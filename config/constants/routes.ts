@@ -8,4 +8,5 @@ export const enum ROUTE {
   SETTINGS = '/settings',
   FEEDBACK = '/feedback',
   ISSUE = '/issue',
+  MOBILE_TEMPORARILY_NOT_ALLOWED = '/mobile-temporarily-not-allowed',
 }
