@@ -27,6 +27,8 @@ const fracktif = localFont({
   display: 'swap',
 })
 
+export const runtime = 'edge'
+
 export const metadata: Metadata = {
   title: {
     template: `%s | ${APP_NAME.FULL}`,
