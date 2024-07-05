@@ -1,26 +1,50 @@
 {
-  "name": "my-daily-expenses",
+  "name": "explend-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc",
+    "prettier": "prettier --c \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "prettier:fix": "prettier --w \"**/*.{js,jsx,ts,tsx,json,md}\""
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.3"
+    "@internationalized/date": "^3.5.4",
+    "@nextui-org/react": "^2.4.2",
+    "@sentry/nextjs": "^8.14.0",
+    "date-fns": "^3.6.0",
+    "framer-motion": "^11.2.13",
+    "mongoose": "^8.4.4",
+    "mongoose-encryption-decryption": "^1.2.1",
+    "next": "14.2.4",
+    "next-auth": "^5.0.0-beta.19",
+    "next-themes": "^0.3.0",
+    "react": "^18.3.1",
+    "react-confetti": "^6.1.0",
+    "react-dom": "^18.3.1",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.2.1",
+    "react-is": "^18.3.1",
+    "react-use": "^17.5.0",
+    "recharts": "^2.12.7",
+    "resend": "^3.4.0"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.3"
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-is": "^18.3.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.4",
+    "eslint-config-prettier": "^9.1.0",
+    "postcss": "^8.4.39",
+    "prettier": "^3.3.2",
+    "prettier-plugin-tailwindcss": "^0.6.5",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.5.3"
   }
 }

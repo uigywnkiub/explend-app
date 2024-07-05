@@ -1,0 +1,7 @@
+.next/
+.turbo/
+_next/
+__tmp__/
+dist/
+target/
+compiled/

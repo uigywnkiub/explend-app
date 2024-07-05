@@ -1,0 +1,56 @@
+[
+  {
+    "target": "Living Expenses",
+    "items": [
+      { "emoji": "🍲", "name": "Food" },
+      { "emoji": "🏠", "name": "Rent/Mortgage" },
+      { "emoji": "💊", "name": "Health" },
+      { "emoji": "⚡", "name": "Utilities" },
+      { "emoji": "📱", "name": "Phone/Internet" }
+    ]
+  },
+  {
+    "target": "Personal & Leisure",
+    "items": [
+      { "emoji": "🎁", "name": "Gift" },
+      { "emoji": "🏕️", "name": "Travel" },
+      { "emoji": "👖", "name": "Clothes" },
+      { "emoji": "💅🏼", "name": "Self-care" },
+      { "emoji": "🏋️", "name": "Gym" },
+      { "emoji": "📚", "name": "Books" },
+      { "emoji": "🎓", "name": "Education" },
+      { "emoji": "🎬", "name": "Entertainment" }
+    ]
+  },
+  {
+    "target": "Finance & Work",
+    "items": [
+      { "emoji": "💵", "name": "Salary" },
+      { "emoji": "💼", "name": "Work" },
+      { "emoji": "💎", "name": "Subscription" },
+      { "emoji": "💳", "name": "Savings/Investments" },
+      { "emoji": "👏🏼", "name": "Donations" },
+      { "emoji": "💰", "name": "Bonus" }
+    ]
+  },
+  {
+    "target": "Transportation",
+    "items": [
+      { "emoji": "🚗", "name": "Car" },
+      { "emoji": "🚕", "name": "Taxi" },
+      { "emoji": "🚌", "name": "Public Transport" },
+      { "emoji": "🚂", "name": "Train" },
+      { "emoji": "⛽", "name": "Fuel" },
+      { "emoji": "🅿️", "name": "Parking" },
+      { "emoji": "🚲", "name": "Bike Maintenance" }
+    ]
+  },
+  {
+    "target": "General",
+    "items": [
+      { "emoji": "🤔", "name": "Unknown" },
+      { "emoji": "🛠️", "name": "Repairs" },
+      { "emoji": "📦", "name": "Miscellaneous" }
+    ]
+  }
+]
