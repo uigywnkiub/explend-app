@@ -1,7 +1,6 @@
 'use client'
 
 // import type { Metadata } from 'next'
-
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import Logo from '../ui/logo'
