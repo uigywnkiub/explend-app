@@ -191,7 +191,7 @@ function SignIn() {
                     const buttonWithIcon = (icon: TIcon) => (
                       <ClientButton
                         title={title}
-                        isDisabled={provider === 'notion' || isAnyLoading}
+                        isDisabled={provider === 'notion' || provider === 'dribbble' || isAnyLoading}
                         className='min-w-[220px] bg-foreground font-medium text-default-50'
                         isLoading={isLoading}
                         onClick={(e) => onSignIn(e, provider)}
