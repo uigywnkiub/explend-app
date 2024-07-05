@@ -1,0 +1,49 @@
+name: Lint
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+  push:
+    branches:
+      - master
+env:
+  CACHE_NAME: cache-node-modules
+jobs:
+  lint:
+    name: Linting, Typechecking
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "yarn_cache_dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache node modules
+        id: cache-yarn
+        uses: actions/cache@v4
+        with:
+          # another cache folder on ubuntu
+          # path: ~/.cache/yarn
+          path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
+          key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}\
+            -${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: yarn list
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Run ESLint
+        run: yarn lint
+
+      - name: Run Typescript
+        run: yarn typecheck
