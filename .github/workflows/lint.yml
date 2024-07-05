@@ -7,7 +7,7 @@ on:
       - synchronize
   push:
     branches:
-      - master
+      - main
 env:
   CACHE_NAME: cache-node-modules
 jobs:
@@ -45,5 +45,5 @@ jobs:
       - name: Run ESLint
         run: yarn lint
 
-      - name: Run Typescript
+      - name: Run TypeScript
         run: yarn typecheck
