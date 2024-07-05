@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 
+import { SpeedInsights } from '@vercel/speed-insights/next'
+
 import { APP_NAME } from '@/config/constants/main'
 
 import './globals.css'
@@ -62,6 +64,7 @@ export default function RootLayout({
         className={`${fracktif.className} ${inter.variable} bg-background text-foreground`}
       >
         <Providers>{children}</Providers>
+        <SpeedInsights />
       </body>
     </html>
   )

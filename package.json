@@ -15,6 +15,7 @@
     "@internationalized/date": "^3.5.4",
     "@nextui-org/react": "^2.4.2",
     "@sentry/nextjs": "^8.14.0",
+    "@vercel/speed-insights": "^1.0.12",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.2.13",
     "mongoose": "^8.4.4",
