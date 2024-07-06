@@ -1,4 +1,5 @@
 // @ts-check
+import withPWAInit from '@ducanh2912/next-pwa'
 import { withSentryConfig } from '@sentry/nextjs'
 
 /** @type {import('next').NextConfig} */
@@ -36,7 +37,12 @@ const nextConfig = {
   },
 }
 
-export default withSentryConfig(nextConfig, {
+const withPWA = withPWAInit({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+})
+
+const sentryConfig = {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
 
@@ -69,4 +75,6 @@ export default withSentryConfig(nextConfig, {
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
   // automaticVercelMonitors: true,
-})
+}
+
+export default withSentryConfig(withPWA(nextConfig), sentryConfig)

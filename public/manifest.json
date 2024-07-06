@@ -1,5 +1,5 @@
 {
-  "name": "Explend App",
+  "name": "Explend",
   "short_name": "Explend",
   "description": "Stop wondering where your money goes. Track Income & Expense.",
   "icons": [
@@ -8,11 +8,6 @@
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/android-chrome-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png"
     },
     {
       "src": "/icons/icon-512x512.png",

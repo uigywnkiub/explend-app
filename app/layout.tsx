@@ -5,7 +5,7 @@ import localFont from 'next/font/local'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
-import { APP_NAME } from '@/config/constants/main'
+import { APP_DESCRIPTION, APP_NAME } from '@/config/constants/main'
 
 import './globals.css'
 import Providers from './providers'
@@ -27,13 +27,17 @@ const fracktif = localFont({
   display: 'swap',
 })
 
+const _APP_NAME = APP_NAME.FULL
+const APP_DEFAULT_TITLE = APP_NAME.SHORT
+const APP_TITLE_TEMPLATE = `%s | ${APP_NAME.FULL}`
+
 export const metadata: Metadata = {
+  applicationName: _APP_NAME,
   title: {
-    template: `%s | ${APP_NAME.FULL}`,
+    template: APP_TITLE_TEMPLATE,
     default: APP_NAME.FULL,
   },
-  description: 'Stop wondering where your money goes. Track Income & Expense.',
-  applicationName: APP_NAME.FULL,
+  description: APP_DESCRIPTION,
   manifest: '/manifest.json',
   icons: {
     icon: '/icons/favicon.ico',
@@ -48,11 +52,32 @@ export const metadata: Metadata = {
       url: '/icons/apple-touch-icon.png',
     },
   },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: 'website',
+    siteName: _APP_NAME,
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
+  twitter: {
+    card: 'summary',
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
 }
 
 export const viewport: Viewport = {
   themeColor: '#FFFFFF',
 }
+
 export default function RootLayout({
   children,
 }: Readonly<{
