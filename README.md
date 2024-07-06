@@ -1,6 +1,6 @@
 # Explend App
 
-**Explend App** is an application for tracking personal income and expenses. It provides a comprehensive view of your financial activities, allowing you to manage your finances effectively.
+**Explend** is an application for tracking personal income and expenses. It provides a comprehensive view of your financial activities, allowing you to manage your finances effectively.
 
 ## Features
 
