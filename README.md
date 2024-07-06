@@ -9,6 +9,7 @@
 - **Transaction Management**: Delete transactions, set spending limits, and more.
 - **Search Transactions**: Quickly find specific transactions using the search functionality.
 - **Security**: Your transaction data are secured with AES encryption, ensuring your financial information remains private. Encrypted data looks something like this: "5c007dc6c2db3395a8…”.
+- **Theme Customization**: Customize the appearance of the app with support for light, dark, and system themes.
 - **Future Enhancements**: Some advanced features are currently in development and may become available in a premium version.
 
 ## Contributing
