@@ -27,3 +27,6 @@ export const enum APP_NAME {
   FULL = 'Explend App',
   SHORT = 'Explend',
 }
+
+export const APP_DESCRIPTION: string =
+  'Stop wondering where your money goes. Track Income & Expense.'

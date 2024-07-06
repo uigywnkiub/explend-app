@@ -25,7 +25,11 @@ import {
 } from '@/app/lib/types'
 import { Accordion, AccordionItem, Divider } from '@nextui-org/react'
 
-import { APP_NAME, DEFAULT_ICON_SIZE } from '@/config/constants/main'
+import {
+  APP_DESCRIPTION,
+  APP_NAME,
+  DEFAULT_ICON_SIZE,
+} from '@/config/constants/main'
 import { ROUTE } from '@/config/constants/routes'
 
 import ClientButton from '../default-button'
@@ -135,9 +139,7 @@ function SignIn() {
         <h1 className='mb-2 text-3xl font-bold md:text-4xl'>
           Welcome to {APP_NAME.FULL}
         </h1>
-        <p className='text-default-500 md:text-lg'>
-          {`Stop wondering where your money goes. Track Income & Expense.`}
-        </p>
+        <p className='text-default-500 md:text-lg'>{APP_DESCRIPTION}</p>
         <Divider className='my-4 w-full bg-divider md:w-1/2' />
         <div className='flex flex-col items-center space-y-3'>
           <p className='text-lg font-semibold md:text-lg'>
