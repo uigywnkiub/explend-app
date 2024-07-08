@@ -61,13 +61,15 @@ const transactionSchema = new Schema<TTransaction>(
       type: Number,
       default: null,
     },
+    isEdited: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   },
-)
-
-transactionSchema.plugin(mongooseEncryptionDecryption, {
+).plugin(mongooseEncryptionDecryption, {
   encodedFields: ['amount', 'balance'],
   privateKey: process.env.ENCRYPTION_SECRET,
 })

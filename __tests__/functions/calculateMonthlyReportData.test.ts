@@ -19,6 +19,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
+        isEdited: false,
         balance: '1000',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -39,6 +40,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Weekly groceries',
         amount: '200',
         isIncome: false,
+        isEdited: false,
         balance: '800',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -66,6 +68,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Groceries',
         amount: '200',
         isIncome: false,
+        isEdited: false,
         balance: '800',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -83,6 +86,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Bus fare',
         amount: '100',
         isIncome: false,
+        isEdited: false,
         balance: '700',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -100,6 +104,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'More groceries',
         amount: '150',
         isIncome: false,
+        isEdited: false,
         balance: '550',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -130,6 +135,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
+        isEdited: false,
         balance: '1000',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -160,6 +166,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Groceries',
         amount: '200',
         isIncome: false,
+        isEdited: false,
         balance: '800',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -186,6 +193,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
+        isEdited: false,
         balance: '1000',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -206,6 +214,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Groceries',
         amount: '200',
         isIncome: false,
+        isEdited: false,
         balance: '800',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -232,6 +241,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
+        isEdited: false,
         balance: '1000',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -252,6 +262,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Groceries',
         amount: '200',
         isIncome: false,
+        isEdited: false,
         balance: '800',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -278,6 +289,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
+        isEdited: false,
         balance: '1000',
         currency: {
           name: CURRENCY_NAME.UAH,
@@ -298,6 +310,7 @@ describe('calculateMonthlyReportData', () => {
         description: 'Groceries',
         amount: '200',
         isIncome: false,
+        isEdited: false,
         balance: '800',
         currency: {
           name: CURRENCY_NAME.UAH,
