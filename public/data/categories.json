@@ -6,7 +6,9 @@
       { "emoji": "🏠", "name": "Rent/Mortgage" },
       { "emoji": "💊", "name": "Health" },
       { "emoji": "⚡", "name": "Utilities" },
-      { "emoji": "📱", "name": "Phone/Internet" }
+      { "emoji": "📱", "name": "Phone/Internet" },
+      { "emoji": "🍺", "name": "Beer" },
+      { "emoji": "🚬", "name": "Cigarette" }
     ]
   },
   {
@@ -50,7 +52,7 @@
     "items": [
       { "emoji": "🤔", "name": "Unknown" },
       { "emoji": "🛠️", "name": "Repairs" },
-      { "emoji": "📦", "name": "Miscellaneous" }
+      { "emoji": "📦", "name": "Other" }
     ]
   }
 ]
