@@ -31,6 +31,7 @@ export type TTransaction = {
       }
     | undefined
   transactionLimit: number | null | undefined
+  isEdited: boolean
   createdAt: Date
   updatedAt: Date
 }

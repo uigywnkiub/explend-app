@@ -115,7 +115,7 @@ function Currency({ userId, currency }: TProps) {
       await updateCurrency(userId, getCurrencyData(key as CURRENCY_NAME))
       toast.success('Currency updated.')
     } catch (err) {
-      toast.error('Error updating currency.')
+      toast.error('Failed to update currency.')
       throw err
     } finally {
       setIsLoading(false)

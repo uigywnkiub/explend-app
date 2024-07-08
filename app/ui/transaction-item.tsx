@@ -13,6 +13,8 @@ import {
   PiWarningOctagonFill,
 } from 'react-icons/pi'
 
+import { useRouter } from 'next/navigation'
+
 import {
   Button,
   Dropdown,
@@ -57,8 +59,10 @@ function TransactionItem({
   amount,
   currency,
   isIncome,
+  isEdited,
   createdAt,
 }: TProps) {
+  const router = useRouter()
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [isBlinkTransaction, setIsBlinkTransaction] = useState(false)
 
@@ -114,7 +118,7 @@ function TransactionItem({
                 {description}
               </p>
               <p className='text-xs font-medium text-default-300'>
-                {formatTime(createdAt)}
+                {isEdited && 'edited'} {formatTime(createdAt)}
               </p>
             </div>
           </div>
@@ -130,8 +134,11 @@ function TransactionItem({
                 if (key === 'delete') {
                   onOpen()
                 }
+                if (key === 'edit') {
+                  router.push(`/transaction/${id}/edit`)
+                }
               }}
-              disabledKeys={['copy', 'edit']}
+              disabledKeys={['copy']}
             >
               <DropdownSection title='Actions' showDivider>
                 <DropdownItem
@@ -162,13 +169,7 @@ function TransactionItem({
                       }
                     />
                   }
-                  description={
-                    <ConstructionPlug
-                      withIcon={false}
-                      size='xs'
-                      target='section'
-                    />
-                  }
+                  description='Edit transaction details'
                 >
                   Edit
                 </DropdownItem>

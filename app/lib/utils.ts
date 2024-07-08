@@ -24,6 +24,10 @@ export const getEmojiFromCategory = (category: TTransaction['category']) => {
   return category.slice(0, 2)
 }
 
+export const getCategoryWithoutEmoji = (category: TTransaction['category']) => {
+  return category.slice(2).trim()
+}
+
 export const getSlicedCurrencyCode = (code: CURRENCY_CODE) => {
   return code.toLocaleLowerCase().slice(0, 2)
 }

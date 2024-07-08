@@ -164,13 +164,13 @@ export async function createTransaction(
   try {
     const newTransaction: Omit<
       TTransaction,
-      'createdAt' | 'updatedAt' | 'transactionLimit'
+      'createdAt' | 'updatedAt' | 'transactionLimit' | 'isEdited'
     > = {
       id: crypto.randomUUID(),
       userId,
       description: capitalizeFirstLetter(
         formData.get('description') as TTransaction['description'],
-      ),
+      ).trim(),
       amount: formData.get('amount') as TTransaction['amount'],
       category: getCategoryWithEmoji(
         formData.get('category'),
@@ -310,24 +310,58 @@ export async function getAllTransactions(
 }
 export const getCachedAllTransactions = cache(getAllTransactions)
 
-// export async function editTransaction(
-//   id: TTransaction['id'],
-//   updates: Partial<TTransaction>,
-// ): Promise<void> {
-//   if (!id) {
-//     throw new Error('Transaction ID is required to edit a transaction.')
-//   }
-//   if (!updates || Object.keys(updates).length === 0) {
-//     throw new Error('No updates provided.')
-//   }
-//   try {
-//     await dbConnect()
-//     await TransactionModel.updateOne({ id }, { $set: updates })
-//     revalidatePath(ROUTE.HOME)
-//   } catch (err) {
-//     throw err
-//   }
-// }
+export async function editTransactionById(
+  id: TTransaction['id'],
+  newTransactionData: Partial<TTransaction>,
+): Promise<void> {
+  if (!id) {
+    throw new Error('Transaction ID is required to update a transaction.')
+  }
+  try {
+    await dbConnect()
+    const session = await TransactionModel.startSession()
+    try {
+      session.startTransaction()
+      const updateFields: Partial<TTransaction> = {}
+      if (newTransactionData.description) {
+        updateFields.description = newTransactionData.description.trim()
+      }
+      if (newTransactionData.amount) {
+        updateFields.amount = newTransactionData.amount.replace(/\s/g, '')
+        const amount = parseFloat(updateFields.amount)
+        let balance = 0
+        if (newTransactionData.isIncome) {
+          balance += amount
+        } else {
+          balance -= amount
+        }
+        updateFields.balance = balance.toString()
+      }
+      if (newTransactionData.category) {
+        updateFields.category = newTransactionData.category
+      }
+      if (newTransactionData.currency) {
+        updateFields.currency = newTransactionData.currency
+      }
+      if (newTransactionData.isIncome !== undefined) {
+        updateFields.isIncome = newTransactionData.isIncome
+      }
+      if (newTransactionData.isEdited) {
+        updateFields.isEdited = newTransactionData.isEdited
+      }
+      await TransactionModel.updateOne({ id }, updateFields, { session })
+      await session.commitTransaction()
+      session.endSession()
+      revalidatePath(ROUTE.HOME)
+    } catch (err) {
+      await session.abortTransaction()
+      session.endSession()
+      throw err
+    }
+  } catch (err) {
+    throw err
+  }
+}
 
 export async function deleteTransaction(id: TTransaction['id']): Promise<void> {
   if (!id) {
@@ -337,6 +371,31 @@ export async function deleteTransaction(id: TTransaction['id']): Promise<void> {
     await dbConnect()
     await TransactionModel.deleteOne({ id })
     revalidatePath(ROUTE.HOME)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function findTransactionById(
+  id: TTransaction['id'],
+): Promise<TTransaction | null> {
+  if (!id) {
+    throw new Error(
+      'Transaction ID and User ID are required to find a transaction.',
+    )
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne({
+      id,
+    }).lean<TTransaction>({
+      transform: (doc: TRawTransaction) => {
+        delete doc._id
+        delete doc.__v
+        return doc
+      },
+    })
+    return transaction
   } catch (err) {
     throw err
   }

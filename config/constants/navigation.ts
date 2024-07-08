@@ -17,4 +17,5 @@ export const enum NAV_TITLE {
 export const enum SEARCH_PARAM {
   QUERY = 'query',
   PAGE = 'page',
+  TRANSACTION_ID = 'transactionId',
 }

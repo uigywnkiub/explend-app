@@ -181,6 +181,7 @@ export default async function Home({
                       amount={transaction.amount}
                       currency={transaction.currency}
                       isIncome={transaction.isIncome}
+                      isEdited={transaction.isEdited}
                       createdAt={transaction.createdAt}
                     />
                   </li>

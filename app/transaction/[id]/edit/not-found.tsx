@@ -2,17 +2,17 @@ import Link from 'next/link'
 
 import { ROUTE } from '@/config/constants/routes'
 
-import ClientButton from './ui/default-button'
+import ClientButton from '@/app/ui/default-button'
+import WithSidebar from '@/app/ui/sidebar/with-sidebar'
 
 export default function NotFound() {
-  return (
+  const content = (
     <main className='mx-auto flex h-screen max-w-md flex-col items-center justify-center gap-4 px-4 text-center xs:px-0'>
       <div className='flex flex-col items-center'>
         <p className='text-default-300'>#404NotFound</p>
       </div>
       <h1 className='text-lg font-medium'>
-        Looks like this page got lost in the internet abyss. Do not worry, we
-        will help you find your way home.
+        Could not find the requested transaction.
       </h1>
       <Link href={ROUTE.HOME}>
         <ClientButton
@@ -22,4 +22,6 @@ export default function NotFound() {
       </Link>
     </main>
   )
+
+  return <WithSidebar contentNearby={content} />
 }

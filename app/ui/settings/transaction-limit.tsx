@@ -73,7 +73,7 @@ function TransactionLimit({
       await updateTransactionLimit(userId, Number(key))
       toast.success('Transaction limit updated.')
     } catch (err) {
-      toast.error('Error updating transaction limit.')
+      toast.error('Failed to update transaction limit.')
       throw err
     } finally {
       setIsLoading(false)
