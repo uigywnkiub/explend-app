@@ -48,6 +48,8 @@ function TransactionFormEdit({ transaction }: TProps) {
     Array.from(category)[0]?.toString(),
   )
   const currency = transaction.currency
+  const isEdited = transaction.isEdited
+  const transactionId = transaction.id
 
   const onChangeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value)
@@ -64,19 +66,46 @@ function TransactionFormEdit({ transaction }: TProps) {
     }
   }
 
+  const hasChanges = (
+    newData: Partial<TTransaction>,
+    oldData: TTransaction,
+  ) => {
+    const { amount, ...restOldData } = oldData
+    const modifiedOldData: TTransaction = {
+      ...restOldData,
+      amount: getFormattedCurrency(oldData.amount),
+    }
+    return Object.keys(newData).some((key) => {
+      const newKey = key as keyof typeof newData
+      return (
+        newData[newKey] !== undefined &&
+        newData[newKey] !== modifiedOldData[newKey]
+      )
+    })
+  }
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
+
     const newTransactionData = {
       isIncome: isSwitchedOn,
-      isEdited: true,
+      isEdited,
       description,
       amount,
       category: categoryWithEmoji,
       currency,
     }
+
+    if (!hasChanges(newTransactionData, transaction)) {
+      toast.error('No changes detected.')
+      setIsLoading(false)
+      return
+    }
+    newTransactionData.isEdited = true
+
     try {
-      await editTransactionById(transaction.id, newTransactionData)
+      await editTransactionById(transactionId, newTransactionData)
       router.push(ROUTE.HOME)
       toast.success('Transaction edited.')
     } catch (err) {
