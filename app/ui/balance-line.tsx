@@ -20,11 +20,7 @@ function BalanceLine({ balance, currency, user }: TProps) {
   const quoteRef = useRef<HTMLQuoteElement>(null)
 
   const onQuoteCopy = async () => {
-    await copyToClipboard(
-      quoteRef,
-      'Quote copied to the clipboard.',
-      'Failed to copy quote to the clipboard.',
-    )
+    await copyToClipboard('Quote copied.', 'Failed to copy quote.', quoteRef)
   }
 
   return (

@@ -23,6 +23,7 @@ import { ROUTE } from '@/config/constants/routes'
 import { editTransactionById } from '../lib/actions'
 import type { TTransaction } from '../lib/types'
 import {
+  capitalizeFirstLetter,
   getCategoryWithEmoji,
   getCategoryWithoutEmoji,
   getFormattedCurrency,
@@ -91,7 +92,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     const newTransactionData = {
       isIncome: isSwitchedOn,
       isEdited,
-      description,
+      description: capitalizeFirstLetter(description),
       amount,
       category: categoryWithEmoji,
       currency,

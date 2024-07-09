@@ -33,6 +33,7 @@ import { motion } from 'framer-motion'
 
 import { BLINK_DURATION } from '@/config/constants/animation'
 import {
+  APP_NAME,
   DEFAULT_CURRENCY_SIGN,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
@@ -40,12 +41,18 @@ import {
 import { deleteTransaction } from '../lib/actions'
 import type { TTransaction } from '../lib/types'
 import {
+  copyToClipboard,
   formatTime,
   getEmojiFromCategory,
   getFormattedCurrency,
 } from '../lib/utils'
-import ConstructionPlug from './construction-plug'
 import { HoverableElement } from './hoverables'
+
+const enum DROPDOWN_KEY {
+  COPY = 'copy',
+  EDIT = 'edit',
+  DELETE = 'delete',
+}
 
 type TProps = Omit<
   TTransaction,
@@ -65,6 +72,13 @@ function TransactionItem({
   const router = useRouter()
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [isBlinkTransaction, setIsBlinkTransaction] = useState(false)
+  const transactionDataToCopy = `Transaction data from ${APP_NAME.FULL}
+
+${isIncome ? 'Type: Income' : 'Type: Expense'}
+Category: ${category}
+Description: ${description}
+Amount: ${isIncome ? '+' : '-'} ${getFormattedCurrency(amount)} ${currency?.sign || DEFAULT_CURRENCY_SIGN}
+Time: ${formatTime(createdAt)}`
 
   const onBlinkTransaction = async () => {
     try {
@@ -131,36 +145,37 @@ function TransactionItem({
             <DropdownMenu
               aria-label='Transaction actions'
               onAction={(key) => {
-                if (key === 'delete') {
-                  onOpen()
+                if (key === DROPDOWN_KEY.COPY) {
+                  copyToClipboard(
+                    'Transaction copied.',
+                    'Failed to copy transaction.',
+                    undefined,
+                    transactionDataToCopy,
+                  )
                 }
-                if (key === 'edit') {
+                if (key === DROPDOWN_KEY.EDIT) {
                   router.push(`/transaction/${id}/edit`)
                 }
+                if (key === DROPDOWN_KEY.DELETE) {
+                  onOpen()
+                }
               }}
-              disabledKeys={['copy']}
             >
               <DropdownSection title='Actions' showDivider>
                 <DropdownItem
-                  key='copy'
+                  key={DROPDOWN_KEY.COPY}
                   startContent={
                     <HoverableElement
                       element={<PiCopy size={DEFAULT_ICON_SIZE} />}
                       hoveredElement={<PiCopyFill size={DEFAULT_ICON_SIZE} />}
                     />
                   }
-                  description={
-                    <ConstructionPlug
-                      withIcon={false}
-                      size='xs'
-                      target='section'
-                    />
-                  }
+                  description='Copy transaction data'
                 >
                   Copy
                 </DropdownItem>
                 <DropdownItem
-                  key='edit'
+                  key={DROPDOWN_KEY.EDIT}
                   startContent={
                     <HoverableElement
                       element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
@@ -176,7 +191,7 @@ function TransactionItem({
               </DropdownSection>
               <DropdownSection title='Danger zone'>
                 <DropdownItem
-                  key='delete'
+                  key={DROPDOWN_KEY.DELETE}
                   className='text-danger'
                   color='danger'
                   startContent={
