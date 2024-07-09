@@ -90,13 +90,19 @@ export const calculateEntryRange = (
 }
 
 export const copyToClipboard = async (
-  ref: React.RefObject<THTMLElement>,
   successTitle: string,
   errorTitle: string,
+  ref?: React.RefObject<THTMLElement>,
+  text?: string,
 ): Promise<void> => {
-  const element = ref.current?.textContent || ''
+  const content = text || ref?.current?.textContent || ''
+
+  if (!content) {
+    toast.error(errorTitle)
+    return
+  }
   try {
-    await navigator.clipboard.writeText(element)
+    await navigator.clipboard.writeText(content)
     toast.success(successTitle)
   } catch (err) {
     toast.error(errorTitle)
