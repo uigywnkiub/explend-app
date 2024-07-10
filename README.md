@@ -9,7 +9,7 @@
 - **Transaction Management**: Delete transactions, edit, set spending limits and more.
 - **Search Transactions**: Quickly find specific transactions using the search functionality.
 - **Security**: Your transaction data are secured with AES encryption, ensuring your financial information remains private. Encrypted data looks something like this: "5c007dc6c2db3395a8…”.
-- **PWA Mobile Version**: Access Explend on the go with its Progressive Web App (PWA) mobile version, offering a seamless experience across different devices.
+- **PWA Mobile Version**: Access Explend on the go with its Progressive Web App (PWA) mobile version, offering a seamless experience across different devices. (Add to Home Screen)
 - **Theme Customization**: Customize the appearance of the app with support for light, dark, and system themes.
 - **Future Enhancements**: Some advanced features are currently in development and may become available in a premium version.
 
