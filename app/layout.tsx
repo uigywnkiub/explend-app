@@ -63,6 +63,14 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
+    images: [
+      {
+        url: '/icons/apple-touch-icon.png',
+        width: 180,
+        height: 180,
+        alt: _APP_NAME,
+      },
+    ],
   },
   twitter: {
     card: 'summary',
@@ -71,6 +79,14 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
+    images: [
+      {
+        url: '/icons/apple-touch-icon.png',
+        width: 180,
+        height: 180,
+        alt: _APP_NAME,
+      },
+    ],
   },
 }
 
