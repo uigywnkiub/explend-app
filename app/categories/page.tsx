@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Page() {
   const content = (
     <>
-      <h1 className='mb-8 text-center text-2xl font-bold'>
+      <h1 className='mb-4 md:mb-8 text-center text-2xl font-bold'>
         {NAV_TITLE.CATEGORIES}
       </h1>
       <div className='mx-auto text-center'>

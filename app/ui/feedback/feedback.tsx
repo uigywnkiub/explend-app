@@ -30,6 +30,7 @@ export default function Feedback() {
         isDisabled={pending}
         value={feedback}
         onValueChange={setFeedback}
+        size='lg'
         classNames={{
           input: 'resize-y min-h-[140px]',
         }}
@@ -38,7 +39,8 @@ export default function Feedback() {
         <p
           className={`text-sm text-default-${pending || feedback.length < MIN_TEXT_LENGTH ? '300' : '500'}`}
         >
-          Press{' '}
+          <span className='hidden md:inline'>Press </span>
+          <span className='inline md:hidden'>Tap </span>
           <Button
             aria-label='Enter'
             type='submit'

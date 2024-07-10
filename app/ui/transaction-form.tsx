@@ -105,8 +105,8 @@ function TransactionForm({ currency }: TProps) {
           color={isSwitchedOn ? 'success' : 'danger'}
           placeholder={
             isSwitchedOn
-              ? 'Type income transaction...'
-              : 'Type expense transaction...'
+              ? 'Type income...'
+              : 'Type expense...'
           }
           classNames={{
             input: 'border-none focus:ring-0 placeholder:text-default-500',
@@ -131,7 +131,7 @@ function TransactionForm({ currency }: TProps) {
                 input:
                   'border-none focus:ring-0 placeholder:text-default-500 text-center',
                 inputWrapper: 'h-12 w-full px-4',
-                base: 'w-36',
+                base: 'w-44 md:w-36',
               }}
               endContent={
                 <div className='pointer-events-none flex items-center'>

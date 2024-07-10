@@ -104,7 +104,7 @@ function DeleteAccount({ userId }: TProps) {
                   deleted, you will no longer be able to access any information
                   associated with your account.
                 </p>
-                <p className='text-sm text-default-500'>
+                <p className='mt-2 text-sm text-default-500'>
                   To confirm type:{' '}
                   <span className='select-none text-foreground'>
                     {CONFIRM_TEXT}
@@ -116,6 +116,7 @@ function DeleteAccount({ userId }: TProps) {
                   placeholder={CONFIRM_TEXT.slice(0, INVALID_LENGTH) + '...'}
                   isInvalid={isInvalidText && inputText.length > INVALID_LENGTH}
                   errorMessage={INVALID_TEXT_ERROR}
+                  size='lg'
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />

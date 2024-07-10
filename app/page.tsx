@@ -104,14 +104,16 @@ export default async function Home({
 
   const content = (
     <>
-      <h1 className='mb-8 text-center text-2xl font-bold'>{NAV_TITLE.HOME}</h1>
-      <div className='mx-auto flex max-w-2xl flex-col gap-y-4'>
+      <h1 className='mb-4 text-center text-2xl font-bold md:mb-8'>
+        {NAV_TITLE.HOME}
+      </h1>
+      <div className='mx-auto flex max-w-2xl flex-col gap-y-2'>
         <BalanceLine
           balance={balance}
           currency={currency}
           user={session?.user}
         />
-        <form action={createTransactionWithUserId}>
+        <form action={createTransactionWithUserId} className='mt-4'>
           <TransactionForm currency={currency} />
         </form>
         <div className='text-center text-default-300'>
@@ -123,7 +125,7 @@ export default async function Home({
                 placeholder='Type to search...'
                 hasSearchedTransactions={hasSearchedTransactions}
               />
-              <div className='mt-4'>
+              <div className='mb-2 mt-4'>
                 {!hasSearchedTransactions ? (
                   <p>No Transactions Found</p>
                 ) : (

@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const content = (
     <main className='mx-auto max-w-2xl'>
-      <h1 className='mb-8 text-center text-2xl font-bold'>{PAGE_TITLE}</h1>
+      <h1 className='mb-4 md:mb-8 text-center text-2xl font-bold'>{PAGE_TITLE}</h1>
       <TransactionFormEdit transaction={transaction} />
     </main>
   )
