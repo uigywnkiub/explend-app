@@ -28,8 +28,9 @@ const fracktif = localFont({
 })
 
 const _APP_NAME = APP_NAME.FULL
-const APP_DEFAULT_TITLE = APP_NAME.SHORT
+const APP_DEFAULT_TITLE = APP_NAME.FULL
 const APP_TITLE_TEMPLATE = `%s | ${APP_NAME.FULL}`
+const APP_URL = 'https://explend-app.vercel.app'
 
 export const metadata: Metadata = {
   applicationName: _APP_NAME,
@@ -63,11 +64,12 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
+    url: APP_URL,
     images: [
       {
-        url: '/icons/apple-touch-icon.png',
-        width: 180,
-        height: 180,
+        url: '/icons/android-chrome-512x512.png',
+        width: 512,
+        height: 512,
         alt: _APP_NAME,
       },
     ],
@@ -81,9 +83,9 @@ export const metadata: Metadata = {
     description: APP_DESCRIPTION,
     images: [
       {
-        url: '/icons/apple-touch-icon.png',
-        width: 180,
-        height: 180,
+        url: '/icons/android-chrome-512x512.png',
+        width: 512,
+        height: 512,
         alt: _APP_NAME,
       },
     ],
