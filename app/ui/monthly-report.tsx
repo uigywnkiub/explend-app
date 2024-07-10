@@ -78,20 +78,22 @@ function MonthlyReport({ transactions, currency }: TProps) {
         selectedDate={selectedDate}
         onDateSelection={onDateSelection}
       />
-      <div className='mb-6 flex items-end justify-between'>
-        <p className='text-2xl text-default-500'>{formattedDateRange}</p>
+      <div className='mb-3 flex items-end justify-between md:mb-6'>
+        <p className='hidden text-2xl text-default-500 md:block'>
+          {formattedDateRange}
+        </p>
         <div className='flex gap-4 md:gap-8'>
           <div>
-            <p className='text-sm text-default-500'>Total Income</p>
-            <p className='flex items-center gap-1 text-2xl font-semibold'>
+            <p className='text-xs text-default-500 md:text-sm'>Total Income</p>
+            <p className='flex items-center gap-1 text-lg font-semibold md:text-2xl'>
               <PiArrowCircleUpFill className='fill-success' />
               {getFormattedCurrency(totalIncome)}{' '}
               {currency?.code || DEFAULT_CURRENCY_CODE}
             </p>
           </div>
           <div>
-            <p className='text-sm text-default-500'>Total Expense</p>
-            <p className='flex items-center gap-1 text-2xl font-semibold'>
+            <p className='text-xs text-default-500 md:text-sm'>Total Expense</p>
+            <p className='flex items-center gap-1 text-lg font-semibold md:text-2xl'>
               <PiArrowCircleDownFill className='fill-danger' />
               {getFormattedCurrency(totalExpense)}{' '}
               {currency?.code || DEFAULT_CURRENCY_CODE}
@@ -99,18 +101,20 @@ function MonthlyReport({ transactions, currency }: TProps) {
           </div>
         </div>
       </div>
-      <Divider className='mx-auto mb-6 bg-divider' />
+      <Divider className='mx-auto mb-3 bg-divider md:mb-6' />
       <div className='grid grid-cols-3 gap-4'>
-        <div className='text-sm text-default-500'>Category</div>
-        <div className='text-sm text-default-500'>Percentage</div>
-        <div className='text-sm text-default-500'>Spent</div>
+        <div className='text-xs text-default-500 md:text-sm'>Category</div>
+        <div className='text-xs text-default-500 md:text-sm'>Percentage</div>
+        <div className='text-xs text-default-500 md:text-sm'>Spent</div>
         {monthlyReportData
           .sort((c1, c2) => c2.spent - c1.spent)
           .map((category) => (
             <Fragment key={category.category}>
-              <div className='text-lg'>{category.category}</div>
-              <div className='text-lg'>{category.percentage} %</div>
-              <div className='text-lg'>
+              <div className='text-md overflow-hidden text-ellipsis whitespace-nowrap md:text-lg'>
+                {category.category}
+              </div>
+              <div className='text-md md:text-lg'>{category.percentage} %</div>
+              <div className='text-md md:text-lg'>
                 {getFormattedCurrency(category.spent)}{' '}
                 {currency?.sign || DEFAULT_CURRENCY_SIGN}
               </div>
