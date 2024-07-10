@@ -215,7 +215,8 @@ function TransactionFormEdit({ transaction }: TProps) {
         </div>
         <div className='flex items-center'>
           <p className='text-sm text-default-500'>
-            Press{' '}
+            <span className='hidden md:inline'>Press </span>
+            <span className='inline md:hidden'>Tap </span>
             <Button
               aria-label='Enter'
               type='submit'
@@ -224,8 +225,8 @@ function TransactionFormEdit({ transaction }: TProps) {
               size='sm'
             >
               <Kbd keys={['enter']}>Enter</Kbd>
-            </Button>{' '}
-            to Edit Transaction
+            </Button>
+            <span className='hidden md:inline'> to Add Transaction</span>
           </p>
         </div>
       </div>
