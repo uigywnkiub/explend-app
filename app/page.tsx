@@ -140,7 +140,7 @@ export default async function Home({
           'flex items-center gap-1 text-default-300 hover:text-foreground'
 
         return (
-          <div key={date} className='mx-auto max-w-2xl px-2'>
+          <div key={date} className='mx-auto max-w-2xl'>
             <div className='flex items-center justify-between p-2 text-default-500'>
               <p className='text-sm text-default-300 hover:cursor-none hover:text-foreground'>
                 {date}

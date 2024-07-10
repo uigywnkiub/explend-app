@@ -121,7 +121,7 @@ function TransactionFormEdit({ transaction }: TProps) {
   }
 
   return (
-    <form className='px-2' onSubmit={onSubmit}>
+    <form onSubmit={onSubmit}>
       <Switch
         isDisabled={isLoading}
         color='success'

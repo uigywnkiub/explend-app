@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse, userAgent } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 import { auth } from '@/auth'
 
@@ -7,12 +7,6 @@ import { ROUTE } from './config/constants/routes'
 
 export default auth((req: NextRequest & { auth: TSession }) => {
   const url = req.nextUrl.clone()
-  const { device } = userAgent(req)
-
-  if (device.type === 'mobile') {
-    url.pathname = ROUTE.MOBILE_TEMPORARILY_NOT_ALLOWED
-    return NextResponse.rewrite(url)
-  }
 
   if (!req.auth) {
     url.pathname = ROUTE.SIGNIN

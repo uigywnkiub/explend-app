@@ -1,3 +1,5 @@
+'use client'
+
 import { useHover } from 'react-use'
 
 import Link from 'next/link'
