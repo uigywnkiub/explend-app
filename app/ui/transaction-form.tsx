@@ -103,11 +103,7 @@ function TransactionForm({ currency }: TProps) {
           required
           size='lg'
           color={isSwitchedOn ? 'success' : 'danger'}
-          placeholder={
-            isSwitchedOn
-              ? 'Type income...'
-              : 'Type expense...'
-          }
+          placeholder={isSwitchedOn ? 'Type income...' : 'Type expense...'}
           classNames={{
             input: 'border-none focus:ring-0 placeholder:text-default-500',
             inputWrapper: 'h-20 my-2 px-4',
