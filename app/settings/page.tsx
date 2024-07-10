@@ -5,7 +5,6 @@ import { Spacer } from '@nextui-org/react'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
-  deleteAllTransactionsAndSignOut,
   getCachedAuthSession,
   getCountDocuments,
   getCurrency,
@@ -44,10 +43,7 @@ export default async function Page() {
       <h1 className='mb-8 text-center text-2xl font-bold'>
         {NAV_TITLE.SETTINGS}
       </h1>
-      <Section
-        title='General settings'
-        subtitle='Configure your general preferences.'
-      >
+      <Section title='General' subtitle='Configure your general preferences.'>
         <SectionItem
           title='Theme switcher'
           subtitle='Select your favorite theme to give the app a new look that matches your style.'
@@ -67,10 +63,7 @@ export default async function Page() {
         </SectionItem>
       </Section>
 
-      <Section
-        title='Account settings'
-        subtitle='Change your account settings.'
-      >
+      <Section title='Account' subtitle='Change your account preferences.'>
         <>
           <SectionItem
             title='Currency'
