@@ -45,10 +45,10 @@ export const metadata: Metadata = {
   },
   keywords:
     'explend, finance, money, budget, tracker, income tracking, expense tracking, manage finances, control spending, save money tracker, financial wellness.',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: APP_NAME.FULL,
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: 'black-translucent',
+      title: APP_NAME.FULL,
     startupImage: {
       url: '/icons/apple-touch-icon.png',
     },
@@ -56,6 +56,7 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  metadataBase: new URL(APP_URL),
   openGraph: {
     type: 'website',
     siteName: _APP_NAME,
