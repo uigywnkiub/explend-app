@@ -74,7 +74,6 @@ function TransactionForm({ currency }: TProps) {
       hideIndicator
       onExpandedChange={onExpandedChange}
       defaultExpandedKeys={isInitialExpanded}
-      className='p-0'
     >
       <AccordionItem
         key={ACCORDION_ITEM_KEY}
