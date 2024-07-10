@@ -101,21 +101,19 @@ export default function Search({
             title: 'text-center hover:opacity-hover',
           }}
         >
-          <div className='px-2'>
-            <Input
-              size='lg'
-              color='primary'
-              isClearable
-              placeholder={placeholder}
-              onClear={() => [onSearchChange(''), setSearchTerm('')]}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              defaultValue={searchTerm}
-              classNames={{
-                input: 'border-none focus:ring-0 placeholder:text-default-500',
-                inputWrapper: 'h-20 my-2 px-4',
-              }}
-            />
-          </div>
+          <Input
+            size='lg'
+            color='primary'
+            isClearable
+            placeholder={placeholder}
+            onClear={() => [onSearchChange(''), setSearchTerm('')]}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            defaultValue={searchTerm}
+            classNames={{
+              input: 'border-none focus:ring-0 placeholder:text-default-500',
+              inputWrapper: 'h-20 my-2 px-4',
+            }}
+          />
         </AccordionItem>
       </Accordion>
     </>

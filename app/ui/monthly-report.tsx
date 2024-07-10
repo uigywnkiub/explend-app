@@ -56,7 +56,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
 
   if (filteredTransactions.length === 0) {
     return (
-      <div className='mx-auto max-w-3xl rounded-medium bg-content1 p-8'>
+      <div className='mx-auto max-w-3xl rounded-medium bg-content1 p-4 md:p-8'>
         <MonthPicker
           selectedDate={selectedDate}
           onDateSelection={onDateSelection}
@@ -73,14 +73,14 @@ function MonthlyReport({ transactions, currency }: TProps) {
     calculateMonthlyReportData(income, expense)
 
   return (
-    <div className='mx-auto max-w-3xl rounded-medium bg-content1 p-8'>
+    <div className='mx-auto max-w-3xl rounded-medium bg-content1 p-4 md:p-8'>
       <MonthPicker
         selectedDate={selectedDate}
         onDateSelection={onDateSelection}
       />
       <div className='mb-6 flex items-end justify-between'>
         <p className='text-2xl text-default-500'>{formattedDateRange}</p>
-        <div className='flex gap-8'>
+        <div className='flex gap-4 md:gap-8'>
           <div>
             <p className='text-sm text-default-500'>Total Income</p>
             <p className='flex items-center gap-1 text-2xl font-semibold'>

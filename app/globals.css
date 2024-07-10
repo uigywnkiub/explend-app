@@ -37,3 +37,8 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+#sidebar-toggle:checked ~ .flex > .fixed-no-scroll {
+  display: block;
+  width: 100%;
+}
