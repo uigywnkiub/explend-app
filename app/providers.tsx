@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react'
 import { Toaster } from 'react-hot-toast'
 
+import { Next13ProgressBar } from 'next13-progressbar'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { useRouter } from 'next/navigation'
 
 import { NextUIProvider } from '@nextui-org/react'
 
+import { SUCCESS } from '@/config/constants/colors'
 import {
   DARK_TOAST_OPTS,
   LIGHT_TOAST_OPTS,
@@ -36,6 +38,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           }
         />
         {children}
+        <Next13ProgressBar
+          height='3px'
+          color={SUCCESS}
+          options={{ showSpinner: false }}
+          showOnShallow={true}
+        />
       </NextThemesProvider>
     </NextUIProvider>
   )
