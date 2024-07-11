@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import ConstructionPlug from '../ui/construction-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
 
 export const metadata: Metadata = {
@@ -16,7 +16,17 @@ export default function Page() {
         {NAV_TITLE.ISSUE}
       </h1>
       <div className='mx-auto text-center'>
-        <ConstructionPlug pageTitle={NAV_TITLE.ISSUE} />
+        <p className='mb-4'>
+          If you encounter any problems or would like to suggest something,
+          please report them on GitHub.
+        </p>
+        <Link
+          href='https://github.com/uigywnkiub/explend-app/issues'
+          className='text-primary underline'
+          target='_blank'
+        >
+          Report Link ↗
+        </Link>
       </div>
     </>
   )
