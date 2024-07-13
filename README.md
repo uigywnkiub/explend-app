@@ -13,6 +13,10 @@
 - **Theme Customization**: Customize the appearance of the app with support for light, dark, and system themes.
 - **Future Enhancements**: Some advanced features are currently in development and may become available in a premium version.
 
+## Review
+
+[Link to review the project](https://www.youtube.com/watch?v=v_tLuYTPoSI)
+
 ## Contributing
 
 We welcome contributions to improve this application. Feel free to submit issues or pull requests.
