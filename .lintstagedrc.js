@@ -7,7 +7,7 @@ const buildEslintCommand = (filenames) =>
 
 const config = {
   '*.{js,jsx,ts,tsx}': [buildEslintCommand],
-  // '**/*': ['yarn prettier:fix'],
+  '**/*': ['yarn prettier:fix'],
 }
 
 export default config
