@@ -30,3 +30,5 @@ export const enum APP_NAME {
 
 export const APP_DESCRIPTION: string =
   'Stop wondering where your money goes. Track Income & Expense.'
+
+export const APP_URL: string = process.env.APP_URL

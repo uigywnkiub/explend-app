@@ -6,6 +6,7 @@ declare namespace NodeJS {
     RESEND_API_KEY: string
     RESEND_EMAIL: string
     IS_RESEND_ENABLE: string
+    APP_URL: string
     AUTH_SECRET: string
     AUTH_GITHUB_ID: string
     AUTH_GITHUB_SECRET: string
