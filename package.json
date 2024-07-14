@@ -1,6 +1,6 @@
 {
   "name": "explend-app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -68,5 +68,46 @@
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^2.0.1",
     "webpack": "^5.92.1"
-  }
+  },
+  "license": "MIT",
+  "author": "Volodymyr <vgerun97@gmail.com> (https://volodymyr-g.vercel.app)",
+  "description": "Stop wondering where your money goes. Track Income & Expense.",
+  "homepage": "https://github.com/uigywnkiub/explend-app#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uigywnkiub/explend-app"
+  },
+  "bugs": {
+    "url": "https://github.com/uigywnkiub/explend-app/issues",
+    "email": "vgerun97@gmail.com"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://buymeacoffee.com/eubywnkuee"
+  },
+  "keywords": [
+    "explend",
+    "personal finance",
+    "income tracking",
+    "expense tracking",
+    "finance management",
+    "next.js",
+    "react",
+    "typescript",
+    "tailwindcss",
+    "pwa",
+    "mongoose",
+    "encryption",
+    "theme customization",
+    "monthly reports",
+    "dynamic radar chart",
+    "transaction management",
+    "search functionality",
+    "vitest",
+    "jest",
+    "prettier",
+    "eslint",
+    "commitlint",
+    "react-icons"
+  ]
 }
