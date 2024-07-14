@@ -2,7 +2,6 @@
 
 import { useRef } from 'react'
 
-import { peaceOfMindQuotes } from '@/public/data/quotes'
 import { Card, CardHeader } from '@nextui-org/react'
 
 import { DEFAULT_CURRENCY_CODE } from '@/config/constants/main'
@@ -31,7 +30,7 @@ function BalanceLine({ balance, currency, user }: TProps) {
           className='hidden cursor-pointer select-none text-default-300 md:block'
           onClick={onQuoteCopy}
         >
-          <q ref={quoteRef}>{peaceOfMindQuotes[0]}</q>
+          <q ref={quoteRef}>Peace of mind, one transaction at a time.</q>
         </small>
         <h4 className='text-lg font-bold'>
           {getFormattedCurrency(balance)}{' '}
