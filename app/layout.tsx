@@ -5,7 +5,7 @@ import localFont from 'next/font/local'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
-import { APP_DESCRIPTION, APP_NAME } from '@/config/constants/main'
+import { APP_DESCRIPTION, APP_NAME, APP_URL } from '@/config/constants/main'
 
 import './globals.css'
 import Providers from './providers'
@@ -30,7 +30,6 @@ const fracktif = localFont({
 const _APP_NAME = APP_NAME.FULL
 const APP_DEFAULT_TITLE = APP_NAME.FULL
 const APP_TITLE_TEMPLATE = `%s | ${APP_NAME.FULL}`
-const APP_URL = 'https://explend-app.vercel.app'
 
 export const metadata: Metadata = {
   applicationName: _APP_NAME,
