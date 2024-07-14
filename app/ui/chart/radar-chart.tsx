@@ -1,8 +1,5 @@
 'use client'
 
-import { calculateChartData, filterTransactions } from '@/app/lib/data'
-import { TTransaction } from '@/app/lib/types'
-import { capitalizeFirstLetter, getFormattedCurrency } from '@/app/lib/utils'
 import {
   Legend,
   PolarAngleAxis,
@@ -13,6 +10,10 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts'
+
+import { calculateChartData, filterTransactions } from '@/app/lib/data'
+import { TTransaction } from '@/app/lib/types'
+import { capitalizeFirstLetter, getFormattedCurrency } from '@/app/lib/utils'
 
 import { DANGER, SUCCESS } from '@/config/constants/colors'
 
