@@ -28,7 +28,7 @@ jobs:
         id: cache-yarn
         uses: actions/cache@v4
         with:
-          # another cache folder on ubuntu
+          # Below is an another cache folder on ubuntu
           # path: ~/.cache/yarn
           path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
           key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}\
@@ -65,7 +65,7 @@ jobs:
         id: cache-yarn
         uses: actions/cache@v4
         with:
-          # another cache folder on ubuntu
+          # Below is an another cache folder on ubuntu
           # path: ~/.cache/yarn
           path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
           key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-${{ hashFiles('**/yarn.lock') }}

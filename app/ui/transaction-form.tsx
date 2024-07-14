@@ -59,7 +59,7 @@ function TransactionForm({ currency }: TProps) {
 
   useEffect(() => {
     if (pending) {
-      // the idea is to show toast after async form action
+      // The idea is to show toast after async form action
       setTimeout(() => toast.success('Transaction added.'), 0)
     }
   }, [pending])
