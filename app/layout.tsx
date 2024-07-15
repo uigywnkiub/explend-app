@@ -108,8 +108,8 @@ export default function RootLayout({
         className={`${fracktif.className} ${inter.variable} bg-background text-foreground`}
       >
         <Providers>{children}</Providers>
-        <SpeedInsights />
-        <Analytics />
+        <SpeedInsights debug={false} />
+        <Analytics debug={false} />
       </body>
     </html>
   )

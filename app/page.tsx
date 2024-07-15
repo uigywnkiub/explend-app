@@ -1,15 +1,11 @@
-import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
-
 import type { Metadata } from 'next'
 
-import { APP_NAME, DEFAULT_CURRENCY_CODE } from '@/config/constants/main'
+import { APP_NAME } from '@/config/constants/main'
 import {
   DEFAULT_TRANSACTION_LIMIT,
   NAV_TITLE,
   SEARCH_PARAM,
 } from '@/config/constants/navigation'
-
-import TransactionItem from '@/app/ui/transaction-item'
 
 import {
   createTransaction,
@@ -24,13 +20,14 @@ import type {
   TTotalsTransaction,
   TTransaction,
 } from './lib/types'
-import { formatDate, getFormattedCurrency } from './lib/utils'
+import { formatDate } from './lib/utils'
 import BalanceLine from './ui/balance-line'
 import NoTransactionsPlug from './ui/no-transaction-text'
 import PaginationList from './ui/pagination/pagination-list'
 import Search from './ui/search'
 import WithSidebar from './ui/sidebar/with-sidebar'
 import TransactionForm from './ui/transaction-form'
+import TransactionList from './ui/transaction-list'
 
 export const metadata: Metadata = {
   title: `${NAV_TITLE.HOME} | ${APP_NAME.FULL}`,
@@ -136,62 +133,11 @@ export default async function Home({
           )}
         </div>
       </div>
-      {Object.keys(groupedTransactionsByDate)?.map((date) => {
-        const { income, expense } = totalsTransactionsByDate[date]
-        const totalsWrapper =
-          'flex items-center gap-1 text-default-300 hover:text-foreground'
-
-        return (
-          <div key={date} className='mx-auto max-w-2xl'>
-            <div className='flex items-center justify-between p-2 text-default-500'>
-              <p className='text-sm text-default-300 hover:cursor-none hover:text-foreground'>
-                {date}
-              </p>
-              <div className='flex gap-2 text-sm hover:cursor-none'>
-                {income > 0 && (
-                  <p className={totalsWrapper}>
-                    <PiArrowCircleUpFill className='fill-success' />
-                    {getFormattedCurrency(income)}{' '}
-                    {currency?.code || DEFAULT_CURRENCY_CODE}
-                  </p>
-                )}
-                {expense > 0 && (
-                  <p className={totalsWrapper}>
-                    <PiArrowCircleDownFill className='fill-danger' />
-                    {getFormattedCurrency(expense)}{' '}
-                    {currency?.code || DEFAULT_CURRENCY_CODE}
-                  </p>
-                )}
-              </div>
-            </div>
-            <ul>
-              {groupedTransactionsByDate[date]
-                ?.toSorted((t1, t2) => {
-                  const t1Time = new Date(t1.createdAt).getTime()
-                  const t2Time = new Date(t2.createdAt).getTime()
-                  return t2Time - t1Time
-                })
-                .map((transaction) => (
-                  <li
-                    key={transaction.id}
-                    className='mb-2 flex justify-between text-sm'
-                  >
-                    <TransactionItem
-                      id={transaction.id}
-                      category={transaction.category}
-                      description={transaction.description}
-                      amount={transaction.amount}
-                      currency={transaction.currency}
-                      isIncome={transaction.isIncome}
-                      isEdited={transaction.isEdited}
-                      createdAt={transaction.createdAt}
-                    />
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )
-      })}
+      <TransactionList
+        groupedTransactionsByDate={groupedTransactionsByDate}
+        totalsTransactionsByDate={totalsTransactionsByDate}
+        currency={currency}
+      />
       <div className='mt-4'>
         {!query && (
           <PaginationList
