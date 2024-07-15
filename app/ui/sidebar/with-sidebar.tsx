@@ -3,6 +3,7 @@ import { PiHamburger, PiHamburgerFill } from 'react-icons/pi'
 import { NAV_ICON_SIZE } from '@/config/constants/navigation'
 
 import { HoverableElement } from '../hoverables'
+import Footer from '../settings/footer'
 import Navbar from './navbar'
 import User from './user'
 
@@ -35,7 +36,10 @@ export default function WithSidebar({
             </nav>
           </div>
         </div>
-        <div className={contentWrapper}>{contentNearby}</div>
+        <div className={contentWrapper}>
+          {contentNearby}
+          <Footer />
+        </div>
       </div>
       <label
         htmlFor='sidebar-toggle'

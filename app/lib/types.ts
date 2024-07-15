@@ -96,6 +96,12 @@ export type TSelect = {
   hoverIcon: TNavLink['hoverIcon']
 }
 
+export type TSocialLink = {
+  href: string
+  icon: TNavLink['icon']
+  hoverIcon: TNavLink['hoverIcon']
+}
+
 export type TIcon = TNavLink['icon']
 
 export type TSignInButton = {

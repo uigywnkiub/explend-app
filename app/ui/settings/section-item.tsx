@@ -6,7 +6,7 @@ type TProps = {
 
 export default function SectionItem({ title, subtitle, children }: TProps) {
   return (
-    <div className='max-w-2xl'>
+    <div className='max-w-3xl'>
       <h2>{title}</h2>
       <p className='text-balance text-sm text-default-500'>{subtitle}</p>
       {children}

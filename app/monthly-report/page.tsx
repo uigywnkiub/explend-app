@@ -32,7 +32,7 @@ export default async function Page() {
         {NAV_TITLE.MONTHLY_REPORT}
       </h1>
       {transactions.length === 0 ? (
-        <div className='mx-auto max-w-2xl'>
+        <div className='mx-auto max-w-3xl'>
           <NoTransactionsPlug />
         </div>
       ) : (

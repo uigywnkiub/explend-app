@@ -31,7 +31,7 @@ const TransactionsByDate = ({
         const { income, expense } = totalsTransactionsByDate[date]
 
         return (
-          <div key={date} className='mx-auto max-w-2xl'>
+          <div key={date} className='mx-auto max-w-3xl'>
             <div className='flex items-center justify-between p-2 text-default-500'>
               <p className='text-sm text-default-300 hover:cursor-none hover:text-foreground'>
                 {date}
