@@ -18,12 +18,12 @@ import { HoverableElement } from '../hoverables'
 
 const socialLinks: TSocialLink[] = [
   {
-    href: 'https://github.com/uigywnkiub/explend-app',
+    url: 'https://github.com/uigywnkiub/explend-app',
     icon: <PiGithubLogo />,
     hoverIcon: <PiGithubLogoFill />,
   },
   {
-    href: 'https://buymeacoffee.com/eubywnkuee',
+    url: 'https://buymeacoffee.com/eubywnkuee',
     icon: <PiCoffee />,
     hoverIcon: <PiCoffeeFill />,
   },
@@ -48,8 +48,8 @@ function Footer() {
             {socialLinks.map((link) => {
               return (
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  key={link.url}
+                  href={link.url}
                   target='_blank'
                   className='cursor-pointer hover:text-foreground'
                 >
