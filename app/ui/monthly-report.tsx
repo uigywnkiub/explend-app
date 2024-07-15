@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useCallback, useState } from 'react'
+import { Fragment, useCallback, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
@@ -41,18 +41,45 @@ function MonthlyReport({ transactions, currency }: TProps) {
 
   const startDate = selectedDate?.start.toDate(getLocalTimeZone())
   const endDate = selectedDate?.end.toDate(getLocalTimeZone())
-  const formattedDateRange = `${format(startDate, 'MMMM d')} — ${format(endDate, 'MMMM d')}`
+  const formattedDateRange = useMemo(
+    () => `${format(startDate, 'MMMM d')} — ${format(endDate, 'MMMM d')}`,
+    [startDate, endDate],
+  )
 
   const onDateSelection = useCallback((dateRange: RangeValue<DateValue>) => {
     setSelectedDate(dateRange)
     toast.success('Date range updated.')
   }, [])
 
-  const filteredTransactions = filterTransactionsByDateRange(
-    transactions,
-    startDate,
-    endDate,
+  const filteredTransactions = useMemo(
+    () => filterTransactionsByDateRange(transactions, startDate, endDate),
+    [transactions, startDate, endDate],
   )
+  const { income, expense } = useMemo(
+    () => filterTransactions(filteredTransactions),
+    [filteredTransactions],
+  )
+  const { totalIncome, totalExpense, monthlyReportData } = useMemo(
+    () => calculateMonthlyReportData(income, expense),
+    [income, expense],
+  )
+
+  const memorizedMonthlyReportData = useMemo(() => {
+    return monthlyReportData
+      .sort((c1, c2) => c2.spent - c1.spent)
+      .map((category) => (
+        <Fragment key={category.category}>
+          <div className='text-md overflow-hidden text-ellipsis whitespace-nowrap md:text-lg'>
+            {category.category}
+          </div>
+          <div className='text-md md:text-lg'>{category.percentage} %</div>
+          <div className='text-md md:text-lg'>
+            {getFormattedCurrency(category.spent)}{' '}
+            {currency?.sign || DEFAULT_CURRENCY_SIGN}
+          </div>
+        </Fragment>
+      ))
+  }, [currency?.sign, monthlyReportData])
 
   if (filteredTransactions.length === 0) {
     return (
@@ -62,15 +89,11 @@ function MonthlyReport({ transactions, currency }: TProps) {
           onDateSelection={onDateSelection}
         />
         <p className='text-default-500'>
-          No transactions from {formattedDateRange}
+          No transactions found from {formattedDateRange}
         </p>
       </div>
     )
   }
-
-  const { income, expense } = filterTransactions(filteredTransactions)
-  const { totalIncome, totalExpense, monthlyReportData } =
-    calculateMonthlyReportData(income, expense)
 
   return (
     <div className='mx-auto max-w-3xl rounded-medium bg-content1 p-4 md:p-8'>
@@ -101,26 +124,21 @@ function MonthlyReport({ transactions, currency }: TProps) {
           </div>
         </div>
       </div>
-      <Divider className='mx-auto mb-3 bg-divider md:mb-6' />
-      <div className='grid grid-cols-3 gap-4'>
-        <div className='text-xs text-default-500 md:text-sm'>Category</div>
-        <div className='text-xs text-default-500 md:text-sm'>Percentage</div>
-        <div className='text-xs text-default-500 md:text-sm'>Spent</div>
-        {monthlyReportData
-          .sort((c1, c2) => c2.spent - c1.spent)
-          .map((category) => (
-            <Fragment key={category.category}>
-              <div className='text-md overflow-hidden text-ellipsis whitespace-nowrap md:text-lg'>
-                {category.category}
-              </div>
-              <div className='text-md md:text-lg'>{category.percentage} %</div>
-              <div className='text-md md:text-lg'>
-                {getFormattedCurrency(category.spent)}{' '}
-                {currency?.sign || DEFAULT_CURRENCY_SIGN}
-              </div>
-            </Fragment>
-          ))}
-      </div>
+      {expense.length !== 0 ? (
+        <>
+          <Divider className='mx-auto mb-3 bg-divider md:mb-6' />
+          <div className='grid grid-cols-3 gap-4'>
+            <div className='text-xs text-default-500 md:text-sm'>Category</div>
+            <div className='text-xs text-default-500 md:text-sm'>
+              Percentage
+            </div>
+            <div className='text-xs text-default-500 md:text-sm'>Spent</div>
+            {memorizedMonthlyReportData}
+          </div>
+        </>
+      ) : (
+        <p className='text-default-500'>No expense transactions found.</p>
+      )}
     </div>
   )
 }
