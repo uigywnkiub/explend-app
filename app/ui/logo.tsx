@@ -3,14 +3,23 @@ import { Badge } from '@nextui-org/react'
 type TSize = 'sm' | 'md' | 'lg'
 
 type TProps = {
-  size?: 'xs' | TSize
+  size?: 'smallest' | 'xs' | TSize
   badgeSize?: TSize
+  withBadge?: boolean
 }
 
-export default function Logo({ size = 'md', badgeSize = 'md' }: TProps) {
+export default function Logo({
+  size = 'md',
+  badgeSize = 'md',
+  withBadge = true,
+}: TProps) {
   let logoSizeClass = 'h-40 w-40'
   let textSizeClass = 'text-7xl'
   switch (size) {
+    case 'smallest':
+      logoSizeClass = 'h-5 w-5'
+      textSizeClass = 'text-xxs'
+      break
     case 'xs':
       logoSizeClass = 'h-16 w-16'
       textSizeClass = 'text-3xl'
@@ -26,10 +35,16 @@ export default function Logo({ size = 'md', badgeSize = 'md' }: TProps) {
   }
 
   return (
-    <Badge content='beta' color='warning' variant='solid' size={badgeSize}>
+    <Badge
+      content='beta'
+      color='warning'
+      variant='solid'
+      size={badgeSize}
+      isInvisible={!withBadge}
+    >
       <div className='flex items-center justify-center'>
         <div
-          className={`h- flex bg-logo-gradient text-background ${logoSizeClass} items-center justify-center rounded-medium`}
+          className={`h- flex bg-logo-gradient text-background ${logoSizeClass} items-center justify-center ${size === 'smallest' ? 'rounded-md' : 'rounded-medium'}`}
         >
           <span
             className={`${textSizeClass} -skew-x-6 transform-gpu cursor-default font-inter font-bold drop-shadow-lg`}

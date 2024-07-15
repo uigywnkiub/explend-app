@@ -106,6 +106,12 @@ export type TSignInButton = {
   hoverIcon: TNavLink['hoverIcon']
 }
 
+export type TSocialLink = {
+  url: string
+  icon: TNavLink['icon']
+  hoverIcon: TNavLink['hoverIcon']
+}
+
 export type TAuthProvidersLoading = Record<TAuthProvider, boolean>
 
 export type THTMLElement =

@@ -101,10 +101,10 @@ export default async function Home({
 
   const content = (
     <>
-      <h1 className='mb-4 text-center text-2xl font-bold md:mb-8'>
+      <h1 className='mb-4 text-center text-3xl font-bold md:mb-8'>
         {NAV_TITLE.HOME}
       </h1>
-      <div className='mx-auto flex max-w-2xl flex-col gap-y-2'>
+      <div className='mx-auto flex max-w-3xl flex-col gap-y-2'>
         <BalanceLine
           balance={balance}
           currency={currency}
