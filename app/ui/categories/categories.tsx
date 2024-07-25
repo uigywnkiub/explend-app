@@ -173,22 +173,18 @@ function Categories({ userId, userCategories }: TProps) {
     [categories],
   )
 
-  const onResetCategories = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      setIsLoading({ subject: false, item: false, reset: true })
-      try {
-        await resetCategories(userId, DEFAULT_CATEGORIES)
-        toast.success('Categories reset.')
-      } catch (err) {
-        toast.error('Failed to reset categories.')
-        throw err
-      } finally {
-        setIsLoading({ subject: false, item: false, reset: false })
-      }
-    },
-    [userId],
-  )
+  const onResetCategories = useCallback(async () => {
+    setIsLoading({ subject: false, item: false, reset: true })
+    try {
+      await resetCategories(userId, DEFAULT_CATEGORIES)
+      toast.success('Categories reset.')
+    } catch (err) {
+      toast.error('Failed to reset categories.')
+      throw err
+    } finally {
+      setIsLoading({ subject: false, item: false, reset: false })
+    }
+  }, [userId])
 
   return (
     <>
