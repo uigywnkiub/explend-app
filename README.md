@@ -6,6 +6,7 @@
 
 - **Monthly Reports**: View detailed monthly reports by selecting any month or customizing your own date range.
 - **Dynamic Radar Chart**: The app features a radar chart that updates each time you add a new transaction category, providing a visual representation of your spending habits.
+- **Customizable Categories**: Change default categories to suit your needs.
 - **Transaction Management**: Delete transactions, edit, set spending limits and more.
 - **Search Transactions**: Quickly find specific transactions using the search functionality.
 - **Security**: Your transaction data are secured with AES encryption, ensuring your financial information remains private. Encrypted data looks something like this: "5c007dc6c2db3395a8…”.
