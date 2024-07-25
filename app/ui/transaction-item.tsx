@@ -73,8 +73,8 @@ function TransactionItem({
   currency,
   isIncome,
   isEdited,
-  hasCategoryChanged,
   createdAt,
+  hasCategoryChanged,
 }: TProps) {
   const router = useRouter()
   const { isOpen, onOpen, onOpenChange } = useDisclosure()

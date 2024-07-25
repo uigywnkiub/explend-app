@@ -34,10 +34,10 @@ export const getSlicedCurrencyCode = (code: CURRENCY_CODE) => {
 export const getTransactionsWithChangedCategory = (
   transactions: TTransaction[],
 ): TTransaction[] => {
-  return transactions.filter((transaction) => {
-    return !transaction.categories.some((category) => {
+  return transactions.filter((t) => {
+    return !t.categories.some((category) => {
       return category.items.some(
-        (item) => `${item.emoji} ${item.name}` === transaction.category,
+        (item) => `${item.emoji} ${item.name}` === t.category,
       )
     })
   })

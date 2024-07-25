@@ -69,9 +69,9 @@ export async function getBalance(
         return doc
       },
     })
-    const balance = transactions.reduce((acc, transaction) => {
-      const amount = parseFloat(transaction.amount)
-      return transaction.isIncome ? acc + amount : acc - amount
+    const balance = transactions.reduce((acc, t) => {
+      const amount = parseFloat(t.amount)
+      return t.isIncome ? acc + amount : acc - amount
     }, 0)
     return balance.toString()
   } catch (err) {

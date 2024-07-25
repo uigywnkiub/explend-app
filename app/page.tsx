@@ -85,26 +85,23 @@ export default async function Home({
 
   const groupedTransactionsByDate: TGroupedTransactions = (
     query ? filteredTransactionsByQuery : transactions
-  )?.reduce(
-    (acc: Record<string, TTransaction[]>, transaction: TTransaction) => {
-      const date = formatDate(transaction.createdAt)
-      if (!acc[date]) {
-        acc[date] = []
-      }
-      acc[date].unshift(transaction)
-      return acc
-    },
-    {},
-  )
+  )?.reduce((acc: Record<string, TTransaction[]>, t: TTransaction) => {
+    const date = formatDate(t.createdAt)
+    if (!acc[date]) {
+      acc[date] = []
+    }
+    acc[date].unshift(t)
+    return acc
+  }, {})
 
   const totalsTransactionsByDate: TTotalsTransaction = Object.fromEntries(
-    Object.entries(groupedTransactionsByDate).map(([date, transactions]) => {
+    Object.entries(groupedTransactionsByDate).map(([date, t]) => {
       const totals = transactions.reduce(
-        (totals, transaction) => {
-          if (transaction.isIncome) {
-            totals.income += parseFloat(transaction.amount)
+        (totals, t) => {
+          if (t.isIncome) {
+            totals.income += parseFloat(t.amount)
           } else {
-            totals.expense += parseFloat(transaction.amount)
+            totals.expense += parseFloat(t.amount)
           }
           return totals
         },

@@ -64,27 +64,27 @@ function TransactionList({
                   const t2Time = new Date(t2.createdAt).getTime()
                   return t2Time - t1Time
                 })
-                .map((transaction) => {
+                .map((t) => {
                   const hasCategoryChanged =
                     transactionsWithChangedCategory.some(
-                      (t) => t.id === transaction.id,
+                      (transaction) => transaction.id === t.id,
                     )
 
                   return (
                     <li
-                      key={transaction.id}
+                      key={t.id}
                       className='mb-2 flex w-full justify-between text-sm'
                     >
                       <TransactionItem
-                        id={transaction.id}
-                        category={transaction.category}
-                        description={transaction.description}
-                        amount={transaction.amount}
-                        currency={transaction.currency}
-                        isIncome={transaction.isIncome}
-                        isEdited={transaction.isEdited}
+                        id={t.id}
+                        category={t.category}
+                        description={t.description}
+                        amount={t.amount}
+                        currency={t.currency}
+                        isIncome={t.isIncome}
+                        isEdited={t.isEdited}
+                        createdAt={t.createdAt}
                         hasCategoryChanged={hasCategoryChanged}
-                        createdAt={transaction.createdAt}
                       />
                     </li>
                   )
