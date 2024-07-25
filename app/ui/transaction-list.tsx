@@ -1,10 +1,12 @@
+'use client'
+
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
 import { DEFAULT_CURRENCY_CODE } from '@/config/constants/main'
 
 import TransactionItem from '@/app/ui/transaction-item'
 
-import {
+import type {
   TGroupedTransactions,
   TTotalsTransaction,
   TTransaction,
@@ -14,14 +16,16 @@ import { getFormattedCurrency } from '../lib/utils'
 type TProps = {
   groupedTransactionsByDate: TGroupedTransactions
   totalsTransactionsByDate: TTotalsTransaction
+  transactionsWithChangedCategory: TTransaction[]
   currency: TTransaction['currency']
 }
 
-const TransactionsByDate = ({
+function TransactionList({
   groupedTransactionsByDate,
   totalsTransactionsByDate,
+  transactionsWithChangedCategory,
   currency,
-}: TProps) => {
+}: TProps) {
   const totalsWrapper =
     'flex items-center gap-1 text-default-300 hover:text-foreground'
 
@@ -60,23 +64,31 @@ const TransactionsByDate = ({
                   const t2Time = new Date(t2.createdAt).getTime()
                   return t2Time - t1Time
                 })
-                .map((transaction) => (
-                  <li
-                    key={transaction.id}
-                    className='mb-2 flex justify-between text-sm'
-                  >
-                    <TransactionItem
-                      id={transaction.id}
-                      category={transaction.category}
-                      description={transaction.description}
-                      amount={transaction.amount}
-                      currency={transaction.currency}
-                      isIncome={transaction.isIncome}
-                      isEdited={transaction.isEdited}
-                      createdAt={transaction.createdAt}
-                    />
-                  </li>
-                ))}
+                .map((transaction) => {
+                  const hasCategoryChanged =
+                    transactionsWithChangedCategory.some(
+                      (t) => t.id === transaction.id,
+                    )
+
+                  return (
+                    <li
+                      key={transaction.id}
+                      className='mb-2 flex w-full justify-between text-sm'
+                    >
+                      <TransactionItem
+                        id={transaction.id}
+                        category={transaction.category}
+                        description={transaction.description}
+                        amount={transaction.amount}
+                        currency={transaction.currency}
+                        isIncome={transaction.isIncome}
+                        isEdited={transaction.isEdited}
+                        hasCategoryChanged={hasCategoryChanged}
+                        createdAt={transaction.createdAt}
+                      />
+                    </li>
+                  )
+                })}
             </ul>
           </div>
         )
@@ -85,4 +97,4 @@ const TransactionsByDate = ({
   )
 }
 
-export default TransactionsByDate
+export default TransactionList

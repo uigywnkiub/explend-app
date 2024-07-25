@@ -13,7 +13,7 @@ export default function NoTransactionsPlug({
     <p
       className={`rounded-medium ${withBackground && 'bg-content1'} p-${padding} text-${align} text-default-300`}
     >
-      No transactions found
+      No transactions found.
     </p>
   )
 }

@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 
+import { useTheme } from 'next-themes'
 import { useRouter } from 'next/navigation'
 
-import categories from '@/public/data/categories.json'
+import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import {
+  Badge,
   Button,
   Input,
   Kbd,
@@ -27,8 +29,10 @@ import {
   getCategoryWithEmoji,
   getCategoryWithoutEmoji,
   getFormattedCurrency,
+  getTransactionsWithChangedCategory,
 } from '../lib/utils'
 import Loading from '../loading'
+import InfoBadge from './info-badge'
 
 const AMOUNT_LENGTH = 6
 
@@ -38,23 +42,33 @@ type TProps = {
 
 function TransactionFormEdit({ transaction }: TProps) {
   const router = useRouter()
+  const { theme } = useTheme()
   const [isLoading, setIsLoading] = useState(false)
   const [isSwitchedOn, setIsSwitchedOn] = useState(transaction.isIncome)
   const [description, setDescription] = useState(transaction.description)
   const [amount, setAmount] = useState(getFormattedCurrency(transaction.amount))
+  const isTransactionWithChangedCategory = !!getTransactionsWithChangedCategory(
+    [transaction],
+  ).length
   const [category, setCategory] = useState<Selection>(
-    new Set([getCategoryWithoutEmoji(transaction.category)]),
+    new Set(
+      isTransactionWithChangedCategory
+        ? []
+        : [getCategoryWithoutEmoji(transaction.category)],
+    ),
   )
+  // @ts-ignore
+  const isCategorySelect = Boolean(category.size)
+  const categoryName = Array.from(category)[0]?.toString()
+  const userCategories = transaction.categories
   const categoryWithEmoji = getCategoryWithEmoji(
-    Array.from(category)[0]?.toString(),
+    categoryName,
+    userCategories || DEFAULT_CATEGORIES,
   )
+  const prevCategory = transaction.category
   const currency = transaction.currency
   const isEdited = transaction.isEdited
   const transactionId = transaction.id
-
-  const onChangeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDescription(e.target.value)
-  }
 
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawAmount = e.target.value
@@ -107,8 +121,8 @@ function TransactionFormEdit({ transaction }: TProps) {
 
     try {
       await editTransactionById(transactionId, newTransactionData)
-      router.push(ROUTE.HOME)
       toast.success('Transaction edited.')
+      router.push(ROUTE.HOME)
     } catch (err) {
       toast.error('Failed to edit transaction.')
       throw err
@@ -121,116 +135,146 @@ function TransactionFormEdit({ transaction }: TProps) {
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <Switch
-        isDisabled={isLoading}
-        color='success'
-        name='isIncome'
-        value='isIncome'
-        aria-label='Income Switch'
-        isSelected={isSwitchedOn}
-        onValueChange={(isSelected) => setIsSwitchedOn(isSelected)}
-      >
-        Income
-      </Switch>
-      <Input
-        isDisabled={isLoading}
-        isRequired
-        type='text'
-        name='description'
-        aria-label='Description'
-        value={description}
-        onChange={onChangeDescription}
-        required
-        size='lg'
-        color={isSwitchedOn ? 'success' : 'danger'}
-        placeholder={
-          isSwitchedOn
-            ? 'Type income transaction...'
-            : 'Type expense transaction...'
-        }
-        classNames={{
-          input: 'border-none focus:ring-0 placeholder:text-default-500',
-          inputWrapper: 'h-20 my-2 px-4',
-        }}
-        endContent={
-          <Input
-            isRequired
-            type='text'
-            name='amount'
-            aria-label='Amount'
-            value={amount}
-            onChange={onChangeAmount}
-            required
-            maxLength={AMOUNT_LENGTH + 1}
-            // pattern='\d+'
-            pattern='[\d\s,]+'
-            inputMode='decimal'
-            placeholder='0'
-            size='lg'
-            classNames={{
-              input:
-                'border-none focus:ring-0 placeholder:text-default-500 text-center',
-              inputWrapper: 'h-12 w-full px-4',
-              base: 'w-44 md:w-36',
-            }}
-            endContent={
-              <div className='pointer-events-none flex items-center'>
-                <span className='text-md text-lg text-default-500'>
-                  {transaction.currency?.sign || DEFAULT_CURRENCY_SIGN}
-                </span>
-              </div>
-            }
-          />
-        }
-      />
-      <div className='flex justify-between'>
-        <div className='flex items-center gap-2'>
-          <div className='flex w-full flex-wrap gap-4 md:flex-nowrap'>
-            <Select
-              isDisabled={isLoading}
-              name='category'
-              label='Select a category'
-              className='w-56'
-              items={categories}
-              selectedKeys={category}
-              defaultSelectedKeys={category}
-              onSelectionChange={setCategory}
-            >
-              {categories.map((category, idx, arr) => (
-                <SelectSection
-                  key={category.target}
-                  showDivider={idx !== arr.length - 1}
-                  title={category.target}
+    <>
+      <form onSubmit={onSubmit}>
+        <Switch
+          isDisabled={isLoading}
+          color='success'
+          name='isIncome'
+          value='isIncome'
+          aria-label='Income Switch'
+          isSelected={isSwitchedOn}
+          onValueChange={(isSelected) => setIsSwitchedOn(isSelected)}
+        >
+          Income
+        </Switch>
+        <Input
+          isDisabled={isLoading}
+          isRequired
+          type='text'
+          name='description'
+          aria-label='Description'
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+          size='lg'
+          color={isSwitchedOn ? 'success' : 'danger'}
+          placeholder={
+            isSwitchedOn
+              ? 'Type income transaction...'
+              : 'Type expense transaction...'
+          }
+          classNames={{
+            input: 'border-none focus:ring-0 placeholder:text-default-500',
+            inputWrapper: 'h-20 my-2 px-4',
+          }}
+          endContent={
+            <Input
+              isRequired
+              type='text'
+              name='amount'
+              aria-label='Amount'
+              value={amount}
+              onChange={onChangeAmount}
+              required
+              maxLength={AMOUNT_LENGTH + 1}
+              // pattern='\d+'
+              pattern='[\d\s,]+'
+              inputMode='decimal'
+              placeholder='0'
+              size='lg'
+              classNames={{
+                input:
+                  'border-none focus:ring-0 placeholder:text-default-500 text-center',
+                inputWrapper: 'h-12 w-full px-4',
+                base: 'w-44 md:w-36',
+              }}
+              endContent={
+                <div className='pointer-events-none flex items-center'>
+                  <span className='text-md text-lg text-default-500'>
+                    {transaction.currency?.sign || DEFAULT_CURRENCY_SIGN}
+                  </span>
+                </div>
+              }
+            />
+          }
+        />
+        <div className='flex justify-between'>
+          <div className='flex items-center gap-2'>
+            <div className='flex w-full flex-wrap gap-4 md:flex-nowrap'>
+              <Badge
+                content=''
+                shape='rectangle'
+                color='danger'
+                variant='solid'
+                size='sm'
+                isDot
+                placement='top-right'
+                classNames={{
+                  base: 'w-full',
+                  badge: 'right-1',
+                }}
+                isInvisible={
+                  !isTransactionWithChangedCategory || isCategorySelect
+                }
+              >
+                <Select
+                  isDisabled={isLoading}
+                  name='category'
+                  label='Select a category'
+                  className='w-56'
+                  items={userCategories || DEFAULT_CATEGORIES}
+                  selectedKeys={category}
+                  defaultSelectedKeys={category}
+                  onSelectionChange={setCategory}
                 >
-                  {category.items.map((item) => (
-                    <SelectItem key={item.name}>
-                      {`${item.emoji} ${item.name}`}
-                    </SelectItem>
-                  ))}
-                </SelectSection>
-              ))}
-            </Select>
+                  {(userCategories || DEFAULT_CATEGORIES).map(
+                    (category, idx, arr) => (
+                      <SelectSection
+                        key={category.subject}
+                        showDivider={idx !== arr.length - 1}
+                        title={category.subject}
+                      >
+                        {category.items.map((item) => (
+                          <SelectItem key={item.name}>
+                            {`${item.emoji} ${item.name}`}
+                          </SelectItem>
+                        ))}
+                      </SelectSection>
+                    ),
+                  )}
+                </Select>
+              </Badge>
+            </div>
+          </div>
+          <div className='flex items-center'>
+            <p className='text-sm text-default-500'>
+              <span className='hidden md:inline'>Press </span>
+              <span className='inline md:hidden'>Tap </span>
+              <Button
+                aria-label='Enter'
+                type='submit'
+                isDisabled={
+                  !amount || amount === '0' || isLoading || !isCategorySelect
+                }
+                className={`${isCategorySelect && isTransactionWithChangedCategory ? `animate-blink-${theme === 'system' ? 'light' : theme}-once` : ''} cursor-pointer bg-background px-0`}
+                size='sm'
+              >
+                <Kbd keys={['enter']}>Enter</Kbd>
+              </Button>
+              <span className='hidden md:inline'> to Add Transaction</span>
+            </p>
           </div>
         </div>
-        <div className='flex items-center'>
-          <p className='text-sm text-default-500'>
-            <span className='hidden md:inline'>Press </span>
-            <span className='inline md:hidden'>Tap </span>
-            <Button
-              aria-label='Enter'
-              type='submit'
-              isDisabled={!amount || amount === '0' || isLoading}
-              className='cursor-pointer bg-background px-0'
-              size='sm'
-            >
-              <Kbd keys={['enter']}>Enter</Kbd>
-            </Button>
-            <span className='hidden md:inline'> to Add Transaction</span>
-          </p>
+      </form>
+      {isTransactionWithChangedCategory && (
+        <div className='mt-2'>
+          <InfoBadge text='1. Looks like you have changed the category data. Please select an existing one.' />
+          <br />
+          <InfoBadge text={`2. Your previous category was: ${prevCategory}.`} />
         </div>
-      </div>
-    </form>
+      )}
+    </>
   )
 }
 

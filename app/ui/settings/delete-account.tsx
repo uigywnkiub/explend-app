@@ -7,8 +7,6 @@ import {
   PiWarningOctagonFill,
 } from 'react-icons/pi'
 
-import { deleteAllTransactionsAndSignOut } from '@/app/lib/actions'
-import { TIcon, TUserId } from '@/app/lib/types'
 import {
   Button,
   Input,
@@ -22,10 +20,13 @@ import {
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
+import { deleteAllTransactionsAndSignOut } from '@/app/lib/actions'
+import { TIcon, TUserId } from '@/app/lib/types'
+
 import { HoverableElement } from '../hoverables'
 
 const CONFIRM_TEXT = 'delete my account'
-const INVALID_TEXT_ERROR = 'Invalid confirmation text'
+const INVALID_TEXT_ERROR = 'Invalid confirmation text.'
 const INVALID_LENGTH = 3
 
 type TProps = {

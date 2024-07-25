@@ -38,7 +38,6 @@ function MonthlyReport({ transactions, currency }: TProps) {
     start: toCalendarDate(startOfMonth(startOfToday())),
     end: toCalendarDate(endOfMonth(endOfToday())),
   })
-
   const startDate = selectedDate?.start.toDate(getLocalTimeZone())
   const endDate = selectedDate?.end.toDate(getLocalTimeZone())
   const formattedDateRange = useMemo(
@@ -83,7 +82,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
 
   if (filteredTransactions.length === 0) {
     return (
-      <div className='mx-auto max-w-3xl rounded-medium bg-content1 p-4 md:p-8'>
+      <div className='rounded-medium bg-content1 p-4 md:p-8'>
         <MonthPicker
           selectedDate={selectedDate}
           onDateSelection={onDateSelection}
@@ -96,7 +95,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
   }
 
   return (
-    <div className='mx-auto max-w-3xl rounded-medium bg-content1 p-4 md:p-8'>
+    <div className='rounded-medium bg-content1 p-4 md:p-8'>
       <MonthPicker
         selectedDate={selectedDate}
         onDateSelection={onDateSelection}

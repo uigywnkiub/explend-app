@@ -15,10 +15,21 @@ export type TDefaultSession = DefaultSession
 export type TUser = User
 export type TUserId = TUser['email']
 
+export type TCategoriesItem = {
+  emoji: string
+  name: string
+}
+
+export type TCategories = {
+  subject: string
+  items: TCategoriesItem[]
+}
+
 export type TTransaction = {
   id: string
   userId: string
   category: string
+  categories: TCategories[]
   description: string
   amount: string
   isIncome: boolean
@@ -131,3 +142,14 @@ export type TCookie = {
 }
 
 export type TTheme = 'system' | 'dark' | 'light'
+
+export type TEditingItemIndex = {
+  categoryIndex: number
+  itemIndex: number
+}
+
+export type TCategoriesLoading = {
+  subject: boolean
+  item: boolean
+  reset: boolean
+}

@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import {
@@ -16,6 +14,7 @@ import {
 import { useRouter } from 'next/navigation'
 
 import {
+  Badge,
   Button,
   Dropdown,
   DropdownItem,
@@ -56,8 +55,15 @@ const enum DROPDOWN_KEY {
 
 type TProps = Omit<
   TTransaction,
-  'userId' | 'balance' | 'updatedAt' | 'transactionLimit'
->
+  | 'userId'
+  | 'balance'
+  | 'updatedAt'
+  | 'transactionLimit'
+  | 'categories'
+  | 'hasCategoryChanged'
+> & {
+  hasCategoryChanged: boolean
+}
 
 function TransactionItem({
   id,
@@ -67,6 +73,7 @@ function TransactionItem({
   currency,
   isIncome,
   isEdited,
+  hasCategoryChanged,
   createdAt,
 }: TProps) {
   const router = useRouter()
@@ -137,11 +144,25 @@ Time: ${formatTime(createdAt)}`
             </div>
           </div>
           <Dropdown>
-            <DropdownTrigger>
-              <Button variant='light' isIconOnly size='lg'>
-                <PiDotsThreeOutlineVerticalFill className='fill-foreground' />
-              </Button>
-            </DropdownTrigger>
+            <Badge
+              content=''
+              shape='rectangle'
+              color='danger'
+              variant='solid'
+              size='sm'
+              isDot
+              placement='top-right'
+              classNames={{
+                badge: 'right-1',
+              }}
+              isInvisible={!hasCategoryChanged}
+            >
+              <DropdownTrigger>
+                <Button variant='light' isIconOnly size='lg'>
+                  <PiDotsThreeOutlineVerticalFill className='fill-foreground' />
+                </Button>
+              </DropdownTrigger>
+            </Badge>
             <DropdownMenu
               aria-label='Transaction actions'
               onAction={(key) => {
@@ -184,7 +205,24 @@ Time: ${formatTime(createdAt)}`
                       }
                     />
                   }
-                  description='Edit transaction details'
+                  description={
+                    <Badge
+                      content=''
+                      shape='rectangle'
+                      color='danger'
+                      variant='solid'
+                      size='sm'
+                      isDot
+                      placement='top-right'
+                      classNames={{
+                        base: 'w-full',
+                        badge: 'right-1',
+                      }}
+                      isInvisible={!hasCategoryChanged}
+                    >
+                      Edit transaction details
+                    </Badge>
+                  }
                 >
                   Edit
                 </DropdownItem>

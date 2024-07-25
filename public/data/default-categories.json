@@ -1,6 +1,6 @@
 [
   {
-    "target": "Living Expenses",
+    "subject": "Living Expenses",
     "items": [
       { "emoji": "🍲", "name": "Food" },
       { "emoji": "🏠", "name": "Rent/Mortgage" },
@@ -12,7 +12,7 @@
     ]
   },
   {
-    "target": "Personal & Leisure",
+    "subject": "Personal & Leisure",
     "items": [
       { "emoji": "🎁", "name": "Gift" },
       { "emoji": "🏕️", "name": "Travel" },
@@ -25,7 +25,7 @@
     ]
   },
   {
-    "target": "Finance & Work",
+    "subject": "Finance & Work",
     "items": [
       { "emoji": "💵", "name": "Salary" },
       { "emoji": "💼", "name": "Work" },
@@ -36,7 +36,7 @@
     ]
   },
   {
-    "target": "Transportation",
+    "subject": "Transportation",
     "items": [
       { "emoji": "🚗", "name": "Car" },
       { "emoji": "🚕", "name": "Taxi" },
@@ -48,7 +48,7 @@
     ]
   },
   {
-    "target": "General",
+    "subject": "General",
     "items": [
       { "emoji": "🤔", "name": "Unknown" },
       { "emoji": "🛠️", "name": "Repairs" },
