@@ -13,11 +13,12 @@ import {
 
 import { useTheme } from 'next-themes'
 
-import { TSelect } from '@/app/lib/types'
 import { Select, SelectItem } from '@nextui-org/react'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { TOAST_DURATION } from '@/config/constants/toast'
+
+import { TSelect } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
 

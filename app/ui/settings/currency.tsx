@@ -5,9 +5,6 @@ import toast from 'react-hot-toast'
 
 import Image from 'next/image'
 
-import { updateCurrency } from '@/app/lib/actions'
-import { TSelect, TTransaction, TUserId } from '@/app/lib/types'
-import { getSlicedCurrencyCode } from '@/app/lib/utils'
 import { Avatar, Select, SelectItem } from '@nextui-org/react'
 
 import {
@@ -19,6 +16,10 @@ import {
   DEFAULT_CURRENCY_SIGN,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
+
+import { updateCurrency } from '@/app/lib/actions'
+import { TSelect, TTransaction, TUserId } from '@/app/lib/types'
+import { getSlicedCurrencyCode } from '@/app/lib/utils'
 
 import { HoverableElement } from '../hoverables'
 
