@@ -1,3 +1,4 @@
+import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { model, models, Schema } from 'mongoose'
 import { mongooseEncryptionDecryption } from 'mongoose-encryption-decryption'
 
@@ -7,7 +8,23 @@ import {
   DEFAULT_CURRENCY_SIGN,
 } from '@/config/constants/main'
 
-import { TTransaction } from '../types'
+import type { TCategories, TCategoriesItem, TTransaction } from '../types'
+
+const itemSchema = new Schema<TCategoriesItem>(
+  {
+    emoji: { type: String, required: true },
+    name: { type: String, required: true },
+  },
+  { _id: false },
+)
+
+const categorySchema = new Schema<TCategories>(
+  {
+    subject: { type: String, required: true },
+    items: { type: [itemSchema], required: true },
+  },
+  { _id: false },
+)
 
 const transactionSchema = new Schema<TTransaction>(
   {
@@ -64,6 +81,10 @@ const transactionSchema = new Schema<TTransaction>(
     isEdited: {
       type: Boolean,
       default: false,
+    },
+    categories: {
+      type: [categorySchema],
+      default: DEFAULT_CATEGORIES,
     },
   },
   {

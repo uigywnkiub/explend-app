@@ -86,8 +86,8 @@ export const filterTransactionsByDateRange = (
   startDate: Date,
   endDate: Date,
 ): TTransaction[] => {
-  return transactions.filter((transaction) => {
-    const transactionDate = formatISO(transaction.createdAt)
+  return transactions.filter((t) => {
+    const transactionDate = formatISO(t.createdAt)
     return isWithinInterval(transactionDate, {
       start: startDate,
       end: endOfDay(endDate),

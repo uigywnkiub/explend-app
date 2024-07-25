@@ -3,10 +3,11 @@
 import { useFormStatus } from 'react-dom'
 import { PiUserSwitch, PiUserSwitchFill } from 'react-icons/pi'
 
-import { TIcon } from '@/app/lib/types'
 import { Button } from '@nextui-org/react'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
+
+import { TIcon } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
 

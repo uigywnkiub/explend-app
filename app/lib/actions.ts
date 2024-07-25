@@ -5,8 +5,8 @@ import { cache } from 'react'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 
-import TransactionModel from '@/app/lib/models/transaction.model'
 import { auth, signOut } from '@/auth'
+import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { SignOutError } from '@auth/core/errors'
 import { Resend } from 'resend'
 
@@ -15,10 +15,13 @@ import { APP_NAME } from '@/config/constants/main'
 import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
+import TransactionModel from '@/app/lib/models/transaction.model'
+
 import dbConnect from './mongodb'
 import type {
   TBalance,
   TBalanceProjection,
+  TCategories,
   TCookie,
   TGetTransactions,
   TRawTransaction,
@@ -62,13 +65,13 @@ export async function getBalance(
       'isIncome',
     ] as TBalanceProjection).lean<TBalance[]>({
       transform: (doc: TRawTransaction) => {
-        delete doc._id
+        delete doc?._id
         return doc
       },
     })
-    const balance = transactions.reduce((acc, transaction) => {
-      const amount = parseFloat(transaction.amount)
-      return transaction.isIncome ? acc + amount : acc - amount
+    const balance = transactions.reduce((acc, t) => {
+      const amount = parseFloat(t.amount)
+      return t.isIncome ? acc + amount : acc - amount
     }, 0)
     return balance.toString()
   } catch (err) {
@@ -156,6 +159,7 @@ export async function updateTransactionLimit(
 export async function createTransaction(
   userId: TUserId,
   currency: TTransaction['currency'],
+  userCategories: TTransaction['categories'],
   formData: FormData,
 ): Promise<void> {
   if (!userId) {
@@ -174,10 +178,12 @@ export async function createTransaction(
       amount: formData.get('amount') as TTransaction['amount'],
       category: getCategoryWithEmoji(
         formData.get('category'),
+        userCategories || DEFAULT_CATEGORIES,
       ) as TTransaction['category'],
       isIncome: !!formData.get('isIncome'),
       balance: '0' as TTransaction['balance'],
       currency,
+      categories: userCategories,
     }
     newTransaction.amount = newTransaction.amount.replace(/\s/g, '')
     const amount = parseFloat(newTransaction.amount)
@@ -274,8 +280,8 @@ export async function getTransactions(
         .sort({ createdAt: 'desc' })
         .lean<TTransaction[]>({
           transform: (doc: TRawTransaction) => {
-            delete doc._id
-            delete doc.__v
+            delete doc?._id
+            delete doc?.__v
             return doc
           },
         }),
@@ -299,8 +305,8 @@ export async function getAllTransactions(
     await dbConnect()
     return TransactionModel.find({ userId }).lean<TTransaction[]>({
       transform: (doc: TRawTransaction) => {
-        delete doc._id
-        delete doc.__v
+        delete doc?._id
+        delete doc?.__v
         return doc
       },
     })
@@ -363,6 +369,56 @@ export async function editTransactionById(
   }
 }
 
+export async function updateCategories(
+  userId: TUserId,
+  subjectName: TCategories['subject'],
+  updatedCategories: Partial<TCategories>,
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to update categories.')
+  }
+  if (!subjectName) {
+    throw new Error('Category subject name is required.')
+  }
+  if (!updatedCategories) {
+    throw new Error('Updated categories are required.')
+  }
+  try {
+    await dbConnect()
+    const newCategories: Partial<TCategories> = {}
+    if (updatedCategories.subject) {
+      newCategories.subject = updatedCategories.subject
+    }
+    if (updatedCategories.items) {
+      newCategories.items = updatedCategories.items
+    }
+    await TransactionModel.updateMany(
+      { userId, 'categories.subject': subjectName },
+      { $set: { 'categories.$': newCategories } },
+    )
+    revalidatePath(ROUTE.CATEGORIES)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function resetCategories(
+  userId: TUserId,
+  categories: TTransaction['categories'],
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to update categories.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany({ userId }, { categories })
+    revalidatePath(ROUTE.HOME)
+    revalidatePath(ROUTE.CATEGORIES)
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function deleteTransaction(id: TTransaction['id']): Promise<void> {
   if (!id) {
     throw new Error('Transaction ID is required to delete a transaction.')
@@ -390,8 +446,8 @@ export async function findTransactionById(
       id,
     }).lean<TTransaction>({
       transform: (doc: TRawTransaction) => {
-        delete doc._id
-        delete doc.__v
+        delete doc?._id
+        delete doc?.__v
         return doc
       },
     })

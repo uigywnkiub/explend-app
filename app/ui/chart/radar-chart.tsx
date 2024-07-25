@@ -11,11 +11,11 @@ import {
   Tooltip,
 } from 'recharts'
 
+import { DANGER, SUCCESS } from '@/config/constants/colors'
+
 import { calculateChartData, filterTransactions } from '@/app/lib/data'
 import { TTransaction } from '@/app/lib/types'
 import { capitalizeFirstLetter, getFormattedCurrency } from '@/app/lib/utils'
-
-import { DANGER, SUCCESS } from '@/config/constants/colors'
 
 import CustomLegend from './custom-legend'
 
@@ -47,6 +47,7 @@ function RadarChart({ transactions, currency }: TProps) {
         />
         <Legend content={<CustomLegend />} />
         <Tooltip
+          separator=': '
           contentStyle={{ backgroundColor: 'none' }}
           wrapperClassName='rounded-medium bg-background'
           formatter={(value, name) => [

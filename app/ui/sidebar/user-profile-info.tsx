@@ -2,8 +2,9 @@
 
 import Image from 'next/image'
 
-import { TDefaultSession } from '@/app/lib/types'
 import { User } from '@nextui-org/react'
+
+import { TDefaultSession } from '@/app/lib/types'
 
 type TProps = {
   user: TDefaultSession['user']

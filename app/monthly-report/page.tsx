@@ -31,13 +31,13 @@ export default async function Page() {
       <h1 className='mb-4 text-center text-2xl font-bold md:mb-8'>
         {NAV_TITLE.MONTHLY_REPORT}
       </h1>
-      {transactions.length === 0 ? (
-        <div className='mx-auto max-w-3xl'>
+      <div className='mx-auto max-w-3xl'>
+        {transactions.length === 0 ? (
           <NoTransactionsPlug />
-        </div>
-      ) : (
-        <MonthlyReport transactions={transactions} currency={currency} />
-      )}
+        ) : (
+          <MonthlyReport transactions={transactions} currency={currency} />
+        )}
+      </div>
     </>
   )
 

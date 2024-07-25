@@ -4,9 +4,9 @@ import { useState } from 'react'
 import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
 
-import { setCookie } from '@/app/lib/actions'
-
 import { CONFETTI } from '@/config/constants/cookies'
+
+import { setCookie } from '@/app/lib/actions'
 
 export default function ConfettiRain() {
   const [party, setParty] = useState(true)

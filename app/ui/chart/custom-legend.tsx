@@ -2,9 +2,9 @@ import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
 import type { LegendProps } from 'recharts'
 
-import { capitalizeFirstLetter } from '@/app/lib/utils'
-
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
+
+import { capitalizeFirstLetter } from '@/app/lib/utils'
 
 function CustomLegend({ payload }: LegendProps) {
   return (

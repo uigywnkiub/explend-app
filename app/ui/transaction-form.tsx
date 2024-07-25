@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import toast from 'react-hot-toast'
 
-import categories from '@/public/data/categories.json'
+import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import {
   Accordion,
   AccordionItem,
@@ -30,9 +30,10 @@ const AMOUNT_LENGTH = 6
 
 type TProps = {
   currency: TTransaction['currency']
+  userCategories: TTransaction['categories']
 }
 
-function TransactionForm({ currency }: TProps) {
+function TransactionForm({ currency, userCategories }: TProps) {
   const { pending } = useFormStatus()
   const [isSwitchedOn, setIsSwitchedOn] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -147,22 +148,24 @@ function TransactionForm({ currency }: TProps) {
                 name='category'
                 label='Select a category'
                 className='w-56'
-                items={categories}
+                items={userCategories || DEFAULT_CATEGORIES}
                 defaultSelectedKeys={[DEFAULT_CATEGORY]}
               >
-                {categories.map((category, idx, arr) => (
-                  <SelectSection
-                    key={category.target}
-                    showDivider={idx !== arr.length - 1}
-                    title={category.target}
-                  >
-                    {category.items.map((item) => (
-                      <SelectItem key={item.name}>
-                        {`${item.emoji} ${item.name}`}
-                      </SelectItem>
-                    ))}
-                  </SelectSection>
-                ))}
+                {(userCategories || DEFAULT_CATEGORIES).map(
+                  (category, idx, arr) => (
+                    <SelectSection
+                      key={category.subject}
+                      showDivider={idx !== arr.length - 1}
+                      title={category.subject}
+                    >
+                      {category.items.map((item) => (
+                        <SelectItem key={item.name}>
+                          {`${item.emoji} ${item.name}`}
+                        </SelectItem>
+                      ))}
+                    </SelectSection>
+                  ),
+                )}
               </Select>
             </div>
           </div>

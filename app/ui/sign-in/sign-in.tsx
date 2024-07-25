@@ -17,12 +17,6 @@ import {
 import { AuthError } from 'next-auth'
 import { signIn } from 'next-auth/react'
 
-import {
-  TAuthProvider,
-  TAuthProvidersLoading,
-  TIcon,
-  TSignInButton,
-} from '@/app/lib/types'
 import { Accordion, AccordionItem, Divider } from '@nextui-org/react'
 
 import {
@@ -31,6 +25,13 @@ import {
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
 import { ROUTE } from '@/config/constants/routes'
+
+import {
+  TAuthProvider,
+  TAuthProvidersLoading,
+  TIcon,
+  TSignInButton,
+} from '@/app/lib/types'
 
 import ClientButton from '../default-button'
 import { HoverableElement } from '../hoverables'
@@ -216,10 +217,9 @@ function SignIn() {
         </div>
       </div>
       <div className='mt-4 text-center'>
-        <InfoBadge
-          text='Your name and email will be visible on the site and serve as your
-          primary identifiers.'
-        />
+        <InfoBadge text='1. Your name and email will be visible on the site and serve as your primary identifiers.' />
+        <br />
+        <InfoBadge text='2. Signing in does not create an account.' />
       </div>
     </div>
   )

@@ -1,6 +1,5 @@
 import toast from 'react-hot-toast'
 
-import categories from '@/public/data/categories.json'
 import { CalendarDate } from '@internationalized/date'
 import {
   format,
@@ -32,6 +31,18 @@ export const getSlicedCurrencyCode = (code: CURRENCY_CODE) => {
   return code.toLocaleLowerCase().slice(0, 2)
 }
 
+export const getTransactionsWithChangedCategory = (
+  transactions: TTransaction[],
+): TTransaction[] => {
+  return transactions.filter((t) => {
+    return !t.categories.some((category) => {
+      return category.items.some(
+        (item) => `${item.emoji} ${item.name}` === t.category,
+      )
+    })
+  })
+}
+
 export const formatDate = (dateStr: Date) => {
   const date = new Date(dateStr)
   const currentYear = new Date().getFullYear()
@@ -50,6 +61,7 @@ export const formatTime = (dateStr: Date) => {
 
 export const getCategoryWithEmoji = (
   category: FormDataEntryValue | null,
+  categories: TTransaction['categories'],
 ): string => {
   if (typeof category !== 'string' || category === null) {
     return DEFAULT_CATEGORY
@@ -111,4 +123,45 @@ export const copyToClipboard = async (
 
 export const toCalendarDate = (date: Date) => {
   return new CalendarDate(getYear(date), getMonth(date) + 1, getDate(date))
+}
+
+const deepEqual = (obj1: any, obj2: any): boolean => {
+  if (obj1 === obj2) return true // If both values are strictly equal, they are deeply equal.
+
+  if (
+    typeof obj1 !== 'object' ||
+    obj1 === null ||
+    typeof obj2 !== 'object' ||
+    obj2 === null
+  ) {
+    return false // If either value is not an object or is null, they are not deeply equal.
+  }
+
+  const keys1 = Object.keys(obj1)
+  const keys2 = Object.keys(obj2)
+
+  if (keys1.length !== keys2.length) {
+    return false // If the objects have different numbers of keys, they are not deeply equal.
+  }
+
+  for (const key of keys1) {
+    if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+      return false // If the keys or their values are not deeply equal, return false.
+    }
+  }
+
+  return true // If all keys and values are deeply equal, return true.
+}
+export const deepCompareArrays = (array1: any[], array2: any[]): boolean => {
+  if (array1.length !== array2.length) {
+    return false // If the arrays have different lengths, they are not identical.
+  }
+
+  for (let i = 0; i < array1.length; i++) {
+    if (!deepEqual(array1[i], array2[i])) {
+      return false // If any elements are not deeply equal, the arrays are not identical.
+    }
+  }
+
+  return true // If all elements are deeply equal, the arrays are identical.
 }

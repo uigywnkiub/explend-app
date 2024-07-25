@@ -9,10 +9,11 @@ import {
 
 import Link from 'next/link'
 
-import { TSocialLink } from '@/app/lib/types'
 import { getYear } from 'date-fns'
 
 import { APP_NAME } from '@/config/constants/main'
+
+import type { TSocialLink } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
 
@@ -38,11 +39,12 @@ function Footer() {
             {/* {<Logo size='smallest' withBadge={false} />}  */}
             &copy; {APP_NAME.SHORT}, {getYear(new Date())}. All rights reserved
             | design by{' '}
-            <Link href='https://volodymyr-g.vercel.app'>
+            <Link href='https://volodymyr-g.vercel.app' target='_blank'>
               <span className='cursor-pointer hover:text-foreground'>
                 Volodymyr
               </span>
             </Link>
+            .
           </div>
           <div className='mt-1 flex justify-center gap-1'>
             {socialLinks.map((link) => {

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 
+import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
+
 import { APP_NAME } from '@/config/constants/main'
 import {
   DEFAULT_TRANSACTION_LIMIT,
@@ -14,14 +16,16 @@ import {
   getCurrency,
   getTransactionLimit,
   getTransactions,
+  resetCategories,
 } from './lib/actions'
 import type {
   TGroupedTransactions,
   TTotalsTransaction,
   TTransaction,
 } from './lib/types'
-import { formatDate } from './lib/utils'
+import { formatDate, getTransactionsWithChangedCategory } from './lib/utils'
 import BalanceLine from './ui/balance-line'
+import InfoBadge from './ui/info-badge'
 import NoTransactionsPlug from './ui/no-transaction-text'
 import PaginationList from './ui/pagination/pagination-list'
 import Search from './ui/search'
@@ -57,39 +61,47 @@ export default async function Home({
       getTransactions(userId, offset, limit),
     ])
 
+  const haveCategories = transactions.some((t) => t.categories)
+  if (!haveCategories) {
+    await resetCategories(userId, DEFAULT_CATEGORIES)
+  }
+
+  const [userCategories] = transactions.map((t) => t.categories).filter(Boolean)
+
   const createTransactionWithUserId = createTransaction.bind(
     null,
     userId,
     currency,
+    userCategories,
   )
 
-  const filteredTransactionsByQuery = transactions.filter((e) => {
-    return e.description.toLowerCase().includes(query.toLowerCase())
+  const transactionsWithChangedCategory =
+    getTransactionsWithChangedCategory(transactions)
+
+  const filteredTransactionsByQuery = transactions.filter((t) => {
+    return t.description.toLowerCase().includes(query.toLowerCase())
   })
   const hasSearchedTransactions = filteredTransactionsByQuery.length > 0
 
   const groupedTransactionsByDate: TGroupedTransactions = (
     query ? filteredTransactionsByQuery : transactions
-  )?.reduce(
-    (acc: Record<string, TTransaction[]>, transaction: TTransaction) => {
-      const date = formatDate(transaction.createdAt)
-      if (!acc[date]) {
-        acc[date] = []
-      }
-      acc[date].unshift(transaction)
-      return acc
-    },
-    {},
-  )
+  )?.reduce((acc: Record<string, TTransaction[]>, t: TTransaction) => {
+    const date = formatDate(t.createdAt)
+    if (!acc[date]) {
+      acc[date] = []
+    }
+    acc[date].unshift(t)
+    return acc
+  }, {})
 
   const totalsTransactionsByDate: TTotalsTransaction = Object.fromEntries(
-    Object.entries(groupedTransactionsByDate).map(([date, transactions]) => {
+    Object.entries(groupedTransactionsByDate).map(([date, t]) => {
       const totals = transactions.reduce(
-        (totals, transaction) => {
-          if (transaction.isIncome) {
-            totals.income += parseFloat(transaction.amount)
+        (totals, t) => {
+          if (t.isIncome) {
+            totals.income += parseFloat(t.amount)
           } else {
-            totals.expense += parseFloat(transaction.amount)
+            totals.expense += parseFloat(t.amount)
           }
           return totals
         },
@@ -111,11 +123,19 @@ export default async function Home({
           user={session?.user}
         />
         <form action={createTransactionWithUserId} className='mt-4'>
-          <TransactionForm currency={currency} />
+          <TransactionForm
+            currency={currency}
+            userCategories={userCategories}
+          />
         </form>
         <div className='text-center text-default-300'>
           {transactions.length === 0 ? (
-            <NoTransactionsPlug />
+            <>
+              <NoTransactionsPlug />
+              <InfoBadge text='1. The first written transaction means creating your account.' />
+              <br />
+              <InfoBadge text='2. The last deleted transaction means deleting your account.' />
+            </>
           ) : (
             <>
               <Search
@@ -136,6 +156,7 @@ export default async function Home({
       <TransactionList
         groupedTransactionsByDate={groupedTransactionsByDate}
         totalsTransactionsByDate={totalsTransactionsByDate}
+        transactionsWithChangedCategory={transactionsWithChangedCategory}
         currency={currency}
       />
       <div className='mt-4'>
