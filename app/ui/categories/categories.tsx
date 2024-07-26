@@ -65,6 +65,11 @@ function Categories({ userId, userCategories }: TProps) {
     [],
   )
 
+  const toggleEmojiPicker = useCallback(
+    () => setShowEmojiPicker((prev) => !prev),
+    [],
+  )
+
   const onSaveTargetClick = useCallback(
     async (index: number) => {
       const updatedCategories = [...categories]
@@ -148,6 +153,7 @@ function Categories({ userId, userCategories }: TProps) {
       }
 
       setIsLoading({ subject: false, item: true, reset: false })
+      setShowEmojiPicker(false)
       try {
         await updateCategories(
           userId,
@@ -211,6 +217,7 @@ function Categories({ userId, userCategories }: TProps) {
           setNewItemName={setNewItemName}
           onSaveItemClick={onSaveItemClick}
           showEmojiPicker={showEmojiPicker}
+          toggleEmojiPicker={toggleEmojiPicker}
           isLoading={isLoading}
           onEmojiClick={onEmojiClick}
         />

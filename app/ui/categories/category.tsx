@@ -38,6 +38,7 @@ type TProps = {
   setNewItemName: (name: string) => void
   onSaveItemClick: (categoryIndex: number, itemIndex: number) => void
   showEmojiPicker: boolean
+  toggleEmojiPicker: () => void
   isLoading: TCategoriesLoading
   onEmojiClick: (emojiData: EmojiClickData) => void
 }
@@ -56,6 +57,7 @@ function Category({
   setNewItemName,
   onSaveItemClick,
   showEmojiPicker,
+  toggleEmojiPicker,
   isLoading,
   onEmojiClick,
 }: TProps) {
@@ -73,6 +75,7 @@ function Category({
             isInvalid={newTargetName.length < 1}
             onChange={(e) => setNewTargetName(e.target.value)}
             size='lg'
+            color='success'
             classNames={{
               input:
                 'border-none focus:ring-0 placeholder:text-default-500 font-bold text-lg md:text-xl',
@@ -82,6 +85,8 @@ function Category({
           <Button
             onClick={() => onSaveTargetClick(index)}
             isLoading={isLoading.subject}
+            color='success'
+            className='font-medium text-background'
           >
             {!isLoading.subject && (
               <HoverableElement
@@ -98,7 +103,10 @@ function Category({
           <h2 className='text-lg font-semibold md:text-xl'>
             {category.subject}
           </h2>
-          <Button onClick={() => onEditTargetClick(index, category.subject)}>
+          <Button
+            onClick={() => onEditTargetClick(index, category.subject)}
+            className='bg-foreground font-medium text-default-50'
+          >
             <HoverableElement
               element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
               hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
@@ -121,6 +129,7 @@ function Category({
             setNewItemName={setNewItemName}
             onSaveItemClick={onSaveItemClick}
             showEmojiPicker={showEmojiPicker}
+            toggleEmojiPicker={toggleEmojiPicker}
             isLoading={isLoading}
             onEmojiClick={onEmojiClick}
           />

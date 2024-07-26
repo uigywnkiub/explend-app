@@ -61,7 +61,7 @@ export default async function Home({
       getTransactions(userId, offset, limit),
     ])
 
-  const haveCategories = transactions.some((t) => t.categories)
+  const haveCategories = transactions.every((t) => t.categories)
   if (!haveCategories) {
     await resetCategories(userId, DEFAULT_CATEGORIES)
   }
