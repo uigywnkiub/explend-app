@@ -7,12 +7,7 @@ import {
 } from 'react-icons/pi'
 
 import { Button, Input } from '@nextui-org/react'
-import EmojiPicker, {
-  EmojiClickData,
-  SkinTonePickerLocation,
-  SuggestionMode,
-  Theme,
-} from 'emoji-picker-react'
+import { EmojiClickData } from 'emoji-picker-react'
 import { motion } from 'framer-motion'
 
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
@@ -25,6 +20,7 @@ import type {
 
 import { HoverableElement } from '../hoverables'
 import InfoBadge from '../info-badge'
+import CustomEmojiPicker from './custom-emoji-picker'
 
 type TProps = {
   item: TTransaction['categories'][number]['items'][number]
@@ -40,6 +36,7 @@ type TProps = {
   setNewItemName: (name: string) => void
   onSaveItemClick: (categoryIndex: number, itemIndex: number) => void
   showEmojiPicker: boolean
+  toggleEmojiPicker: () => void
   isLoading: TCategoriesLoading
   onEmojiClick: (emojiData: EmojiClickData) => void
 }
@@ -54,6 +51,7 @@ function CategoryItem({
   setNewItemName,
   onSaveItemClick,
   showEmojiPicker,
+  toggleEmojiPicker,
   isLoading,
   onEmojiClick,
 }: TProps) {
@@ -65,7 +63,10 @@ function CategoryItem({
         <div className='w-full'>
           <div className='text-md flex h-auto w-full items-center justify-between gap-2 rounded-medium bg-content1 p-3 text-left font-bold md:text-lg'>
             <div className='flex h-[52px] items-center'>
-              <div className='z-10 mr-2 rounded-medium bg-content2 px-3 py-2 text-xl md:text-2xl'>
+              <div
+                className='z-10 mr-2 cursor-pointer rounded-medium bg-success-50 px-3 py-2 text-xl hover:bg-success-100 md:text-2xl'
+                onClick={toggleEmojiPicker}
+              >
                 <motion.div
                   drag
                   dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
@@ -83,6 +84,7 @@ function CategoryItem({
                 isInvalid={newItemName.length < 1}
                 onChange={(e) => setNewItemName(e.target.value)}
                 size='lg'
+                color='success'
                 classNames={{
                   input:
                     'border-none focus:ring-0 placeholder:text-default-500 font-bold text-md md:text-lg',
@@ -92,6 +94,8 @@ function CategoryItem({
             <Button
               onClick={() => onSaveItemClick(categoryIndex, itemIndex)}
               isLoading={isLoading.item}
+              color='success'
+              className='font-medium text-background'
             >
               {!isLoading.item && (
                 <HoverableElement
@@ -103,19 +107,10 @@ function CategoryItem({
               Save
             </Button>
           </div>
-          {showEmojiPicker && (
-            <EmojiPicker
-              lazyLoadEmojis
-              onEmojiClick={onEmojiClick}
-              searchPlaceHolder='Search emoji...'
-              // width={300}
-              // height={400}
-              theme={Theme.AUTO}
-              suggestedEmojisMode={SuggestionMode.RECENT}
-              skinTonePickerLocation={SkinTonePickerLocation.PREVIEW}
-              className='my-2'
-            />
-          )}
+          <CustomEmojiPicker
+            showEmojiPicker={showEmojiPicker}
+            onEmojiClick={onEmojiClick}
+          />
         </div>
       ) : (
         <div className='text-md flex h-auto w-full items-center justify-between gap-2 rounded-medium bg-content1 p-3 text-left font-bold md:text-lg'>
@@ -138,6 +133,7 @@ function CategoryItem({
           <Button
             onClick={() => onEditItemClick(categoryIndex, itemIndex, item.name)}
             isDisabled={item.name === DEFAULT_CATEGORY}
+            className='bg-foreground font-medium text-default-50'
           >
             <HoverableElement
               element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
