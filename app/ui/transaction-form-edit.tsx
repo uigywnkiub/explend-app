@@ -23,7 +23,7 @@ import { DEFAULT_CURRENCY_SIGN } from '@/config/constants/main'
 import { ROUTE } from '@/config/constants/routes'
 
 import { editTransactionById } from '../lib/actions'
-import type { TTransaction } from '../lib/types'
+import type { TTheme, TTransaction } from '../lib/types'
 import {
   capitalizeFirstLetter,
   getCategoryWithEmoji,
@@ -257,7 +257,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                 isDisabled={
                   !amount || amount === '0' || isLoading || !isCategorySelect
                 }
-                className={`${isCategorySelect && isTransactionWithChangedCategory ? `animate-blink-${theme === 'system' ? 'light' : theme}-once` : ''} cursor-pointer bg-background px-0`}
+                className={`${isCategorySelect && isTransactionWithChangedCategory ? `animate-blink-${(theme as TTheme) === 'system' ? 'light' : theme}-once` : ''} cursor-pointer bg-background px-0`}
                 size='sm'
               >
                 <Kbd keys={['enter']}>Enter</Kbd>

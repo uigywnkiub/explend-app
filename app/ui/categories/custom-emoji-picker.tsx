@@ -9,6 +9,8 @@ import EmojiPicker, {
   Theme,
 } from 'emoji-picker-react'
 
+import { TTheme } from '@/app/lib/types'
+
 type TProps = {
   showEmojiPicker: boolean
   onEmojiClick: (emojiData: EmojiClickData) => void
@@ -24,7 +26,7 @@ function CustomEmojiPicker({ showEmojiPicker, onEmojiClick }: TProps) {
         searchPlaceHolder='Search emoji...'
         // width={300}
         // height={400}
-        theme={theme === 'system' ? Theme.AUTO : (theme as Theme)}
+        theme={(theme as TTheme) === 'system' ? Theme.AUTO : (theme as Theme)}
         suggestedEmojisMode={SuggestionMode.RECENT}
         skinTonePickerLocation={SkinTonePickerLocation.PREVIEW}
         className='my-2'
