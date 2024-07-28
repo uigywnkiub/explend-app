@@ -1,5 +1,7 @@
 import { memo, useMemo } from 'react'
 
+import { useTheme } from 'next-themes'
+
 import EmojiPicker, {
   EmojiClickData,
   SkinTonePickerLocation,
@@ -13,6 +15,7 @@ type TProps = {
 }
 
 function CustomEmojiPicker({ showEmojiPicker, onEmojiClick }: TProps) {
+  const { theme } = useTheme()
   const emojiPicker = useMemo(
     () => (
       <EmojiPicker
@@ -21,13 +24,13 @@ function CustomEmojiPicker({ showEmojiPicker, onEmojiClick }: TProps) {
         searchPlaceHolder='Search emoji...'
         // width={300}
         // height={400}
-        theme={Theme.AUTO}
+        theme={theme === 'system' ? Theme.AUTO : (theme as Theme)}
         suggestedEmojisMode={SuggestionMode.RECENT}
         skinTonePickerLocation={SkinTonePickerLocation.PREVIEW}
         className='my-2'
       />
     ),
-    [onEmojiClick],
+    [onEmojiClick, theme],
   )
 
   return <>{showEmojiPicker && emojiPicker}</>
