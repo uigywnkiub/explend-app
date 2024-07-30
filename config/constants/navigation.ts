@@ -10,8 +10,6 @@ export const enum NAV_TITLE {
   FEEDBACK = 'Give Feedback',
   ISSUE = 'Report Issue',
   SIGNIN = 'Sign In',
-  SIGNOUT = 'Sign Out',
-  MOBILE_TEMPORARILY_NOT_ALLOWED = 'Mobile Temporarily Not Allowed',
 }
 
 export const enum SEARCH_PARAM {
