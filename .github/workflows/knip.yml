@@ -49,6 +49,17 @@ jobs:
       - name: Run Knip
         continue-on-error: true
         run: |
-          yarn knip
-          echo "### Knip Output ###"
-          echo "::warning file=app.py,line=10,col=5::Code formatting issues detected"
+          yarn knip > knip-output.log 2> knip-error.log || true
+          # Process knip-error.log and output warnings
+          while IFS= read -r line; do
+            # Adjust pattern based on actual knip error output format
+            if [[ $line =~ ^(.+):([0-9]+):([0-9]+):\s*(.*)$ ]]; then
+              file=${BASH_REMATCH[1]}
+              line=${BASH_REMATCH[2]}
+              col=${BASH_REMATCH[3]}
+              message=${BASH_REMATCH[4]}
+              echo "::warning file=${file},line=${line},col=${col}::${message}"
+            else
+              echo "::notice::Unknown error format: $line"
+            fi
+          done < knip-error.log
