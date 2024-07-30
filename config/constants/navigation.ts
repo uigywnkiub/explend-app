@@ -10,7 +10,6 @@ export const enum NAV_TITLE {
   FEEDBACK = 'Give Feedback',
   ISSUE = 'Report Issue',
   SIGNIN = 'Sign In',
-  SIGNOUT = 'Sign Out',
 }
 
 export const enum SEARCH_PARAM {
