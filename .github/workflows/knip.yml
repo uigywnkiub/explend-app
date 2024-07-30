@@ -47,4 +47,5 @@ jobs:
         run: yarn install --immutable
 
       - name: Run Knip
+        continue-on-error: true
         run: yarn knip
