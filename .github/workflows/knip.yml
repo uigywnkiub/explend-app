@@ -48,4 +48,9 @@ jobs:
 
       - name: Run Knip
         continue-on-error: true
-        run: yarn knip
+        run: |
+          yarn knip > knip-output.log 2> knip-error.log || true
+          echo "### Knip Output ###"
+          cat knip-output.log
+          echo "### Knip Errors ###"
+          cat knip-error.log
