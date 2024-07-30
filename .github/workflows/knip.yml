@@ -7,9 +7,6 @@ on:
     types:
       - opened
       - synchronize
-  push:
-    branches:
-      - main
 
 env:
   CACHE_NAME: cache-node-modules
