@@ -38,9 +38,9 @@ jobs:
             ${{ runner.os }}-
 
       - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
-        name: List the state of node modules
+        name: Info the state of node modules
         continue-on-error: true
-        run: yarn list
+        run: yarn info --name-only
 
       - name: Install Dependencies
         run: yarn install --immutable
@@ -75,9 +75,9 @@ jobs:
             ${{ runner.os }}-
 
       - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
-        name: List the state of node modules
+        name: Info the state of node modules
         continue-on-error: true
-        run: yarn list
+        run: yarn info --name-only
 
       - name: Install Dependencies
         run: yarn install --immutable
