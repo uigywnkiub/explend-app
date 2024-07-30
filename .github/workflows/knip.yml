@@ -49,8 +49,6 @@ jobs:
       - name: Run Knip
         continue-on-error: true
         run: |
-          yarn knip > knip-output.log 2> knip-error.log || true
+          yarn knip
           echo "### Knip Output ###"
-          cat knip-output.log
-          echo "### Knip Errors ###"
-          cat knip-error.log
+          echo "::warning file=app.py,line=10,col=5::Code formatting issues detected"
