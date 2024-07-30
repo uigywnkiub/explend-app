@@ -48,4 +48,4 @@ jobs:
 
       - name: Run Knip
         # continue-on-error: true
-        run: yanr knip
+        run: yarn knip
