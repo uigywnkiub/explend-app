@@ -132,9 +132,15 @@ export default async function Home({
           {transactions.length === 0 ? (
             <>
               <NoTransactionsPlug />
-              <InfoBadge text='1. The first written transaction means creating your account.' />
+              <InfoBadge
+                withAsterisk={false}
+                text='1. The first written transaction means creating your account.'
+              />
               <br />
-              <InfoBadge text='2. The last deleted transaction means deleting your account.' />
+              <InfoBadge
+                withAsterisk={false}
+                text='2. The last deleted transaction means deleting your account.'
+              />
             </>
           ) : (
             <>

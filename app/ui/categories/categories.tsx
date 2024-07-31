@@ -195,11 +195,25 @@ function Categories({ userId, userCategories }: TProps) {
   return (
     <>
       <div className='mb-4'>
-        <InfoBadge text='1. If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.' />
+        <InfoBadge
+          withAsterisk={false}
+          text='1. If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.'
+        />
         <br />
-        <InfoBadge text='2. Once editing, you will need to manually update your previous transactions with previous categories to new categories. You will see a badge on them.' />
+        <InfoBadge
+          withAsterisk={false}
+          text='2. Once editing, you will need to manually update your previous transactions with previous categories to new categories. You will see a badge on them.'
+        />
         <br />
-        <InfoBadge text='3. The category subject does not affect the category data. It is just a subject name.' />
+        <InfoBadge
+          withAsterisk={false}
+          text='3. The category subject does not affect the category data. It is just a subject name.'
+        />
+        <br />
+        <InfoBadge
+          withAsterisk={false}
+          text='4. The emoji picker may appear with a slight delay.'
+        />
       </div>
       {categories.map((category, index) => (
         <Category

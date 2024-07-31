@@ -217,9 +217,15 @@ function SignIn() {
         </div>
       </div>
       <div className='mt-4 text-center'>
-        <InfoBadge text='1. Your name and email will be visible on the site and serve as your primary identifiers.' />
+        <InfoBadge
+          withAsterisk={false}
+          text='1. Your name and email will be visible on the site and serve as your primary identifiers.'
+        />
         <br />
-        <InfoBadge text='2. Signing in does not create an account.' />
+        <InfoBadge
+          withAsterisk={false}
+          text='2. Signing in does not create an account.'
+        />
       </div>
     </div>
   )

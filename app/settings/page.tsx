@@ -49,9 +49,12 @@ export default async function Page() {
           subtitle='Select your favorite theme to give the app a new look that matches your style.'
         >
           <>
-            <InfoBadge text='1. Will reload the page.' />
+            <InfoBadge withAsterisk={false} text='1. Will reload the page.' />
             <br />
-            <InfoBadge text='2. When you select the system theme, the general pop-up will always be dark.' />
+            <InfoBadge
+              withAsterisk={false}
+              text='2. When you select the system theme, the general pop-up will always be dark.'
+            />
             <div className='max-w-xs'>
               <Spacer y={2} />
               <ThemeSwitcher />
