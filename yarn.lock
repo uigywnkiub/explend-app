@@ -8828,6 +8828,7 @@ __metadata:
     "@vitest/coverage-v8": "npm:^2.0.5"
     date-fns: "npm:^3.6.0"
     emoji-picker-react: "npm:^4.11.1"
+    emoji-regex: "npm:^10.3.0"
     eslint: "npm:^8.57.0"
     eslint-config-next: "npm:14.2.5"
     eslint-config-prettier: "npm:^9.1.0"

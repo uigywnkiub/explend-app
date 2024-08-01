@@ -9,25 +9,34 @@ import {
   isToday,
   isYesterday,
 } from 'date-fns'
+import emojiRegex from 'emoji-regex'
 
 import { CURRENCY_CODE, DEFAULT_CATEGORY } from '@/config/constants/main'
 
 import type { TGetTransactions, THTMLElement, TTransaction } from './types'
 
-export const capitalizeFirstLetter = (str: string) => {
+export const capitalizeFirstLetter = (str: string): string => {
   if (!str) return str
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-export const getEmojiFromCategory = (category: TTransaction['category']) => {
-  return category.slice(0, 2)
+export const getEmojiFromCategory = (
+  category: TTransaction['category'],
+): string => {
+  const regex = emojiRegex()
+  const match = category.match(regex)
+  return match ? match[0] : ''
 }
 
-export const getCategoryWithoutEmoji = (category: TTransaction['category']) => {
-  return category.slice(3).trim()
+export const getCategoryWithoutEmoji = (
+  category: TTransaction['category'],
+): string => {
+  const regex = emojiRegex()
+  // Replace the emoji(s) at the beginning of the category with an empty string
+  return category.replace(regex, '').trim()
 }
 
-export const getSlicedCurrencyCode = (code: CURRENCY_CODE) => {
+export const getSlicedCurrencyCode = (code: CURRENCY_CODE): string => {
   return code.toLocaleLowerCase().slice(0, 2)
 }
 

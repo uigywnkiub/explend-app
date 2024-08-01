@@ -27,7 +27,7 @@ function BalanceLine({ balance, currency, user }: TProps) {
       <CardHeader className='flex items-center justify-between px-4'>
         <p className='text-xs font-bold'>Hey {user?.name} 👋🏼</p>
         <small
-          className='hidden cursor-pointer select-none text-default-300 md:block'
+          className='hidden cursor-pointer select-none text-default-300 hover:text-foreground md:block'
           onClick={onQuoteCopy}
         >
           <q ref={quoteRef}>Peace of mind, one transaction at a time.</q>
