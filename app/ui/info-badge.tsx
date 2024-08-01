@@ -10,7 +10,7 @@ export default function InfoBadge({
   withDoubleAsterisk = false,
 }: TProps) {
   return (
-    <span className='text-xxs text-default-300 md:text-xs'>
+    <span className='text-xxs text-default-300 hover:cursor-none hover:text-foreground md:text-xs'>
       {withDoubleAsterisk && ' ** '}
       {!withDoubleAsterisk && withAsterisk && ' * '}
       {text}
