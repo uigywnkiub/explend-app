@@ -1,4 +1,4 @@
-import { PiHamburger, PiHamburgerFill } from 'react-icons/pi'
+import { PiList, PiListFill } from 'react-icons/pi'
 
 import { NAV_ICON_SIZE } from '@/config/constants/navigation'
 
@@ -43,12 +43,12 @@ export default function WithSidebar({
       </div>
       <label
         htmlFor='sidebar-toggle'
-        className='fixed right-[16px] top-[16px] z-10 cursor-pointer rounded-medium bg-background md:right-[32px] md:top-[32px] md:hidden'
+        className='fixed right-[16px] top-[16px] z-10 cursor-pointer rounded-medium bg-background p-1 md:right-[32px] md:top-[32px] md:hidden'
         // className={`fixed right-[${BURGER_SIZE.DEFAULT}] top-[${BURGER_SIZE.DEFAULT}] z-10 bg-background rounded-medium cursor-pointer md:right-[${BURGER_SIZE.MD}] md:top-[${BURGER_SIZE.MD}] md:hidden`}
       >
         <HoverableElement
-          element={<PiHamburger size={NAV_ICON_SIZE} />}
-          hoveredElement={<PiHamburgerFill size={NAV_ICON_SIZE} />}
+          element={<PiList size={NAV_ICON_SIZE} />}
+          hoveredElement={<PiListFill size={NAV_ICON_SIZE} />}
           withShift={false}
         />
       </label>
