@@ -27,6 +27,7 @@
     "@vercel/speed-insights": "^1.0.12",
     "date-fns": "^3.6.0",
     "emoji-picker-react": "^4.11.1",
+    "emoji-regex": "^10.3.0",
     "framer-motion": "^11.3.20",
     "mongoose": "^8.5.2",
     "mongoose-encryption-decryption": "^1.2.1",

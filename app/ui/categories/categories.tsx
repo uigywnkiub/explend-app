@@ -207,12 +207,12 @@ function Categories({ userId, userCategories }: TProps) {
         <br />
         <InfoBadge
           withAsterisk={false}
-          text='3. The category subject does not affect the category data. It is just a subject name.'
+          text='4. The emoji picker may appear with a slight delay.'
         />
         <br />
         <InfoBadge
           withAsterisk={false}
-          text='4. The emoji picker may appear with a slight delay.'
+          text='3. The category subject does not affect the category data.'
         />
       </div>
       {categories.map((category, index) => (
