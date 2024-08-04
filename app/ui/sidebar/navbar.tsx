@@ -16,9 +16,11 @@ import {
   PiStack,
   PiStackFill,
 } from 'react-icons/pi'
+import { useMedia } from 'react-use'
 
 import { usePathname } from 'next/navigation'
 
+import { getBreakpointWidth } from '@/config/constants/breakpoints'
 import { NAV_ICON_SIZE, NAV_TITLE } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
@@ -80,17 +82,19 @@ type TProps = {
 }
 
 function Navbar({ linksGroup, withLogo }: TProps) {
+  const isMd = useMedia(getBreakpointWidth('md'), true)
   const pathname = usePathname()
   const navLinks: TNavLink[] =
     linksGroup === 'top' ? topNavLinks : bottomNavLinks
 
   return (
     <>
-      {withLogo && <Logo size='sm' badgeSize='sm' />}
-      {navLinks.map((link) => {
+      {withLogo && <Logo size={isMd ? 'sm' : 'xxs'} />}
+      {navLinks.map((link, idx) => {
         return (
           <HoverableNavLink
             key={link.url}
+            idx={idx}
             link={link}
             isActiveLink={pathname === link.url}
             withScale

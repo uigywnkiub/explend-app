@@ -1,16 +1,7 @@
-import { PiList, PiListFill } from 'react-icons/pi'
-
-import { NAV_ICON_SIZE } from '@/config/constants/navigation'
-
-import { HoverableElement } from '../hoverables'
 import Footer from '../settings/footer'
+import Hamburger from './hamburger'
 import Navbar from './navbar'
 import User from './user'
-
-// const enum BURGER_SIZE {
-//   DEFAULT = '16px',
-//   MD = '32px',
-// }
 
 export default function WithSidebar({
   contentNearby,
@@ -19,7 +10,7 @@ export default function WithSidebar({
 }>) {
   const linkWrapper =
     'item-center flex flex-col items-start gap-4 w-full md:w-56'
-  const contentWrapper = 'flex-1 overflow-auto p-4 md:p-8'
+  const contentWrapper = 'content-wrapper flex-1 overflow-auto p-4 md:p-8'
 
   return (
     <div className='h-screen overflow-hidden'>
@@ -36,22 +27,12 @@ export default function WithSidebar({
             </nav>
           </div>
         </div>
-        <div className={contentWrapper}>
+        <main className={contentWrapper}>
           {contentNearby}
           <Footer />
-        </div>
+        </main>
       </div>
-      <label
-        htmlFor='sidebar-toggle'
-        className='fixed right-[16px] top-[16px] z-10 cursor-pointer rounded-medium bg-background p-1 md:right-[32px] md:top-[32px] md:hidden'
-        // className={`fixed right-[${BURGER_SIZE.DEFAULT}] top-[${BURGER_SIZE.DEFAULT}] z-10 bg-background rounded-medium cursor-pointer md:right-[${BURGER_SIZE.MD}] md:top-[${BURGER_SIZE.MD}] md:hidden`}
-      >
-        <HoverableElement
-          element={<PiList size={NAV_ICON_SIZE} />}
-          hoveredElement={<PiListFill size={NAV_ICON_SIZE} />}
-          withShift={false}
-        />
-      </label>
+      <Hamburger />
     </div>
   )
 }

@@ -33,14 +33,14 @@ const socialLinks: TSocialLink[] = [
 function Footer() {
   return (
     <>
-      <footer className='mt-4 flex items-center justify-center text-center text-default-300 md:mt-8'>
+      <footer className='mt-8 flex items-center justify-center text-center text-default-300 md:mt-16'>
         <div>
           <div className='text-xs md:text-sm'>
             {/* {<Logo size='smallest' withBadge={false} />}  */}
             &copy; {APP_NAME.SHORT}, {getYear(new Date())}. All rights reserved
             | design by{' '}
             <Link href='https://volodymyr-g.vercel.app' target='_blank'>
-              <span className='cursor-pointer hover:text-foreground'>
+              <span className='cursor-pointer underline active:text-foreground md:no-underline md:hover:text-foreground md:hover:underline'>
                 Volodymyr
               </span>
             </Link>

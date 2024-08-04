@@ -5,6 +5,7 @@ import { useHover } from 'react-use'
 import Link from 'next/link'
 
 import { motion } from 'framer-motion'
+import { twMerge } from 'tailwind-merge'
 
 import { DIV } from '@/config/constants/framer'
 
@@ -36,11 +37,13 @@ export const HoverableElement = ({
 }
 
 type THoverableNavLink = {
+  idx: number
   link: TNavLink
   isActiveLink: boolean
   withScale?: THoverableElement['withScale']
 }
 export const HoverableNavLink = ({
+  idx,
   link,
   isActiveLink,
   withScale = false,
@@ -48,11 +51,14 @@ export const HoverableNavLink = ({
   return useHover((hovered: boolean) => (
     <Link
       href={link.url}
-      className={`flex w-full items-center gap-4 rounded-medium p-2 ${
-        isActiveLink ? 'bg-content1' : 'text-default-500 hover:text-foreground'
-      }`}
+      className={twMerge(
+        'flex w-full items-center gap-4 rounded-medium py-2 text-2xl md:text-base',
+        !isActiveLink && 'text-default-500 hover:text-foreground',
+        idx === 0 && 'mt-8 md:mt-4',
+      )}
     >
       <motion.div
+        className='hidden md:block'
         initial={{ ...DIV.INITIAL }}
         animate={{ ...DIV.ANIMATE(isActiveLink || hovered, withScale) }}
         transition={{ ...DIV.TRANSITION }}

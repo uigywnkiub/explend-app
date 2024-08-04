@@ -268,12 +268,11 @@ function TransactionFormEdit({ transaction }: TProps) {
         </div>
       </form>
       {isTransactionWithChangedCategory && (
-        <div className='mt-2'>
+        <div className='mt-2 flex flex-col gap-2'>
           <InfoBadge
             withAsterisk={false}
             text='1. Looks like you have changed the category data. Please select an existing one.'
           />
-          <br />
           <InfoBadge
             withAsterisk={false}
             text={`2. Your previous category was: ${prevCategory}.`}

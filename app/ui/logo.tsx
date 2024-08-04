@@ -1,17 +1,20 @@
+'use client'
+
 import { Badge } from '@nextui-org/react'
+import { twMerge } from 'tailwind-merge'
 
 type TSize = 'sm' | 'md' | 'lg'
 
 type TProps = {
-  size?: 'smallest' | 'xs' | TSize
-  badgeSize?: TSize
-  withBadge?: boolean
+  size?: 'smallest' | 'xxs' | 'xs' | TSize
+  // badgeSize?: TSize
+  // withBadge?: boolean
 }
 
 export default function Logo({
   size = 'md',
-  badgeSize = 'md',
-  withBadge = true,
+  // badgeSize = 'md',
+  // withBadge = true,
 }: TProps) {
   let logoSizeClass = 'h-40 w-40'
   let textSizeClass = 'text-7xl'
@@ -19,6 +22,10 @@ export default function Logo({
     case 'smallest':
       logoSizeClass = 'h-5 w-5'
       textSizeClass = 'text-xxs'
+      break
+    case 'xxs':
+      logoSizeClass = 'h-7 w-7'
+      textSizeClass = 'text-xs'
       break
     case 'xs':
       logoSizeClass = 'h-16 w-16'
@@ -39,15 +46,26 @@ export default function Logo({
       content='beta'
       color='warning'
       variant='solid'
-      size={badgeSize}
-      isInvisible={!withBadge}
+      // size={badgeSize}
+      // isInvisible={!withBadge}
+      isInvisible={true}
     >
       <div className='flex items-center justify-center'>
         <div
-          className={`h- flex bg-logo-gradient text-background ${logoSizeClass} items-center justify-center ${size === 'smallest' ? 'rounded-md' : 'rounded-medium'}`}
+          className={twMerge(
+            'flex bg-logo-gradient text-background',
+            logoSizeClass,
+            'items-center justify-center',
+            size === 'smallest' || size === 'xxs'
+              ? 'rounded-md'
+              : 'rounded-medium',
+          )}
         >
           <span
-            className={`${textSizeClass} -skew-x-6 transform-gpu cursor-default font-inter font-bold drop-shadow-lg`}
+            className={twMerge(
+              textSizeClass,
+              '-skew-x-6 transform-gpu cursor-default font-inter font-bold drop-shadow-lg',
+            )}
           >
             Ex
           </span>

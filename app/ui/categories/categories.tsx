@@ -194,27 +194,6 @@ function Categories({ userId, userCategories }: TProps) {
 
   return (
     <>
-      <div className='mb-4'>
-        <InfoBadge
-          withAsterisk={false}
-          text='1. If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.'
-        />
-        <br />
-        <InfoBadge
-          withAsterisk={false}
-          text='2. Once editing, you will need to manually update your previous transactions with previous categories to new categories. You will see a badge on them.'
-        />
-        <br />
-        <InfoBadge
-          withAsterisk={false}
-          text='4. The emoji picker may appear with a slight delay.'
-        />
-        <br />
-        <InfoBadge
-          withAsterisk={false}
-          text='3. The category subject does not affect the category data.'
-        />
-      </div>
       {categories.map((category, index) => (
         <Category
           key={index}
@@ -251,6 +230,16 @@ function Categories({ userId, userCategories }: TProps) {
         >
           Reset categories
         </Button>
+      </div>
+      <div className='mt-4 flex flex-col gap-2 md:mt-8'>
+        <InfoBadge text='If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.' />
+        <InfoBadge text='Once editing, you will need to manually update your previous transactions with previous categories to new categories. You will see a badge on them.' />
+        <InfoBadge text='The emoji picker may appear with a slight delay.' />
+        <InfoBadge
+          id='hint-1'
+          text='1. The category subject does not affect the category data.'
+          withAsterisk={false}
+        />
       </div>
       <Modal
         defaultOpen

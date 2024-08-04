@@ -124,9 +124,9 @@ function CategoryItem({
               </motion.div>
             </div>
             <div className='overflow-hidden text-ellipsis whitespace-nowrap text-balance'>
-              {item.name}{' '}
+              {item.name}
               {item.name === DEFAULT_CATEGORY && (
-                <InfoBadge text='Default category cannot be edited.' />
+                <InfoBadge text='Default category.' withAsterisk={false} />
               )}
             </div>
           </div>

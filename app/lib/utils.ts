@@ -102,6 +102,13 @@ export const getFormattedCurrency = (value: number | string | null) => {
   return formattedNumber.replace(/\./g, ' ')
 }
 
+export const getFormattedBalance = (balance: TTransaction['balance']) => {
+  const formattedCurrency = getFormattedCurrency(balance)
+  return Number(balance) < 0
+    ? `- ${formattedCurrency.slice(1)}`
+    : formattedCurrency
+}
+
 export const calculateEntryRange = (
   page: number | string | null,
   limit: number | string | null,

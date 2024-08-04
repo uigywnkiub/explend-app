@@ -1,19 +1,24 @@
 type TProps = {
+  id?: string
   text: string
   withAsterisk?: boolean
   withDoubleAsterisk?: boolean
 }
 
 export default function InfoBadge({
+  id,
   text,
   withAsterisk = true,
   withDoubleAsterisk = false,
 }: TProps) {
   return (
-    <span className='text-xxs text-default-300 hover:cursor-none hover:text-foreground md:text-xs'>
+    <p
+      id={id}
+      className='text-xxs text-default-300 active:cursor-none active:text-foreground md:text-xs md:hover:cursor-none md:hover:text-foreground'
+    >
       {withDoubleAsterisk && ' ** '}
       {!withDoubleAsterisk && withAsterisk && ' * '}
       {text}
-    </span>
+    </p>
   )
 }

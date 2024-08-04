@@ -27,7 +27,7 @@ function TransactionList({
   currency,
 }: TProps) {
   const totalsWrapper =
-    'flex items-center gap-1 text-default-300 hover:text-foreground'
+    'flex items-center gap-1 text-default-300 active:cursor-none active:text-foreground md:hover:text-foreground'
 
   return (
     <>
@@ -37,10 +37,10 @@ function TransactionList({
         return (
           <div key={date} className='mx-auto max-w-3xl'>
             <div className='flex items-center justify-between p-2 text-default-500'>
-              <p className='text-sm text-default-300 hover:cursor-none hover:text-foreground'>
+              <p className='text-sm text-default-300 active:cursor-none active:text-foreground md:hover:cursor-none md:hover:text-foreground'>
                 {date}
               </p>
-              <div className='flex gap-2 text-sm hover:cursor-none'>
+              <div className='flex gap-2 text-sm md:hover:cursor-none'>
                 {income > 0 && (
                   <p className={totalsWrapper}>
                     <PiArrowCircleUpFill className='fill-success' />

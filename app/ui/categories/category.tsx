@@ -6,6 +6,8 @@ import {
   PiNotePencilFill,
 } from 'react-icons/pi'
 
+import { useRouter } from 'next/navigation'
+
 import { Button, Input } from '@nextui-org/react'
 import { EmojiClickData } from 'emoji-picker-react'
 
@@ -61,6 +63,8 @@ function Category({
   isLoading,
   onEmojiClick,
 }: TProps) {
+  const router = useRouter()
+
   return (
     <div className='mb-4 md:mb-8'>
       {editingIndex === index ? (
@@ -102,6 +106,12 @@ function Category({
         <div className='mb-2 flex items-center justify-between gap-2 px-3'>
           <h2 className='text-lg font-semibold md:text-xl'>
             {category.subject}
+            <sup
+              className='ml-1 cursor-pointer text-xxs text-default-500 underline active:text-foreground md:no-underline md:hover:text-foreground md:hover:underline'
+              onClick={() => router.push('#hint-1')}
+            >
+              1
+            </sup>
           </h2>
           <Button
             onClick={() => onEditTargetClick(index, category.subject)}

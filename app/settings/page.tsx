@@ -39,7 +39,7 @@ export default async function Page() {
   )
 
   const content = (
-    <>
+    <div className='mx-auto max-w-3xl'>
       <h1 className='mb-4 text-center text-2xl font-bold md:mb-8'>
         {NAV_TITLE.SETTINGS}
       </h1>
@@ -49,14 +49,11 @@ export default async function Page() {
           subtitle='Select your favorite theme to give the app a new look that matches your style.'
         >
           <>
-            <InfoBadge withAsterisk={false} text='1. Will reload the page.' />
-            <br />
-            <InfoBadge
-              withAsterisk={false}
-              text='2. When you select the system theme, the general pop-up will always be dark.'
-            />
+            <div className='my-2 flex flex-col gap-2'>
+              <InfoBadge text='Will reload the page.' />
+              <InfoBadge text='When you select the system theme, the general pop-up will always be dark.' />
+            </div>
             <div className='max-w-xs'>
-              <Spacer y={2} />
               <ThemeSwitcher />
             </div>
           </>
@@ -144,7 +141,7 @@ export default async function Page() {
           </div>
         </SectionItem>
       </Section>
-    </>
+    </div>
   )
 
   return <WithSidebar contentNearby={content} />

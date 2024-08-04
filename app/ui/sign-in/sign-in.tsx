@@ -216,16 +216,9 @@ function SignIn() {
           </Accordion>
         </div>
       </div>
-      <div className='mt-4 text-center'>
-        <InfoBadge
-          withAsterisk={false}
-          text='1. Your name and email will be visible on the site and serve as your primary identifiers.'
-        />
-        <br />
-        <InfoBadge
-          withAsterisk={false}
-          text='2. Signing in does not create an account.'
-        />
+      <div className='mt-4 flex flex-col gap-2 text-center'>
+        <InfoBadge text='Your name and email will be visible on the site and serve as your primary identifiers.' />
+        <InfoBadge text='Signing in does not create an account.' />
       </div>
     </div>
   )

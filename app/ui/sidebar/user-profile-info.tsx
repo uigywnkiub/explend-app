@@ -26,6 +26,10 @@ function UserProfileInfo({ user }: TProps) {
         },
         src: user?.image || '',
       }}
+      classNames={{
+        name: 'text-md md:text-sm',
+        description: 'text-sm md:text-tiny',
+      }}
     />
   )
 }
