@@ -10,8 +10,8 @@ on:
     branches:
       - main
 
-env:
-  CACHE_NAME: cache-node-modules
+# env:
+#   CACHE_NAME: cache-node-modules
 
 jobs:
   lint:
@@ -65,17 +65,8 @@ jobs:
       # run: yarn info --name-only
 
       - name: Install Dependencies
-        # run: yarn install --immutable
-        run: yarn install --frozen-lockfile
-
-      - name: Log TypeScript Version
-        run: tsc --version
-
-      - name: Install Latest TypeScript Globally
-        run: npm install -g typescript@latest
-
-      - name: Log TypeScript Version
-        run: tsc --version
+        # run: yarn install --immutable --immutable-cache
+        run: yarn install --check-cache
 
       - name: Run ESLint
         run: yarn lint
