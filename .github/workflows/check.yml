@@ -25,6 +25,11 @@ jobs:
       - name: Set Yarn to Berry version
         run: yarn set version berry
 
+      - name: Create .yarnrc.yml file
+        # run: echo "enableGlobalCache: true" > .yarnrc.yml
+        run: |
+          echo "enableGlobalCache: true" > .yarnrc.yml
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "yarn_cache_dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -34,7 +39,8 @@ jobs:
         uses: actions/cache@v4
         with:
           # Below is an another cache folder on ubuntu
-          path: ~/.cache/yarn
+          # path: ~/.cache/yarn
+          path: .yarn/cache
           # path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
           key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}\
             -${{ hashFiles('**/yarn.lock') }}
@@ -67,6 +73,11 @@ jobs:
       - name: Set Yarn to Berry version
         run: yarn set version berry
 
+      - name: Create .yarnrc.yml file
+        # run: echo "enableGlobalCache: true" > .yarnrc.yml
+        run: |
+          echo "enableGlobalCache: true" > .yarnrc.yml
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "yarn_cache_dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -77,7 +88,8 @@ jobs:
         with:
           # Below is an another cache folder on ubuntu
           # path: ~/.cache/yarn
-          path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
+          path: .yarn/cache
+          # path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
           key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.CACHE_NAME }}-
