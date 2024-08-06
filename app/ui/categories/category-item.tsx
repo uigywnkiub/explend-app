@@ -126,7 +126,7 @@ function CategoryItem({
             <div className='overflow-hidden text-ellipsis whitespace-nowrap text-balance'>
               {item.name}
               {item.name === DEFAULT_CATEGORY && (
-                <InfoBadge text='Default category.' withAsterisk={false} />
+                <InfoBadge text='Default category' withAsterisk={false} />
               )}
             </div>
           </div>

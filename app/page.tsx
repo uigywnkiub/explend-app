@@ -95,7 +95,7 @@ export default async function Home({
   }, {})
 
   const totalsTransactionsByDate: TTotalsTransaction = Object.fromEntries(
-    Object.entries(groupedTransactionsByDate).map(([date, t]) => {
+    Object.entries(groupedTransactionsByDate).map(([date, transactions]) => {
       const totals = transactions.reduce(
         (totals, t) => {
           if (t.isIncome) {
@@ -133,14 +133,8 @@ export default async function Home({
             <>
               <NoTransactionsPlug />
               <div className='mt-2 flex flex-col gap-2'>
-                <InfoBadge
-                  withAsterisk={false}
-                  text='1. The first written transaction means creating your account.'
-                />
-                <InfoBadge
-                  withAsterisk={false}
-                  text='2. The last deleted transaction means deleting your account.'
-                />
+                <InfoBadge text='The first written transaction means creating your account.' />
+                <InfoBadge text='The last deleted transaction means deleting your account.' />
               </div>
             </>
           ) : (
