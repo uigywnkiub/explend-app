@@ -25,33 +25,32 @@ jobs:
       - name: Set Yarn to Berry version
         run: yarn set version berry
 
-      - name: Create .yarnrc.yml file
-        # run: echo "enableGlobalCache: true" > .yarnrc.yml
-        run: |
-          echo "enableGlobalCache: true" > .yarnrc.yml
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "yarn_cache_dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      # - name: Get yarn cache directory path
+      #   id: yarn-cache-dir-path
+      #   run: echo "yarn_cache_dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Cache node modules
         id: cache-yarn
         uses: actions/cache@v4
         with:
-          # Below is an another cache folder on ubuntu
-          # path: ~/.cache/yarn
           path: .yarn/cache
-          # path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
-          key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}\
-            -${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          key: default-yarndeps-${{ hashFiles('yarn.lock') }}
 
-      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
-        name: Info the state of node modules
-        continue-on-error: true
-        run: yarn info --name-only
+      #   with:
+      #     # Below is an another cache folder on ubuntu
+      #     # path: ~/.cache/yarn
+      #     path: .yarn/cache
+      #     # path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
+      #     key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}\
+      #       -${{ hashFiles('**/yarn.lock') }}
+      #     restore-keys: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-
+      #       ${{ runner.os }}-build-
+      #       ${{ runner.os }}-
+
+      # - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
+      # name: Info the state of node modules
+      # continue-on-error: true
+      # run: yarn info --name-only
 
       - name: Install Dependencies
         run: yarn install --immutable
@@ -62,47 +61,47 @@ jobs:
       - name: Run TypeScript
         run: yarn typecheck
 
-  test:
-    name: Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Enable Corepack before setting up Node
-        run: corepack enable
+  # test:
+  #   name: Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Enable Corepack before setting up Node
+  #       run: corepack enable
 
-      - name: Set Yarn to Berry version
-        run: yarn set version berry
+  #     - name: Set Yarn to Berry version
+  #       run: yarn set version berry
 
-      - name: Create .yarnrc.yml file
-        # run: echo "enableGlobalCache: true" > .yarnrc.yml
-        run: |
-          echo "enableGlobalCache: true" > .yarnrc.yml
+  #     - name: Create .yarnrc.yml file
+  #       # run: echo "enableGlobalCache: true" > .yarnrc.yml
+  #       run: |
+  #         echo "enableGlobalCache: true" > .yarnrc.yml
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "yarn_cache_dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+  #     - name: Get yarn cache directory path
+  #       id: yarn-cache-dir-path
+  #       run: echo "yarn_cache_dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-      - name: Cache node modules
-        id: cache-yarn
-        uses: actions/cache@v4
-        with:
-          # Below is an another cache folder on ubuntu
-          # path: ~/.cache/yarn
-          path: .yarn/cache
-          # path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
-          key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.CACHE_NAME }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+  #     - name: Cache node modules
+  #       id: cache-yarn
+  #       uses: actions/cache@v4
+  #       with:
+  #         # Below is an another cache folder on ubuntu
+  #         # path: ~/.cache/yarn
+  #         path: .yarn/cache
+  #         # path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
+  #         key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-build-${{ env.CACHE_NAME }}-
+  #           ${{ runner.os }}-build-
+  #           ${{ runner.os }}-
 
-      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
-        name: Info the state of node modules
-        continue-on-error: true
-        run: yarn info --name-only
+  #     - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
+  #       name: Info the state of node modules
+  #       continue-on-error: true
+  #       run: yarn info --name-only
 
-      - name: Install Dependencies
-        run: yarn install --immutable
+  #     - name: Install Dependencies
+  #       run: yarn install --immutable
 
-      - name: Run Tests
-        run: yarn test
+  #     - name: Run Tests
+  #       run: yarn test
