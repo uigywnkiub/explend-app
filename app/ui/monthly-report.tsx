@@ -64,20 +64,18 @@ function MonthlyReport({ transactions, currency }: TProps) {
   )
 
   const memorizedMonthlyReportData = useMemo(() => {
-    return monthlyReportData
-      .sort((c1, c2) => c2.spent - c1.spent)
-      .map((category) => (
-        <Fragment key={category.category}>
-          <div className='text-md overflow-hidden text-ellipsis whitespace-nowrap md:text-lg'>
-            {category.category}
-          </div>
-          <div className='text-md md:text-lg'>{category.percentage} %</div>
-          <div className='text-md md:text-lg'>
-            {getFormattedCurrency(category.spent)}{' '}
-            {currency?.sign || DEFAULT_CURRENCY_SIGN}
-          </div>
-        </Fragment>
-      ))
+    return monthlyReportData.map((category) => (
+      <Fragment key={category.category}>
+        <div className='text-md overflow-hidden text-ellipsis whitespace-nowrap md:text-lg'>
+          {category.category}
+        </div>
+        <div className='text-md md:text-lg'>{category.percentage} %</div>
+        <div className='text-md md:text-lg'>
+          {getFormattedCurrency(category.spent)}{' '}
+          {currency?.sign || DEFAULT_CURRENCY_SIGN}
+        </div>
+      </Fragment>
+    ))
   }, [currency?.sign, monthlyReportData])
 
   if (filteredTransactions.length === 0) {
