@@ -103,7 +103,7 @@ export default function Search({
         >
           <Input
             size='lg'
-            color='primary'
+            color={hasSearchedTransactions ? 'primary' : 'danger'}
             isClearable
             placeholder={placeholder}
             onClear={() => [onSearchChange(''), setSearchTerm('')]}
