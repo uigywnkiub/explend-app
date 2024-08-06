@@ -106,12 +106,11 @@ function Category({
         <div className='mb-2 flex items-center justify-between gap-2 px-3'>
           <h2 className='text-lg font-semibold md:text-xl'>
             {category.subject}
-            <sup
-              className='ml-1 cursor-pointer text-xxs text-default-500 underline md:no-underline md:hover:text-foreground md:hover:underline'
-              onClick={() => router.push('#hint-1')}
-            >
-              1
-            </sup>
+            <button className='ml-1 h-0' onClick={() => router.push('#hint-1')}>
+              <sup className='cursor-pointer p-1 text-xxs text-default-500 underline md:no-underline md:hover:text-foreground md:hover:underline'>
+                1
+              </sup>
+            </button>
           </h2>
           <Button
             onClick={() => onEditTargetClick(index, category.subject)}
