@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Enable Corepack before setting up Node
+        run: corepack enable
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -56,6 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Enable Corepack before setting up Node
+        run: corepack enable
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
