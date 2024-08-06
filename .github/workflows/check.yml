@@ -22,19 +22,20 @@ jobs:
       - name: Enable Corepack before setting up Node
         run: corepack enable
 
-      - name: Set Yarn to Berry version
-        run: yarn set version berry
+      # - name: Set Yarn to Berry version
+      #   run: yarn set version berry
 
-      - name: Restore Turbo Cache
-        uses: actions/cache@40c3b67b2955d93d83b27ed164edd0756bc24049 # v4.0.2
-        with:
-          path: |
-            .yarn/cache
-            .cache
-            .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha}}
-          restore-keys: |
-            ${{ runner.os }}-turbo-
+      # - name: Restore Turbo Cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       .yarn/cache
+      #       node_modules
+      #       .cache
+      #       .turbo
+      #     key: ${{ runner.os }}-turbo-${{ github.sha}}
+      #     restore-keys: |
+      #       ${{ runner.os }}-turbo-
 
       # - name: Get yarn cache directory path
       #   id: yarn-cache-dir-path
@@ -69,8 +70,8 @@ jobs:
       - name: Run ESLint
         run: yarn lint
 
-      # - name: Run TypeScript
-      #   run: yarn typecheck
+      - name: Run TypeScript
+        run: yarn typecheck
 
   # test:
   #   name: Tests
