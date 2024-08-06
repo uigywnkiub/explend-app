@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { findTransactionById } from '@/app/lib/actions'
+import { findTransactionById, getAuthSession } from '@/app/lib/actions'
 
 import WithSidebar from '@/app/ui/sidebar/with-sidebar'
 import TransactionFormEdit from '@/app/ui/transaction-form-edit'
@@ -14,9 +14,14 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params
-  const transaction = await findTransactionById(id)
+  const [transaction, session] = await Promise.all([
+    findTransactionById(id),
+    getAuthSession(),
+  ])
+  const userId = session?.user?.email
+  const isCurrentUser = userId === transaction?.userId
 
-  if (!transaction) {
+  if (!transaction || !isCurrentUser) {
     notFound()
   }
 
