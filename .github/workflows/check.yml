@@ -61,6 +61,9 @@ jobs:
       - name: Enable Corepack before setting up Node
         run: corepack enable
 
+      - name: Set Yarn to Berry version
+        run: yarn set version berry
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "yarn_cache_dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
