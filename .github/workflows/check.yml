@@ -65,7 +65,8 @@ jobs:
       # run: yarn info --name-only
 
       - name: Install Dependencies
-        run: yarn install --immutable
+        # run: yarn install --immutable
+        run: yarn install --frozen-lockfile --ignore-scripts --ignore-engines
 
       - name: Log TypeScript Version
         run: tsc --version
