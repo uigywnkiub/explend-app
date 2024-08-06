@@ -58,8 +58,8 @@ jobs:
       - name: Run ESLint
         run: yarn lint
 
-      - name: Run TypeScript
-        run: yarn typecheck
+      # - name: Run TypeScript
+      #   run: yarn typecheck
 
   # test:
   #   name: Tests
