@@ -40,7 +40,7 @@ function Footer() {
             &copy; {APP_NAME.SHORT}, {getYear(new Date())}. All rights reserved
             | design by{' '}
             <Link href='https://volodymyr-g.vercel.app' target='_blank'>
-              <span className='cursor-pointer underline active:text-foreground md:no-underline md:hover:text-foreground md:hover:underline'>
+              <span className='cursor-pointer underline md:no-underline md:hover:text-foreground md:hover:underline'>
                 Volodymyr
               </span>
             </Link>

@@ -14,7 +14,7 @@ export default function InfoBadge({
   return (
     <p
       id={id}
-      className='text-xxs text-default-300 active:cursor-none active:text-foreground md:text-xs md:hover:cursor-none md:hover:text-foreground'
+      className='text-xxs text-default-300 md:text-xs md:hover:cursor-none md:hover:text-foreground'
     >
       {withDoubleAsterisk && ' ** '}
       {!withDoubleAsterisk && withAsterisk && ' * '}

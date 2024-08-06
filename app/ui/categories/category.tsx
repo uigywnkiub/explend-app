@@ -107,7 +107,7 @@ function Category({
           <h2 className='text-lg font-semibold md:text-xl'>
             {category.subject}
             <sup
-              className='ml-1 cursor-pointer text-xxs text-default-500 underline active:text-foreground md:no-underline md:hover:text-foreground md:hover:underline'
+              className='ml-1 cursor-pointer text-xxs text-default-500 underline md:no-underline md:hover:text-foreground md:hover:underline'
               onClick={() => router.push('#hint-1')}
             >
               1
