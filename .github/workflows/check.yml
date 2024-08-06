@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Enable Corepack before setting up Node
+      - name: Enable Corepack because of the Yarn Berry
         run: corepack enable
 
       # - name: Set Yarn to Berry version
@@ -66,6 +66,15 @@ jobs:
 
       - name: Install Dependencies
         run: yarn install --immutable
+
+      - name: Log TypeScript Version
+        run: tsc --version
+
+      - name: Install Latest TypeScript Globally
+        run: npm install -g typescript@latest
+
+      - name: Log TypeScript Version
+        run: tsc --version
 
       - name: Run ESLint
         run: yarn lint
