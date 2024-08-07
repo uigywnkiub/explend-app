@@ -9508,7 +9508,7 @@ __metadata:
     resend: "npm:^3.5.0"
     tailwind-merge: "npm:^2.4.0"
     tailwindcss: "npm:^3.4.7"
-    typescript: "npm:^5.5.0"
+    typescript: "npm:^5.4.0"
     vite-tsconfig-paths: "npm:^4.3.2"
     vitest: "npm:^2.0.5"
     webpack: "npm:^5.93.0"
@@ -14926,7 +14926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.5.0":
+"typescript@npm:^5.4.0":
   version: 5.5.4
   resolution: "typescript@npm:5.5.4"
   bin:
@@ -14936,7 +14936,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.5.0#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.4.0#optional!builtin<compat/typescript>":
   version: 5.5.4
   resolution: "typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"
   bin:

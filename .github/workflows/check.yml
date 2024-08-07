@@ -59,8 +59,7 @@ jobs:
       # continue-on-error: true
       # run: yarn info --name-only
       - name: Install Dependencies
-        # run: yarn install --immutable
-        run: yarn
+        run: yarn install --immutable
         # run: npm i
 
       # - name: Run ESLint
