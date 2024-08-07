@@ -19,8 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # - name: Enable Corepack because of the Yarn Berry
-      #   run: corepack enable
+
+      - name: Display Node.js version
+        run: node -v
 
       - name: Setup Latest Yarn Berry
         uses: threeal/setup-yarn-action@v2.0.0
@@ -28,51 +29,14 @@ jobs:
           version: latest
           cache: true
 
-      # - name: Set Yarn to Berry version
-      #   run: yarn set version berry
-      # - name: Restore Turbo Cache
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: |
-      #       .yarn/cache
-      #       node_modules
-      #       .cache
-      #       .turbo
-      #     key: ${{ runner.os }}-turbo-${{ github.sha}}
-      #     restore-keys: |
-      #       ${{ runner.os }}-turbo-
-      # - name: Get yarn cache directory path
-      #   id: yarn-cache-dir-path
-      #   run: echo "yarn_cache_dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-      # - name: Cache node modules
-      #   id: cache-yarn
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: .yarn/cache
-      #     key: default-yarndeps-${{ hashFiles('yarn.lock') }}
-      #   with:
-      #     # Below is an another cache folder on ubuntu
-      #     # path: ~/.cache/yarn
-      #     path: .yarn/cache
-      #     # path: ${{ steps.yarn-cache-dir-path.outputs.yarn_cache_dir }}
-      #     key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}\
-      #       -${{ hashFiles('**/yarn.lock') }}
-      #     restore-keys: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-
-      #       ${{ runner.os }}-build-
-      #       ${{ runner.os }}-
-      # - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
-      # name: Info the state of node modules
-      # continue-on-error: true
-      # run: yarn info --name-only
-      # - name: Install Dependencies
-      #   run: yarn install --immutable
-      # run: npm i
+      - name: Display Node.js version
+        run: node -v
 
       - name: Run ESLint
         run: yarn lint
 
       - name: Run TypeScript
-        run: yarn tsc
+        run: yarn typecheck
 
   # test:
   #   name: Tests
