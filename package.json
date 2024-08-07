@@ -115,6 +115,5 @@
     "eslint",
     "commitlint",
     "react-icons"
-  ],
-  "packageManager": "yarn@4.4.0"
+  ]
 }
