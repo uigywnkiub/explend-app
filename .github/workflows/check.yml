@@ -24,7 +24,6 @@ jobs:
 
       # - name: Set Yarn to Berry version
       #   run: yarn set version berry
-
       # - name: Restore Turbo Cache
       #   uses: actions/cache@v4
       #   with:
@@ -36,18 +35,15 @@ jobs:
       #     key: ${{ runner.os }}-turbo-${{ github.sha}}
       #     restore-keys: |
       #       ${{ runner.os }}-turbo-
-
       # - name: Get yarn cache directory path
       #   id: yarn-cache-dir-path
       #   run: echo "yarn_cache_dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
       # - name: Cache node modules
       #   id: cache-yarn
       #   uses: actions/cache@v4
       #   with:
       #     path: .yarn/cache
       #     key: default-yarndeps-${{ hashFiles('yarn.lock') }}
-
       #   with:
       #     # Below is an another cache folder on ubuntu
       #     # path: ~/.cache/yarn
@@ -58,15 +54,13 @@ jobs:
       #     restore-keys: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-
       #       ${{ runner.os }}-build-
       #       ${{ runner.os }}-
-
       # - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
       # name: Info the state of node modules
       # continue-on-error: true
       # run: yarn info --name-only
-
       - name: Install Dependencies
-        # run: yarn install --immutable --immutable-cache
-        run: yarn install --check-cache
+        run: yarn install --immutable --immutable-cache
+        # run: yarn install --check-cache
 
       - name: Run ESLint
         run: yarn lint
