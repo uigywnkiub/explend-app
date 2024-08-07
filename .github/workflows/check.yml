@@ -28,6 +28,15 @@ jobs:
           version: latest
           cache: true
 
+      - name: Log TypeScript Version
+        run: yarn tsc -v
+
+      - name: Log Yarn Version
+        run: yarn --version
+
+      - name: Show Yarn Lock File
+        run: cat yarn.lock
+
       # - name: Set Yarn to Berry version
       #   run: yarn set version berry
       # - name: Restore Turbo Cache
