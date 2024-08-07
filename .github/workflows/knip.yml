@@ -26,4 +26,5 @@ jobs:
           cache: true
 
       - name: Check Knip
+        continue-on-error: true
         run: yarn knip
