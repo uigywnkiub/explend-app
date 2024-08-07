@@ -59,7 +59,7 @@ jobs:
       # continue-on-error: true
       # run: yarn info --name-only
       - name: Install Dependencies
-        run: yarn install --immutable --immutable-cache
+        run: yarn install --immutable
         # run: yarn install --check-cache
 
       - name: Run ESLint
