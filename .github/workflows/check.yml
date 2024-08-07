@@ -22,7 +22,7 @@ jobs:
       # - name: Enable Corepack because of the Yarn Berry
       #   run: corepack enable
 
-      - name: Setup Latest Yarn
+      - name: Setup Latest Yarn Berry
         uses: threeal/setup-yarn-action@v2.0.0
         with:
           version: latest
