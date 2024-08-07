@@ -26,6 +26,7 @@ jobs:
         uses: threeal/setup-yarn-action@v2.0.0
         with:
           version: latest
+          cache: true
 
       # - name: Set Yarn to Berry version
       #   run: yarn set version berry
@@ -67,12 +68,14 @@ jobs:
       #   run: yarn install --immutable
       # run: npm i
 
+      - name: Disable Next.js telemetry
+        run: yarn next telemetry disable
+
       - name: Run ESLint
         run: yarn lint
 
-      # - name: Run TypeScript
-      #   run: yarn typecheck
-      # run: npm run typecheck
+      - name: Run TypeScript
+        run: yarn typecheck
 
   # test:
   #   name: Tests
