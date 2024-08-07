@@ -68,8 +68,8 @@ jobs:
       #   run: yarn install --immutable
       # run: npm i
 
-      - name: Disable Next.js telemetry
-        run: yarn next telemetry disable
+      - name: Check Next.js telemetry
+        run: yarn next telemetry status
 
       - name: Run ESLint
         run: yarn lint
