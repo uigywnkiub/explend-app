@@ -60,14 +60,14 @@ jobs:
       # run: yarn info --name-only
       - name: Install Dependencies
         # run: yarn install --immutable
-        run: npm i
+        run: yarn
+        # run: npm i
 
       # - name: Run ESLint
       #   run: yarn lint
-
       - name: Run TypeScript
-        # run: yarn typecheck
-        run: npm run typecheck
+        run: yarn typecheck
+        # run: npm run typecheck
 
   # test:
   #   name: Tests
