@@ -35,7 +35,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@auth/core@npm:0.34.2":
+"@auth/core@npm:0.34.2, @auth/core@npm:^0.34.2":
   version: 0.34.2
   resolution: "@auth/core@npm:0.34.2"
   dependencies:
@@ -9459,6 +9459,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "explend-app@workspace:."
   dependencies:
+    "@auth/core": "npm:^0.34.2"
     "@commitlint/cli": "npm:^19.3.0"
     "@commitlint/config-conventional": "npm:^19.2.2"
     "@ducanh2912/next-pwa": "npm:^10.2.8"
@@ -9509,9 +9510,12 @@ __metadata:
     tailwind-merge: "npm:^2.4.0"
     tailwindcss: "npm:^3.4.7"
     typescript: "npm:>=4.7.4 <5.5.0"
+    vite: "npm:^5.3.5"
     vite-tsconfig-paths: "npm:^4.3.2"
     vitest: "npm:^2.0.5"
     webpack: "npm:^5.93.0"
+  peerDependencies:
+    vite: ^5.3.5
   languageName: unknown
   linkType: soft
 
@@ -15231,7 +15235,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.0.0":
+"vite@npm:^5.0.0, vite@npm:^5.3.5":
   version: 5.3.5
   resolution: "vite@npm:5.3.5"
   dependencies:
