@@ -66,11 +66,13 @@ jobs:
       # - name: Install Dependencies
       #   run: yarn install --immutable
       # run: npm i
-      # - name: Run ESLint
-      #   run: yarn lint
-      - name: Run TypeScript
-        run: yarn typecheck
-        # run: npm run typecheck
+
+      - name: Run ESLint
+        run: yarn lint
+
+      # - name: Run TypeScript
+      #   run: yarn typecheck
+      # run: npm run typecheck
 
   # test:
   #   name: Tests
