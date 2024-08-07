@@ -7,7 +7,7 @@ import { cookies } from 'next/headers'
 
 import { auth, signOut } from '@/auth'
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
-import { dd, SignOutError } from '@auth/core/errors'
+import { SignOutError } from '@auth/core/errors'
 import { Resend } from 'resend'
 
 import { FEEDBACK } from '@/config/constants/cookies'

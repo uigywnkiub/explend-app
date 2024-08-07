@@ -72,7 +72,7 @@ jobs:
         run: yarn lint
 
       - name: Run TypeScript
-        run: yarn typecheck
+        run: yarn tsc
 
   # test:
   #   name: Tests
