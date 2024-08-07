@@ -412,7 +412,6 @@ export async function resetCategories(
   try {
     await dbConnect()
     await TransactionModel.updateMany({ userId }, { categories })
-    revalidatePath(ROUTE.HOME)
     revalidatePath(ROUTE.CATEGORIES)
   } catch (err) {
     throw err
