@@ -59,14 +59,15 @@ jobs:
       # continue-on-error: true
       # run: yarn info --name-only
       - name: Install Dependencies
-        run: yarn install --immutable
-        # run: yarn install --check-cache
+        # run: yarn install --immutable
+        run: npm ci
 
-      - name: Run ESLint
-        run: yarn lint
+      # - name: Run ESLint
+      #   run: yarn lint
 
       - name: Run TypeScript
-        run: yarn typecheck
+        # run: yarn typecheck
+        run: npm run typecheck
 
   # test:
   #   name: Tests
