@@ -63,20 +63,25 @@ export const calculateMonthlyReportData = (
     {} as Record<string, number>,
   )
 
-  const monthlyReportData: TCategoryData[] = Object.entries(
-    totalsByCategory,
-  ).map(([category, spent]) => {
-    let percentage = ((spent / totalExpense) * 100).toFixed(2)
-    if (percentage.endsWith('.00')) {
-      percentage = percentage.slice(0, -3)
-    }
+  // Do raw sorting data first to improve performance in some cases.
+  const sortedEntries = Object.entries(totalsByCategory).sort(
+    ([, spentA], [, spentB]) => spentB - spentA,
+  )
 
-    return {
-      category,
-      spent,
-      percentage,
-    }
-  })
+  const monthlyReportData: TCategoryData[] = sortedEntries.map(
+    ([category, spent]) => {
+      let percentage = ((spent / totalExpense) * 100).toFixed(2)
+      if (percentage.endsWith('.00')) {
+        percentage = percentage.slice(0, -3)
+      }
+
+      return {
+        category,
+        spent,
+        percentage,
+      }
+    },
+  )
 
   return { totalIncome, totalExpense, monthlyReportData }
 }

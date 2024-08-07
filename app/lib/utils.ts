@@ -74,10 +74,14 @@ export const formatTime = (dateStr: Date) => {
 }
 
 export const getCategoryWithEmoji = (
-  category: FormDataEntryValue | null,
+  category: FormDataEntryValue | null | undefined,
   categories: TTransaction['categories'],
 ): string => {
-  if (typeof category !== 'string' || category === null) {
+  if (
+    typeof category !== 'string' ||
+    category === null ||
+    category === undefined
+  ) {
     return DEFAULT_CATEGORY
   }
   for (const categoryGroup of categories) {

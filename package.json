@@ -19,16 +19,17 @@
     "knip": "knip"
   },
   "dependencies": {
+    "@auth/core": "^0.34.2",
     "@ducanh2912/next-pwa": "^10.2.8",
     "@internationalized/date": "^3.5.4",
     "@nextui-org/react": "^2.4.6",
-    "@sentry/nextjs": "^8.23.0",
+    "@sentry/nextjs": "^8.24.0",
     "@vercel/analytics": "^1.3.1",
     "@vercel/speed-insights": "^1.0.12",
     "date-fns": "^3.6.0",
     "emoji-picker-react": "^4.11.1",
     "emoji-regex": "^10.3.0",
-    "framer-motion": "^11.3.21",
+    "framer-motion": "^11.3.22",
     "mongoose": "^8.5.2",
     "mongoose-encryption-decryption": "^1.2.1",
     "next": "14.2.5",
@@ -47,7 +48,7 @@
     "tailwind-merge": "^2.4.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.3.0",
+    "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.0.0",
@@ -64,16 +65,20 @@
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "husky": "^9.1.4",
     "jsdom": "^24.1.1",
-    "knip": "^5.27.0",
+    "knip": "^5.27.1",
     "lint-staged": "^15.2.8",
     "postcss": "^8.4.41",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.7",
     "typescript": "^5.5.4",
+    "vite": "^5.3.5",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^2.0.5",
     "webpack": "^5.93.0"
+  },
+  "peerDependencies": {
+    "vite": "^5.3.5"
   },
   "license": "MIT",
   "author": "Volodymyr <vgerun97@gmail.com> (https://volodymyr-g.vercel.app)",
@@ -115,5 +120,6 @@
     "eslint",
     "commitlint",
     "react-icons"
-  ]
+  ],
+  "packageManager": "yarn@4.4.0"
 }
