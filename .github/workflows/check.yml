@@ -19,8 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Enable Corepack because of the Yarn Berry
-        run: corepack enable
+      # - name: Enable Corepack because of the Yarn Berry
+      #   run: corepack enable
 
       - name: Setup Latest Yarn
         uses: threeal/setup-yarn-action@v2.0.0
@@ -68,14 +68,13 @@ jobs:
       #   run: yarn install --immutable
       # run: npm i
 
-      - name: Check Next.js telemetry
-        run: yarn next telemetry status
-
       - name: Run ESLint
         run: yarn lint
 
       - name: Run TypeScript
-        run: yarn typecheck
+        # run: yarn typecheck
+        run: |
+          yarn typecheck
 
   # test:
   #   name: Tests
