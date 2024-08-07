@@ -22,8 +22,8 @@ jobs:
       - name: Enable Corepack because of the Yarn Berry
         run: corepack enable
 
-      - name: Set Yarn to Berry version
-        run: yarn set version berry
+      # - name: Set Yarn to Berry version
+      #   run: yarn set version berry
       # - name: Restore Turbo Cache
       #   uses: actions/cache@v4
       #   with:
@@ -59,7 +59,7 @@ jobs:
       # continue-on-error: true
       # run: yarn info --name-only
       - name: Install Dependencies
-        run: yarn install --immutable --immutable-cache
+        run: yarn install --immutable
         # run: yarn install --check-cache
 
       - name: Run ESLint
