@@ -13,6 +13,7 @@ import {
 } from 'date-fns'
 import emojiRegex from 'emoji-regex'
 import { extendTailwindMerge } from 'tailwind-merge'
+import defaultTheme from 'tailwindcss/defaultTheme'
 
 import { CURRENCY_CODE, DEFAULT_CATEGORY } from '@/config/constants/main'
 
@@ -29,6 +30,12 @@ export const customTwMerge = extendTailwindMerge({
 })
 export function cn(...args: ClassValue[]) {
   return customTwMerge(clsx(args))
+}
+
+export const getBreakpointWidth = (
+  breakpoint: keyof typeof defaultTheme.screens,
+): string => {
+  return `(min-width: ${defaultTheme.screens[breakpoint]})`
 }
 
 export const capitalizeFirstLetter = (str: string): string => {
