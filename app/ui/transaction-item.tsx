@@ -147,7 +147,7 @@ Time: ${formatTime(createdAt)}`
             <Badge
               content=''
               shape='rectangle'
-              color='danger'
+              color='warning'
               variant='solid'
               size='sm'
               isDot
@@ -209,7 +209,7 @@ Time: ${formatTime(createdAt)}`
                     <Badge
                       content=''
                       shape='rectangle'
-                      color='danger'
+                      color='warning'
                       variant='solid'
                       size='sm'
                       isDot

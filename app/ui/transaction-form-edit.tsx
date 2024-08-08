@@ -205,7 +205,7 @@ function TransactionFormEdit({ transaction }: TProps) {
               <Badge
                 content=''
                 shape='rectangle'
-                color='danger'
+                color='warning'
                 variant='solid'
                 size='sm'
                 isDot
