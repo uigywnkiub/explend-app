@@ -19,7 +19,7 @@ import type {
 } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
-import InfoBadge from '../info-badge'
+import InfoText from '../info-text'
 import CustomEmojiPicker from './custom-emoji-picker'
 
 type TProps = {
@@ -127,7 +127,7 @@ function CategoryItem({
             <div className='overflow-hidden text-ellipsis whitespace-nowrap text-balance'>
               {item.name}
               {item.name === DEFAULT_CATEGORY && (
-                <InfoBadge text='Default category' withAsterisk={false} />
+                <InfoText text='Default category' withAsterisk={false} />
               )}
             </div>
           </div>

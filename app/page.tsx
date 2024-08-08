@@ -32,7 +32,7 @@ import {
   pluralize,
 } from './lib/utils'
 import BalanceLine from './ui/balance-line'
-import InfoBadge from './ui/info-badge'
+import InfoText from './ui/info-text'
 import NoTransactionsPlug from './ui/no-transaction-text'
 import PaginationList from './ui/pagination/pagination-list'
 import Search from './ui/search'
@@ -143,8 +143,8 @@ export default async function Home({
             <>
               <NoTransactionsPlug />
               <div className='mt-2 flex flex-col gap-2'>
-                <InfoBadge text='The first written transaction means creating your account.' />
-                <InfoBadge text='The last deleted transaction means deleting your account.' />
+                <InfoText text='The first written transaction means creating your account.' />
+                <InfoText text='The last deleted transaction means deleting your account.' />
               </div>
             </>
           ) : (

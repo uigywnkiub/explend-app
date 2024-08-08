@@ -35,7 +35,7 @@ import {
 
 import ClientButton from '../default-button'
 import { HoverableElement } from '../hoverables'
-import InfoBadge from '../info-badge'
+import InfoText from '../info-text'
 import Logo from '../logo'
 
 const ACCORDION_ITEM_KEY = 'More'
@@ -217,8 +217,8 @@ function SignIn() {
         </div>
       </div>
       <div className='mt-4 flex flex-col gap-2 text-center'>
-        <InfoBadge text='Your name and email will be visible on the site and serve as your primary identifiers.' />
-        <InfoBadge text='Signing in does not create an account.' />
+        <InfoText text='Your name and email will be visible on the site and serve as your primary identifiers.' />
+        <InfoText text='Signing in does not create an account.' />
       </div>
     </div>
   )

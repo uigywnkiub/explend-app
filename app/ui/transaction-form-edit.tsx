@@ -32,7 +32,7 @@ import {
   getTransactionsWithChangedCategory,
 } from '../lib/utils'
 import Loading from '../loading'
-import InfoBadge from './info-badge'
+import InfoText from './info-text'
 
 const AMOUNT_LENGTH = 6
 
@@ -269,8 +269,8 @@ function TransactionFormEdit({ transaction }: TProps) {
       </form>
       {isTransactionWithChangedCategory && (
         <div className='mt-2 flex flex-col gap-2'>
-          <InfoBadge text='Looks like you have changed the category data. Please select an existing one.' />
-          <InfoBadge text={`Your previous category was: ${prevCategory}.`} />
+          <InfoText text='Looks like you have changed the category data. Please select an existing one.' />
+          <InfoText text={`Your previous category was: ${prevCategory}.`} />
         </div>
       )}
     </>

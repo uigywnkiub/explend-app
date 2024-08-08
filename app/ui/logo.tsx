@@ -1,7 +1,8 @@
 'use client'
 
 import { Badge } from '@nextui-org/react'
-import { twMerge } from 'tailwind-merge'
+
+import { cn } from '../lib/utils'
 
 type TSize = 'sm' | 'md' | 'lg'
 
@@ -52,7 +53,7 @@ export default function Logo({
     >
       <div className='flex items-center justify-center'>
         <div
-          className={twMerge(
+          className={cn(
             'flex bg-logo-gradient text-background',
             logoSizeClass,
             'items-center justify-center',
@@ -62,9 +63,9 @@ export default function Logo({
           )}
         >
           <span
-            className={twMerge(
-              textSizeClass,
+            className={cn(
               '-skew-x-6 transform-gpu cursor-default font-inter font-bold drop-shadow-lg',
+              textSizeClass,
             )}
           >
             Ex

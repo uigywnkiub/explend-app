@@ -11,7 +11,7 @@ import {
   getTransactionLimit,
   signOutAccount,
 } from '../lib/actions'
-import InfoBadge from '../ui/info-badge'
+import InfoText from '../ui/info-text'
 import NoTransactionsPlug from '../ui/no-transaction-text'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
@@ -50,8 +50,8 @@ export default async function Page() {
         >
           <>
             <div className='my-2 flex flex-col gap-2'>
-              <InfoBadge text='Will reload the page.' />
-              <InfoBadge text='When you select the system theme, the general pop-up will always be dark.' />
+              <InfoText text='Will reload the page.' />
+              <InfoText text='When you select the system theme, the general pop-up will always be dark.' />
             </div>
             <div className='max-w-xs'>
               <ThemeSwitcher />

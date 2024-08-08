@@ -5,11 +5,11 @@ import { useHover } from 'react-use'
 import Link from 'next/link'
 
 import { motion } from 'framer-motion'
-import { twMerge } from 'tailwind-merge'
 
 import { DIV } from '@/config/constants/framer'
 
 import type { TNavLink, TSelect } from '../lib/types'
+import { cn } from '../lib/utils'
 
 type THoverableElement = {
   element: TSelect['icon'] | string
@@ -51,7 +51,7 @@ export const HoverableNavLink = ({
   return useHover((hovered: boolean) => (
     <Link
       href={link.url}
-      className={twMerge(
+      className={cn(
         'flex w-full items-center gap-4 rounded-medium py-2 text-2xl md:text-base',
         !isActiveLink && 'text-default-500 hover:text-foreground',
         idx === 0 && 'mt-8 md:mt-4',
