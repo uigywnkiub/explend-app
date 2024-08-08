@@ -12,6 +12,7 @@ import type {
   TTransaction,
 } from '../lib/types'
 import { getFormattedCurrency } from '../lib/utils'
+import InfoText from './info-text'
 
 type TProps = {
   groupedTransactionsByDate: TGroupedTransactions
@@ -26,34 +27,40 @@ function TransactionList({
   transactionsWithChangedCategory,
   currency,
 }: TProps) {
-  const totalsWrapper =
-    'flex items-center gap-1 text-default-300 md:hover:text-foreground'
-
   return (
     <>
       {Object.keys(groupedTransactionsByDate)?.map((date) => {
         const { income, expense } = totalsTransactionsByDate[date]
 
+        const incomeIcon = <PiArrowCircleUpFill className='fill-success' />
+        const expenseIcon = <PiArrowCircleDownFill className='fill-danger' />
+        const totalsWrapper = 'flex items-center gap-1'
+        const totalsCurrency = currency?.code || DEFAULT_CURRENCY_CODE
+
         return (
           <div key={date} className='mx-auto max-w-3xl'>
             <div className='flex items-center justify-between p-2 text-default-500'>
-              <p className='text-sm text-default-300 md:hover:cursor-none md:hover:text-foreground'>
-                {date}
-              </p>
-              <div className='flex gap-2 text-sm md:hover:cursor-none'>
+              <InfoText text={date} withAsterisk={false} isSm />
+              <div className='flex gap-2 text-sm hover:cursor-none'>
                 {income > 0 && (
-                  <p className={totalsWrapper}>
-                    <PiArrowCircleUpFill className='fill-success' />
-                    {getFormattedCurrency(income)}{' '}
-                    {currency?.code || DEFAULT_CURRENCY_CODE}
-                  </p>
+                  <div className={totalsWrapper}>
+                    {incomeIcon}
+                    <InfoText
+                      text={`${getFormattedCurrency(income)} ${totalsCurrency}`}
+                      withAsterisk={false}
+                      isSm
+                    />
+                  </div>
                 )}
                 {expense > 0 && (
-                  <p className={totalsWrapper}>
-                    <PiArrowCircleDownFill className='fill-danger' />
-                    {getFormattedCurrency(expense)}{' '}
-                    {currency?.code || DEFAULT_CURRENCY_CODE}
-                  </p>
+                  <div className={totalsWrapper}>
+                    {expenseIcon}
+                    <InfoText
+                      text={`${getFormattedCurrency(expense)} ${totalsCurrency}`}
+                      withAsterisk={false}
+                      isSm
+                    />
+                  </div>
                 )}
               </div>
             </div>

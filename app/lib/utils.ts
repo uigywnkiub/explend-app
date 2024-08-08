@@ -1,6 +1,8 @@
 import toast from 'react-hot-toast'
 
+import config from '@/tailwind.config'
 import { CalendarDate } from '@internationalized/date'
+import { type ClassValue, clsx } from 'clsx'
 import {
   format,
   getDate,
@@ -10,10 +12,31 @@ import {
   isYesterday,
 } from 'date-fns'
 import emojiRegex from 'emoji-regex'
+import { extendTailwindMerge } from 'tailwind-merge'
+import defaultTheme from 'tailwindcss/defaultTheme'
 
 import { CURRENCY_CODE, DEFAULT_CATEGORY } from '@/config/constants/main'
 
 import type { TGetTransactions, THTMLElement, TTransaction } from './types'
+
+export const customTwMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      'font-size': Object.keys(config?.theme?.extend?.fontSize!).map(
+        (key) => `text-${key}`,
+      ),
+    },
+  },
+})
+export function cn(...args: ClassValue[]) {
+  return customTwMerge(clsx(args))
+}
+
+export const getBreakpointWidth = (
+  breakpoint: keyof typeof defaultTheme.screens,
+): string => {
+  return `(min-width: ${defaultTheme.screens[breakpoint]})`
+}
 
 export const capitalizeFirstLetter = (str: string): string => {
   if (!str) return str

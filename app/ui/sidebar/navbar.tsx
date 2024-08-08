@@ -20,9 +20,10 @@ import { useMedia } from 'react-use'
 
 import { usePathname } from 'next/navigation'
 
-import { getBreakpointWidth } from '@/config/constants/breakpoints'
 import { NAV_ICON_SIZE, NAV_TITLE } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
+
+import { getBreakpointWidth } from '@/app/lib/utils'
 
 import type { TNavLink } from '../../lib/types'
 import { HoverableNavLink } from '../hoverables'

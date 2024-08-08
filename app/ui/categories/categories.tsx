@@ -33,7 +33,7 @@ import {
 import { capitalizeFirstLetter, deepCompareArrays } from '@/app/lib/utils'
 
 import { HoverableElement } from '../hoverables'
-import InfoBadge from '../info-badge'
+import InfoText from '../info-text'
 import Category from './category'
 
 type TProps = {
@@ -232,10 +232,10 @@ function Categories({ userId, userCategories }: TProps) {
         </Button>
       </div>
       <div className='mt-4 flex flex-col gap-2 md:mt-8'>
-        <InfoBadge text='If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.' />
-        <InfoBadge text='Once editing, you will need to manually update your previous transactions with previous categories to new categories. You will see a badge on them.' />
-        <InfoBadge text='The emoji picker may appear with a slight delay.' />
-        <InfoBadge
+        <InfoText text='If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.' />
+        <InfoText text='Once editing, you will need to manually update your previous transactions with previous categories to new categories. You will see a badge on them.' />
+        <InfoText text='The emoji picker may appear with a slight delay.' />
+        <InfoText
           id='hint-1'
           text='1. The category subject does not affect the category data.'
           withAsterisk={false}
@@ -263,7 +263,7 @@ function Categories({ userId, userCategories }: TProps) {
                   state? This action is irreversible and will reset all your
                   current category data to default.
                 </p>
-                <InfoBadge text='Once reset, you will need to manually update your previous transactions with previous categories to new default categories. You will see a badge on them.' />
+                <InfoText text='Once reset, you will need to manually update your previous transactions with previous categories to new default categories. You will see a badge on them.' />
               </ModalBody>
               <ModalFooter>
                 <Button
