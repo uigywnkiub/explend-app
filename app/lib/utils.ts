@@ -190,3 +190,15 @@ export const deepCompareArrays = (array1: any[], array2: any[]): boolean => {
 
   return true // If all elements are deeply equal, the arrays are identical.
 }
+
+export const pluralize = (
+  count: number,
+  singular: string,
+  plural: string,
+): string => {
+  const pluralRules = new Intl.PluralRules('en-US')
+  const pluralCategory = pluralRules.select(count)
+  return pluralCategory === 'one' || pluralCategory === 'zero' || count === 0
+    ? singular
+    : plural
+}

@@ -1,3 +1,5 @@
+import { PiWarningOctagonFill } from 'react-icons/pi'
+
 import type { Metadata } from 'next'
 
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
@@ -11,11 +13,12 @@ import {
 
 import {
   createTransaction,
-  getBalance,
+  getCachedAllTransactions,
   getCachedAuthSession,
-  getCurrency,
-  getTransactionLimit,
-  getTransactions,
+  getCachedBalance,
+  getCachedCurrency,
+  getCachedTransactionLimit,
+  getCachedTransactions,
   resetCategories,
 } from './lib/actions'
 import type {
@@ -23,7 +26,11 @@ import type {
   TTotalsTransaction,
   TTransaction,
 } from './lib/types'
-import { formatDate, getTransactionsWithChangedCategory } from './lib/utils'
+import {
+  formatDate,
+  getTransactionsWithChangedCategory,
+  pluralize,
+} from './lib/utils'
 import BalanceLine from './ui/balance-line'
 import InfoBadge from './ui/info-badge'
 import NoTransactionsPlug from './ui/no-transaction-text'
@@ -51,14 +58,14 @@ export default async function Home({
   const page = Number(searchParams?.[SEARCH_PARAM.PAGE]) || 1
   const userTransactionLimit = query
     ? Infinity
-    : await getTransactionLimit(userId)
+    : await getCachedTransactionLimit(userId)
   const limit = userTransactionLimit || DEFAULT_TRANSACTION_LIMIT
   const offset = (page - 1) * limit
   const [balance, currency, { transactions, totalEntries, totalPages }] =
     await Promise.all([
-      getBalance(userId),
-      getCurrency(userId),
-      getTransactions(userId, offset, limit),
+      getCachedBalance(userId),
+      getCachedCurrency(userId),
+      getCachedTransactions(userId, offset, limit),
     ])
 
   const haveCategories = transactions.every((t) => t.categories)
@@ -75,8 +82,11 @@ export default async function Home({
     userCategories,
   )
 
-  const transactionsWithChangedCategory =
-    getTransactionsWithChangedCategory(transactions)
+  const transactionsWithChangedCategory = getTransactionsWithChangedCategory(
+    await getCachedAllTransactions(userId),
+  )
+  const countTransactionsWithChangedCategory =
+    transactionsWithChangedCategory.length
 
   const filteredTransactionsByQuery = transactions.filter((t) => {
     return t.description.toLowerCase().includes(query.toLowerCase())
@@ -160,13 +170,19 @@ export default async function Home({
         transactionsWithChangedCategory={transactionsWithChangedCategory}
         currency={currency}
       />
-      <div className='mt-4'>
+      <div className='mx-auto mt-4 max-w-3xl'>
         {!query && (
           <PaginationList
             totalPages={totalPages}
             totalEntries={totalEntries}
             limit={limit}
           />
+        )}
+        {countTransactionsWithChangedCategory > 0 && (
+          <p className='mt-4 text-center text-sm text-warning'>
+            <PiWarningOctagonFill className='inline animate-pulse' />{' '}
+            {`You still have ${countTransactionsWithChangedCategory} ${pluralize(countTransactionsWithChangedCategory, 'transaction', 'transactions')} with the old category.`}
+          </p>
         )}
       </div>
     </>
