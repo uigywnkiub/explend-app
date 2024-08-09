@@ -1,1 +1,1 @@
-yarn typecheck && yarn lint && yarn lint-staged
+pnpm typecheck && pnpm lint && pnpm lint-staged

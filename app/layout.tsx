@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next'
 import { ViewTransitions } from 'next-view-transitions'
 import { Inter } from 'next/font/google'
 import localFont from 'next/font/local'
-import Head from 'next/head'
 
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -106,7 +105,7 @@ export default function RootLayout({
   return (
     <ViewTransitions>
       <html lang='en'>
-        <Head>
+        <head>
           <link rel='icon' href='/favicon.ico' sizes='any' />
           <link
             rel='icon'
@@ -120,7 +119,7 @@ export default function RootLayout({
             type='image/<generated>'
             sizes='<generated>'
           />
-        </Head>
+        </head>
         <body
           suppressHydrationWarning
           className={`${fracktif.className} ${inter.variable} bg-background text-foreground`}

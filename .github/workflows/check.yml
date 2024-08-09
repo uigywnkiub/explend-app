@@ -1,4 +1,5 @@
 name: Check
+
 on:
   workflow_dispatch:
   pull_request:
@@ -8,47 +9,54 @@ on:
   push:
     branches:
       - main
+
 jobs:
   lint:
     name: ESLint and TypeScript
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: 'pnpm'
 
-      - name: Set up latest Yarn
-        uses: threeal/setup-yarn-action@v2.0.0
-        with:
-          version: latest
-          cache: true
+      - name: Install dependencies
+        run: pnpm i
 
       - name: Check ESLint
-        run: yarn lint
+        run: pnpm lint
 
       - name: Check TypeScript
-        run: yarn typecheck
+        run: pnpm typecheck
   test:
     name: Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: 'pnpm'
 
-      - name: Set up latest Yarn
-        uses: threeal/setup-yarn-action@v2.0.0
-        with:
-          version: latest
-          cache: true
+      - name: Install dependencies
+        run: pnpm i
 
       - name: Check Tests
-        run: yarn test
+        run: pnpm test

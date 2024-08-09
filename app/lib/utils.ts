@@ -19,7 +19,7 @@ import { CURRENCY_CODE, DEFAULT_CATEGORY } from '@/config/constants/main'
 
 import type { TGetTransactions, THTMLElement, TTransaction } from './types'
 
-export const customTwMerge = extendTailwindMerge({
+const customTwMerge = extendTailwindMerge({
   extend: {
     classGroups: {
       'font-size': Object.keys(config?.theme?.extend?.fontSize!).map(

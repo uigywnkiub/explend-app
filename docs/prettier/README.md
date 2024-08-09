@@ -38,6 +38,6 @@ One limitation with this approach is that `prettier-plugin-tailwindcss` _must_ b
 }
 ```
 
-Also, if you use vscode, only the tailwindcss plugin will work on save (command + s) and the rest of the plugins will work after running `yarn prettier` or `yarn prettier:fix`.
+Also, if you use vscode, only the tailwindcss plugin will work on save (command + s) and the rest of the plugins will work after running `pnpm prettier` or `pnpm prettier:fix`.
 
 However, all plugins may work correctly on the save (command + s). I guess it depends on their versions.
