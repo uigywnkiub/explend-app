@@ -16,7 +16,7 @@
 
 ## Review
 
-[Link to review the project](https://www.youtube.com/watch?v=v_tLuYTPoSI)
+[Link to project video review](https://www.youtube.com/watch?v=v_tLuYTPoSI)
 
 ## Contributing
 
