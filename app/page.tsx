@@ -92,6 +92,7 @@ export default async function Home({
     return t.description.toLowerCase().includes(query.toLowerCase())
   })
   const hasSearchedTransactions = filteredTransactionsByQuery.length > 0
+  const countFilteredTransactionsByQuery = filteredTransactionsByQuery.length
 
   const groupedTransactionsByDate: TGroupedTransactions = (
     query ? filteredTransactionsByQuery : transactions
@@ -157,7 +158,27 @@ export default async function Home({
                 {!hasSearchedTransactions ? (
                   <p>No Transactions Found</p>
                 ) : (
-                  <p>Last Transactions</p>
+                  <>
+                    {!query ? (
+                      <p>
+                        Last{' '}
+                        {pluralize(
+                          transactions.length,
+                          'Transaction',
+                          'Transactions',
+                        )}
+                      </p>
+                    ) : (
+                      <p>
+                        Found {countFilteredTransactionsByQuery}{' '}
+                        {pluralize(
+                          countFilteredTransactionsByQuery,
+                          'Transaction',
+                          'Transactions',
+                        )}
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             </>
