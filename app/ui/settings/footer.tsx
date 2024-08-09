@@ -7,7 +7,7 @@ import {
   PiGithubLogoFill,
 } from 'react-icons/pi'
 
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 
 import { getYear } from 'date-fns'
 

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 

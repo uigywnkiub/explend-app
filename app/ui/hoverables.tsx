@@ -2,11 +2,11 @@
 
 import { useHover } from 'react-use'
 
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 
 import { motion } from 'framer-motion'
 
-import { DIV } from '@/config/constants/framer'
+import { DIV } from '@/config/constants/motion'
 
 import type { TNavLink, TSelect } from '../lib/types'
 import { cn } from '../lib/utils'

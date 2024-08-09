@@ -6,7 +6,7 @@ import {
   PiNotePencilFill,
 } from 'react-icons/pi'
 
-import { useRouter } from 'next/navigation'
+import { useTransitionRouter } from 'next-view-transitions'
 
 import { Button, Input } from '@nextui-org/react'
 import { EmojiClickData } from 'emoji-picker-react'
@@ -63,7 +63,7 @@ function Category({
   isLoading,
   onEmojiClick,
 }: TProps) {
-  const router = useRouter()
+  const router = useTransitionRouter()
 
   return (
     <div className='mb-4 md:mb-8'>

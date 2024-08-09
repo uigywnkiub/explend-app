@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect } from 'react'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useTransitionRouter } from 'next-view-transitions'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { Pagination } from '@nextui-org/react'
 
@@ -19,7 +20,7 @@ type TProps = {
 }
 
 function PaginationList({ totalPages, totalEntries, limit }: TProps) {
-  const router = useRouter()
+  const router = useTransitionRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const page = searchParams.get(SEARCH_PARAM.PAGE)
