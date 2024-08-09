@@ -148,7 +148,7 @@ importers:
         specifier: ^24.1.1
         version: 24.1.1
       knip:
-        specifier: ^5.27.1
+        specifier: ^5.27.2
         version: 5.27.2(@types/node@22.1.0)(typescript@5.5.4)
       lint-staged:
         specifier: ^15.2.8
@@ -166,7 +166,7 @@ importers:
         specifier: ^3.4.7
         version: 3.4.9
       typescript:
-        specifier: ^5.4.5
+        specifier: ^5.5.4
         version: 5.5.4
       vite-tsconfig-paths:
         specifier: ^4.3.2

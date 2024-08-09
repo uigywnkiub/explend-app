@@ -1,4 +1,5 @@
 name: Check PR
+
 on:
   pull_request_target:
     types:
@@ -6,8 +7,10 @@ on:
       - edited
       - synchronize
       - reopened
+
 permissions:
   pull-requests: read
+
 jobs:
   lint:
     name: Lint PR title
