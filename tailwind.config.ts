@@ -16,6 +16,7 @@ const config: Config = {
     // './components/**/*.{js,ts,jsx,tsx,mdx}',
     // './ui/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    // Make sure it's pointing to the ROOT node_module
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
