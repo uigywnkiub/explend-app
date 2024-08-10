@@ -13,8 +13,8 @@
     "typecheck": "tsc",
     "test": "vitest",
     "test:cov": "vitest --coverage",
-    "prettier": "prettier --c .",
-    "prettier:fix": "prettier --w .",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
     "prepare": "husky",
     "knip": "knip"
   },

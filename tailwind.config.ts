@@ -3,9 +3,12 @@ import type { Config } from 'tailwindcss'
 
 import { BLINK_DURATION } from './config/constants/animation'
 import {
+  BRONZE,
   CUSTOM_DARK,
   CUSTOM_LIGHT,
   DANGER,
+  GOLD,
+  SILVER,
   SUCCESS,
 } from './config/constants/colors'
 
@@ -30,6 +33,11 @@ const config: Config = {
       screens: {
         xxs: '360px',
         xs: '480px',
+      },
+      colors: {
+        gold: GOLD,
+        silver: SILVER,
+        bronze: BRONZE,
       },
       keyframes: {
         ['blink-light']: {
