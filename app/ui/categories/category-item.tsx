@@ -124,7 +124,7 @@ function CategoryItem({
                 {item.emoji}
               </motion.div>
             </div>
-            <div className='overflow-hidden text-ellipsis whitespace-nowrap text-balance'>
+            <div className='truncate'>
               {item.name}
               {item.name === DEFAULT_CATEGORY && (
                 <InfoText text='Default category' withAsterisk={false} />

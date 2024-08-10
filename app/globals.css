@@ -49,3 +49,7 @@ input::-webkit-inner-spin-button {
 #sidebar-toggle:checked ~ .label > .hamburger-menu .bar3 {
   transform: rotate(-45deg) translate(4px, -4px);
 }
+
+/* Check if View Transitions API browser support */
+@supports (view-transition-name: figure-caption) {
+}

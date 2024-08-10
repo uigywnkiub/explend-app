@@ -11,13 +11,19 @@ import {
   isToday,
   isYesterday,
 } from 'date-fns'
+import { formatInTimeZone } from 'date-fns-tz'
 import emojiRegex from 'emoji-regex'
 import { extendTailwindMerge } from 'tailwind-merge'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
 import { CURRENCY_CODE, DEFAULT_CATEGORY } from '@/config/constants/main'
 
-import type { TGetTransactions, THTMLElement, TTransaction } from './types'
+import type {
+  TBrowserName,
+  TGetTransactions,
+  THTMLElement,
+  TTransaction,
+} from './types'
 
 const customTwMerge = extendTailwindMerge({
   extend: {
@@ -173,6 +179,21 @@ export const toCalendarDate = (date: Date) => {
   return new CalendarDate(getYear(date), getMonth(date) + 1, getDate(date))
 }
 
+export const getGreeting = (timeZoneIANA: string): string => {
+  const currentHour = formatInTimeZone(new Date(), timeZoneIANA, 'HH')
+  const parsedHour = parseInt(currentHour, 10)
+
+  if (parsedHour < 12) {
+    return 'Good morning'
+  } else if (parsedHour < 18) {
+    return 'Good afternoon'
+  } else if (parsedHour < 22) {
+    return 'Good evening'
+  } else {
+    return 'Good night'
+  }
+}
+
 const deepEqual = (obj1: any, obj2: any): boolean => {
   if (obj1 === obj2) return true // If both values are strictly equal, they are deeply equal.
 
@@ -224,4 +245,22 @@ export const pluralize = (
   return pluralCategory === 'one' || pluralCategory === 'zero' || count === 0
     ? singular
     : plural
+}
+
+export const getBrowserName = (userAgent: string | null): TBrowserName => {
+  if (!userAgent) return 'Unknown'
+
+  if (/Edg/.test(userAgent)) {
+    return 'Edge' // Edge
+  } else if (/OPR/.test(userAgent) || /Opera/.test(userAgent)) {
+    return 'Opera' // Opera
+  } else if (/Firefox/.test(userAgent)) {
+    return 'Firefox' // Firefox
+  } else if (/Chrome/.test(userAgent) && !/Edg/.test(userAgent)) {
+    return 'Chrome' // Chrome
+  } else if (/Safari/.test(userAgent) && !/Chrome/.test(userAgent)) {
+    return 'Safari' // Safari
+  } else {
+    return 'Unknown' // Unknown or unrecognized browser
+  }
 }

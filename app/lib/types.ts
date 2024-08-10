@@ -153,3 +153,11 @@ export type TCategoriesLoading = {
   item: boolean
   reset: boolean
 }
+
+export type TBrowserName =
+  | 'Chrome'
+  | 'Safari'
+  | 'Edge'
+  | 'Opera'
+  | 'Firefox'
+  | 'Unknown'
