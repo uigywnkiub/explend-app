@@ -31,7 +31,7 @@ import {
   getTransactionsWithChangedCategory,
   pluralize,
 } from './lib/utils'
-import BalanceLine from './ui/balance-line'
+import BalanceCard from './ui/balance-card'
 import InfoText from './ui/info-text'
 import NoTransactionsPlug from './ui/no-transaction-text'
 import PaginationList from './ui/pagination/pagination-list'
@@ -128,7 +128,7 @@ export default async function Home({
         {NAV_TITLE.HOME}
       </h1>
       <div className='mx-auto flex max-w-3xl flex-col gap-y-2'>
-        <BalanceLine
+        <BalanceCard
           balance={balance}
           currency={currency}
           user={session?.user}

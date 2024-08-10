@@ -11,6 +11,7 @@ import {
   isToday,
   isYesterday,
 } from 'date-fns'
+import { formatInTimeZone } from 'date-fns-tz'
 import emojiRegex from 'emoji-regex'
 import { extendTailwindMerge } from 'tailwind-merge'
 import defaultTheme from 'tailwindcss/defaultTheme'
@@ -171,6 +172,21 @@ export const copyToClipboard = async (
 
 export const toCalendarDate = (date: Date) => {
   return new CalendarDate(getYear(date), getMonth(date) + 1, getDate(date))
+}
+
+export const getGreeting = (timeZoneIANA: string): string => {
+  const currentHour = formatInTimeZone(new Date(), timeZoneIANA, 'HH')
+  const parsedHour = parseInt(currentHour, 10)
+
+  if (parsedHour < 12) {
+    return 'Good morning'
+  } else if (parsedHour < 18) {
+    return 'Good afternoon'
+  } else if (parsedHour < 22) {
+    return 'Good evening'
+  } else {
+    return 'Good night'
+  }
 }
 
 const deepEqual = (obj1: any, obj2: any): boolean => {

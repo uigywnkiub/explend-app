@@ -17,7 +17,6 @@ export default function ConfettiRain() {
       width={width}
       height={height}
       gravity={0.2}
-      opacity={0.9}
       recycle={false}
       numberOfPieces={party ? 100 : 0}
       onConfettiComplete={async (confetti) => {
