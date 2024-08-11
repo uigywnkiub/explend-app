@@ -114,7 +114,7 @@ Time: ${formatTime(createdAt)}`
         className={`h-auto w-full rounded-medium bg-content1 p-4 text-left text-lg font-bold ${isBlinkTransaction && 'animate-blink-light-once dark:animate-blink-dark-once'}`}
       >
         <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-2'>
+          <div className='flex items-center gap-2 break-all'>
             <div className='rounded-medium bg-content2 px-4 py-3 text-2xl'>
               <motion.div
                 drag
@@ -262,7 +262,7 @@ Time: ${formatTime(createdAt)}`
                 </div>
               </ModalHeader>
               <ModalBody>
-                <p className='text-default-500'>
+                <p className='overflow-hidden text-ellipsis text-default-500'>
                   Are you sure you want to delete the{' '}
                   <span className='text-foreground'>{description}</span>{' '}
                   transaction? This action is permanent and cannot be undone.
