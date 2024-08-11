@@ -4,15 +4,15 @@ import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
 import { DEFAULT_CURRENCY_CODE } from '@/config/constants/main'
 
-import TransactionItem from '@/app/ui/transaction-item'
+import TransactionItem from '@/app/ui/home/transaction-item'
 
 import type {
   TGroupedTransactions,
   TTotalsTransaction,
   TTransaction,
-} from '../lib/types'
-import { getFormattedCurrency } from '../lib/utils'
-import InfoText from './info-text'
+} from '../../lib/types'
+import { getFormattedCurrency } from '../../lib/utils'
+import InfoText from '../info-text'
 
 type TProps = {
   groupedTransactionsByDate: TGroupedTransactions

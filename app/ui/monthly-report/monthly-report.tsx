@@ -23,9 +23,10 @@ import {
   calculateMonthlyReportData,
   filterTransactions,
   filterTransactionsByDateRange,
-} from '../lib/data'
-import { TTransaction } from '../lib/types'
-import { getFormattedCurrency, toCalendarDate } from '../lib/utils'
+} from '@/app/lib/data'
+import type { TTransaction } from '@/app/lib/types'
+import { getFormattedCurrency, toCalendarDate } from '@/app/lib/utils'
+
 import MonthPicker from './month-picker'
 
 type TProps = {

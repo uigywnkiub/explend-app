@@ -32,13 +32,13 @@ import {
   pluralize,
 } from './lib/utils'
 import BalanceCard from './ui/balance-card'
+import Search from './ui/home/search'
+import TransactionForm from './ui/home/transaction-form'
+import TransactionList from './ui/home/transaction-list'
 import InfoText from './ui/info-text'
-import NoTransactionsPlug from './ui/no-transaction-text'
+import NoTransactionsPlug from './ui/no-transactions-plug'
 import PaginationList from './ui/pagination/pagination-list'
-import Search from './ui/search'
 import WithSidebar from './ui/sidebar/with-sidebar'
-import TransactionForm from './ui/transaction-form'
-import TransactionList from './ui/transaction-list'
 
 export const metadata: Metadata = {
   title: `${NAV_TITLE.HOME} | ${APP_NAME.FULL}`,

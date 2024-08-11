@@ -22,8 +22,8 @@ import {
   DEFAULT_CURRENCY_SIGN,
 } from '@/config/constants/main'
 
-import type { TTransaction } from '../lib/types'
-import { getFormattedCurrency } from '../lib/utils'
+import type { TTransaction } from '../../lib/types'
+import { getFormattedCurrency } from '../../lib/utils'
 
 const ACCORDION_ITEM_KEY = 'Form'
 const AMOUNT_LENGTH = 6

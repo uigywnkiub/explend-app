@@ -9,8 +9,9 @@ import { Pagination } from '@nextui-org/react'
 
 import { SEARCH_PARAM } from '@/config/constants/navigation'
 
-import type { TGetTransactions } from '../../lib/types'
-import { calculateEntryRange, toNumber } from '../../lib/utils'
+import type { TGetTransactions } from '@/app/lib/types'
+import { calculateEntryRange, toNumber } from '@/app/lib/utils'
+
 import PaginationInfo from './pagination-info'
 
 type TProps = {

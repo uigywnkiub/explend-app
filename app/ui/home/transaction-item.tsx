@@ -37,15 +37,15 @@ import {
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
 
-import { deleteTransaction } from '../lib/actions'
-import type { TTransaction } from '../lib/types'
+import { deleteTransaction } from '../../lib/actions'
+import type { TTransaction } from '../../lib/types'
 import {
   copyToClipboard,
   formatTime,
   getEmojiFromCategory,
   getFormattedCurrency,
-} from '../lib/utils'
-import { HoverableElement } from './hoverables'
+} from '../../lib/utils'
+import { HoverableElement } from '../hoverables'
 
 const enum DROPDOWN_KEY {
   COPY = 'copy',
