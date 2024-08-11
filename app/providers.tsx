@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast'
 
 import { Next13ProgressBar } from 'next13-progressbar'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
-import { useTransitionRouter } from 'next-view-transitions'
+import { useRouter } from 'next/navigation'
 
 import { NextUIProvider } from '@nextui-org/react'
 
@@ -19,7 +19,7 @@ import {
 import { TTheme } from './lib/types'
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  const router = useTransitionRouter()
+  const router = useRouter()
   const [theme, setTheme] = useState<TTheme | undefined>(undefined)
 
   useEffect(() => {

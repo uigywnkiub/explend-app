@@ -11,7 +11,7 @@ import {
   PiWarningOctagonFill,
 } from 'react-icons/pi'
 
-import { useTransitionRouter } from 'next-view-transitions'
+import { useRouter } from 'next/navigation'
 
 import {
   Badge,
@@ -76,7 +76,7 @@ function TransactionItem({
   createdAt,
   hasCategoryChanged,
 }: TProps) {
-  const router = useTransitionRouter()
+  const router = useRouter()
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [isBlinkTransaction, setIsBlinkTransaction] = useState(false)
   const transactionDataToCopy = `Transaction data from ${APP_NAME.FULL}

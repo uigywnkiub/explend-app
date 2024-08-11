@@ -4,7 +4,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 
 import { useTheme } from 'next-themes'
-import { useTransitionRouter } from 'next-view-transitions'
+import { useRouter } from 'next/navigation'
 
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import {
@@ -20,7 +20,6 @@ import {
 } from '@nextui-org/react'
 
 import { DEFAULT_CURRENCY_SIGN } from '@/config/constants/main'
-import { slideInOut } from '@/config/constants/motion'
 import { ROUTE } from '@/config/constants/routes'
 
 import { editTransactionById } from '../lib/actions'
@@ -42,7 +41,7 @@ type TProps = {
 }
 
 function TransactionFormEdit({ transaction }: TProps) {
-  const router = useTransitionRouter()
+  const router = useRouter()
   const { theme } = useTheme()
   const [isLoading, setIsLoading] = useState(false)
   const [isSwitchedOn, setIsSwitchedOn] = useState(transaction.isIncome)
@@ -123,9 +122,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     try {
       await editTransactionById(transactionId, newTransactionData)
       toast.success('Transaction edited.')
-      router.push(ROUTE.HOME, {
-        onTransitionReady: slideInOut,
-      })
+      router.push(ROUTE.HOME)
     } catch (err) {
       toast.error('Failed to edit transaction.')
       throw err

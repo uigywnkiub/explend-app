@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDebounce } from 'react-use'
 
-import { useTransitionRouter } from 'next-view-transitions'
+import { useRouter } from 'next/navigation'
 import { usePathname, useSearchParams } from 'next/navigation'
 
 import { Accordion, AccordionItem, Input } from '@nextui-org/react'
@@ -24,7 +24,7 @@ export default function Search({
 }: TProps) {
   const searchParams = useSearchParams()
   const pathname = usePathname()
-  const router = useTransitionRouter()
+  const router = useRouter()
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get(SEARCH_PARAM.QUERY)?.toString() || '',
   )
