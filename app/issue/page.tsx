@@ -22,7 +22,7 @@ export default function Page() {
         </p>
         <Link
           href='https://github.com/uigywnkiub/explend-app/issues'
-          className='text-primary underline md:no-underline md:hover:underline'
+          className='text-primary underline md:hover:no-underline md:hover:opacity-hover'
           target='_blank'
         >
           Report Link ↗

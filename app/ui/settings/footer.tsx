@@ -40,7 +40,7 @@ function Footer() {
             &copy; {APP_NAME.SHORT}, {getYear(new Date())}. All rights reserved
             | design by{' '}
             <Link href='https://volodymyr-g.vercel.app' target='_blank'>
-              <span className='cursor-pointer underline md:no-underline md:hover:text-foreground md:hover:underline'>
+              <span className='cursor-pointer underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
                 Volodymyr
               </span>
             </Link>
@@ -53,7 +53,7 @@ function Footer() {
                   key={link.url}
                   href={link.url}
                   target='_blank'
-                  className='cursor-pointer hover:text-foreground'
+                  className='cursor-pointer hover:text-foreground md:hover:opacity-hover'
                 >
                   <HoverableElement
                     element={link.icon}
