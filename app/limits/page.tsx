@@ -4,7 +4,7 @@ import { NAV_TITLE } from '@/config/constants/navigation'
 
 import { getAllTransactions, getAuthSession } from '../lib/actions'
 import ConstructionPlug from '../ui/construction-plug'
-import NoTransactionsPlug from '../ui/no-transaction-text'
+import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
 
 export const metadata: Metadata = {

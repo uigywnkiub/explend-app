@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import { getAllTransactions, getAuthSession, getCurrency } from '../lib/actions'
-import MonthlyReport from '../ui/monthly-report'
-import NoTransactionsPlug from '../ui/no-transaction-text'
+import MonthlyReport from '../ui/monthly-report/monthly-report'
+import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
 
 export const metadata: Metadata = {

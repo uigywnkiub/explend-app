@@ -9,7 +9,7 @@ import {
   getCountDocuments,
 } from '../lib/actions'
 import Chart from '../ui/chart/chart'
-import NoTransactionsPlug from '../ui/no-transaction-text'
+import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
 
 export const metadata: Metadata = {

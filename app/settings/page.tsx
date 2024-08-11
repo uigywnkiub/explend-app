@@ -12,7 +12,7 @@ import {
   signOutAccount,
 } from '../lib/actions'
 import InfoText from '../ui/info-text'
-import NoTransactionsPlug from '../ui/no-transaction-text'
+import NoTransactionsPlug from '../ui/no-transactions-plug'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
 import ExitAccount from '../ui/settings/exit-account'
