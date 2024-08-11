@@ -5,6 +5,8 @@ import {
   PiBugBeetleFill,
   PiChatText,
   PiChatTextFill,
+  PiEscalatorUp,
+  PiEscalatorUpFill,
   PiGearSix,
   PiGearSixFill,
   PiHouse,
@@ -47,6 +49,12 @@ const topNavLinks: TNavLink[] = [
     url: ROUTE.CHART,
     icon: <PiPolygon size={NAV_ICON_SIZE} />,
     hoverIcon: <PiPolygonFill size={NAV_ICON_SIZE} />,
+  },
+  {
+    title: NAV_TITLE.LIMITS,
+    url: ROUTE.LIMITS,
+    icon: <PiEscalatorUp size={NAV_ICON_SIZE} />,
+    hoverIcon: <PiEscalatorUpFill size={NAV_ICON_SIZE} />,
   },
   {
     title: NAV_TITLE.CATEGORIES,

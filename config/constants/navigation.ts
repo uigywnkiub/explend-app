@@ -5,6 +5,7 @@ export const enum NAV_TITLE {
   HOME = 'Home',
   MONTHLY_REPORT = 'Monthly Report',
   CHART = 'Chart',
+  LIMITS = 'Limits',
   CATEGORIES = 'Categories',
   SETTINGS = 'Settings',
   FEEDBACK = 'Give Feedback',
