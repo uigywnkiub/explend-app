@@ -2,7 +2,7 @@
 
 import { useHover } from 'react-use'
 
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 
 import { motion } from 'framer-motion'
 
