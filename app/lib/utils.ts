@@ -18,7 +18,12 @@ import defaultTheme from 'tailwindcss/defaultTheme'
 
 import { CURRENCY_CODE, DEFAULT_CATEGORY } from '@/config/constants/main'
 
-import type { TGetTransactions, THTMLElement, TTransaction } from './types'
+import type {
+  TBrowserName,
+  TGetTransactions,
+  THTMLElement,
+  TTransaction,
+} from './types'
 
 const customTwMerge = extendTailwindMerge({
   extend: {
@@ -240,4 +245,22 @@ export const pluralize = (
   return pluralCategory === 'one' || pluralCategory === 'zero' || count === 0
     ? singular
     : plural
+}
+
+export const getBrowserName = (userAgent: string | null): TBrowserName => {
+  if (!userAgent) return 'Unknown'
+
+  if (/Edg/.test(userAgent)) {
+    return 'Edge' // Edge
+  } else if (/OPR/.test(userAgent) || /Opera/.test(userAgent)) {
+    return 'Opera' // Opera
+  } else if (/Firefox/.test(userAgent)) {
+    return 'Firefox' // Firefox
+  } else if (/Chrome/.test(userAgent) && !/Edg/.test(userAgent)) {
+    return 'Chrome' // Chrome
+  } else if (/Safari/.test(userAgent) && !/Chrome/.test(userAgent)) {
+    return 'Safari' // Safari
+  } else {
+    return 'Unknown' // Unknown or unrecognized browser
+  }
 }

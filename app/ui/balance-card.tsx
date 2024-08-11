@@ -5,7 +5,10 @@ import { useRef, useState } from 'react'
 import { Card, CardHeader } from '@nextui-org/react'
 
 import { DANGER, OPACITY, SUCCESS } from '@/config/constants/colors'
-import { DEFAULT_CURRENCY_CODE } from '@/config/constants/main'
+import {
+  DEFAULT_CURRENCY_CODE,
+  DEFAULT_TIME_ZONE,
+} from '@/config/constants/main'
 
 import type { TTransaction, TUser } from '../lib/types'
 import { getFormattedBalance, getGreeting } from '../lib/utils'
@@ -24,7 +27,7 @@ function BalanceCard({ balance, currency, user }: TProps) {
 
   const isPositiveBalance = Number(balance) > 0
   const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const greetingMsg = `${getGreeting(currentTimeZone || 'Europe/Kiev')} ${user?.name} 👋🏼`
+  const greetingMsg = `${getGreeting(currentTimeZone || DEFAULT_TIME_ZONE)}, ${user?.name} 👋🏼`
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!divRef.current || isFocused) return

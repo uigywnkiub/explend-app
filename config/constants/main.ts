@@ -1,8 +1,8 @@
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
 export const DEFAULT_CATEGORY: string = 'Unknown'
-
 export const DEFAULT_ICON_SIZE: number = 18
+export const DEFAULT_TIME_ZONE: string = 'Europe/Kiev'
 
 export const enum CURRENCY_NAME {
   UAH = 'Ukrainian Hryvnia',
@@ -27,9 +27,7 @@ export const enum APP_NAME {
   FULL = 'Explend App',
   SHORT = 'Explend',
 }
-
 export const APP_DESCRIPTION: string =
   'Stop wondering where your money goes. Track Income & Expense.'
-
 export const APP_URL: string = process.env.APP_URL
 export const APP_LOCALHOST_URL: string = process.env.APP_LOCALHOST_URL
