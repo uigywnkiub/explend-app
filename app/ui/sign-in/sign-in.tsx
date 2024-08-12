@@ -94,6 +94,13 @@ function SignIn() {
         hoverIcon: <PiGoogleLogoFill size={DEFAULT_ICON_SIZE} />,
       },
       {
+        provider: 'notion',
+        title: 'Continue with Notion',
+        isLoading: isLoading.notion,
+        icon: <PiNotionLogo size={DEFAULT_ICON_SIZE} />,
+        hoverIcon: <PiNotionLogoFill size={DEFAULT_ICON_SIZE} />,
+      },
+      {
         provider: 'spotify',
         title: 'Continue with Spotify',
         isLoading: isLoading.spotify,
@@ -106,13 +113,6 @@ function SignIn() {
         isLoading: isLoading.dribbble,
         icon: <PiDribbbleLogo size={DEFAULT_ICON_SIZE} />,
         hoverIcon: <PiDribbbleLogoFill size={DEFAULT_ICON_SIZE} />,
-      },
-      {
-        provider: 'notion',
-        title: 'Continue with Notion',
-        isLoading: isLoading.notion,
-        icon: <PiNotionLogo size={DEFAULT_ICON_SIZE} />,
-        hoverIcon: <PiNotionLogoFill size={DEFAULT_ICON_SIZE} />,
       },
     ]
   }, [
@@ -138,13 +138,13 @@ function SignIn() {
           <Logo />
         </div>
         <h1 className='mb-2 text-3xl font-bold md:text-4xl'>
-          Welcome to {APP_NAME.FULL}
+          Welcome to {APP_NAME.SHORT}
         </h1>
         <p className='text-default-500 md:text-lg'>{APP_DESCRIPTION}</p>
         <Divider className='my-4 w-full bg-divider md:w-1/2' />
         <div className='flex flex-col items-center space-y-3'>
           <p className='text-lg font-semibold md:text-lg'>
-            Start Your Financial Wellness Journey.
+            Start Your Financial Wellness Journey.{' '}
             <span className='mt-1 block text-sm font-medium text-default-500'>
               AES encryption protects your sensitive data.
             </span>
