@@ -29,7 +29,7 @@ export const HoverableElement = ({
     return (
       <motion.div
         initial={{ ...DIV.INITIAL, y: withShift ? -20 : 0 }}
-        animate={{ ...DIV.ANIMATE(hovered, withScale), y: 0 }}
+        animate={{ ...DIV.ANIMATE(hovered, isMd && withScale), y: 0 }}
         transition={{ ...DIV.TRANSITION }}
       >
         {isMd

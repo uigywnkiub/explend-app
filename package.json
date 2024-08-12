@@ -48,7 +48,7 @@
     "react-use": "^17.5.1",
     "recharts": "^2.12.7",
     "resend": "^3.5.0",
-    "tailwind-merge": "^2.5.0"
+    "tailwind-merge": "^2.5.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",

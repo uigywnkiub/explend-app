@@ -6,6 +6,7 @@ import {
   PiGithubLogo,
   PiGithubLogoFill,
 } from 'react-icons/pi'
+import { useMedia } from 'react-use'
 
 import Link from 'next/link'
 
@@ -14,6 +15,7 @@ import { getYear } from 'date-fns'
 import { APP_NAME } from '@/config/constants/main'
 
 import type { TSocialLink } from '@/app/lib/types'
+import { getBreakpointWidth } from '@/app/lib/utils'
 
 import { HoverableElement } from '../hoverables'
 
@@ -31,40 +33,39 @@ const socialLinks: TSocialLink[] = [
 ]
 
 function Footer() {
+  const isMd = useMedia(getBreakpointWidth('md'), typeof window !== 'undefined')
+
   return (
     <>
-      <footer className='mt-8 flex items-center justify-center text-center text-default-300 md:mt-16'>
-        <div>
-          <div className='text-xs md:text-sm'>
-            {/* {<Logo size='smallest' withBadge={false} />}  */}
-            &copy; {APP_NAME.SHORT}, {getYear(new Date())}. All rights reserved
-            | design by{' '}
-            <Link href='https://volodymyr-g.vercel.app' target='_blank'>
-              <span className='cursor-pointer underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
-                Volodymyr
-              </span>
-            </Link>
-            .
-          </div>
-          <div className='mt-1 flex justify-center gap-1'>
-            {socialLinks.map((link) => {
-              return (
-                <Link
-                  key={link.url}
-                  href={link.url}
-                  target='_blank'
-                  className='cursor-pointer hover:text-foreground md:hover:opacity-hover'
-                >
-                  <HoverableElement
-                    element={link.icon}
-                    hoveredElement={link.hoverIcon}
-                    withShift={false}
-                    withScale
-                  />
-                </Link>
-              )
-            })}
-          </div>
+      <footer className='mt-32 flex flex-col-reverse items-center justify-center gap-2 text-center text-default-500'>
+        <div className='text-xs md:text-sm'>
+          {/* {<Logo size='smallest' withBadge={false} />}  */}
+          {APP_NAME.SHORT} &copy; {getYear(new Date())}. All rights reserved |
+          design by{' '}
+          <Link href='https://volodymyr-g.vercel.app' target='_blank'>
+            <span className='cursor-pointer underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
+              Volodymyr
+            </span>
+          </Link>
+          .
+        </div>
+        <div className='flex justify-center gap-1'>
+          {socialLinks.map((link) => {
+            return (
+              <Link
+                key={link.url}
+                href={link.url}
+                target='_blank'
+                className='cursor-pointer hover:text-foreground md:hover:opacity-hover'
+              >
+                <HoverableElement
+                  element={link.icon}
+                  hoveredElement={isMd ? link.hoverIcon : undefined}
+                  withShift={false}
+                />
+              </Link>
+            )
+          })}
         </div>
       </footer>
     </>
