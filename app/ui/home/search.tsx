@@ -15,12 +15,12 @@ const ACCORDION_ITEM_KEY = 'Search'
 
 type TProps = {
   placeholder: string
-  hasSearchedTransactions: boolean
+  hasSearchedTransactionsByQuery: boolean
 }
 
 export default function Search({
   placeholder,
-  hasSearchedTransactions,
+  hasSearchedTransactionsByQuery,
 }: TProps) {
   const searchParams = useSearchParams()
   const pathname = usePathname()
@@ -70,13 +70,13 @@ export default function Search({
     }
 
     if (isInitialExpanded.current) {
-      if (hasSearchedTransactions) {
+      if (hasSearchedTransactionsByQuery) {
         toast.success('Transactions found.')
       } else {
         toast.error('No transactions found.')
       }
     }
-  }, [hasSearchedTransactions])
+  }, [hasSearchedTransactionsByQuery])
 
   const accordionTitle = isExpanded
     ? `Hide ${ACCORDION_ITEM_KEY}`
@@ -104,8 +104,8 @@ export default function Search({
         >
           <Input
             size='lg'
-            color={hasSearchedTransactions ? 'primary' : 'danger'}
-            description='You can do searches by description and amount.'
+            color={hasSearchedTransactionsByQuery ? 'primary' : 'danger'}
+            description='You can do searches by description, category, and amount.'
             isClearable
             placeholder={placeholder}
             onClear={() => [onSearchChange(''), setSearchTerm('')]}

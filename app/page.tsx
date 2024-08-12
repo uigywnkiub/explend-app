@@ -28,6 +28,7 @@ import type {
 } from './lib/types'
 import {
   formatDate,
+  getCategoryWithoutEmoji,
   getTransactionsWithChangedCategory,
   pluralize,
 } from './lib/utils'
@@ -88,18 +89,21 @@ export default async function Home({
   const countTransactionsWithChangedCategory =
     transactionsWithChangedCategory.length
 
-  const filteredTransactionsByQuery = transactions.filter((t) => {
+  const searchedTransactionsByQuery = transactions.filter((t) => {
     const toLowerCase = (str: string) => str.toLowerCase()
     return (
       toLowerCase(t.description).includes(toLowerCase(query)) ||
-      toLowerCase(t.amount).includes(toLowerCase(query))
+      toLowerCase(t.amount).includes(toLowerCase(query)) ||
+      toLowerCase(getCategoryWithoutEmoji(t.category)).includes(
+        toLowerCase(query),
+      )
     )
   })
-  const hasSearchedTransactions = filteredTransactionsByQuery.length > 0
-  const countFilteredTransactionsByQuery = filteredTransactionsByQuery.length
+  const hasSearchedTransactionsByQuery = searchedTransactionsByQuery.length > 0
+  const countSearchedTransactionsByQuery = searchedTransactionsByQuery.length
 
   const groupedTransactionsByDate: TGroupedTransactions = (
-    query ? filteredTransactionsByQuery : transactions
+    query ? searchedTransactionsByQuery : transactions
   )?.reduce((acc: Record<string, TTransaction[]>, t: TTransaction) => {
     const date = formatDate(t.createdAt)
     if (!acc[date]) {
@@ -156,10 +160,10 @@ export default async function Home({
             <>
               <Search
                 placeholder='Type to search...'
-                hasSearchedTransactions={hasSearchedTransactions}
+                hasSearchedTransactionsByQuery={hasSearchedTransactionsByQuery}
               />
               <div className='mb-2 mt-4'>
-                {!hasSearchedTransactions ? (
+                {!hasSearchedTransactionsByQuery ? (
                   <p>No Transactions Found</p>
                 ) : (
                   <>
@@ -174,9 +178,9 @@ export default async function Home({
                       </p>
                     ) : (
                       <p>
-                        Found {countFilteredTransactionsByQuery}{' '}
+                        Found {countSearchedTransactionsByQuery}{' '}
                         {pluralize(
-                          countFilteredTransactionsByQuery,
+                          countSearchedTransactionsByQuery,
                           'Transaction',
                           'Transactions',
                         )}
