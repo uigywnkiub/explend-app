@@ -89,7 +89,11 @@ export default async function Home({
     transactionsWithChangedCategory.length
 
   const filteredTransactionsByQuery = transactions.filter((t) => {
-    return t.description.toLowerCase().includes(query.toLowerCase())
+    const toLowerCase = (str: string) => str.toLowerCase()
+    return (
+      toLowerCase(t.description).includes(toLowerCase(query)) ||
+      toLowerCase(t.amount).includes(toLowerCase(query))
+    )
   })
   const hasSearchedTransactions = filteredTransactionsByQuery.length > 0
   const countFilteredTransactionsByQuery = filteredTransactionsByQuery.length

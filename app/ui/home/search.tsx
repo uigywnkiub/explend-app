@@ -105,6 +105,7 @@ export default function Search({
           <Input
             size='lg'
             color={hasSearchedTransactions ? 'primary' : 'danger'}
+            description='You can do searches by description and amount.'
             isClearable
             placeholder={placeholder}
             onClear={() => [onSearchChange(''), setSearchTerm('')]}
@@ -113,6 +114,7 @@ export default function Search({
             classNames={{
               input: 'border-none focus:ring-0 placeholder:text-default-500',
               inputWrapper: 'h-20 my-2 px-4',
+              description: 'text-left',
             }}
           />
         </AccordionItem>
