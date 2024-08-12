@@ -1,6 +1,6 @@
 'use client'
 
-import { useHover } from 'react-use'
+import { useHover, useMedia } from 'react-use'
 
 import Link from 'next/link'
 
@@ -9,7 +9,7 @@ import { motion } from 'framer-motion'
 import { DIV } from '@/config/constants/motion'
 
 import type { TNavLink, TSelect } from '../lib/types'
-import { cn } from '../lib/utils'
+import { cn, getBreakpointWidth } from '../lib/utils'
 
 type THoverableElement = {
   element: TSelect['icon'] | string
@@ -23,6 +23,8 @@ export const HoverableElement = ({
   withScale = false,
   withShift = true,
 }: THoverableElement) => {
+  const isMd = useMedia(getBreakpointWidth('md'), typeof window !== 'undefined')
+
   return useHover((hovered: boolean) => {
     return (
       <motion.div
@@ -30,7 +32,11 @@ export const HoverableElement = ({
         animate={{ ...DIV.ANIMATE(hovered, withScale), y: 0 }}
         transition={{ ...DIV.TRANSITION }}
       >
-        {hoveredElement && hovered ? hoveredElement : element}
+        {isMd
+          ? hoveredElement && hovered
+            ? hoveredElement
+            : element
+          : hoveredElement || element}
       </motion.div>
     )
   })
