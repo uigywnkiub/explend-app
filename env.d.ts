@@ -8,6 +8,7 @@ declare namespace NodeJS {
     IS_RESEND_ENABLE: string
     APP_URL: string
     APP_LOCALHOST_URL: string
+    GOOGLE_ANALYTICS_ID: string
     AUTH_SECRET: string
     AUTH_GITHUB_ID: string
     AUTH_GITHUB_SECRET: string

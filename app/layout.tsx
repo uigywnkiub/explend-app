@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
@@ -125,6 +126,7 @@ export default function RootLayout({
         <Providers>{children}</Providers>
         <SpeedInsights debug={false} />
         <Analytics debug={false} />
+        <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID} />
       </body>
     </html>
   )
