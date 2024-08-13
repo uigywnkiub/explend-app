@@ -159,7 +159,6 @@ export default async function Home({
           ) : (
             <>
               <Search
-                placeholder='Type to search...'
                 hasSearchedTransactionsByQuery={hasSearchedTransactionsByQuery}
               />
               <div className='mb-2 mt-4'>
