@@ -3,7 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 import * as Sentry from '@sentry/nextjs'
 
-import { IS_PROD, REGEX_APP_URL } from './config/constants/main'
+import { APP_URL, IS_PROD, REGEX_APP_URL } from './config/constants/main'
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -11,7 +11,7 @@ Sentry.init({
   // Enable Sentry only in production mode
   enabled: IS_PROD,
 
-  allowUrls: [REGEX_APP_URL.source],
+  denyUrls: [REGEX_APP_URL.source, APP_URL + '/sw.js'],
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
