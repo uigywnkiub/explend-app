@@ -32,5 +32,5 @@ export const APP_DESCRIPTION: string =
 export const APP_URL: string = process.env.APP_URL
 export const APP_LOCALHOST_URL: string = process.env.APP_LOCALHOST_URL
 // This regex will match any URL that starts with https://explend-, followed by any alphanumeric and hyphenated string, and ends with -projects.vercel.app.
-export const REGEX_APP_URL: RegExp =
+export const REGEX_APP_PREVIEW_PROD_URL: RegExp =
   /^https:\/\/explend-[\w\d-]+-projects[\w\d-]*\.vercel\.app(\/.*)?$/
