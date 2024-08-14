@@ -65,8 +65,10 @@ export const getCategoryWithoutEmoji = (
   return category.replace(regex, '').trim()
 }
 
+export const toLowerCase = (str: string) => str.toLowerCase()
+
 export const getSlicedCurrencyCode = (code: CURRENCY_CODE): string => {
-  return code.toLocaleLowerCase().slice(0, 2)
+  return toLowerCase(code).slice(0, 2)
 }
 
 export const getTransactionsWithChangedCategory = (
