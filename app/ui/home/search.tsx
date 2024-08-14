@@ -109,7 +109,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
             defaultValue={searchTerm}
             classNames={{
               input: 'border-none focus:ring-0 placeholder:text-default-500',
-              inputWrapper: 'h-20 my-2 px-4',
+              inputWrapper: 'h-16 md:h-20 my-2 px-3',
               description: 'text-left',
             }}
           />

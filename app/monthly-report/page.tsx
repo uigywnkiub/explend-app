@@ -28,7 +28,7 @@ export default async function Page() {
 
   const content = (
     <>
-      <h1 className='mb-4 text-center text-2xl font-bold md:mb-8'>
+      <h1 className='mb-4 text-center text-2xl font-semibold md:mb-8'>
         {NAV_TITLE.MONTHLY_REPORT}
       </h1>
       <div className='mx-auto max-w-3xl'>

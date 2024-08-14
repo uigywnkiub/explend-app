@@ -26,6 +26,7 @@ import { editTransactionById } from '../lib/actions'
 import type { TTheme, TTransaction } from '../lib/types'
 import {
   capitalizeFirstLetter,
+  cn,
   getCategoryWithEmoji,
   getCategoryWithoutEmoji,
   getFormattedCurrency,
@@ -159,14 +160,10 @@ function TransactionFormEdit({ transaction }: TProps) {
           required
           size='lg'
           color={isSwitchedOn ? 'success' : 'danger'}
-          placeholder={
-            isSwitchedOn
-              ? 'Type income transaction...'
-              : 'Type expense transaction...'
-          }
+          placeholder={isSwitchedOn ? 'Type income...' : 'Type expense...'}
           classNames={{
             input: 'border-none focus:ring-0 placeholder:text-default-500',
-            inputWrapper: 'h-20 my-2 px-4',
+            inputWrapper: 'h-16 md:h-20 my-2 px-3',
           }}
           endContent={
             <Input
@@ -176,6 +173,7 @@ function TransactionFormEdit({ transaction }: TProps) {
               aria-label='Amount'
               value={amount}
               onChange={onChangeAmount}
+              onBlur={() => parseFloat(amount) === 0 && setAmount('')}
               required
               maxLength={AMOUNT_LENGTH + 1}
               // pattern='\d+'
@@ -185,13 +183,20 @@ function TransactionFormEdit({ transaction }: TProps) {
               size='lg'
               classNames={{
                 input:
-                  'border-none focus:ring-0 placeholder:text-default-500 text-center',
-                inputWrapper: 'h-12 w-full px-4',
-                base: 'w-44 md:w-36',
+                  'border-none focus:ring-0 placeholder:text-default-500 text-default-500 text-center',
+                inputWrapper: 'h-12 w-full pl-3 md:px-4',
+                base: 'w-[154px] md:w-36',
               }}
               endContent={
-                <div className='pointer-events-none flex items-center'>
-                  <span className='text-md text-lg text-default-500'>
+                <div className='pointer-events-none mt-[3px] flex items-center'>
+                  <span
+                    className={cn(
+                      'text-md text-lg',
+                      parseFloat(amount) >= 1
+                        ? 'text-foreground'
+                        : 'text-default-500',
+                    )}
+                  >
                     {transaction.currency?.sign || DEFAULT_CURRENCY_SIGN}
                   </span>
                 </div>
@@ -223,6 +228,10 @@ function TransactionFormEdit({ transaction }: TProps) {
                   name='category'
                   label='Select a category'
                   className='w-56'
+                  classNames={{
+                    trigger:
+                      'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                  }}
                   items={userCategories || DEFAULT_CATEGORIES}
                   selectedKeys={category}
                   defaultSelectedKeys={category}
