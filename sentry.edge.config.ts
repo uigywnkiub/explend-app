@@ -7,12 +7,12 @@ import * as Sentry from '@sentry/nextjs'
 import { IS_PROD, REGEX_APP_URL } from './config/constants/main'
 
 Sentry.init({
-  dsn: 'https://ea71017b9fc55199468ca928a1744adc@o4507440201859072.ingest.de.sentry.io/4507440206118992',
-
-  allowUrls: [REGEX_APP_URL.source],
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
   // Enable Sentry only in production mode
   enabled: IS_PROD,
+
+  allowUrls: [REGEX_APP_URL.source],
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,

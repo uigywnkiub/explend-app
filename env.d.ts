@@ -9,6 +9,8 @@ declare namespace NodeJS {
     APP_URL: string
     APP_LOCALHOST_URL: string
     GOOGLE_ANALYTICS_ID: string
+    SENTRY_AUTH_TOKEN: string
+    NEXT_PUBLIC_SENTRY_DSN: string
     AUTH_SECRET: string
     AUTH_GITHUB_ID: string
     AUTH_GITHUB_SECRET: string
