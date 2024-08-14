@@ -40,7 +40,7 @@ export default async function Page() {
 
   const content = (
     <div className='mx-auto max-w-3xl'>
-      <h1 className='mb-4 text-center text-2xl font-bold md:mb-8'>
+      <h1 className='mb-4 text-center text-2xl font-semibold md:mb-8'>
         {NAV_TITLE.SETTINGS}
       </h1>
       <Section title='General' subtitle='Configure your general preferences.'>

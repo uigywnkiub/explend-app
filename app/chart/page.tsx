@@ -30,7 +30,9 @@ export default async function Page() {
 
   const content = (
     <>
-      <h1 className='mb-0 text-center text-2xl font-bold'>{NAV_TITLE.CHART}</h1>
+      <h1 className='mb-0 text-center text-2xl font-semibold'>
+        {NAV_TITLE.CHART}
+      </h1>
       {!transactionsCount ? (
         <div className='mx-auto mt-8 max-w-3xl'>
           <NoTransactionsPlug />

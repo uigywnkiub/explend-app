@@ -73,10 +73,10 @@ function BalanceCard({ balance, currency, user }: TProps) {
         }}
       />
       <CardHeader className='flex items-center justify-between px-2 md:px-4'>
-        <p className='text-xxs font-semibold md:text-xs md:font-bold'>
+        <p className='text-xxs font-semibold md:text-xs md:font-semibold'>
           {greetingMsg}
         </p>
-        <h4 className='text-lg font-semibold md:text-xl md:font-bold'>
+        <h4 className='text-lg font-semibold md:text-xl md:font-semibold'>
           {getFormattedBalance(balance)}{' '}
           {currency?.code || DEFAULT_CURRENCY_CODE}
         </h4>

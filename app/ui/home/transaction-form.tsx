@@ -23,7 +23,7 @@ import {
 } from '@/config/constants/main'
 
 import type { TTransaction } from '../../lib/types'
-import { getFormattedCurrency } from '../../lib/utils'
+import { cn, getFormattedCurrency } from '../../lib/utils'
 
 const ACCORDION_ITEM_KEY = 'Form'
 const AMOUNT_LENGTH = 6
@@ -75,6 +75,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
       hideIndicator
       onExpandedChange={onExpandedChange}
       defaultExpandedKeys={isInitialExpanded}
+      className='p-0'
     >
       <AccordionItem
         key={ACCORDION_ITEM_KEY}
@@ -107,7 +108,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           placeholder={isSwitchedOn ? 'Type income...' : 'Type expense...'}
           classNames={{
             input: 'border-none focus:ring-0 placeholder:text-default-500',
-            inputWrapper: 'h-20 my-2 px-4',
+            inputWrapper: 'h-16 md:h-20 my-2 px-3',
           }}
           endContent={
             <Input
@@ -118,6 +119,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
               value={amount}
               onChange={onChangeAmount}
               required
+              onBlur={() => parseFloat(amount) === 0 && setAmount('')}
               maxLength={AMOUNT_LENGTH + 1}
               // pattern='\d+'
               pattern='[\d\s,]+'
@@ -126,13 +128,20 @@ function TransactionForm({ currency, userCategories }: TProps) {
               size='lg'
               classNames={{
                 input:
-                  'border-none focus:ring-0 placeholder:text-default-500 text-center',
-                inputWrapper: 'h-12 w-full px-4',
-                base: 'w-44 md:w-36',
+                  'border-none focus:ring-0 placeholder:text-default-500 text-default-500 text-center',
+                inputWrapper: 'h-12 w-full pl-3 md:px-4',
+                base: 'w-[154px] md:w-36',
               }}
               endContent={
-                <div className='pointer-events-none flex items-center'>
-                  <span className='text-md text-lg text-default-500'>
+                <div className='pointer-events-none mt-[3px] flex items-center'>
+                  <span
+                    className={cn(
+                      'text-md text-lg',
+                      parseFloat(amount) >= 1
+                        ? 'text-foreground'
+                        : 'text-default-500',
+                    )}
+                  >
                     {currency?.sign || DEFAULT_CURRENCY_SIGN}
                   </span>
                 </div>
@@ -148,6 +157,10 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 name='category'
                 label='Select a category'
                 className='w-56'
+                classNames={{
+                  trigger:
+                    'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                }}
                 items={userCategories || DEFAULT_CATEGORIES}
                 defaultSelectedKeys={[DEFAULT_CATEGORY]}
               >

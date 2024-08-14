@@ -111,11 +111,11 @@ Time: ${formatTime(createdAt)}`
   return (
     <>
       <div
-        className={`h-auto w-full rounded-medium bg-content1 p-4 text-left text-lg font-bold ${isBlinkTransaction && 'animate-blink-light-once dark:animate-blink-dark-once'}`}
+        className={`h-auto w-full rounded-medium bg-content1 p-2 text-left text-lg md:p-4 ${isBlinkTransaction && 'animate-blink-light-once dark:animate-blink-dark-once'}`}
       >
         <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-2 break-all'>
-            <div className='rounded-medium bg-content2 px-4 py-3 text-2xl'>
+          <div className='flex items-center gap-2 truncate break-keep'>
+            <div className='rounded-medium bg-content2 px-3 py-2 text-2xl md:px-4 md:py-3'>
               <motion.div
                 drag
                 dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
@@ -123,7 +123,7 @@ Time: ${formatTime(createdAt)}`
                 {getEmojiFromCategory(category)}
               </motion.div>
             </div>
-            <div>
+            <div className='font-semibold'>
               {isIncome ? (
                 <p className='text-xl text-success'>
                   + {getFormattedCurrency(amount)}{' '}

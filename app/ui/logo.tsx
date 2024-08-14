@@ -64,7 +64,7 @@ export default function Logo({
         >
           <span
             className={cn(
-              '-skew-x-6 transform-gpu cursor-default font-inter font-bold drop-shadow-lg',
+              '-skew-x-6 transform-gpu cursor-default font-inter font-semibold drop-shadow-lg',
               textSizeClass,
             )}
           >

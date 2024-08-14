@@ -82,7 +82,7 @@ function Category({
             color='success'
             classNames={{
               input:
-                'border-none focus:ring-0 placeholder:text-default-500 font-bold text-lg md:text-xl',
+                'border-none focus:ring-0 placeholder:text-default-500 font-semibold text-lg md:text-xl',
               base: 'w-fit',
             }}
           />
@@ -90,7 +90,7 @@ function Category({
             onClick={() => onSaveTargetClick(index)}
             isLoading={isLoading.subject}
             color='success'
-            className='font-medium text-background'
+            className='px-0 font-medium text-background'
           >
             {!isLoading.subject && (
               <HoverableElement
@@ -103,18 +103,18 @@ function Category({
           </Button>
         </div>
       ) : (
-        <div className='mb-2 flex items-center justify-between gap-2 px-3'>
-          <h2 className='text-lg font-semibold md:text-xl'>
+        <div className='mb-2 flex items-center justify-between gap-2 px-3 font-semibold'>
+          <h2 className='text-lg md:text-xl'>
             {category.subject}
             <button className='ml-1 h-0' onClick={() => router.push('#hint-1')}>
-              <sup className='cursor-pointer p-1 text-xxs text-default-500 underline md:no-underline md:hover:text-foreground md:hover:underline'>
+              <sup className='cursor-pointer p-1 text-xxs text-default-500 underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
                 1
               </sup>
             </button>
           </h2>
           <Button
             onClick={() => onEditTargetClick(index, category.subject)}
-            className='bg-foreground font-medium text-default-50'
+            className='bg-foreground px-0 font-medium text-default-50'
           >
             <HoverableElement
               element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
