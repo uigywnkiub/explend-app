@@ -66,7 +66,7 @@ export default async function Home({
   const [balance, currency, { transactions, totalEntries, totalPages }] =
     await Promise.all([
       getCachedBalance(userId),
-      getCachedCurrency(userId),
+      getCachedCurrency(),
       getCachedTransactions(userId, offset, limit),
     ])
 

@@ -16,7 +16,7 @@ Sentry.init({
   // Enable Sentry only in production mode
   enabled: IS_PROD,
 
-  denyUrls: [REGEX_APP_PREVIEW_PROD_URL.source, APP_URL + '/sw.js'],
+  denyUrls: [REGEX_APP_PREVIEW_PROD_URL, APP_URL + '/sw.js'],
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
