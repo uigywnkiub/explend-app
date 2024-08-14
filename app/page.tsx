@@ -31,6 +31,7 @@ import {
   getCategoryWithoutEmoji,
   getTransactionsWithChangedCategory,
   pluralize,
+  toLowerCase,
 } from './lib/utils'
 import BalanceCard from './ui/balance-card'
 import Search from './ui/home/search'
@@ -90,7 +91,6 @@ export default async function Home({
     transactionsWithChangedCategory.length
 
   const searchedTransactionsByQuery = transactions.filter((t) => {
-    const toLowerCase = (str: string) => str.toLowerCase()
     return (
       toLowerCase(t.description).includes(toLowerCase(query)) ||
       toLowerCase(t.amount).includes(toLowerCase(query)) ||

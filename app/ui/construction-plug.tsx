@@ -1,3 +1,5 @@
+import { toLowerCase } from '../lib/utils'
+
 type TProps = {
   pageTitle?: string
   target?: 'page' | 'section'
@@ -28,7 +30,7 @@ export default function ConstructionPlug({
     <p className={`${textSizeClass} text-warning`}>
       {withIcon ? '🚧' : null} The{' '}
       {target === 'page' && pageTitle
-        ? `${pageTitle.toLowerCase()} ${target}`
+        ? `${toLowerCase(pageTitle)} ${target}`
         : target}{' '}
       is under construction.
     </p>

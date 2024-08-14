@@ -31,6 +31,6 @@ export const APP_DESCRIPTION: string =
   'Stop wondering where your money goes. Track Income & Expense.'
 export const APP_URL: string = process.env.APP_URL
 export const APP_LOCALHOST_URL: string = process.env.APP_LOCALHOST_URL
-// This regex will match the root URL (https://explend-app.vercel.app) and any paths under it, except for /sw.js.
-export const REGEX_APP_URL: RegExp =
-  /^https:\/\/explend-app\.vercel\.app(\/(?!sw\.js).*)?$/
+// This regex will match any URL that starts with https://explend-, followed by any alphanumeric and hyphenated string, and ends with -projects.vercel.app.
+export const REGEX_APP_PREVIEW_PROD_URL: RegExp =
+  /^https:\/\/explend-[\w\d-]+-projects[\w\d-]*\.vercel\.app(\/.*)?$/
