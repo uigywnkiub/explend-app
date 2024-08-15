@@ -4,24 +4,22 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 import * as Sentry from '@sentry/nextjs'
 
-import {
-  APP_URL,
-  IS_PROD,
-  REGEX_APP_PREVIEW_PROD_URL,
-} from './config/constants/main'
-import { ROUTE } from './config/constants/routes'
+import { IS_PROD, SENTRY_WORKER_ERROR_TEXT } from './config/constants/main'
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-  // Enable Sentry only in production mode
   enabled: IS_PROD,
 
-  denyUrls: [
-    REGEX_APP_PREVIEW_PROD_URL,
-    APP_URL + '/sw.js',
-    APP_URL + ROUTE.SIGNIN,
-  ],
+  // @ts-ignore
+  beforeSend(event) {
+    // Skip error if the user has no authentication because on the sign-in page service worker can’t run.
+    if (event.message && event.message.startsWith(SENTRY_WORKER_ERROR_TEXT)) {
+      return null
+    }
+
+    return event
+  },
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,

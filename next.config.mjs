@@ -1,6 +1,6 @@
 // @ts-check
-import withPWAInit from '@ducanh2912/next-pwa'
 import { withSentryConfig } from '@sentry/nextjs'
+import withSerwistInit from '@serwist/next'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -37,8 +37,11 @@ const nextConfig = {
   },
 }
 
-const withPWA = withPWAInit({
-  dest: 'public',
+const withSerwist = withSerwistInit({
+  // Note: This is only an example. If you use Pages Router,
+  // use something else that works, such as "service-worker/index.ts".
+  swSrc: 'app/sw.ts',
+  swDest: 'public/sw.js',
   disable: process.env.NODE_ENV === 'development',
 })
 
@@ -77,4 +80,4 @@ const sentryConfig = {
   // automaticVercelMonitors: true,
 }
 
-export default withSentryConfig(withPWA(nextConfig), sentryConfig)
+export default withSentryConfig(withSerwist(nextConfig), sentryConfig)
