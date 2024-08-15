@@ -1,4 +1,8 @@
-import { PiWarningOctagonFill } from 'react-icons/pi'
+import {
+  PiArrowCircleDownFill,
+  PiArrowCircleUpFill,
+  PiWarningOctagonFill,
+} from 'react-icons/pi'
 
 import type { Metadata } from 'next'
 
@@ -21,6 +25,7 @@ import {
   getCachedTransactions,
   resetCategories,
 } from './lib/actions'
+import { calculateTotalAmount, filterTransactions } from './lib/data'
 import type {
   TGroupedTransactions,
   TTotalsTransaction,
@@ -29,6 +34,7 @@ import type {
 import {
   formatDate,
   getCategoryWithoutEmoji,
+  getFormattedCurrency,
   getTransactionsWithChangedCategory,
   pluralize,
   toLowerCase,
@@ -74,7 +80,6 @@ export default async function Home({
   if (!haveCategories) {
     await resetCategories(userId, DEFAULT_CATEGORIES)
   }
-
   const [userCategories] = transactions.map((t) => t.categories).filter(Boolean)
 
   const createTransactionWithUserId = createTransaction.bind(
@@ -99,6 +104,14 @@ export default async function Home({
       )
     )
   })
+  const { searchedIncomeTotals, searchedExpenseTotals } = {
+    searchedIncomeTotals: calculateTotalAmount(
+      filterTransactions(searchedTransactionsByQuery).income,
+    ),
+    searchedExpenseTotals: calculateTotalAmount(
+      filterTransactions(searchedTransactionsByQuery).expense,
+    ),
+  }
   const hasSearchedTransactionsByQuery = searchedTransactionsByQuery.length > 0
   const countSearchedTransactionsByQuery = searchedTransactionsByQuery.length
 
@@ -199,12 +212,32 @@ export default async function Home({
         currency={currency}
       />
       <div className='mx-auto mt-4 max-w-3xl'>
-        {!query && (
+        {!query ? (
           <PaginationList
             totalPages={totalPages}
             totalEntries={totalEntries}
             limit={limit}
           />
+        ) : (
+          hasSearchedTransactionsByQuery && (
+            <div className='flex flex-col justify-center gap-2 text-center'>
+              <p className='mt-2 text-default-300 md:mt-4'>Searched Totals</p>
+              <div className='flex flex-wrap justify-center gap-2'>
+                <p>
+                  {<PiArrowCircleUpFill className='mr-1 inline fill-success' />}
+                  Income: {getFormattedCurrency(searchedIncomeTotals)}{' '}
+                  {currency?.code}
+                </p>
+                <p>
+                  {
+                    <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
+                  }
+                  Expense: {getFormattedCurrency(searchedExpenseTotals)}{' '}
+                  {currency?.code}
+                </p>
+              </div>
+            </div>
+          )
         )}
         {countTransactionsWithChangedCategory > 0 && (
           <p className='mt-4 text-center text-sm text-warning'>

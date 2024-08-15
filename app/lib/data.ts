@@ -41,17 +41,17 @@ export const calculateChartData = (
   return chartData
 }
 
+export const calculateTotalAmount = (transactions: TTransaction[]) => {
+  return transactions.reduce(
+    (total, { amount }) => total + parseFloat(amount),
+    0,
+  )
+}
+
 export const calculateMonthlyReportData = (
   income: TTransaction[],
   expense: TTransaction[],
 ) => {
-  const calculateTotalAmount = (transactions: TTransaction[]) => {
-    return transactions.reduce(
-      (total, { amount }) => total + parseFloat(amount),
-      0,
-    )
-  }
-
   const totalIncome = calculateTotalAmount(income)
   const totalExpense = calculateTotalAmount(expense)
 
