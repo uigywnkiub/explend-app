@@ -15,13 +15,18 @@ Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
   // Enable Sentry only in production mode
-  enabled: IS_PROD,
+  enabled: !IS_PROD,
 
-  denyUrls: [
-    REGEX_APP_PREVIEW_PROD_URL,
-    APP_URL + '/sw.js',
-    APP_URL + ROUTE.SIGNIN,
-  ],
+  // denyUrls: [
+  //   REGEX_APP_PREVIEW_PROD_URL,
+  //   APP_URL + '/sw.js',
+  //   APP_URL + ROUTE.SIGNIN,
+  // ],
+
+  // @ts-ignore
+  beforeSend(event) {
+    console.log(event)
+  },
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
