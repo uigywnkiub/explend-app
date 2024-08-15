@@ -3,17 +3,21 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 import * as Sentry from '@sentry/nextjs'
 
-import { IS_PROD, SENTRY_WORKER_ERROR_TEXT } from './config/constants/main'
+import { FILTERED_SENTRY_ERROR_TEXT, IS_PROD } from './config/constants/main'
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
   enabled: IS_PROD,
 
-  // @ts-ignore
+  // Docs https://docs.sentry.io/platforms/javascript/configuration/filtering/#using-before-send
   beforeSend(event) {
-    // Skip error if the user has no authentication because on the sign-in page service worker can’t run.
-    if (event.message && event.message.startsWith(SENTRY_WORKER_ERROR_TEXT)) {
+    if (
+      event.message &&
+      Object.values(FILTERED_SENTRY_ERROR_TEXT).some((errText) =>
+        event.message?.startsWith(errText),
+      )
+    ) {
       return null
     }
 
