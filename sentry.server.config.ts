@@ -8,6 +8,7 @@ import {
   IS_PROD,
   REGEX_APP_PREVIEW_PROD_URL,
 } from './config/constants/main'
+import { ROUTE } from './config/constants/routes'
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -15,7 +16,11 @@ Sentry.init({
   // Enable Sentry only in production mode
   enabled: IS_PROD,
 
-  denyUrls: [REGEX_APP_PREVIEW_PROD_URL, APP_URL + '/sw.js'],
+  denyUrls: [
+    REGEX_APP_PREVIEW_PROD_URL,
+    APP_URL + '/sw.js',
+    APP_URL + ROUTE.SIGNIN,
+  ],
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
