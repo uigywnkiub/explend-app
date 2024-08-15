@@ -27,6 +27,16 @@ Sentry.init({
   beforeSend(event, hint) {
     console.log('event', event)
     console.log('hint', hint)
+
+    if (
+      event.message &&
+      event.message.startsWith(
+        'SecurityError: Failed to register a ServiceWorker',
+      )
+    ) {
+      return null
+    }
+
     return event
   },
 
