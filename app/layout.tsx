@@ -65,15 +65,15 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
-    url: APP_URL,
-    images: [
-      {
-        url: '/icons/android-chrome-512x512.png',
-        width: 512,
-        height: 512,
-        alt: _APP_NAME,
-      },
-    ],
+    // url: APP_URL,
+    // images: [
+    //   {
+    //     url: '/icons/android-chrome-512x512.png',
+    //     width: 512,
+    //     height: 512,
+    //     alt: _APP_NAME,
+    //   },
+    // ],
   },
   twitter: {
     card: 'summary',
@@ -82,14 +82,14 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
-    images: [
-      {
-        url: '/icons/android-chrome-512x512.png',
-        width: 512,
-        height: 512,
-        alt: _APP_NAME,
-      },
-    ],
+    // images: [
+    //   {
+    //     url: '/icons/android-chrome-512x512.png',
+    //     width: 512,
+    //     height: 512,
+    //     alt: _APP_NAME,
+    //   },
+    // ],
   },
 }
 
@@ -103,7 +103,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' dir='ltr'>
       <head>
         <link rel='icon' href='/favicon.ico' sizes='any' />
         <link
