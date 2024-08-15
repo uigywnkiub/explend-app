@@ -15,7 +15,7 @@ Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
   // Enable Sentry only in production mode
-  enabled: !IS_PROD,
+  enabled: true,
 
   // denyUrls: [
   //   REGEX_APP_PREVIEW_PROD_URL,
