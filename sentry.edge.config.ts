@@ -24,8 +24,10 @@ Sentry.init({
   // ],
 
   // @ts-ignore
-  beforeSend(event) {
-    console.log(event)
+  beforeSend(event, hint) {
+    console.log('event', event)
+    console.log('hint', hint)
+    return event
   },
 
   // Adjust this value in production, or use tracesSampler for greater control
