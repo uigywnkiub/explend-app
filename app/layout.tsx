@@ -6,7 +6,13 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
-import { APP_DESCRIPTION, APP_NAME, APP_URL } from '@/config/constants/main'
+import {
+  APP_NAME,
+  APP_URL,
+  AUTHOR_NAME,
+  AUTHOR_URL,
+} from '@/config/constants/main'
+import { siteMeta } from '@/config/site-meta'
 
 import './globals.css'
 import Providers from './providers'
@@ -28,48 +34,44 @@ const fracktif = localFont({
   display: 'swap',
 })
 
-const _APP_NAME = APP_NAME.FULL
-const APP_DEFAULT_TITLE = APP_NAME.FULL
-const APP_TITLE_TEMPLATE = `%s | ${APP_NAME.FULL}`
-
 export const metadata: Metadata = {
-  applicationName: _APP_NAME,
   title: {
-    template: APP_TITLE_TEMPLATE,
-    default: APP_NAME.FULL,
+    default: siteMeta.title as string,
+    template: `%s | ${siteMeta.title}`,
   },
-  description: APP_DESCRIPTION,
-  keywords:
-    'explend, finance, money, budget, tracker, income tracking, expense tracking, manage finances, control spending, save money tracker, financial wellness.',
+  description: siteMeta.description,
+  keywords: siteMeta.keywords,
+  manifest: '/manifest.json',
+  openGraph: siteMeta.openGraph,
+  twitter: siteMeta.twitter,
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: APP_NAME.FULL,
+    title: APP_NAME.SHORT,
     startupImage: {
       url: '/icons/apple-touch-icon.png',
     },
   },
-  formatDetection: {
-    telephone: false,
-  },
-  metadataBase: new URL(APP_URL),
-  openGraph: {
-    type: 'website',
-    siteName: _APP_NAME,
-    title: {
-      default: APP_DEFAULT_TITLE,
-      template: APP_TITLE_TEMPLATE,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
-    description: APP_DESCRIPTION,
   },
-  twitter: {
-    card: 'summary',
-    title: {
-      default: APP_DEFAULT_TITLE,
-      template: APP_TITLE_TEMPLATE,
+  alternates: {
+    canonical: APP_URL,
+  },
+  authors: [
+    {
+      name: AUTHOR_NAME,
+      url: AUTHOR_URL,
     },
-    description: APP_DESCRIPTION,
-  },
+  ],
 }
 
 export const viewport: Viewport = {
@@ -84,7 +86,7 @@ export default function RootLayout({
   return (
     <html lang='en' dir='ltr'>
       <head>
-        <link rel='icon' href='/favicon.ico' sizes='any' />
+        <link rel='icon' href='/favicon.ico' sizes='32x32' />
         <link
           rel='icon'
           href='/icon?<generated>'

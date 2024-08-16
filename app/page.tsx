@@ -48,10 +48,6 @@ import NoTransactionsPlug from './ui/no-transactions-plug'
 import PaginationList from './ui/pagination/pagination-list'
 import WithSidebar from './ui/sidebar/with-sidebar'
 
-export const metadata: Metadata = {
-  title: `${NAV_TITLE.HOME} | ${APP_NAME.FULL}`,
-}
-
 export default async function Home({
   searchParams,
 }: {

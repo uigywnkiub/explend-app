@@ -12,7 +12,7 @@ import Link from 'next/link'
 
 import { getYear } from 'date-fns'
 
-import { APP_NAME } from '@/config/constants/main'
+import { APP_NAME, AUTHOR_NAME, AUTHOR_URL } from '@/config/constants/main'
 
 import type { TSocialLink } from '@/app/lib/types'
 import { getBreakpointWidth } from '@/app/lib/utils'
@@ -42,9 +42,9 @@ function Footer() {
           {/* {<Logo size='smallest' withBadge={false} />}  */}
           {APP_NAME.SHORT} &copy; {getYear(new Date())}. All rights reserved |
           design by{' '}
-          <Link href='https://volodymyr-g.vercel.app' target='_blank'>
+          <Link href={AUTHOR_URL} target='_blank'>
             <span className='cursor-pointer underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
-              Volodymyr
+              {AUTHOR_NAME}
             </span>
           </Link>
           .

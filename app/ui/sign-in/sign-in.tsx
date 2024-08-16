@@ -22,6 +22,7 @@ import { Accordion, AccordionItem, Divider } from '@nextui-org/react'
 import {
   APP_DESCRIPTION,
   APP_NAME,
+  APP_TITLE,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
 import { ROUTE } from '@/config/constants/routes'
@@ -144,7 +145,7 @@ function SignIn() {
         <Divider className='my-4 w-full bg-divider md:w-1/2' />
         <div className='flex flex-col items-center space-y-3'>
           <p className='text-lg font-semibold md:text-lg'>
-            Start Your Financial Wellness Journey.{' '}
+            Start {APP_TITLE}{' '}
             <span className='mt-1 block text-sm font-medium text-default-500'>
               AES encryption protects your sensitive data.
             </span>

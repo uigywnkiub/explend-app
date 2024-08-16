@@ -27,6 +27,7 @@ export const enum APP_NAME {
   FULL = 'Explend App',
   SHORT = 'Explend',
 }
+export const APP_TITLE: string = 'Your Financial Wellness Journey'
 export const APP_DESCRIPTION: string =
   'Stop wondering where your money goes. Track Income & Expense.'
 export const APP_URL: string = process.env.APP_URL
@@ -40,3 +41,6 @@ export const FILTERED_SENTRY_ERROR_TEXT = {
   SECURITY_ERROR: 'SecurityError: Failed to register a ServiceWorker for scope',
   SECURITY_ERROR_SCRIPT: `Script ${APP_URL}/sw.js load failed`,
 }
+
+export const AUTHOR_NAME: string = 'Volodymyr'
+export const AUTHOR_URL: string = 'https://volodymyr-g.vercel.app'
