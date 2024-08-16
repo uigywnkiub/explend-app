@@ -48,10 +48,6 @@ import NoTransactionsPlug from './ui/no-transactions-plug'
 import PaginationList from './ui/pagination/pagination-list'
 import WithSidebar from './ui/sidebar/with-sidebar'
 
-export const metadata: Metadata = {
-  title: `${NAV_TITLE.HOME} | ${APP_NAME.FULL}`,
-}
-
 export default async function Home({
   searchParams,
 }: {
@@ -164,7 +160,7 @@ export default async function Home({
           {transactions.length === 0 ? (
             <>
               <NoTransactionsPlug />
-              <div className='mt-2 flex flex-col gap-2'>
+              <div className='mt-2 flex flex-col gap-1'>
                 <InfoText text='The first written transaction means creating your account.' />
                 <InfoText text='The last deleted transaction means deleting your account.' />
               </div>

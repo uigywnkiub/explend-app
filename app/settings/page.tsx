@@ -49,7 +49,7 @@ export default async function Page() {
           subtitle='Select your favorite theme to give the app a new look that matches your style.'
         >
           <>
-            <div className='my-2 flex flex-col gap-2'>
+            <div className='my-2 flex flex-col gap-1'>
               <InfoText text='Will reload the page.' />
               <InfoText text='When you select the system theme, the general pop-up will always be dark.' />
             </div>
