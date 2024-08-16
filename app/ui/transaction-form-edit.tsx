@@ -277,7 +277,7 @@ function TransactionFormEdit({ transaction }: TProps) {
         </div>
       </form>
       {isTransactionWithChangedCategory && (
-        <div className='mt-2 flex flex-col gap-2'>
+        <div className='mt-2 flex flex-col gap-1'>
           <InfoText text='Looks like you have changed the category data. Please select an existing one.' />
           <InfoText text={`Your previous category was: ${prevCategory}.`} />
         </div>

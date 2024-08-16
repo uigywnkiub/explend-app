@@ -51,12 +51,11 @@ export default function Logo({
       // isInvisible={!withBadge}
       isInvisible={true}
     >
-      <div className='flex items-center justify-center'>
+      <div className='flex items-center justify-center rounded-full shadow-md'>
         <div
           className={cn(
-            'flex bg-logo-gradient text-background',
+            'flex items-center justify-center bg-foreground text-background',
             logoSizeClass,
-            'items-center justify-center',
             size === 'smallest' || size === 'xxs'
               ? 'rounded-md'
               : 'rounded-medium',
@@ -64,7 +63,7 @@ export default function Logo({
         >
           <span
             className={cn(
-              '-skew-x-6 transform-gpu cursor-default font-inter font-semibold drop-shadow-lg',
+              '-skew-x-6 transform-gpu cursor-default bg-logo-gradient bg-clip-text font-inter font-bold text-transparent drop-shadow-md',
               textSizeClass,
             )}
           >

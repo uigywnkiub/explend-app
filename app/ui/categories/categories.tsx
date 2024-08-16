@@ -231,7 +231,7 @@ function Categories({ userId, userCategories }: TProps) {
           Reset categories
         </Button>
       </div>
-      <div className='mt-4 flex flex-col gap-2 md:mt-8'>
+      <div className='mt-4 flex flex-col gap-1 md:mt-8'>
         <InfoText text='If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.' />
         <InfoText text='Once editing, you will need to manually update your previous transactions with previous categories to new categories. You will see a badge on them.' />
         <InfoText text='The emoji picker may appear with a slight delay.' />

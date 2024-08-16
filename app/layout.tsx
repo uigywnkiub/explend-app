@@ -39,10 +39,6 @@ export const metadata: Metadata = {
     default: APP_NAME.FULL,
   },
   description: APP_DESCRIPTION,
-  manifest: '/manifest.json',
-  icons: {
-    icon: '/icons/favicon.ico',
-  },
   keywords:
     'explend, finance, money, budget, tracker, income tracking, expense tracking, manage finances, control spending, save money tracker, financial wellness.',
   appleWebApp: {
@@ -65,15 +61,6 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
-    // url: APP_URL,
-    // images: [
-    //   {
-    //     url: '/icons/android-chrome-512x512.png',
-    //     width: 512,
-    //     height: 512,
-    //     alt: _APP_NAME,
-    //   },
-    // ],
   },
   twitter: {
     card: 'summary',
@@ -82,14 +69,6 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
-    // images: [
-    //   {
-    //     url: '/icons/android-chrome-512x512.png',
-    //     width: 512,
-    //     height: 512,
-    //     alt: _APP_NAME,
-    //   },
-    // ],
   },
 }
 
