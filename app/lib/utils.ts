@@ -16,7 +16,11 @@ import emojiRegex from 'emoji-regex'
 import { extendTailwindMerge } from 'tailwind-merge'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
-import { CURRENCY_CODE, DEFAULT_CATEGORY } from '@/config/constants/main'
+import {
+  CURRENCY_CODE,
+  DEFAULT_CATEGORY,
+  DEFAULT_LANG,
+} from '@/config/constants/main'
 
 import type {
   TBrowserName,
@@ -242,7 +246,7 @@ export const pluralize = (
   singular: string,
   plural: string,
 ): string => {
-  const pluralRules = new Intl.PluralRules('en-US')
+  const pluralRules = new Intl.PluralRules(DEFAULT_LANG)
   const pluralCategory = pluralRules.select(count)
   return pluralCategory === 'one' || pluralCategory === 'zero' || count === 0
     ? singular

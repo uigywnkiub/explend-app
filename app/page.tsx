@@ -218,7 +218,7 @@ export default async function Home({
           hasSearchedTransactionsByQuery && (
             <div className='flex flex-col justify-center gap-2 text-center'>
               <p className='mt-2 text-default-300 md:mt-4'>Searched Totals</p>
-              <div className='flex flex-wrap justify-center gap-2'>
+              <div className='flex flex-col flex-wrap justify-center'>
                 <p>
                   {<PiArrowCircleUpFill className='mr-1 inline fill-success' />}
                   Income: {getFormattedCurrency(searchedIncomeTotals)}{' '}
