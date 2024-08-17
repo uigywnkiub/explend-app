@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 
 import { APP_URL } from '@/config/constants/main'
+import { ROUTE } from '@/config/constants/routes'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -11,28 +12,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
-      url: `${APP_URL}/monthly-report`,
+      url: `${APP_URL}${ROUTE.MONTHLY_REPORT}`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'daily',
       priority: 0.8,
     },
     {
-      url: `${APP_URL}/chart`,
+      url: `${APP_URL}${ROUTE.CHART}`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
+      changeFrequency: 'weekly',
+      priority: 0.8,
     },
     {
-      url: `${APP_URL}/categories`,
+      url: `${APP_URL}${ROUTE.LIMITS}`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'daily',
       priority: 0.6,
     },
     {
-      url: `${APP_URL}/settings`,
+      url: `${APP_URL}${ROUTE.CATEGORIES}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
+    {
+      url: `${APP_URL}${ROUTE.SETTINGS}`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.7,
     },
   ]
 }

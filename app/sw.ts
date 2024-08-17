@@ -12,7 +12,8 @@ declare global {
   }
 }
 
-declare const self: WorkerGlobalScope
+// @ts-ignore
+declare const self: ServiceWorkerGlobalScope
 
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,

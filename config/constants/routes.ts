@@ -8,4 +8,5 @@ export const enum ROUTE {
   SETTINGS = '/settings',
   FEEDBACK = '/feedback',
   ISSUE = '/issue',
+  SITEMAP = '/sitemap.xml',
 }

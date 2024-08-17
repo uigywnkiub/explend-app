@@ -12,7 +12,10 @@ export const runtime = 'edge'
 
 export async function GET() {
   const fontData = await fetch(
-    new URL('../../fonts/FracktifSemiBold/DEMO-font.otf', import.meta.url),
+    new URL(
+      '../../fonts/FracktifSemiBold/DEMO-fracktif-semibold.otf',
+      import.meta.url,
+    ),
   ).then((res) => res.arrayBuffer())
 
   return new ImageResponse(
