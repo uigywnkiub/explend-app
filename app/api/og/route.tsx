@@ -8,9 +8,26 @@ import {
 } from '@/config/constants/colors'
 import { APP_NAME, APP_TITLE } from '@/config/constants/main'
 
+import { toLowerCase } from '@/app/lib/utils'
+
 export const runtime = 'edge'
 
-export async function GET() {
+// Image metadata
+export const alt = APP_NAME.FULL
+export const size = {
+  width: 1200,
+  height: 630,
+}
+export const contentType = 'image/png'
+
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url)
+
+  const hasTitle = searchParams.has('title')
+  const title = hasTitle
+    ? searchParams.get('title')?.slice(0, 100)
+    : `Start ${APP_TITLE}.`
+
   const fontData = await fetch(
     new URL(
       '../../fonts/FracktifSemiBold/DEMO-fracktif-semibold.otf',
@@ -31,6 +48,8 @@ export async function GET() {
           fontWeight: 600,
           fontFamily: 'FracktifSemiBold',
           background: CUSTOM_LIGHT,
+          // backgroundImage: `radial-gradient(circle at 25px 25px, ${CUSTOM_DARK}${OPACITY.O30} 2%, transparent 0%), radial-gradient(circle at 75px 75px, ${CUSTOM_DARK}${OPACITY.O30} 2%, transparent 0%)`,
+          // backgroundSize: '100px 100px',
         }}
       >
         <div
@@ -46,7 +65,6 @@ export async function GET() {
             style={{
               width: 24,
               height: 24,
-              // background: CUSTOM_DARK,
               background: `linear-gradient(to bottom, ${SUCCESS}, ${DANGER})`,
               borderRadius: 6,
             }}
@@ -57,7 +75,7 @@ export async function GET() {
               fontSize: 20,
             }}
           >
-            {APP_NAME.SHORT}
+            {toLowerCase(APP_NAME.SHORT)}
           </span>
         </div>
         <div
@@ -69,26 +87,29 @@ export async function GET() {
             margin: '0 42px',
             fontSize: 44,
             width: 'auto',
-            maxWidth: 550,
+            maxWidth: 640,
             textAlign: 'center',
             backgroundColor: CUSTOM_DARK,
             color: CUSTOM_LIGHT,
             lineHeight: 1.4,
-            borderRadius: 12,
+            borderRadius: 24,
           }}
         >
-          Start {APP_TITLE}.
+          {title}
         </div>
       </div>
     ),
+    // ImageResponse options
     {
-      width: 1200,
-      height: 630,
+      // For convenience, we can re-use the exported opengraph-image
+      // size config to also set the ImageResponse's width and height.
+      ...size,
       fonts: [
         {
           name: 'FracktifSemiBold',
           data: fontData,
           style: 'normal',
+          weight: 600,
         },
       ],
     },
