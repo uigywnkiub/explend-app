@@ -12,6 +12,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: APP_NAME.FULL,
     short_name: APP_NAME.SHORT,
     description: siteMeta.description || APP_DESCRIPTION,
+    // The `id` key is might be unstable on dev environment.
     id: '/',
     start_url: '/',
     lang: DEFAULT_LANG,

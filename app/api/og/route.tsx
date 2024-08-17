@@ -1,5 +1,4 @@
 import { ImageResponse } from 'next/og'
-import type { NextRequest } from 'next/server'
 
 import {
   CUSTOM_DARK,
@@ -11,7 +10,7 @@ import { APP_NAME, APP_TITLE } from '@/config/constants/main'
 
 export const runtime = 'edge'
 
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
 
   const hasTitle = searchParams.has('title')
