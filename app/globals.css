@@ -38,8 +38,12 @@ input::-webkit-inner-spin-button {
   @apply h-[2px] w-4 transform-gpu rounded-medium bg-foreground transition duration-300 ease-out-cubic;
 }
 
+#sidebar-toggle ~ .label > .hamburger-menu .bar2 {
+  @apply ml-0.5 w-3.5;
+}
+
 #sidebar-toggle:checked ~ .label > .hamburger-menu .bar1 {
-  transform: rotate(45deg) translate(3px, 3px);
+  transform: rotate(-45deg) translate(-3px, 3px);
 }
 
 #sidebar-toggle:checked ~ .label > .hamburger-menu .bar2 {
@@ -47,7 +51,7 @@ input::-webkit-inner-spin-button {
 }
 
 #sidebar-toggle:checked ~ .label > .hamburger-menu .bar3 {
-  transform: rotate(-45deg) translate(4px, -4px);
+  transform: rotate(45deg) translate(-4px, -4px);
 }
 
 /* Check if View Transitions API browser support */

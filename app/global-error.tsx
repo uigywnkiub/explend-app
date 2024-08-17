@@ -6,6 +6,8 @@ import NextError from 'next/error'
 
 import * as Sentry from '@sentry/nextjs'
 
+import { DEFAULT_DIR, DEFAULT_LANG } from '@/config/constants/main'
+
 export default function GlobalError({
   error,
 }: {
@@ -16,7 +18,7 @@ export default function GlobalError({
   }, [error])
 
   return (
-    <html lang='en'>
+    <html lang={DEFAULT_LANG} dir={DEFAULT_DIR}>
       <body>
         {/* `NextError` is the default Next.js error page component. Its type
         definition requires a `statusCode` prop. However, since the App Router

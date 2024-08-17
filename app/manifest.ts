@@ -1,12 +1,20 @@
 import type { MetadataRoute } from 'next'
 
+import {
+  APP_DESCRIPTION,
+  APP_NAME,
+  DEFAULT_LANG,
+} from '@/config/constants/main'
+import { siteMeta } from '@/config/site-meta'
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Explend',
-    short_name: 'Explend',
-    description:
-      'Stop wondering where your money goes. Track Income & Expense.',
+    name: APP_NAME.FULL,
+    short_name: APP_NAME.SHORT,
+    description: siteMeta.description || APP_DESCRIPTION,
+    id: '/',
     start_url: '/',
+    lang: DEFAULT_LANG,
     display: 'standalone',
     background_color: '#FFFFFF',
     theme_color: '#FFFFFF',

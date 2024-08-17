@@ -11,6 +11,8 @@ import {
   APP_URL,
   AUTHOR_NAME,
   AUTHOR_URL,
+  DEFAULT_DIR,
+  DEFAULT_LANG,
 } from '@/config/constants/main'
 import { siteMeta } from '@/config/site-meta'
 
@@ -21,12 +23,12 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const fracktif = localFont({
   src: [
     {
-      path: './fonts/FracktifMedium/font.woff2',
+      path: './fonts/FracktifMedium/fracktif-medium.woff2',
       weight: '500',
       style: 'normal',
     },
     {
-      path: './fonts/FracktifSemiBold/font.woff2',
+      path: './fonts/FracktifSemiBold/fracktif-semibold.woff2',
       weight: '600',
       style: 'normal',
     },
@@ -84,7 +86,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en' dir='ltr'>
+    <html lang={DEFAULT_LANG} dir={DEFAULT_DIR}>
       <head>
         <link rel='icon' href='/favicon.ico' sizes='32x32' />
         <link

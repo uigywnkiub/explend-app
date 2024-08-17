@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og'
+import type { NextRequest } from 'next/server'
 
 import {
   CUSTOM_DARK,
@@ -8,19 +9,9 @@ import {
 } from '@/config/constants/colors'
 import { APP_NAME, APP_TITLE } from '@/config/constants/main'
 
-import { toLowerCase } from '@/app/lib/utils'
-
 export const runtime = 'edge'
 
-// Image metadata
-export const alt = APP_NAME.FULL
-export const size = {
-  width: 1200,
-  height: 630,
-}
-export const contentType = 'image/png'
-
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
 
   const hasTitle = searchParams.has('title')
@@ -75,7 +66,7 @@ export async function GET(req: Request) {
               fontSize: 20,
             }}
           >
-            {toLowerCase(APP_NAME.SHORT)}
+            {APP_NAME.SHORT.toLowerCase()}
           </span>
         </div>
         <div
@@ -101,9 +92,8 @@ export async function GET(req: Request) {
     ),
     // ImageResponse options
     {
-      // For convenience, we can re-use the exported opengraph-image
-      // size config to also set the ImageResponse's width and height.
-      ...size,
+      width: 1200,
+      height: 630,
       fonts: [
         {
           name: 'FracktifSemiBold',
