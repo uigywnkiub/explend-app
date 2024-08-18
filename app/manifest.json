@@ -18,7 +18,6 @@
   "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
   "lang": "en",
-  "id": "/",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait"
