@@ -12,7 +12,7 @@ on:
 
 jobs:
   lint:
-    name: ESLint, TypeScript and Prettier
+    name: Prettier, ESLint, and TypeScript
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
