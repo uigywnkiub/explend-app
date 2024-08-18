@@ -1,6 +1,6 @@
 // @ts-check
+import withPWAInit from '@ducanh2912/next-pwa'
 import { withSentryConfig } from '@sentry/nextjs'
-import withSerwistInit from '@serwist/next'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -37,10 +37,11 @@ const nextConfig = {
   },
 }
 
-const withSerwist = withSerwistInit({
-  swSrc: 'app/sw.ts',
-  swDest: 'public/sw.js',
-  cacheOnNavigation: true,
+const withPWA = withPWAInit({
+  dest: 'public',
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  extendDefaultRuntimeCaching: true,
   disable: process.env.NODE_ENV === 'development',
 })
 
@@ -79,4 +80,4 @@ const sentryConfig = {
   // automaticVercelMonitors: true,
 }
 
-export default withSentryConfig(withSerwist(nextConfig), sentryConfig)
+export default withSentryConfig(withPWA(nextConfig), sentryConfig)
