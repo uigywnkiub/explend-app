@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
+import { useMedia } from 'react-use'
 
 import { Card, CardHeader } from '@nextui-org/react'
 
@@ -13,6 +14,7 @@ import {
 
 import type { TTransaction, TUser } from '../lib/types'
 import {
+  getBreakpointWidth,
   getFormattedBalance,
   getFormattedCurrency,
   getGreeting,
@@ -33,11 +35,13 @@ function BalanceCard({
   incomeAmount,
   expenseAmount,
 }: TProps) {
-  const divRef = useRef<HTMLDivElement>(null)
   const [isChangeInfo, setIsChangeInfo] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [opacity, setOpacity] = useState(0)
+  const divRef = useRef<HTMLDivElement>(null)
+
+  const isMd = useMedia(getBreakpointWidth('md'))
 
   const isPositiveBalance = Number(balance) > 0
   const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -48,6 +52,7 @@ function BalanceCard({
   }
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isMd) return
     if (!divRef.current || isFocused) return
     const div = divRef.current
     const rect = div.getBoundingClientRect()
@@ -55,20 +60,24 @@ function BalanceCard({
   }
 
   const onFocus = () => {
+    if (!isMd) return
     setIsFocused(true)
     setOpacity(1)
   }
 
   const onBlur = () => {
+    if (!isMd) return
     setIsFocused(false)
     setOpacity(0)
   }
 
   const onMouseEnter = () => {
+    if (!isMd) return
     setOpacity(1)
   }
 
   const onMouseLeave = () => {
+    if (!isMd) return
     setOpacity(0)
     divRef.current?.blur()
   }
@@ -99,7 +108,7 @@ function BalanceCard({
         >
           <p className='mb-4 text-xs'>{greetingMsg}</p>
           {isChangeInfo ? (
-            <div className='flex cursor-pointer flex-wrap justify-center gap-2'>
+            <div className='flex cursor-pointer flex-wrap justify-center gap-0 text-lg md:gap-2'>
               <p>
                 {<PiArrowCircleUpFill className='mr-1 inline fill-success' />}
                 Income: {getFormattedCurrency(incomeAmount)} {currency?.code}
