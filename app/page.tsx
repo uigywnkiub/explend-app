@@ -100,16 +100,16 @@ export default async function Home({
       )
     )
   })
-  const { searchedIncomeTotals, searchedExpenseTotals } = {
-    searchedIncomeTotals: calculateTotalAmount(
-      filterTransactions(searchedTransactionsByQuery).income,
-    ),
-    searchedExpenseTotals: calculateTotalAmount(
-      filterTransactions(searchedTransactionsByQuery).expense,
-    ),
-  }
   const hasSearchedTransactionsByQuery = searchedTransactionsByQuery.length > 0
   const countSearchedTransactionsByQuery = searchedTransactionsByQuery.length
+
+  const getTransactionsTotals = (transactions: TTransaction[]) => {
+    const { income, expense } = filterTransactions(transactions)
+    return {
+      income: calculateTotalAmount(income),
+      expense: calculateTotalAmount(expense),
+    }
+  }
 
   const groupedTransactionsByDate: TGroupedTransactions = (
     query ? searchedTransactionsByQuery : transactions
@@ -149,6 +149,8 @@ export default async function Home({
           balance={balance}
           currency={currency}
           user={session?.user}
+          incomeAmount={getTransactionsTotals(transactions).income}
+          expenseAmount={getTransactionsTotals(transactions).expense}
         />
         <form action={createTransactionWithUserId} className='mt-4'>
           <TransactionForm
@@ -221,14 +223,20 @@ export default async function Home({
               <div className='flex flex-col flex-wrap justify-center'>
                 <p>
                   {<PiArrowCircleUpFill className='mr-1 inline fill-success' />}
-                  Income: {getFormattedCurrency(searchedIncomeTotals)}{' '}
+                  Income:{' '}
+                  {getFormattedCurrency(
+                    getTransactionsTotals(searchedTransactionsByQuery).income,
+                  )}{' '}
                   {currency?.code}
                 </p>
                 <p>
                   {
                     <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
                   }
-                  Expense: {getFormattedCurrency(searchedExpenseTotals)}{' '}
+                  Expense:{' '}
+                  {getFormattedCurrency(
+                    getTransactionsTotals(searchedTransactionsByQuery).expense,
+                  )}{' '}
                   {currency?.code}
                 </p>
               </div>
