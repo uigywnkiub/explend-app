@@ -99,8 +99,8 @@ function MonthlyReport({ transactions, currency }: TProps) {
         selectedDate={selectedDate}
         onDateSelection={onDateSelection}
       />
-      <div className='mb-3 flex items-end justify-between md:mb-6'>
-        <p className='hidden text-2xl text-default-500 md:block'>
+      <div className='mb-3 flex-none items-end justify-between md:mb-6 md:flex'>
+        <p className='mb-2 text-xl text-default-500 md:mb-0 md:text-2xl'>
           {formattedDateRange}
         </p>
         <div className='flex gap-4 md:gap-8'>

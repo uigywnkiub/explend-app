@@ -102,13 +102,13 @@ function BalanceCard({
       />
       <CardHeader className='flex flex-col items-center justify-between gap-4 px-2 md:px-4'>
         <div
-          className='text-center text-xl font-semibold'
+          className='text-center text-xl'
           onClick={onChangeInfo}
           aria-hidden='true'
         >
           <p className='mb-4 text-xs'>{greetingMsg}</p>
           {isChangeInfo ? (
-            <div className='flex cursor-pointer flex-wrap justify-center gap-0 text-lg md:gap-2'>
+            <div className='flex cursor-pointer flex-wrap justify-center gap-0 text-lg font-semibold md:gap-2'>
               <p>
                 {<PiArrowCircleUpFill className='mr-1 inline fill-success' />}
                 Income: {getFormattedCurrency(incomeAmount)} {currency?.code}
@@ -119,7 +119,7 @@ function BalanceCard({
               </p>
             </div>
           ) : (
-            <p className='cursor-pointer'>
+            <p className='cursor-pointer font-semibold'>
               {getFormattedBalance(balance)}{' '}
               {currency?.code || DEFAULT_CURRENCY_CODE}
             </p>
