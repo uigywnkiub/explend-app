@@ -41,7 +41,7 @@ function BalanceCard({
   const [opacity, setOpacity] = useState(0)
   const divRef = useRef<HTMLDivElement>(null)
 
-  const isMd = useMedia(getBreakpointWidth('md'))
+  const isMd = useMedia(getBreakpointWidth('md'), false)
 
   const isPositiveBalance = Number(balance) > 0
   const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
