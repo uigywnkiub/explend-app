@@ -65,11 +65,14 @@ function TransactionForm({ currency, userCategories }: TProps) {
   )
   const [category, setCategory] = useState<Selection>(newCategoryState)
   useEffect(() => setCategory(newCategoryState), [newCategoryState])
-  const isSalary = useMemo(
+  const isAutoSwitchedOnIncome = useMemo(
     () => toLowerCase(description).includes(AUTO_SWITCH_INCOME_STR),
     [description],
   )
-  useEffect(() => setIsSwitchedOn(isSalary), [isSalary])
+  useEffect(
+    () => setIsSwitchedOn(isAutoSwitchedOnIncome),
+    [isAutoSwitchedOnIncome],
+  )
 
   const isInitialExpanded = isExpanded ? [ACCORDION_ITEM_KEY] : ['']
 

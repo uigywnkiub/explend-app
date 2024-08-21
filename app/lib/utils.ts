@@ -274,7 +274,7 @@ export const pluralize = (
 export const findApproxCategoryByValue = (
   value: string,
   categories: TTransaction['categories'],
-): TApproxCategory => {
+): TApproxCategory | null => {
   if (!value || !categories) return null
 
   const countCategoryItems = categories.flatMap(

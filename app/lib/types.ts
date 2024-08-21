@@ -166,4 +166,4 @@ export type TApproxCategory = {
   subject: TTransaction['categories'][0]['subject'][0]
   item: TTransaction['categories'][0]['items'][0]
   itemIndex: number
-} | null
+}
