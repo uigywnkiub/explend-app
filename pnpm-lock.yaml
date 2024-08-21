@@ -14,6 +14,9 @@ importers:
       '@ducanh2912/next-pwa':
         specifier: ^10.2.8
         version: 10.2.8(@types/babel__core@7.20.5)(next@14.2.5(@babel/core@7.25.2)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(webpack@5.93.0)
+      '@google/generative-ai':
+        specifier: ^0.17.0
+        version: 0.17.0
       '@internationalized/date':
         specifier: ^3.5.4
         version: 3.5.5
@@ -1071,6 +1074,10 @@ packages:
 
   '@formatjs/intl-localematcher@0.5.4':
     resolution: {integrity: sha512-zTwEpWOzZ2CiKcB93BLngUX59hQkuZjT2+SAQEscSm52peDW/getsawMcWF1rGRpMCX6D7nSJA3CzJ8gn13N/g==}
+
+  '@google/generative-ai@0.17.0':
+    resolution: {integrity: sha512-HNIrX4x6EY5UPOTTDC5DepBFVluognTXR0MTWLiSVsJmzqdEYxGtz/9NWIknUbPNnPZOu7N1BoA/Ho24aPUh3g==}
+    engines: {node: '>=18.0.0'}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -7642,6 +7649,8 @@ snapshots:
   '@formatjs/intl-localematcher@0.5.4':
     dependencies:
       tslib: 2.6.3
+
+  '@google/generative-ai@0.17.0': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:

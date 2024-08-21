@@ -152,6 +152,7 @@ function TransactionFormEdit({ transaction }: TProps) {
         <Input
           isDisabled={isLoading}
           isRequired
+          autoComplete='off'
           type='text'
           name='description'
           aria-label='Description'
@@ -168,6 +169,7 @@ function TransactionFormEdit({ transaction }: TProps) {
           endContent={
             <Input
               isRequired
+              autoComplete='off'
               type='text'
               name='amount'
               aria-label='Amount'

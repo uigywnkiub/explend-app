@@ -17,6 +17,7 @@ import { ROUTE } from '@/config/constants/routes'
 
 import TransactionModel from '@/app/lib/models/transaction.model'
 
+import { generativeModel } from './google-ai'
 import dbConnect from './mongodb'
 import type {
   TBalance,
@@ -29,16 +30,20 @@ import type {
   TTransaction,
   TUserId,
 } from './types'
-import { capitalizeFirstLetter, getCategoryWithEmoji } from './utils'
+import {
+  capitalizeFirstLetter,
+  getCategoryItemNames,
+  getCategoryWithEmoji,
+} from './utils'
 
-export const getAuthSession = cache(async (): Promise<TSession> => {
+export const getAuthSession = async (): Promise<TSession> => {
   try {
     const session = await auth()
     return session
   } catch (err) {
     throw err
   }
-})
+}
 export const getCachedAuthSession = cache(getAuthSession)
 
 export async function signOutAccount(): Promise<void> {
@@ -472,3 +477,25 @@ export async function deleteAllTransactionsAndSignOut(
     throw err
   }
 }
+
+export async function getCategoryItemCompletionAI(
+  categories: TTransaction['categories'],
+  promptValue: string,
+): Promise<string> {
+  if (!categories || !promptValue) {
+    throw new Error('Categories or prompt value are required.')
+  }
+
+  try {
+    const prompt = `Given the list of categories: ${getCategoryItemNames(categories).join(', ')} — choose the most relevant category for the prompt '${promptValue}' in one word.`
+
+    const result = await generativeModel.generateContent(prompt)
+    const resultText = result.response.text().trim()
+    return resultText
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedCategoryItemCompletionAI = cache(
+  getCategoryItemCompletionAI,
+)

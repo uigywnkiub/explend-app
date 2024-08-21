@@ -21,6 +21,7 @@
   "dependencies": {
     "@auth/core": "^0.34.2",
     "@ducanh2912/next-pwa": "^10.2.8",
+    "@google/generative-ai": "^0.17.0",
     "@internationalized/date": "^3.5.4",
     "@next/third-parties": "^14.2.5",
     "@nextui-org/react": "^2.4.6",

@@ -3,11 +3,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import toast from 'react-hot-toast'
+import { useDebounce } from 'react-use'
 
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import {
   Accordion,
   AccordionItem,
+  Badge,
   Button,
   Input,
   Kbd,
@@ -23,10 +25,13 @@ import {
   DEFAULT_CURRENCY_SIGN,
 } from '@/config/constants/main'
 
+import { getCachedCategoryItemCompletionAI } from '@/app/lib/actions'
+
 import type { TTransaction } from '../../lib/types'
 import {
   cn,
   findApproxCategoryByValue,
+  getCategoryItemNames,
   getFormattedCurrency,
   toLowerCase,
 } from '../../lib/utils'
@@ -43,8 +48,11 @@ type TProps = {
 function TransactionForm({ currency, userCategories }: TProps) {
   const { pending } = useFormStatus()
   const [isSwitchedOn, setIsSwitchedOn] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(true)
+  const [isLoadingCategoryItemNameAI, setIsLoadingCategoryItemNameAI] =
+    useState(false)
   const [amount, setAmount] = useState('')
+  const [categoryItemNameAI, setCategoryItemNameAI] = useState('')
   const [description, setDescription] = useState('')
   const approxCategory = useMemo(
     () =>
@@ -54,14 +62,22 @@ function TransactionForm({ currency, userCategories }: TProps) {
       ),
     [description, userCategories],
   )
-  const newCategoryState = useMemo(
+  const isCategoryItemNameAIValid = useMemo(
     () =>
-      new Set([
-        approxCategory?.item.name
-          ? approxCategory?.item.name
-          : DEFAULT_CATEGORY,
-      ]),
-    [approxCategory?.item.name],
+      getCategoryItemNames(userCategories || DEFAULT_CATEGORIES).includes(
+        categoryItemNameAI,
+      ),
+    [categoryItemNameAI, userCategories],
+  )
+  const categoryItemName = isCategoryItemNameAIValid
+    ? categoryItemNameAI
+    : approxCategory?.item.name
+      ? approxCategory?.item.name
+      : DEFAULT_CATEGORY
+
+  const newCategoryState = useMemo(
+    () => new Set([categoryItemName]),
+    [categoryItemName],
   )
   const [category, setCategory] = useState<Selection>(newCategoryState)
   useEffect(() => setCategory(newCategoryState), [newCategoryState])
@@ -73,6 +89,42 @@ function TransactionForm({ currency, userCategories }: TProps) {
     () => setIsSwitchedOn(isAutoSwitchedOnIncome),
     [isAutoSwitchedOnIncome],
   )
+
+  const onGetCategoryItemCompletionAI = async (
+    categories: TTransaction['categories'],
+    promptValue: string,
+  ) => {
+    if (!promptValue) {
+      setCategoryItemNameAI('')
+      return
+    }
+    setIsLoadingCategoryItemNameAI(true)
+
+    try {
+      const res = await getCachedCategoryItemCompletionAI(
+        categories,
+        promptValue,
+      )
+      setCategoryItemNameAI(res)
+    } catch (err) {
+      throw err
+    } finally {
+      setIsLoadingCategoryItemNameAI(false)
+    }
+  }
+  // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
+  const [isReady, cancel] = useDebounce(
+    () =>
+      onGetCategoryItemCompletionAI(
+        userCategories || DEFAULT_CATEGORIES,
+        description,
+      ),
+    1000,
+    [description],
+  )
+  useEffect(() => {
+    if (!isReady()) cancel()
+  }, [cancel, isReady])
 
   const isInitialExpanded = isExpanded ? [ACCORDION_ITEM_KEY] : ['']
 
@@ -133,6 +185,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         <Input
           isDisabled={pending}
           isRequired
+          autoComplete='off'
           type='text'
           name='description'
           aria-label='Description'
@@ -149,6 +202,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           endContent={
             <Input
               isRequired
+              autoComplete='off'
               type='text'
               name='amount'
               aria-label='Amount'
@@ -188,36 +242,47 @@ function TransactionForm({ currency, userCategories }: TProps) {
         <div className='flex justify-between'>
           <div className='flex items-center gap-2'>
             <div className='flex w-full flex-wrap gap-4 md:flex-nowrap'>
-              <Select
-                isDisabled={pending}
-                name='category'
-                label='Select a category'
-                className='w-56'
-                classNames={{
-                  trigger:
-                    'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
-                }}
-                items={userCategories || DEFAULT_CATEGORIES}
-                defaultSelectedKeys={[DEFAULT_CATEGORY]}
-                selectedKeys={category}
-                onSelectionChange={setCategory}
+              <Badge
+                isInvisible={
+                  !isCategoryItemNameAIValid || isLoadingCategoryItemNameAI
+                }
+                content='AI'
+                color='primary'
+                size='sm'
+                className='text-xxs'
               >
-                {(userCategories || DEFAULT_CATEGORIES).map(
-                  (category, idx, arr) => (
-                    <SelectSection
-                      key={category.subject}
-                      showDivider={idx !== arr.length - 1}
-                      title={category.subject}
-                    >
-                      {category.items.map((item) => (
-                        <SelectItem key={item.name}>
-                          {`${item.emoji} ${item.name}`}
-                        </SelectItem>
-                      ))}
-                    </SelectSection>
-                  ),
-                )}
-              </Select>
+                <Select
+                  isDisabled={pending}
+                  isLoading={isLoadingCategoryItemNameAI}
+                  items={userCategories || DEFAULT_CATEGORIES}
+                  defaultSelectedKeys={[DEFAULT_CATEGORY]}
+                  selectedKeys={category}
+                  onSelectionChange={setCategory}
+                  name='category'
+                  label='Select a category'
+                  className='w-56'
+                  classNames={{
+                    trigger:
+                      'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                  }}
+                >
+                  {(userCategories || DEFAULT_CATEGORIES).map(
+                    (category, idx, arr) => (
+                      <SelectSection
+                        key={category.subject}
+                        showDivider={idx !== arr.length - 1}
+                        title={category.subject}
+                      >
+                        {category.items.map((item) => (
+                          <SelectItem key={item.name}>
+                            {`${item.emoji} ${item.name}`}
+                          </SelectItem>
+                        ))}
+                      </SelectSection>
+                    ),
+                  )}
+                </Select>
+              </Badge>
             </div>
           </div>
           <div className='flex items-center'>

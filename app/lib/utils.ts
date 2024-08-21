@@ -271,6 +271,13 @@ export const pluralize = (
 //   }
 // }
 
+export const getCategoryItemNames = (category: TTransaction['categories']) => {
+  if (!category) return []
+  return category
+    .flatMap((subject) => subject.items.map((item) => item.name))
+    .filter(Boolean) // Remove empty strings
+}
+
 export const findApproxCategoryByValue = (
   value: string,
   categories: TTransaction['categories'],
