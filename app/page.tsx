@@ -4,11 +4,8 @@ import {
   PiWarningOctagonFill,
 } from 'react-icons/pi'
 
-import type { Metadata } from 'next'
-
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 
-import { APP_NAME } from '@/config/constants/main'
 import {
   DEFAULT_TRANSACTION_LIMIT,
   NAV_TITLE,

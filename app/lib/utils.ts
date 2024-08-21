@@ -23,7 +23,7 @@ import {
 } from '@/config/constants/main'
 
 import type {
-  TBrowserName,
+  TApproxCategory,
   TGetTransactions,
   THTMLElement,
   TTransaction,
@@ -270,3 +270,37 @@ export const pluralize = (
 //     return 'Unknown' // Unknown or unrecognized browser
 //   }
 // }
+
+export const findApproxCategoryByValue = (
+  value: string,
+  categories: TTransaction['categories'],
+): TApproxCategory | null => {
+  if (!value || !categories) return null
+
+  const countCategoryItems = categories.flatMap(
+    (subject) => subject.items,
+  ).length
+  const compareCharactersUntil = Math.round(countCategoryItems * 0.1)
+  const searchValue = toLowerCase(value.slice(0, compareCharactersUntil))
+  const rawSearchValue = toLowerCase(value)
+
+  for (const category of categories) {
+    for (let idx = 0; idx < category.items.length; idx++) {
+      const item = category.items[idx]
+      const itemName = toLowerCase(item.name)
+
+      if (
+        rawSearchValue.includes(itemName) ||
+        itemName.startsWith(searchValue)
+      ) {
+        return {
+          subject: category.subject,
+          item,
+          itemIndex: idx,
+        }
+      }
+    }
+  }
+
+  return null
+}

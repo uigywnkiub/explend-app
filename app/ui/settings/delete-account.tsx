@@ -53,13 +53,7 @@ function DeleteAccount({ userId }: TProps) {
     }
   }
 
-  useEffect(() => {
-    if (inputText === CONFIRM_TEXT) {
-      setIsInvalidText(false)
-    } else {
-      setIsInvalidText(true)
-    }
-  }, [inputText])
+  useEffect(() => setIsInvalidText(inputText !== CONFIRM_TEXT), [inputText])
 
   const buttonWithIcon = (icon: TIcon) => (
     <Button
