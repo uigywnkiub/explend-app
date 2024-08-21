@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import toast from 'react-hot-toast'
 
@@ -12,6 +12,7 @@ import {
   Input,
   Kbd,
   Select,
+  Selection,
   SelectItem,
   SelectSection,
   Switch,
@@ -23,10 +24,16 @@ import {
 } from '@/config/constants/main'
 
 import type { TTransaction } from '../../lib/types'
-import { cn, getFormattedCurrency } from '../../lib/utils'
+import {
+  cn,
+  findApproxCategoryByValue,
+  getFormattedCurrency,
+  toLowerCase,
+} from '../../lib/utils'
 
 const ACCORDION_ITEM_KEY = 'Form'
 const AMOUNT_LENGTH = 6
+const AUTO_SWITCH_INCOME_STR = 'salary'
 
 type TProps = {
   currency: TTransaction['currency']
@@ -38,6 +45,31 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const [isSwitchedOn, setIsSwitchedOn] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [amount, setAmount] = useState('')
+  const [description, setDescription] = useState('')
+  const approxCategory = useMemo(
+    () =>
+      findApproxCategoryByValue(
+        description,
+        userCategories || DEFAULT_CATEGORIES,
+      ),
+    [description, userCategories],
+  )
+  const newCategoryState = useMemo(
+    () =>
+      new Set([
+        approxCategory?.item.name
+          ? approxCategory?.item.name
+          : DEFAULT_CATEGORY,
+      ]),
+    [approxCategory?.item.name],
+  )
+  const [category, setCategory] = useState<Selection>(newCategoryState)
+  useEffect(() => setCategory(newCategoryState), [newCategoryState])
+  const isSalary = useMemo(
+    () => toLowerCase(description).includes(AUTO_SWITCH_INCOME_STR),
+    [description],
+  )
+  useEffect(() => setIsSwitchedOn(isSalary), [isSalary])
 
   const isInitialExpanded = isExpanded ? [ACCORDION_ITEM_KEY] : ['']
 
@@ -54,8 +86,6 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
   const onExpandedChange = () => {
     setIsExpanded((prev) => !prev)
-    setIsSwitchedOn(false)
-    setAmount('')
   }
 
   useEffect(() => {
@@ -88,6 +118,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
       >
         <Switch
           isDisabled={pending}
+          isSelected={isSwitchedOn}
           color='success'
           name='isIncome'
           value='isIncome'
@@ -102,6 +133,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
           type='text'
           name='description'
           aria-label='Description'
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           required
           size='lg'
           color={isSwitchedOn ? 'success' : 'danger'}
@@ -163,6 +196,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 }}
                 items={userCategories || DEFAULT_CATEGORIES}
                 defaultSelectedKeys={[DEFAULT_CATEGORY]}
+                selectedKeys={category}
+                onSelectionChange={setCategory}
               >
                 {(userCategories || DEFAULT_CATEGORIES).map(
                   (category, idx, arr) => (
