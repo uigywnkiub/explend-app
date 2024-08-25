@@ -22,7 +22,7 @@ import {
   getCachedTransactions,
   resetCategories,
 } from './lib/actions'
-import { calculateTotalAmount, filterTransactions } from './lib/data'
+import { getTransactionsTotals } from './lib/data'
 import type {
   TGroupedTransactions,
   TTotalsTransaction,
@@ -100,14 +100,6 @@ export default async function Home({
   const hasSearchedTransactionsByQuery = searchedTransactionsByQuery.length > 0
   const countSearchedTransactionsByQuery = searchedTransactionsByQuery.length
 
-  const getTransactionsTotals = (transactions: TTransaction[]) => {
-    const { income, expense } = filterTransactions(transactions)
-    return {
-      income: calculateTotalAmount(income),
-      expense: calculateTotalAmount(expense),
-    }
-  }
-
   const groupedTransactionsByDate: TGroupedTransactions = (
     query ? searchedTransactionsByQuery : transactions
   )?.reduce((acc: Record<string, TTransaction[]>, t: TTransaction) => {
@@ -141,13 +133,11 @@ export default async function Home({
       <h1 className='mb-4 text-center text-3xl font-semibold md:mb-8'>
         {NAV_TITLE.HOME}
       </h1>
-      <div className='mx-auto flex max-w-3xl flex-col gap-y-2'>
+      <div className='mx-auto flex max-w-3xl flex-col gap-y-0'>
         <BalanceCard
           balance={balance}
           currency={currency}
           user={session?.user}
-          incomeAmount={getTransactionsTotals(transactions).income}
-          expenseAmount={getTransactionsTotals(transactions).expense}
         />
         <form action={createTransactionWithUserId} className='mt-4'>
           <TransactionForm
@@ -169,7 +159,7 @@ export default async function Home({
               <Search
                 hasSearchedTransactionsByQuery={hasSearchedTransactionsByQuery}
               />
-              <div className='mb-2 mt-4'>
+              <div className='mb-2 mt-2'>
                 {!hasSearchedTransactionsByQuery ? (
                   <p>No Transactions Found</p>
                 ) : (

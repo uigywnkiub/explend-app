@@ -33,3 +33,5 @@ export const enum OPACITY {
   O05 = '0D', // 5% opacity
   O0 = '00', // 0% opacity
 }
+
+export const AI = '#62A4FA'

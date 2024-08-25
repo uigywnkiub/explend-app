@@ -148,6 +148,14 @@ export const getFormattedBalance = (balance: TTransaction['balance']) => {
     : formattedCurrency
 }
 
+export const formatAmount = (value: string): string => {
+  const rawAmount = value
+    ?.replace(/\s/g, '')
+    ?.replace(',', '.')
+    ?.replace(/^0+/, '')
+  return rawAmount
+}
+
 export const calculateEntryRange = (
   page: number | string | null,
   limit: number | string | null,
@@ -270,6 +278,13 @@ export const pluralize = (
 //     return 'Unknown' // Unknown or unrecognized browser
 //   }
 // }
+
+export const getCategoryItemNames = (category: TTransaction['categories']) => {
+  if (!category) return []
+  return category
+    .flatMap((subject) => subject.items.map((item) => item.name))
+    .filter(Boolean) // Remove empty strings
+}
 
 export const findApproxCategoryByValue = (
   value: string,

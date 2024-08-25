@@ -7,6 +7,14 @@ export const filterTransactions = (transactions: TTransaction[]) => ({
   expense: transactions.filter((t) => !t.isIncome),
 })
 
+export const getTransactionsTotals = (transactions: TTransaction[]) => {
+  const { income, expense } = filterTransactions(transactions)
+  return {
+    income: calculateTotalAmount(income),
+    expense: calculateTotalAmount(expense),
+  }
+}
+
 export const calculateChartData = (
   income: TTransaction[],
   expense: TTransaction[],

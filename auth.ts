@@ -19,7 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       redirectUri: `${IS_PROD ? APP_URL : APP_LOCALHOST_URL}/api/auth/callback/notion`,
     }),
   ],
-  debug: !IS_PROD,
+  debug: false,
   trustHost: true,
   session: {
     maxAge: 1209600, // Two weeks

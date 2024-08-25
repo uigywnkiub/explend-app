@@ -1,16 +1,33 @@
-import { Spinner } from '@nextui-org/react'
+import { Spinner, SpinnerProps } from '@nextui-org/react'
 
-export default function Loading() {
+import { cn } from './lib/utils'
+
+type TProps = {
+  size?: SpinnerProps['size']
+  inline?: boolean
+  wrapperCN?: string
+}
+
+export default function Loading({
+  size = 'lg',
+  inline = false,
+  wrapperCN,
+}: TProps) {
   return (
-    <div className='flex h-screen flex-col items-center justify-center gap-4'>
+    <div
+      className={cn(
+        !inline && 'flex h-screen flex-col items-center justify-center gap-4',
+        wrapperCN,
+      )}
+    >
       <Spinner
-        size='lg'
+        size={size}
         classNames={{
           // base: 'animate-pulse-fast',
           circle1: 'border-b-success',
           circle2: 'border-b-danger',
         }}
-        label='Just a second...'
+        label={!inline ? 'Just a second...' : undefined}
       />
     </div>
   )

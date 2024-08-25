@@ -3,6 +3,7 @@ import type { Config } from 'tailwindcss'
 
 import { BLINK_DURATION } from './config/constants/animation'
 import {
+  AI,
   BRONZE,
   CUSTOM_DARK,
   CUSTOM_LIGHT,
@@ -38,6 +39,7 @@ const config: Config = {
         gold: GOLD,
         silver: SILVER,
         bronze: BRONZE,
+        ai: AI,
       },
       keyframes: {
         ['blink-light']: {
@@ -59,6 +61,9 @@ const config: Config = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      },
+      dropShadow: {
+        ai: `0 0 1px ${AI}`,
       },
     },
     transitionTimingFunction: {

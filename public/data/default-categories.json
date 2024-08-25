@@ -2,13 +2,10 @@
   {
     "subject": "Living Expenses",
     "items": [
-      { "emoji": "🍲", "name": "Food" },
+      { "emoji": "🛒", "name": "Groceries" },
       { "emoji": "🏠", "name": "Rent/Mortgage" },
-      { "emoji": "💊", "name": "Health" },
       { "emoji": "⚡", "name": "Utilities" },
-      { "emoji": "📱", "name": "Phone/Internet" },
-      { "emoji": "🍺", "name": "Beer" },
-      { "emoji": "🚬", "name": "Cigarettes" }
+      { "emoji": "💊", "name": "Health" }
     ]
   },
   {
@@ -16,12 +13,13 @@
     "items": [
       { "emoji": "🎁", "name": "Gift" },
       { "emoji": "🏕️", "name": "Travel" },
-      { "emoji": "👖", "name": "Clothes" },
+      { "emoji": "🛍️", "name": "Shopping" },
       { "emoji": "💅🏼", "name": "Self-care" },
       { "emoji": "🏋️", "name": "Gym" },
       { "emoji": "📚", "name": "Books" },
       { "emoji": "🎓", "name": "Education" },
-      { "emoji": "🎬", "name": "Entertainment" }
+      { "emoji": "🎬", "name": "Entertainment" },
+      { "emoji": "🎨", "name": "Hobby" }
     ]
   },
   {
@@ -30,28 +28,54 @@
       { "emoji": "💵", "name": "Salary" },
       { "emoji": "💼", "name": "Work" },
       { "emoji": "💎", "name": "Subscription" },
-      { "emoji": "💳", "name": "Savings/Investments" },
-      { "emoji": "👏🏼", "name": "Donations" },
-      { "emoji": "💰", "name": "Bonus" }
+      { "emoji": "💳", "name": "Saving/Investment" },
+      { "emoji": "👏🏼", "name": "Donation" },
+      { "emoji": "💰", "name": "Bonus" },
+      { "emoji": "🧾", "name": "Tax" }
     ]
   },
   {
     "subject": "Transportation",
     "items": [
+      { "emoji": "⛽", "name": "Fuel" },
+      { "emoji": "🅿️", "name": "Parking" },
       { "emoji": "🚗", "name": "Car" },
       { "emoji": "🚕", "name": "Taxi" },
       { "emoji": "🚌", "name": "Public Transport" },
       { "emoji": "🚂", "name": "Train" },
-      { "emoji": "⛽", "name": "Fuel" },
-      { "emoji": "🅿️", "name": "Parking" },
-      { "emoji": "🚲", "name": "Bike Maintenance" }
+      { "emoji": "🛥️", "name": "Boat" },
+      { "emoji": "✈️", "name": "Airplane" },
+      { "emoji": "🏍️", "name": "Motorcycle" },
+      { "emoji": "🛴", "name": "Scooter" },
+      { "emoji": "🚲", "name": "Bike" }
+    ]
+  },
+  {
+    "subject": "Electronics",
+    "items": [
+      { "emoji": "📱", "name": "Smartphone" },
+      { "emoji": "💻", "name": "Computer" },
+      { "emoji": "📺", "name": "TV" },
+      { "emoji": "🎧", "name": "Headphones" },
+      { "emoji": "🎮", "name": "Gaming Console" },
+      { "emoji": "⌚️", "name": "Smartwatch" },
+      { "emoji": "🔋", "name": "Battery" },
+      { "emoji": "🔌", "name": "Charger" },
+      { "emoji": "🎒", "name": "Accessory" }
     ]
   },
   {
     "subject": "General",
     "items": [
       { "emoji": "🤔", "name": "Unknown" },
-      { "emoji": "🛠️", "name": "Repairs" },
+      { "emoji": "📶", "name": "Internet" },
+      { "emoji": "🎉", "name": "Event" },
+      { "emoji": "🥃", "name": "Alcohol" },
+      { "emoji": "🚬", "name": "Cigarettes" },
+      { "emoji": "🐾", "name": "Pet" },
+      { "emoji": "🛡️", "name": "Insurance" },
+      { "emoji": "🛠️", "name": "Repair" },
+      { "emoji": "🪴", "name": "Gardening" },
       { "emoji": "📦", "name": "Other" }
     ]
   }

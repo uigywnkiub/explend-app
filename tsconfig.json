@@ -22,20 +22,13 @@
       "@/*": ["./*"]
     }
   },
-  "types": [
-    // This allows Serwist to type `window.serwist`.
-    "@serwist/next/typings"
-  ],
-  "lib": [
-    // Add this! Doing so adds WebWorker and ServiceWorker types to the global.
-    "webworker"
-  ],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/global-error.tsx"
+    "app/global-error.tsx",
+    "svgr.d.ts"
   ],
   "exclude": ["node_modules", "public/sw.js"]
 }

@@ -5,6 +5,8 @@ import { useFormStatus } from 'react-dom'
 
 import { Button, Kbd, Textarea } from '@nextui-org/react'
 
+import InfoText from '../info-text'
+
 const MAX_TEXT_LENGTH = 1000
 const MIN_TEXT_LENGTH = 10
 
@@ -17,8 +19,13 @@ export default function Feedback() {
       <Textarea
         name='feedback'
         label='Feedback'
-        placeholder='Type your feedback...'
-        description='Feedback is anonymous. Available once for 7 days.'
+        placeholder='Type feedback...'
+        description={
+          <InfoText
+            text='Feedback is anonymous. Available once for 7 days.'
+            withAsterisk={false}
+          />
+        }
         errorMessage={`Feedback must not exceed ${MAX_TEXT_LENGTH} characters.`}
         maxRows={30}
         minRows={5}
