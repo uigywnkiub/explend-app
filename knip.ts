@@ -8,9 +8,9 @@ const config: KnipConfig = {
     '@types/react-is',
     '@testing-library/dom',
     '@testing-library/react',
-    'postcss',
-    'serwist',
+    // 'postcss',
     'postcss-load-config',
+    '@svgr/webpack',
   ],
 }
 
