@@ -4,6 +4,7 @@
 
 ## Features
 
+- **AI-powered Completion**: Leverage Explend Intelligence to automatically complete transaction fields, including category, amount, and whether it is income or expense, based on your input description, making it faster and easier to track your expenses and income.
 - **Monthly Reports**: View detailed monthly reports by selecting any month or customizing your own date range.
 - **Dynamic Radar Chart**: The app features a radar chart that updates each time you add a new transaction category, providing a visual representation of your spending habits.
 - **Customizable Categories**: Change default categories to suit your needs.
