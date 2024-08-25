@@ -4,14 +4,14 @@
 
 ## Features
 
-- **AI-powered Completion**: Leverage Explend Intelligence to automatically complete transaction fields, including category, amount, and whether it is income or expense, based on your input description, making it faster and easier to track your transactions.
+- **AI-powered Completion**: Leverage Explend Intelligence to automatically complete transaction fields, including category, amount, and whether it is income or expense, based on your input description, making it faster and easier to log your transactions.
 - **Monthly Reports**: View detailed monthly reports by selecting any month or customizing your own date range.
 - **Dynamic Radar Chart**: The app features a radar chart that updates each time you add a new transaction category, providing a visual representation of your spending habits.
 - **Customizable Categories**: Change default categories to suit your needs.
 - **Transaction Management**: Delete transactions, edit, set spending limits and more.
 - **Search Transactions**: Quickly find specific transactions using the search functionality.
 - **Security**: Your transaction data are secured with AES encryption, ensuring your financial information remains private. Encrypted data looks something like this: "5c007dc6c2db3395a8…”.
-- **PWA Mobile Version**: Access Explend on the go with its Progressive Web App (PWA) mobile version, offering a seamless experience across different devices. (Add to Home Screen)
+- **PWA Mobile Version**: Access Explend on the go with its Progressive Web App mobile version, offering a seamless experience across different devices. (Add to Home Screen)
 - **Theme Customization**: Customize the appearance of the app with support for light, dark, and system themes.
 - **Future Enhancements**: Some advanced features are currently in development and may become available in a premium version.
 
