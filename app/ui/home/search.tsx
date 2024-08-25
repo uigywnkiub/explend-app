@@ -11,6 +11,8 @@ import { Accordion, AccordionItem, Input } from '@nextui-org/react'
 
 import { SEARCH_PARAM } from '@/config/constants/navigation'
 
+import InfoText from '../info-text'
+
 const ACCORDION_ITEM_KEY = 'Search'
 
 type TProps = {
@@ -102,7 +104,12 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
             size='lg'
             color={hasSearchedTransactionsByQuery ? 'primary' : 'danger'}
             placeholder='Type to search...'
-            description='You can do searches by description, category, and amount.'
+            description={
+              <InfoText
+                text='You can do searches by description, category, and amount.'
+                withAsterisk={false}
+              />
+            }
             isClearable
             onClear={() => [onSearchChange(''), setSearchTerm('')]}
             onChange={(e) => setSearchTerm(e.target.value.trim())}

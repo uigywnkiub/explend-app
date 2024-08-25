@@ -38,14 +38,22 @@ const safetySettings = [
   // },
 ]
 
+// Docs https://ai.google.dev/gemini-api/docs/models/gemini
+// RPM: Requests per minute
+// TPM: Tokens per minute
+// RPD: Requests per day
+// TPD: Tokens per day
+
 export const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-export const generativeModel = genAI.getGenerativeModel({
+export const genAIModel = genAI.getGenerativeModel({
   model: process.env.GEMINI_MODEL,
+  // Docs https://ai.google.dev/api/generate-content#v1beta.GenerationConfig
   generationConfig: {
     candidateCount: 1,
     stopSequences: ['\n'],
-    maxOutputTokens: 1,
-    temperature: 0.1,
+    // A token is equivalent to about 4 characters for Gemini models. 100 tokens are about 60-80 English words.
+    maxOutputTokens: 10,
+    temperature: 0.5,
   },
   safetySettings,
 })

@@ -46,3 +46,9 @@ export const FILTERED_SENTRY_ERROR_TEXT = {
 
 export const AUTHOR_NAME: string = 'Volodymyr'
 export const AUTHOR_URL: string = 'https://volodymyr-g.vercel.app'
+
+const AI_SUFFIX_NAME = 'Intelligence'
+export const enum AI_NAME {
+  FULL = `${APP_NAME.SHORT} ${AI_SUFFIX_NAME}`,
+  SUFFIX = AI_SUFFIX_NAME,
+}

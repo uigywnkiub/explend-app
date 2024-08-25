@@ -11,13 +11,13 @@ import { SignOutError } from '@auth/core/errors'
 import { Resend } from 'resend'
 
 import { FEEDBACK } from '@/config/constants/cookies'
-import { APP_NAME } from '@/config/constants/main'
+import { APP_NAME, CURRENCY_CODE } from '@/config/constants/main'
 import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
 import TransactionModel from '@/app/lib/models/transaction.model'
 
-import { generativeModel } from './google-ai'
+import { genAIModel } from './ai'
 import dbConnect from './mongodb'
 import type {
   TBalance,
@@ -478,24 +478,61 @@ export async function deleteAllTransactionsAndSignOut(
   }
 }
 
-export async function getCategoryItemCompletionAI(
+export async function getCategoryItemNameAI(
   categories: TTransaction['categories'],
-  promptValue: string,
+  userPrompt: string,
 ): Promise<string> {
-  if (!categories || !promptValue) {
-    throw new Error('Categories or prompt value are required.')
+  if (!categories || !userPrompt) {
+    throw new Error('Categories or user prompt are required.')
   }
 
   try {
-    const prompt = `Given the list of categories: ${getCategoryItemNames(categories).join(', ')} — choose the most relevant category for the prompt '${promptValue}' in one word.`
+    const prompt = `Given the list of categories: ${getCategoryItemNames(categories).join(', ')} — choose the most relevant category for the prompt '${userPrompt}' in one word.`
 
-    const result = await generativeModel.generateContent(prompt)
-    const resultText = result.response.text().trim()
-    return resultText
+    const content = await genAIModel.generateContent(prompt)
+    const text = content.response.text().trim()
+    return text
   } catch (err) {
     throw err
   }
 }
-export const getCachedCategoryItemCompletionAI = cache(
-  getCategoryItemCompletionAI,
-)
+export const getCachedCategoryItemAI = cache(getCategoryItemNameAI)
+
+export async function getAmountAI(
+  currency: CURRENCY_CODE | string,
+  userPrompt: string,
+): Promise<string> {
+  if (!currency || !userPrompt) {
+    throw new Error('Currency or user prompt is required.')
+  }
+
+  try {
+    const prompt = `${userPrompt}. Provide a numerical estimate of the cost in ${currency}, disregarding real-time price fluctuations. Omit any decimal points, commas, or other symbols.`
+
+    const content = await genAIModel.generateContent(prompt)
+    const text = content.response.text().trim()
+    return text
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedAmountAI = cache(getAmountAI)
+
+export async function getTransactionTypeAI(
+  userPrompt: string,
+): Promise<string> {
+  if (!userPrompt) {
+    throw new Error('User prompt is required.')
+  }
+
+  try {
+    const prompt = `Analyze the following transaction description and determine if it is an income or expense. The output must be in one word, 'true' for income and 'false' for expense. Description: '${userPrompt}'`
+
+    const content = await genAIModel.generateContent(prompt)
+    const text = content.response.text().trim()
+    return text
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedTransactionTypeAI = cache(getTransactionTypeAI)

@@ -27,6 +27,7 @@ import type { TTheme, TTransaction } from '../lib/types'
 import {
   capitalizeFirstLetter,
   cn,
+  formatAmount,
   getCategoryWithEmoji,
   getCategoryWithoutEmoji,
   getFormattedCurrency,
@@ -72,13 +73,9 @@ function TransactionFormEdit({ transaction }: TProps) {
   const transactionId = transaction.id
 
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawAmount = e.target.value
-      .replace(/\s/g, '')
-      .replace(',', '.')
-      .replace(/^0+/, '')
+    const rawAmount = formatAmount(e.target.value)
     if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
-      const formattedValue = getFormattedCurrency(rawAmount)
-      setAmount(formattedValue)
+      setAmount(getFormattedCurrency(rawAmount))
     }
   }
 

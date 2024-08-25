@@ -148,6 +148,14 @@ export const getFormattedBalance = (balance: TTransaction['balance']) => {
     : formattedCurrency
 }
 
+export const formatAmount = (value: string): string => {
+  const rawAmount = value
+    ?.replace(/\s/g, '')
+    ?.replace(',', '.')
+    ?.replace(/^0+/, '')
+  return rawAmount
+}
+
 export const calculateEntryRange = (
   page: number | string | null,
   limit: number | string | null,
