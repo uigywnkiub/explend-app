@@ -1,6 +1,11 @@
 import { endOfDay, formatISO, isWithinInterval } from 'date-fns'
 
-import type { TCategoryData, TChartData, TTransaction } from './types'
+import type {
+  TCategoryData,
+  TChartData,
+  TMinMaxTransactionByDate,
+  TTransaction,
+} from './types'
 
 export const filterTransactions = (transactions: TTransaction[]) => ({
   income: transactions.filter((t) => t.isIncome),
@@ -106,4 +111,27 @@ export const filterTransactionsByDateRange = (
       end: endOfDay(endDate),
     })
   })
+}
+
+export const getMinMaxTransactionsByDate = (
+  transactions: TTransaction[],
+): TMinMaxTransactionByDate => {
+  return transactions.reduce<TMinMaxTransactionByDate>(
+    (acc, transaction) => {
+      if (
+        !acc.minTransaction ||
+        transaction.createdAt < acc.minTransaction.createdAt
+      ) {
+        acc.minTransaction = transaction
+      }
+      if (
+        !acc.maxTransaction ||
+        transaction.createdAt > acc.maxTransaction.createdAt
+      ) {
+        acc.maxTransaction = transaction
+      }
+      return acc
+    },
+    { minTransaction: null, maxTransaction: null },
+  )
 }

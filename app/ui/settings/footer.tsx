@@ -14,8 +14,8 @@ import { getYear } from 'date-fns'
 
 import { APP_NAME, AUTHOR_NAME, AUTHOR_URL } from '@/config/constants/main'
 
+import { getBreakpointWidth } from '@/app/lib/helpers'
 import type { TSocialLink } from '@/app/lib/types'
-import { getBreakpointWidth } from '@/app/lib/utils'
 
 import { HoverableElement } from '../hoverables'
 

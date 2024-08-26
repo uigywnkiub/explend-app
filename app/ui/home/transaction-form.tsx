@@ -32,7 +32,6 @@ import {
   getCachedTransactionTypeAI,
 } from '@/app/lib/actions'
 
-import type { TTransaction } from '../../lib/types'
 import {
   capitalizeFirstLetter,
   cn,
@@ -40,7 +39,8 @@ import {
   formatAmount,
   getCategoryItemNames,
   getFormattedCurrency,
-} from '../../lib/utils'
+} from '../../lib/helpers'
+import type { TTransaction } from '../../lib/types'
 import AILogo from '../ai-logo'
 import InfoText from '../info-text'
 

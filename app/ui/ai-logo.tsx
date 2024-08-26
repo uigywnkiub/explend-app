@@ -9,9 +9,14 @@ import { AI_NAME } from '@/config/constants/main'
 type TProps = {
   asIcon?: boolean
   asText?: boolean
+  textBefore?: string
 }
 
-export default function AILogo({ asIcon = false, asText = false }: TProps) {
+export default function AILogo({
+  asIcon = false,
+  asText = false,
+  textBefore,
+}: TProps) {
   const aiText = (
     <span className='bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 bg-clip-text text-xxs text-transparent md:text-xs'>
       {AI_NAME.FULL}
@@ -38,7 +43,13 @@ export default function AILogo({ asIcon = false, asText = false }: TProps) {
           </PopoverContent>
         </Popover>
       )}
-      {!asIcon && aiText}
+      {!asIcon && textBefore ? (
+        <span>
+          {textBefore} {aiText}
+        </span>
+      ) : (
+        aiText
+      )}
     </div>
   )
 }

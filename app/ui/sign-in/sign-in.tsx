@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   PiDribbbleLogo,
   PiDribbbleLogoFill,
@@ -20,6 +20,7 @@ import { signIn } from 'next-auth/react'
 import { Accordion, AccordionItem, Divider } from '@nextui-org/react'
 
 import {
+  AI_NAME,
   APP_DESCRIPTION,
   APP_NAME,
   APP_TITLE,
@@ -34,6 +35,7 @@ import {
   TSignInButton,
 } from '@/app/lib/types'
 
+import AILogo from '../ai-logo'
 import ClientButton from '../default-button'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
@@ -42,6 +44,7 @@ import Logo from '../logo'
 const ACCORDION_ITEM_KEY = 'More'
 
 function SignIn() {
+  const [isClient, setIsClient] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isLoading, setIsLoading] = useState<TAuthProvidersLoading>({
     github: false,
@@ -50,6 +53,7 @@ function SignIn() {
     dribbble: false,
     notion: false,
   })
+  useEffect(() => setIsClient(true), [])
 
   const isAnyLoading =
     isLoading.github ||
@@ -144,10 +148,14 @@ function SignIn() {
         <p className='text-default-500 md:text-lg'>{APP_DESCRIPTION}</p>
         <Divider className='my-4 w-full bg-divider md:w-1/2' />
         <div className='flex flex-col items-center space-y-3'>
-          <p className='text-lg font-semibold md:text-lg'>
+          <p className='font-semibold md:text-lg'>
             Start {APP_TITLE}{' '}
-            <span className='mt-1 block text-sm font-medium text-default-500'>
-              AES encryption protects your sensitive data.
+            <span className='block text-xxs md:text-xs'>
+              {isClient ? (
+                <AILogo asText textBefore='Powered by' />
+              ) : (
+                `Powered by ${AI_NAME.FULL}`
+              )}
             </span>
           </p>
           {signInButtons
@@ -218,8 +226,9 @@ function SignIn() {
         </div>
       </div>
       <div className='mt-4 flex flex-col gap-1 text-center'>
-        <InfoText text='Your name and email will be visible on the site and serve as your primary identifiers.' />
         <InfoText text='Signing in does not create an account.' />
+        <InfoText text='AES encryption protects your sensitive data.' />
+        <InfoText text='Your name and email will be visible on the site and serve as your primary identifiers.' />
       </div>
     </div>
   )

@@ -13,6 +13,7 @@ import {
 } from 'date-fns'
 import { formatInTimeZone } from 'date-fns-tz'
 import emojiRegex from 'emoji-regex'
+import getUserLocale from 'get-user-locale'
 import { extendTailwindMerge } from 'tailwind-merge'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
@@ -319,3 +320,7 @@ export const findApproxCategoryByValue = (
 
   return null
 }
+
+export const userLocale = getUserLocale({
+  fallbackLocale: DEFAULT_LANG,
+})

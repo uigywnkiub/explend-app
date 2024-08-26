@@ -1,6 +1,6 @@
 import { Spinner, SpinnerProps } from '@nextui-org/react'
 
-import { cn } from './lib/utils'
+import { cn } from './lib/helpers'
 
 type TProps = {
   size?: SpinnerProps['size']

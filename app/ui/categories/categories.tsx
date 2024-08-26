@@ -24,13 +24,13 @@ import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { updateCategories } from '@/app/lib/actions'
 import { resetCategories } from '@/app/lib/actions'
+import { capitalizeFirstLetter, deepCompareArrays } from '@/app/lib/helpers'
 import {
   TCategoriesLoading,
   TEditingItemIndex,
   TTransaction,
   TUserId,
 } from '@/app/lib/types'
-import { capitalizeFirstLetter, deepCompareArrays } from '@/app/lib/utils'
 
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'

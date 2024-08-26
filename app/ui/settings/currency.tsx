@@ -18,8 +18,8 @@ import {
 } from '@/config/constants/main'
 
 import { updateCurrency } from '@/app/lib/actions'
+import { getSlicedCurrencyCode } from '@/app/lib/helpers'
 import { TSelect, TTransaction, TUserId } from '@/app/lib/types'
-import { getSlicedCurrencyCode } from '@/app/lib/utils'
 
 import { HoverableElement } from '../hoverables'
 

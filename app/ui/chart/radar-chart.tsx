@@ -14,8 +14,8 @@ import {
 import { DANGER, SUCCESS } from '@/config/constants/colors'
 
 import { calculateChartData, filterTransactions } from '@/app/lib/data'
+import { capitalizeFirstLetter, getFormattedCurrency } from '@/app/lib/helpers'
 import { TTransaction } from '@/app/lib/types'
-import { capitalizeFirstLetter, getFormattedCurrency } from '@/app/lib/utils'
 
 import CustomLegend from './custom-legend'
 

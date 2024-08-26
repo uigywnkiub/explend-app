@@ -167,3 +167,8 @@ export type TApproxCategory = {
   item: TTransaction['categories'][0]['items'][0]
   itemIndex: number
 }
+
+export type TMinMaxTransactionByDate = {
+  minTransaction: TTransaction | null
+  maxTransaction: TTransaction | null
+}

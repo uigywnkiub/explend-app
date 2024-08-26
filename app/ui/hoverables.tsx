@@ -8,8 +8,8 @@ import { motion } from 'framer-motion'
 
 import { DIV } from '@/config/constants/motion'
 
+import { cn, getBreakpointWidth } from '../lib/helpers'
 import type { TNavLink, TSelect } from '../lib/types'
-import { cn, getBreakpointWidth } from '../lib/utils'
 
 type THoverableElement = {
   element: TSelect['icon'] | string

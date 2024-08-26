@@ -23,7 +23,6 @@ import { DEFAULT_CURRENCY_SIGN } from '@/config/constants/main'
 import { ROUTE } from '@/config/constants/routes'
 
 import { editTransactionById } from '../lib/actions'
-import type { TTheme, TTransaction } from '../lib/types'
 import {
   capitalizeFirstLetter,
   cn,
@@ -32,7 +31,8 @@ import {
   getCategoryWithoutEmoji,
   getFormattedCurrency,
   getTransactionsWithChangedCategory,
-} from '../lib/utils'
+} from '../lib/helpers'
+import type { TTheme, TTransaction } from '../lib/types'
 import Loading from '../loading'
 import InfoText from './info-text'
 

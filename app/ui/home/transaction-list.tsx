@@ -6,12 +6,12 @@ import { DEFAULT_CURRENCY_CODE } from '@/config/constants/main'
 
 import TransactionItem from '@/app/ui/home/transaction-item'
 
+import { getFormattedCurrency } from '../../lib/helpers'
 import type {
   TGroupedTransactions,
   TTotalsTransaction,
   TTransaction,
 } from '../../lib/types'
-import { getFormattedCurrency } from '../../lib/utils'
 import InfoText from '../info-text'
 
 type TProps = {
