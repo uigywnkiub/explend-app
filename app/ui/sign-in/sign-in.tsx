@@ -20,7 +20,6 @@ import { signIn } from 'next-auth/react'
 import { Accordion, AccordionItem, Divider } from '@nextui-org/react'
 
 import {
-  AI_NAME,
   APP_DESCRIPTION,
   APP_NAME,
   APP_TITLE,
@@ -44,7 +43,6 @@ import Logo from '../logo'
 const ACCORDION_ITEM_KEY = 'More'
 
 function SignIn() {
-  const [isClient, setIsClient] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isLoading, setIsLoading] = useState<TAuthProvidersLoading>({
     github: false,
@@ -53,7 +51,6 @@ function SignIn() {
     dribbble: false,
     notion: false,
   })
-  useEffect(() => setIsClient(true), [])
 
   const isAnyLoading =
     isLoading.github ||
@@ -147,17 +144,15 @@ function SignIn() {
         </h1>
         <p className='text-default-500 md:text-lg'>{APP_DESCRIPTION}</p>
         <Divider className='my-4 w-full bg-divider md:w-1/2' />
-        <div className='flex flex-col items-center space-y-3'>
-          <p className='font-semibold md:text-lg'>
-            Start {APP_TITLE}{' '}
-            <span className='block text-xxs md:text-xs'>
-              {isClient ? (
-                <AILogo asText textBefore='Powered by' />
-              ) : (
-                `Powered by ${AI_NAME.FULL}`
-              )}
-            </span>
-          </p>
+        <div className='flex flex-col items-center space-y-2'>
+          <div className='mb-2 font-semibold'>
+            <p className='md:text-lg'>Start {APP_TITLE}</p>
+            <div className='flex items-center justify-center text-xxs md:text-xs'>
+              <span className='mr-1'>with</span>
+              <AILogo asIcon />
+              <AILogo asText />
+            </div>
+          </div>
           {signInButtons
             .slice(0, 2)
             .map(({ provider, title, isLoading, icon, hoverIcon }) => {
@@ -196,7 +191,7 @@ function SignIn() {
                 title: 'text-center hover:opacity-hover ',
               }}
             >
-              <div className='mt-2 flex flex-col items-center space-y-3'>
+              <div className='mt-2 flex flex-col items-center space-y-2'>
                 {signInButtons
                   .slice(2)
                   .map(({ provider, title, isLoading, icon, hoverIcon }) => {

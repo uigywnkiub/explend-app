@@ -188,7 +188,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
   useEffect(() => {
     if (pending) {
-      // Abort debounce after form submit.
+      // Abort useDebounce after form submit.
       cancel()
       resetAllStates()
       // The idea is to show toast after async form action.
