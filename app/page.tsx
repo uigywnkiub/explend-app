@@ -23,11 +23,6 @@ import {
   resetCategories,
 } from './lib/actions'
 import { getTransactionsTotals } from './lib/data'
-import type {
-  TGroupedTransactions,
-  TTotalsTransaction,
-  TTransaction,
-} from './lib/types'
 import {
   formatDate,
   getCategoryWithoutEmoji,
@@ -35,7 +30,12 @@ import {
   getTransactionsWithChangedCategory,
   pluralize,
   toLowerCase,
-} from './lib/utils'
+} from './lib/helpers'
+import type {
+  TGroupedTransactions,
+  TTotalsTransaction,
+  TTransaction,
+} from './lib/types'
 import BalanceCard from './ui/balance-card'
 import Search from './ui/home/search'
 import TransactionForm from './ui/home/transaction-form'

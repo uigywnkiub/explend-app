@@ -1,4 +1,4 @@
-import { toLowerCase } from '../lib/utils'
+import { toLowerCase } from '../lib/helpers'
 
 type TProps = {
   pageTitle?: string

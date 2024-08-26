@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { capitalizeFirstLetter } from '../../app/lib/utils'
+import { capitalizeFirstLetter } from '../../app/lib/helpers'
 
 describe('capitalizeFirstLetter', () => {
   it('should capitalize the first letter of a string', () => {

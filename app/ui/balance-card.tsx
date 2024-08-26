@@ -12,12 +12,12 @@ import {
 
 import { getAllTransactions } from '../lib/actions'
 import { getTransactionsTotals } from '../lib/data'
-import type { TTransaction, TUser } from '../lib/types'
 import {
   getFormattedBalance,
   getFormattedCurrency,
   getGreeting,
-} from '../lib/utils'
+} from '../lib/helpers'
+import type { TTransaction, TUser } from '../lib/types'
 import Loading from '../loading'
 
 type TProps = {

@@ -10,13 +10,13 @@ import { useRouter } from 'next/navigation'
 import { NextUIProvider } from '@nextui-org/react'
 
 import { SUCCESS } from '@/config/constants/colors'
-import { DEFAULT_LANG } from '@/config/constants/main'
 import {
   DARK_TOAST_OPTS,
   LIGHT_TOAST_OPTS,
   TOAST_POSITION,
 } from '@/config/constants/toast'
 
+import { userLocale } from './lib/helpers'
 import { TTheme } from './lib/types'
 
 export default function Providers({ children }: { children: React.ReactNode }) {
@@ -28,7 +28,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <NextUIProvider navigate={router.push} locale={DEFAULT_LANG}>
+    <NextUIProvider navigate={router.push} locale={userLocale}>
       <NextThemesProvider attribute='class' defaultTheme='dark'>
         <Toaster
           position={TOAST_POSITION}

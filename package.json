@@ -34,6 +34,7 @@
     "emoji-picker-react": "^4.11.1",
     "emoji-regex": "^10.3.0",
     "framer-motion": "^11.3.30",
+    "get-user-locale": "^2.3.2",
     "mongoose": "^8.5.4",
     "mongoose-encryption-decryption": "^1.2.1",
     "next": "14.2.6",

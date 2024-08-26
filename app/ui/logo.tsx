@@ -2,7 +2,7 @@
 
 import { Badge } from '@nextui-org/react'
 
-import { cn } from '../lib/utils'
+import { cn } from '../lib/helpers'
 
 type TSize = 'sm' | 'md' | 'lg'
 
@@ -63,7 +63,7 @@ export default function Logo({
         >
           <span
             className={cn(
-              '-skew-x-6 transform-gpu cursor-default bg-logo-gradient bg-clip-text font-inter font-bold text-transparent drop-shadow-md',
+              '-skew-x-6 transform-gpu cursor-default select-none bg-logo-gradient bg-clip-text font-inter font-bold text-transparent drop-shadow-md',
               textSizeClass,
             )}
           >

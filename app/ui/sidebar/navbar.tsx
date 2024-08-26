@@ -25,7 +25,7 @@ import { usePathname } from 'next/navigation'
 import { NAV_ICON_SIZE, NAV_TITLE } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
-import { getBreakpointWidth } from '@/app/lib/utils'
+import { getBreakpointWidth } from '@/app/lib/helpers'
 
 import type { TNavLink } from '../../lib/types'
 import { HoverableNavLink } from '../hoverables'

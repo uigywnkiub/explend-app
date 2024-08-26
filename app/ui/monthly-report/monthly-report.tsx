@@ -23,9 +23,10 @@ import {
   calculateMonthlyReportData,
   filterTransactions,
   filterTransactionsByDateRange,
+  getMinMaxTransactionsByDate,
 } from '@/app/lib/data'
+import { getFormattedCurrency, toCalendarDate } from '@/app/lib/helpers'
 import type { TTransaction } from '@/app/lib/types'
-import { getFormattedCurrency, toCalendarDate } from '@/app/lib/utils'
 
 import MonthPicker from './month-picker'
 
@@ -63,6 +64,10 @@ function MonthlyReport({ transactions, currency }: TProps) {
     () => calculateMonthlyReportData(income, expense),
     [income, expense],
   )
+  const { minTransaction, maxTransaction } = useMemo(
+    () => getMinMaxTransactionsByDate(transactions),
+    [],
+  )
 
   const memorizedMonthlyReportData = useMemo(() => {
     return monthlyReportData.map((category) => (
@@ -85,6 +90,8 @@ function MonthlyReport({ transactions, currency }: TProps) {
         <MonthPicker
           selectedDate={selectedDate}
           onDateSelection={onDateSelection}
+          minTransaction={minTransaction}
+          maxTransaction={maxTransaction}
         />
         <p className='text-default-500'>
           No transactions found from {formattedDateRange}
@@ -98,6 +105,8 @@ function MonthlyReport({ transactions, currency }: TProps) {
       <MonthPicker
         selectedDate={selectedDate}
         onDateSelection={onDateSelection}
+        minTransaction={minTransaction}
+        maxTransaction={maxTransaction}
       />
       <div className='mb-3 flex-none items-end justify-between md:mb-6 md:flex'>
         <p className='mb-2 text-xl text-default-500 md:mb-0 md:text-2xl'>
