@@ -24,6 +24,7 @@ import {
   DEFAULT_CATEGORY,
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_SIGN,
+  IS_PROD,
 } from '@/config/constants/main'
 
 import {
@@ -97,7 +98,19 @@ function TransactionForm({ currency, userCategories }: TProps) {
   // Synchronize category state with derived value
   useEffect(() => setCategory(newCategoryState), [newCategoryState])
 
-  const resetAIState = () => {
+  const resetAllStates = () => {
+    setIsSwitchedOn(false)
+    setIsExpanded(false)
+    setAmount('')
+    setDescription('')
+    setIsLoadingAIData(false)
+    setIsAmountAIValid(false)
+    setIsTransactionTypeAIValid(false)
+    setCategoryItemNameAI('')
+    setCategory(new Set([DEFAULT_CATEGORY]))
+  }
+
+  const resetAIRelatedStates = () => {
     setIsAmountAIValid(false)
     setIsTransactionTypeAIValid(false)
     setIsSwitchedOn(false)
@@ -110,11 +123,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
     userPrompt: string,
   ) => {
     if (!trimmedDescription) {
-      resetAIState()
+      resetAIRelatedStates()
       return
     }
     setIsLoadingAIData(true)
-    resetAIState()
+    resetAIRelatedStates()
 
     try {
       const [categoryItemNameAI, amountAI, transactionTypeAI] =
@@ -138,7 +151,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         setIsTransactionTypeAIValid(true)
       }
     } catch (err) {
-      resetAIState()
+      resetAIRelatedStates()
       throw err
     } finally {
       setIsLoadingAIData(false)
@@ -147,10 +160,12 @@ function TransactionForm({ currency, userCategories }: TProps) {
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
     () =>
-      getCompletionAIData(
-        userCategories || DEFAULT_CATEGORIES,
-        capitalizeFirstLetter(trimmedDescription),
-      ),
+      IS_PROD
+        ? getCompletionAIData(
+            userCategories || DEFAULT_CATEGORIES,
+            capitalizeFirstLetter(trimmedDescription),
+          )
+        : [null, undefined],
     1000,
     [trimmedDescription],
   )
@@ -173,10 +188,13 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
   useEffect(() => {
     if (pending) {
-      // The idea is to show toast after async form action
+      // Abort debounce after form submit.
+      cancel()
+      resetAllStates()
+      // The idea is to show toast after async form action.
       setTimeout(() => toast.success('Transaction added.'), 0)
     }
-  }, [pending])
+  }, [cancel, pending])
 
   const accordionTitle = isExpanded
     ? `Hide ${ACCORDION_ITEM_KEY}`

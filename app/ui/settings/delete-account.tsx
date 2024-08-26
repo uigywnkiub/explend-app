@@ -95,9 +95,12 @@ function DeleteAccount({ userId }: TProps) {
               <ModalBody>
                 <p className='text-default-500'>
                   Are you sure you want to delete your account? This action is
-                  irreversible and will permanently remove all your data. Once
-                  deleted, you will no longer be able to access any information
-                  associated with your account.
+                  irreversible and will{' '}
+                  <span className='text-foreground'>
+                    permanently remove all your data
+                  </span>
+                  . Once deleted, you will no longer be able to access any
+                  information associated with your account.
                 </p>
                 <p className='mt-2 text-sm text-default-500'>
                   To confirm type:{' '}

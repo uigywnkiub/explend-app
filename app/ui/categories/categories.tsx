@@ -260,8 +260,10 @@ function Categories({ userId, userCategories }: TProps) {
               <ModalBody>
                 <p className='text-default-500'>
                   Are you sure you want to reset your categories to the default
-                  state? This action is irreversible and will reset all your
-                  current category data to default.
+                  state? This action is irreversible and will{' '}
+                  <span className='text-foreground'>
+                    reset all your current category data to default.
+                  </span>
                 </p>
                 <InfoText text='Once reset, you will need to manually update your previous transactions with previous categories to new default categories. You will see a badge on them.' />
               </ModalBody>

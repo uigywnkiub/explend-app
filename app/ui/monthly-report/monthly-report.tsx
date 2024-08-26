@@ -66,7 +66,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
   )
   const { minTransaction, maxTransaction } = useMemo(
     () => getMinMaxTransactionsByDate(transactions),
-    [],
+    [transactions],
   )
 
   const memorizedMonthlyReportData = useMemo(() => {
