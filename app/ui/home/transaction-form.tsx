@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import toast from 'react-hot-toast'
 import { useDebounce } from 'react-use'
@@ -118,49 +118,48 @@ function TransactionForm({ currency, userCategories }: TProps) {
     setCategoryItemNameAI('')
   }
 
-  const getCompletionAIData = async (
-    categories: TTransaction['categories'],
-    userPrompt: string,
-  ) => {
-    if (!trimmedDescription) {
+  const getCompletionAIData = useCallback(
+    async (categories: TTransaction['categories'], userPrompt: string) => {
+      setIsLoadingAIData(true)
       resetAIRelatedStates()
-      return
-    }
-    setIsLoadingAIData(true)
-    resetAIRelatedStates()
 
-    try {
-      const [categoryItemNameAI, amountAI, transactionTypeAI] =
-        await Promise.all([
-          getCachedCategoryItemAI(categories, userPrompt),
-          getCachedAmountAI(
-            currency?.code || DEFAULT_CURRENCY_CODE,
-            userPrompt,
-          ),
-          getCachedTransactionTypeAI(userPrompt),
-        ])
+      try {
+        const [categoryItemNameAI, amountAI, transactionTypeAI] =
+          await Promise.all([
+            getCachedCategoryItemAI(categories, userPrompt),
+            getCachedAmountAI(
+              currency?.code || DEFAULT_CURRENCY_CODE,
+              userPrompt,
+            ),
+            getCachedTransactionTypeAI(userPrompt),
+          ])
 
-      setCategoryItemNameAI(categoryItemNameAI)
-      const rawAmountAI = formatAmount(amountAI)
-      if (!isNaN(Number(rawAmountAI)) && rawAmountAI.length <= AMOUNT_LENGTH) {
-        setAmount(getFormattedCurrency(rawAmountAI))
-        setIsAmountAIValid(true)
+        setCategoryItemNameAI(categoryItemNameAI)
+        const rawAmountAI = formatAmount(amountAI)
+        if (
+          !isNaN(Number(rawAmountAI)) &&
+          rawAmountAI.length <= AMOUNT_LENGTH
+        ) {
+          setAmount(getFormattedCurrency(rawAmountAI))
+          setIsAmountAIValid(true)
+        }
+        if (transactionTypeAI === 'true') {
+          setIsSwitchedOn(true)
+          setIsTransactionTypeAIValid(true)
+        }
+      } catch (err) {
+        resetAIRelatedStates()
+        throw err
+      } finally {
+        setIsLoadingAIData(false)
       }
-      if (transactionTypeAI === 'true') {
-        setIsSwitchedOn(true)
-        setIsTransactionTypeAIValid(true)
-      }
-    } catch (err) {
-      resetAIRelatedStates()
-      throw err
-    } finally {
-      setIsLoadingAIData(false)
-    }
-  }
+    },
+    [currency?.code],
+  )
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
     () =>
-      IS_PROD
+      !IS_PROD
         ? getCompletionAIData(
             userCategories || DEFAULT_CATEGORIES,
             capitalizeFirstLetter(trimmedDescription),
@@ -226,7 +225,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           }}
         >
           <Switch
-            isDisabled={pending}
+            isDisabled={pending || isLoadingAIData}
             isSelected={isSwitchedOn}
             color='success'
             name='isIncome'
@@ -277,6 +276,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
               >
                 <Input
                   isRequired
+                  isDisabled={pending || isLoadingAIData}
                   autoComplete='off'
                   type='text'
                   name='amount'
@@ -327,7 +327,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 }}
               >
                 <Select
-                  isDisabled={pending}
+                  isDisabled={pending || isLoadingAIData}
                   isLoading={isLoadingAIData}
                   items={userCategories || DEFAULT_CATEGORIES}
                   defaultSelectedKeys={[DEFAULT_CATEGORY]}

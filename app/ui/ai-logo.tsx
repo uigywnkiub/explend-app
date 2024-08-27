@@ -43,6 +43,7 @@ export default function AILogo({
         <Popover
           size='sm'
           backdrop='opaque'
+          radius='sm'
           showArrow={isMd}
           classNames={{
             // before is an arrow
