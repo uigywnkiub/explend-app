@@ -3,6 +3,7 @@ import type { MetadataRoute } from 'next'
 import {
   APP_DESCRIPTION,
   APP_NAME,
+  DEFAULT_DIR,
   DEFAULT_LANG,
 } from '@/config/constants/main'
 
@@ -12,6 +13,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: APP_NAME.SHORT,
     description: APP_DESCRIPTION,
     lang: DEFAULT_LANG,
+    dir: DEFAULT_DIR,
     id: '/',
     start_url: '/',
     display: 'standalone',

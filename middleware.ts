@@ -28,12 +28,15 @@ export const config = {
      * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
+     * - images (images folder)
+     * - icons (icons folder)
      * - favicon.ico (favicon file)
      * - workbox* (service worker files)
      * - sw* (service worker files)
-     * - images (images folder)
-     * - icons (icons folder)
+     * - /sitemap.xml (sitemap file)
+     * - /robots.txt (robots file)
+     * - /manifest.webmanifest (web manifest file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|workbox.*|sw.*|images|icons).*)',
+    '/((?!api|_next/static|_next/image|images|icons|favicon.ico|workbox.*|sw.*|sitemap.xml|robots.txt|manifest.webmanifest).*)',
   ],
 }
