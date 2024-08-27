@@ -9,7 +9,7 @@ import {
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: APP_NAME.FULL,
+    name: APP_NAME.SHORT,
     short_name: APP_NAME.SHORT,
     description: APP_DESCRIPTION,
     lang: DEFAULT_LANG,
@@ -23,7 +23,7 @@ export default function manifest(): MetadataRoute.Manifest {
     icons: [
       {
         src: '/icons/favicon.ico',
-        sizes: 'any',
+        sizes: '32x32 16x16',
         type: 'image/x-icon',
       },
       {
