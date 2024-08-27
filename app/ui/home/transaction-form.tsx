@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import toast from 'react-hot-toast'
 import { useDebounce } from 'react-use'
+import type { UseDebounceReturn } from 'react-use/lib/useDebounce'
 
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import {
@@ -119,7 +120,15 @@ function TransactionForm({ currency, userCategories }: TProps) {
   }
 
   const getCompletionAIData = useCallback(
-    async (categories: TTransaction['categories'], userPrompt: string) => {
+    async (
+      categories: TTransaction['categories'],
+      userPrompt: string,
+    ): Promise<UseDebounceReturn | undefined> => {
+      if (!trimmedDescription) {
+        resetAIRelatedStates()
+        return [() => null, () => undefined]
+      }
+
       setIsLoadingAIData(true)
       resetAIRelatedStates()
 
@@ -154,7 +163,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         setIsLoadingAIData(false)
       }
     },
-    [currency?.code],
+    [currency?.code, trimmedDescription],
   )
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
@@ -164,7 +173,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
             userCategories || DEFAULT_CATEGORIES,
             capitalizeFirstLetter(trimmedDescription),
           )
-        : [null, undefined],
+        : [() => null, () => undefined],
     1000,
     [trimmedDescription],
   )
