@@ -111,7 +111,7 @@ Time: ${formatTime(createdAt)}`
   return (
     <>
       <div
-        className={`h-auto w-full rounded-medium bg-content1 px-4 py-2 text-left text-lg md:px-6 md:py-4 ${isBlinkTransaction && 'animate-blink-light-once dark:animate-blink-dark-once'}`}
+        className={`h-auto w-full rounded-medium bg-content1 px-4 py-2 text-left md:px-6 md:py-4 ${isBlinkTransaction && 'animate-blink-light-once dark:animate-blink-dark-once'}`}
       >
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2 truncate break-keep'>
@@ -125,12 +125,12 @@ Time: ${formatTime(createdAt)}`
             </div>
             <div className='font-semibold'>
               {isIncome ? (
-                <p className='text-xl text-success'>
+                <p className='text-lg text-success'>
                   + {getFormattedCurrency(amount)}{' '}
                   {currency?.sign || DEFAULT_CURRENCY_SIGN}
                 </p>
               ) : (
-                <p className='text-xl'>
+                <p className='text-lg'>
                   - {getFormattedCurrency(amount)}{' '}
                   {currency?.sign || DEFAULT_CURRENCY_SIGN}
                 </p>
