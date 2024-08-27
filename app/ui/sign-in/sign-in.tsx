@@ -139,8 +139,8 @@ function SignIn() {
         <div className='mb-4 flex items-center justify-center'>
           <Logo />
         </div>
-        <h1 className='mb-2 text-3xl font-semibold md:text-4xl'>
-          Welcome to {APP_NAME.SHORT}
+        <h1 className='mb-2 text-2xl font-semibold md:text-3xl'>
+          Welcome to {APP_NAME.FULL}
         </h1>
         <p className='text-default-500 md:text-lg'>{APP_DESCRIPTION}</p>
         <Divider className='my-4 w-full bg-divider md:w-1/2' />

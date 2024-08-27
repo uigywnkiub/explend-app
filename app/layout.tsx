@@ -34,6 +34,7 @@ const fracktif = localFont({
     },
   ],
   display: 'swap',
+  variable: '--font-fracktif',
 })
 
 export const metadata: Metadata = {
@@ -104,7 +105,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={`${fracktif.className} ${inter.variable} bg-background text-foreground`}
+        className={`${fracktif.className} ${fracktif.variable} ${inter.variable} bg-background text-foreground`}
       >
         <Providers>{children}</Providers>
         <SpeedInsights debug={false} />

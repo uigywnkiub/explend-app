@@ -27,6 +27,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         inter: ['var(--font-inter)'],
+        fracktif: ['var(--font-fracktif)'],
       },
       fontSize: {
         xxs: '0.68rem',
@@ -36,6 +37,8 @@ const config: Config = {
         xs: '480px',
       },
       colors: {
+        light: CUSTOM_LIGHT,
+        dark: CUSTOM_DARK,
         gold: GOLD,
         silver: SILVER,
         bronze: BRONZE,
