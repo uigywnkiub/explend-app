@@ -22,7 +22,7 @@ export default function AILogo({
   asText = false,
   textBefore,
 }: TProps) {
-  const isMd = useMedia(getBreakpointWidth('md'))
+  const isMd = useMedia(getBreakpointWidth('md'), true)
   const xxs = 10.88
   const textSize = 'text-xxs md:text-xs'
 

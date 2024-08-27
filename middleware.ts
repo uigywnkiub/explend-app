@@ -29,8 +29,11 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - /images/ai-logo.gif (specific allowed image file)
+     * - workbox* (service worker files)
+     * - sw* (service worker files)
+     * - images (images folder)
+     * - icons (icons folder)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|images/ai-logo.gif).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|workbox.*|sw.*|images|icons).*)',
   ],
 }

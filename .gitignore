@@ -43,11 +43,7 @@ next-env.d.ts
 # Sentry Config File
 .env.sentry-build-plugin
 
-# Next PWA
+# Next PWA by @ducanh2912/next-pwa
 /public/workbox*
 /public/sw*
 /public/fallback-development*
-
-# Serwist PWA
-public/sw*
-public/swe-worker*

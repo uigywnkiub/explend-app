@@ -4,7 +4,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 import * as Sentry from '@sentry/nextjs'
 
-import { FILTERED_SENTRY_ERROR_TEXT, IS_PROD } from './config/constants/main'
+import { IS_PROD } from './config/constants/main'
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -12,18 +12,18 @@ Sentry.init({
   enabled: IS_PROD,
 
   // Docs https://docs.sentry.io/platforms/javascript/configuration/filtering/#using-before-send
-  beforeSend(event) {
-    if (
-      event.message &&
-      Object.values(FILTERED_SENTRY_ERROR_TEXT).some((errText) =>
-        event.message?.startsWith(errText),
-      )
-    ) {
-      return null
-    }
+  // beforeSend(event) {
+  //   if (
+  //     event.message &&
+  //     Object.values(FILTERED_SENTRY_ERROR_TEXT).some((errText) =>
+  //       event.message?.startsWith(errText),
+  //     )
+  //   ) {
+  //     return null
+  //   }
 
-    return event
-  },
+  //   return event
+  // },
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
