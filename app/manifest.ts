@@ -7,6 +7,7 @@ import {
   DEFAULT_DIR,
   DEFAULT_LANG,
 } from '@/config/constants/main'
+import { NAV_TITLE } from '@/config/constants/navigation'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -47,7 +48,7 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
         // @ts-ignore
         form_factor: 'wide',
-        label: 'Home',
+        label: NAV_TITLE.HOME,
       },
       {
         src: '/images/screenshots/monthly-report.png',
@@ -55,7 +56,7 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
         // @ts-ignore
         form_factor: 'wide',
-        label: 'Monthly Report',
+        label: NAV_TITLE.MONTHLY_REPORT,
       },
       {
         src: '/images/screenshots/chart.png',
@@ -63,7 +64,7 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
         // @ts-ignore
         form_factor: 'wide',
-        label: 'Chart',
+        label: NAV_TITLE.CHART,
       },
       {
         src: '/images/screenshots/home-mobile.png',
@@ -71,7 +72,7 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
         // @ts-ignore
         form_factor: 'narrow',
-        label: 'Home mobile',
+        label: `${NAV_TITLE.HOME} mobile`,
       },
       {
         src: '/images/screenshots/monthly-report-mobile.png',
@@ -79,7 +80,7 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
         // @ts-ignore
         form_factor: 'narrow',
-        label: 'Monthly Report mobile',
+        label: `${NAV_TITLE.MONTHLY_REPORT} mobile`,
       },
       {
         src: '/images/screenshots/categories-mobile.png',
@@ -87,7 +88,7 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
         // @ts-ignore
         form_factor: 'narrow',
-        label: 'Categories mobile',
+        label: `${NAV_TITLE.CATEGORIES} mobile`,
       },
     ],
   }
