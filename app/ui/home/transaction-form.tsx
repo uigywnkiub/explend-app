@@ -159,7 +159,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
     () =>
-      !IS_PROD
+      IS_PROD
         ? getCompletionAIData(
             userCategories || DEFAULT_CATEGORIES,
             capitalizeFirstLetter(trimmedDescription),
