@@ -6,6 +6,7 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
+import { CUSTOM_DARK } from '@/config/constants/colors'
 import {
   APP_NAME,
   APP_URL,
@@ -78,7 +79,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#FFFFFF',
+  themeColor: CUSTOM_DARK,
 }
 
 export default function RootLayout({
@@ -89,7 +90,8 @@ export default function RootLayout({
   return (
     <html lang={DEFAULT_LANG} dir={DEFAULT_DIR}>
       <head>
-        <link rel='icon' href='/favicon.ico' sizes='32x32' />
+        <meta name='mobile-web-app-capable' content='yes' />
+        <link rel='icon' href='/favicon.ico' sizes='48x48' />
         <link
           rel='icon'
           href='/icon?<generated>'
