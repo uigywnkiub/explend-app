@@ -38,11 +38,11 @@ export const APP_LOCALHOST_URL: string = process.env.APP_LOCALHOST_URL
 // export const REGEX_APP_PREVIEW_PROD_URL: RegExp =
 //   /^https:\/\/explend-[\w\d-]+-projects[\w\d-]*\.vercel\.app(\/.*)?$/
 
-export const FILTERED_SENTRY_ERROR_TEXT = {
-  // Skip error if the user has no authentication because on the sign-in page service worker can’t run.
-  SECURITY_ERROR: 'SecurityError: Failed to register a ServiceWorker for scope',
-  SECURITY_ERROR_SCRIPT: `Script ${APP_URL}/sw.js load failed`,
-}
+// export const FILTERED_SENTRY_ERROR_TEXT = {
+//   // Skip error if the user has no authentication because on the sign-in page service worker can’t run.
+//   SECURITY_ERROR: 'SecurityError: Failed to register a ServiceWorker for scope',
+//   SECURITY_ERROR_SCRIPT: `Script ${APP_URL}/sw.js load failed`,
+// }
 
 export const AUTHOR_NAME: string = 'Volodymyr'
 export const AUTHOR_URL: string = 'https://volodymyr-g.vercel.app'
