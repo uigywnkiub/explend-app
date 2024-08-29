@@ -19,6 +19,7 @@ export default function Logo({
 }: TProps) {
   let logoSizeClass = 'h-40 w-40'
   let textSizeClass = 'text-7xl'
+
   switch (size) {
     case 'smallest':
       logoSizeClass = 'h-5 w-5'
@@ -58,7 +59,9 @@ export default function Logo({
             logoSizeClass,
             size === 'smallest' || size === 'xxs'
               ? 'rounded-lg'
-              : 'rounded-2xl',
+              : size === 'md' || size === 'lg'
+                ? 'rounded-3xl'
+                : 'rounded-2xl',
           )}
         >
           <span
