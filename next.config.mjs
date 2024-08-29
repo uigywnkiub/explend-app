@@ -59,6 +59,12 @@ const nextConfig = {
         '.json',
       ],
     },
+    optimizePackageImports: [
+      '@ducanh2912/next-pwa',
+      '@nextui-org/react',
+      '@sentry/nextjs',
+      'framer-motion',
+    ],
   },
 }
 
