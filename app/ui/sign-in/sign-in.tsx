@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   PiDribbbleLogo,
   PiDribbbleLogoFill,
@@ -38,6 +38,7 @@ import AILogo from '../ai-logo'
 import ClientButton from '../default-button'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
+import InstallPWA from '../install-pwa-button'
 import Logo from '../logo'
 
 const ACCORDION_ITEM_KEY = 'More'
@@ -139,6 +140,7 @@ function SignIn() {
         <div className='mb-4 flex items-center justify-center'>
           <Logo />
         </div>
+        <InstallPWA />
         <h1 className='mb-2 text-2xl font-semibold md:text-3xl'>
           Welcome to {APP_NAME.FULL}
         </h1>

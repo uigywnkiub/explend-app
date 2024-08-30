@@ -36,9 +36,22 @@ type TProps = {
 }
 
 function MonthlyReport({ transactions, currency }: TProps) {
+  const { minTransaction, maxTransaction } = useMemo(
+    () => getMinMaxTransactionsByDate(transactions),
+    [transactions],
+  )
+  const minTransactionCalendarDate = toCalendarDate(minTransaction?.createdAt!)
+  const startOfMonthCalendarDate = toCalendarDate(startOfMonth(startOfToday()))
+  const endOfMonthCalendarDate = toCalendarDate(endOfMonth(endOfToday()))
+  const isMinTransactionAfterStartOfMonth =
+    minTransactionCalendarDate.day > 1 &&
+    minTransactionCalendarDate.month === startOfMonthCalendarDate.month
+
   const [selectedDate, setSelectedDate] = useState<RangeValue<DateValue>>({
-    start: toCalendarDate(startOfMonth(startOfToday())),
-    end: toCalendarDate(endOfMonth(endOfToday())),
+    start: isMinTransactionAfterStartOfMonth
+      ? minTransactionCalendarDate
+      : startOfMonthCalendarDate,
+    end: endOfMonthCalendarDate,
   })
   const startDate = selectedDate?.start.toDate(getLocalTimeZone())
   const endDate = selectedDate?.end.toDate(getLocalTimeZone())
@@ -63,10 +76,6 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const { totalIncome, totalExpense, monthlyReportData } = useMemo(
     () => calculateMonthlyReportData(income, expense),
     [income, expense],
-  )
-  const { minTransaction, maxTransaction } = useMemo(
-    () => getMinMaxTransactionsByDate(transactions),
-    [transactions],
   )
 
   const memorizedMonthlyReportData = useMemo(() => {

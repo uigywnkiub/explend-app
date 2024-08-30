@@ -28,7 +28,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/global-error.tsx",
-    "svgr.d.ts"
+    "types.d.ts"
   ],
   "exclude": ["node_modules", "public/sw.js"]
 }
