@@ -22,6 +22,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: false,
   trustHost: true,
   session: {
-    maxAge: 1209600, // Two weeks
+    maxAge: 1209600, // Two weeks.
   },
 })
