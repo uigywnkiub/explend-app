@@ -17,7 +17,7 @@ import { ROUTE } from '@/config/constants/routes'
 
 import TransactionModel from '@/app/lib/models/transaction.model'
 
-import { genAIModel } from './ai'
+import { CompletionAIModel, ExpenseTipsAIModel } from './ai'
 import {
   capitalizeFirstLetter,
   getCategoryItemNames,
@@ -487,9 +487,11 @@ export async function getCategoryItemNameAI(
   }
 
   try {
-    const prompt = `Given the list of categories: ${getCategoryItemNames(categories).join(', ')} — choose the most relevant category for the prompt '${userPrompt}' in one word.`
+    const categoriesStr = getCategoryItemNames(categories).join(', ')
 
-    const content = await genAIModel.generateContent(prompt)
+    const prompt = `Given the list of categories: ${categoriesStr} — choose the most relevant category for the prompt '${userPrompt}' in one word.`
+
+    const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()
     return text
   } catch (err) {
@@ -509,7 +511,7 @@ export async function getAmountAI(
   try {
     const prompt = `${userPrompt}. Provide a numerical estimate of the cost in ${currency}, disregarding real-time price fluctuations. Omit any decimal points, commas, or other symbols.`
 
-    const content = await genAIModel.generateContent(prompt)
+    const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()
     return text
   } catch (err) {
@@ -528,7 +530,7 @@ export async function getTransactionTypeAI(
   try {
     const prompt = `Analyze the following transaction description and determine if it is an income or expense. The output must be in one word, 'true' for income and 'false' for expense. Description: '${userPrompt}'`
 
-    const content = await genAIModel.generateContent(prompt)
+    const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()
     return text
   } catch (err) {
@@ -536,3 +538,22 @@ export async function getTransactionTypeAI(
   }
 }
 export const getCachedTransactionTypeAI = cache(getTransactionTypeAI)
+
+export async function getExpenseTipsAI(categories: string[]): Promise<string> {
+  if (!categories) {
+    throw new Error('Categories are required.')
+  }
+
+  try {
+    const categoriesStr = categories.join(', ')
+
+    const prompt = `Provide a few actionable tips on decreasing expenses for the following categories: ${categoriesStr}. Include practical strategies, potential savings opportunities, and any recommendations that could help manage and reduce costs within these categories. The output category field must be with an emoji. Advice must be one per category.`
+
+    const content = await ExpenseTipsAIModel.generateContent(prompt)
+    const text = content.response.text().trim()
+    return text
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedExpenseTipsAI = cache(getExpenseTipsAI)

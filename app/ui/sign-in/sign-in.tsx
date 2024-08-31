@@ -152,6 +152,7 @@ function SignIn() {
             <div className='flex items-center justify-center text-xxs md:text-xs'>
               <span className='mr-1'>with</span>
               <AILogo asIcon />
+              <span className='mr-1' />
               <AILogo asText />
             </div>
           </div>

@@ -25,6 +25,7 @@ import {
 
 import type {
   TApproxCategory,
+  TCategoryData,
   TGetTransactions,
   THTMLElement,
   TTransaction,
@@ -324,3 +325,12 @@ export const findApproxCategoryByValue = (
 export const userLocale = getUserLocale({
   fallbackLocale: DEFAULT_LANG,
 })
+
+export const getExpenseCategoriesList = (
+  categoriesData: TCategoryData[],
+  isGetTheFirstThree = true,
+) => {
+  return isGetTheFirstThree
+    ? categoriesData.slice(0, 3).map((c) => c.category)
+    : categoriesData.map((c) => c.category)
+}
