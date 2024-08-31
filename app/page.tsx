@@ -142,7 +142,7 @@ export default async function Home({
         <form action={createTransactionWithUserId} className='mt-4'>
           <TransactionForm
             currency={currency}
-            userCategories={userCategories}
+            userCategories={userCategories || DEFAULT_CATEGORIES}
           />
         </form>
         <div className='text-center text-default-300'>

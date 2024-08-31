@@ -6,7 +6,6 @@ import toast from 'react-hot-toast'
 import { useDebounce } from 'react-use'
 import type { UseDebounceReturn } from 'react-use/lib/useDebounce'
 
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import {
   Accordion,
   AccordionItem,
@@ -72,17 +71,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
   // Memoized values
   const approxCategoryItemName = useMemo(
     () =>
-      findApproxCategoryByValue(
-        trimmedDescription,
-        userCategories || DEFAULT_CATEGORIES,
-      )?.item.name,
+      findApproxCategoryByValue(trimmedDescription, userCategories)?.item.name,
     [trimmedDescription, userCategories],
   )
   const isCategoryItemNameAIValid = useMemo(
-    () =>
-      getCategoryItemNames(userCategories || DEFAULT_CATEGORIES).includes(
-        categoryItemNameAI,
-      ),
+    () => getCategoryItemNames(userCategories).includes(categoryItemNameAI),
     [categoryItemNameAI, userCategories],
   )
   const categoryItemName = isCategoryItemNameAIValid
@@ -170,7 +163,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     () =>
       IS_PROD
         ? getCompletionAIData(
-            userCategories || DEFAULT_CATEGORIES,
+            userCategories,
             capitalizeFirstLetter(trimmedDescription),
           )
         : [() => null, () => undefined],
@@ -338,7 +331,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 <Select
                   isDisabled={pending || isLoadingAIData}
                   isLoading={isLoadingAIData}
-                  items={userCategories || DEFAULT_CATEGORIES}
+                  items={userCategories}
                   defaultSelectedKeys={[DEFAULT_CATEGORY]}
                   selectedKeys={category}
                   onSelectionChange={setCategory}
@@ -350,21 +343,19 @@ function TransactionForm({ currency, userCategories }: TProps) {
                       'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
                   }}
                 >
-                  {(userCategories || DEFAULT_CATEGORIES).map(
-                    (category, idx, arr) => (
-                      <SelectSection
-                        key={category.subject}
-                        showDivider={idx !== arr.length - 1}
-                        title={category.subject}
-                      >
-                        {category.items.map((item) => (
-                          <SelectItem key={item.name}>
-                            {`${item.emoji} ${item.name}`}
-                          </SelectItem>
-                        ))}
-                      </SelectSection>
-                    ),
-                  )}
+                  {userCategories.map((category, idx, arr) => (
+                    <SelectSection
+                      key={category.subject}
+                      showDivider={idx !== arr.length - 1}
+                      title={category.subject}
+                    >
+                      {category.items.map((item) => (
+                        <SelectItem key={item.name}>
+                          {`${item.emoji} ${item.name}`}
+                        </SelectItem>
+                      ))}
+                    </SelectSection>
+                  ))}
                 </Select>
               </Badge>
             </div>
