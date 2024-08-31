@@ -87,9 +87,10 @@ function MonthlyReport({ transactions, currency }: TProps) {
     () => calculateMonthlyReportData(income, expense),
     [income, expense],
   )
-  const expenseCategories = useMemo(() => {
-    return getExpenseCategoriesList(monthlyReportData, false)
-  }, [monthlyReportData])
+  const expenseCategories = useMemo(
+    () => getExpenseCategoriesList(monthlyReportData, false),
+    [monthlyReportData],
+  )
 
   const isTipsDataExist = tipsDataAI && tipsDataAI?.length > 0
 
@@ -124,20 +125,22 @@ function MonthlyReport({ transactions, currency }: TProps) {
     registerAttempt,
   ])
 
-  const memorizedMonthlyReportData = useMemo(() => {
-    return monthlyReportData.map((category) => (
-      <Fragment key={category.category}>
-        <div className='text-md overflow-hidden text-ellipsis whitespace-nowrap md:text-lg'>
-          {category.category}
-        </div>
-        <div className='text-md md:text-lg'>{category.percentage} %</div>
-        <div className='text-md md:text-lg'>
-          {getFormattedCurrency(category.spent)}{' '}
-          {currency?.sign || DEFAULT_CURRENCY_SIGN}
-        </div>
-      </Fragment>
-    ))
-  }, [currency?.sign, monthlyReportData])
+  const memorizedMonthlyReportData = useMemo(
+    () =>
+      monthlyReportData.map((category) => (
+        <Fragment key={category.category}>
+          <div className='text-md overflow-hidden text-ellipsis whitespace-nowrap md:text-lg'>
+            {category.category}
+          </div>
+          <div className='text-md md:text-lg'>{category.percentage} %</div>
+          <div className='text-md md:text-lg'>
+            {getFormattedCurrency(category.spent)}{' '}
+            {currency?.sign || DEFAULT_CURRENCY_SIGN}
+          </div>
+        </Fragment>
+      )),
+    [currency?.sign, monthlyReportData],
+  )
 
   if (filteredTransactions.length === 0) {
     return (
