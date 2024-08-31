@@ -65,6 +65,7 @@ export const ExpenseTipsAIModel = genAI.getGenerativeModel({
   generationConfig: {
     candidateCount: 1,
     temperature: 2,
+    // Docs https://ai.google.dev/gemini-api/docs/json-mode?lang=node
     responseMimeType: 'application/json',
     responseSchema: {
       type: SchemaType.ARRAY,
