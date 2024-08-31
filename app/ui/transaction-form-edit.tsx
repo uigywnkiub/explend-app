@@ -62,11 +62,8 @@ function TransactionFormEdit({ transaction }: TProps) {
   // @ts-ignore
   const isCategorySelect = Boolean(category.size)
   const categoryName = Array.from(category)[0]?.toString()
-  const userCategories = transaction.categories
-  const categoryWithEmoji = getCategoryWithEmoji(
-    categoryName,
-    userCategories || DEFAULT_CATEGORIES,
-  )
+  const userCategories = transaction.categories || DEFAULT_CATEGORIES
+  const categoryWithEmoji = getCategoryWithEmoji(categoryName, userCategories)
   const prevCategory = transaction.category
   const currency = transaction.currency
   const isEdited = transaction.isEdited
@@ -231,26 +228,24 @@ function TransactionFormEdit({ transaction }: TProps) {
                     trigger:
                       'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
                   }}
-                  items={userCategories || DEFAULT_CATEGORIES}
+                  items={userCategories}
                   selectedKeys={category}
                   defaultSelectedKeys={category}
                   onSelectionChange={setCategory}
                 >
-                  {(userCategories || DEFAULT_CATEGORIES).map(
-                    (category, idx, arr) => (
-                      <SelectSection
-                        key={category.subject}
-                        showDivider={idx !== arr.length - 1}
-                        title={category.subject}
-                      >
-                        {category.items.map((item) => (
-                          <SelectItem key={item.name}>
-                            {`${item.emoji} ${item.name}`}
-                          </SelectItem>
-                        ))}
-                      </SelectSection>
-                    ),
-                  )}
+                  {userCategories.map((category, idx, arr) => (
+                    <SelectSection
+                      key={category.subject}
+                      showDivider={idx !== arr.length - 1}
+                      title={category.subject}
+                    >
+                      {category.items.map((item) => (
+                        <SelectItem key={item.name}>
+                          {`${item.emoji} ${item.name}`}
+                        </SelectItem>
+                      ))}
+                    </SelectSection>
+                  ))}
                 </Select>
               </Badge>
             </div>

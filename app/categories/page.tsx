@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 
+import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
+
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import { getAllTransactions, getAuthSession } from '../lib/actions'
@@ -26,7 +28,10 @@ export default async function Page() {
         {transactions.length === 0 ? (
           <NoTransactionsPlug />
         ) : (
-          <Categories userId={userId} userCategories={userCategories} />
+          <Categories
+            userId={userId}
+            userCategories={userCategories || DEFAULT_CATEGORIES}
+          />
         )}
       </div>
     </>
