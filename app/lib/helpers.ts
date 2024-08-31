@@ -21,6 +21,7 @@ import {
   CURRENCY_CODE,
   DEFAULT_CATEGORY,
   DEFAULT_LANG,
+  DEFAULT_TIME_ZONE,
 } from '@/config/constants/main'
 
 import type {
@@ -105,9 +106,15 @@ export const formatDate = (dateStr: Date) => {
   return format(date, 'EEEE, MMMM d')
 }
 
-export const formatTime = (dateStr: Date) => {
+// export const formatTime = (dateStr: Date) => {
+//   const date = new Date(dateStr)
+//   return format(date, 'HH:mm')
+// }
+export const formatTime = (dateStr: Date): string => {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const date = new Date(dateStr)
-  return format(date, 'HH:mm')
+  const formatStr = userTimeZone.includes('America') ? 'hh:mm a' : 'HH:mm'
+  return formatInTimeZone(date, userTimeZone || DEFAULT_TIME_ZONE, formatStr)
 }
 
 export const getCategoryWithEmoji = (
