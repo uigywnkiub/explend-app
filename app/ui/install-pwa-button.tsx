@@ -67,7 +67,9 @@ export default function InstallPWA() {
       animate={{ opacity: 1, ...DIV.ANIMATE(false, true, 1) }}
       transition={{ ...DIV.TRANSITION }}
     >
-      <Button onClick={onInstall}>Install</Button>
+      <Button variant='light' onClick={onInstall}>
+        Install
+      </Button>
     </motion.div>
   )
 }

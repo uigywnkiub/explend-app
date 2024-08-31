@@ -9,18 +9,20 @@ import { twJoin } from 'tailwind-merge'
 
 import { AI_NAME } from '@/config/constants/main'
 
-import { getBreakpointWidth } from '../lib/helpers'
+import { cn, getBreakpointWidth } from '../lib/helpers'
 
 type TProps = {
   asIcon?: boolean
   asText?: boolean
   textBefore?: string
+  iconSize?: 'sm' | 'md'
 }
 
 export default function AILogo({
   asIcon = false,
   asText = false,
   textBefore,
+  iconSize,
 }: TProps) {
   const isMd = useMedia(getBreakpointWidth('md'), true)
   const xxs = 10.88
@@ -54,12 +56,15 @@ export default function AILogo({
           <PopoverTrigger className='focus-visible:hidden'>
             <Image
               src='/images/ai-logo.gif'
-              width={isMd ? 12 : xxs}
-              height={isMd ? 12 : xxs}
+              width={isMd ? (iconSize === 'sm' ? 14 : 12) : xxs}
+              height={isMd ? (iconSize === 'sm' ? 14 : 12) : xxs}
               alt={AI_NAME.FULL}
               priority
               unoptimized
-              className='mr-1 inline-block cursor-pointer select-none drop-shadow-ai md:hover:opacity-hover'
+              className={cn(
+                'inline-block cursor-pointer select-none drop-shadow-ai md:hover:opacity-hover',
+                asIcon ? 'mr-0' : 'mr-1',
+              )}
             />
           </PopoverTrigger>
           <PopoverContent>

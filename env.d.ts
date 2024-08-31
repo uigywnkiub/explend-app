@@ -8,6 +8,7 @@ declare namespace NodeJS {
     IS_RESEND_ENABLE: string
     GEMINI_API_KEY: string
     GEMINI_MODEL: string
+    GEMINI_RICHER_MODEL: string
     APP_URL: string
     APP_LOCALHOST_URL: string
     GOOGLE_ANALYTICS_ID: string

@@ -172,3 +172,9 @@ export type TMinMaxTransactionByDate = {
   minTransaction: TTransaction | null
   maxTransaction: TTransaction | null
 }
+
+export type TExpenseAdvice = {
+  category: TTransaction['category']
+  tip: string
+  savings: string
+}

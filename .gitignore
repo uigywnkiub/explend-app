@@ -47,3 +47,6 @@ next-env.d.ts
 /public/workbox*
 /public/sw*
 /public/fallback-development*
+
+# Localhost https 
+certificates
