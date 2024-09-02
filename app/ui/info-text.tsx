@@ -19,8 +19,8 @@ export default function InfoText({
     <p
       id={id}
       className={cn(
-        'text-default-300 hover:cursor-none hover:text-foreground',
-        isSm ? 'text-sm' : 'text-xxs md:text-xs',
+        'text-default-500 hover:cursor-none hover:text-foreground',
+        isSm ? 'text-sm' : 'text-xs',
       )}
     >
       {withDoubleAsterisk && ' ** '}

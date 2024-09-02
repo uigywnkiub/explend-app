@@ -35,7 +35,7 @@ import type {
 const customTwMerge = extendTailwindMerge({
   extend: {
     classGroups: {
-      'font-size': Object.keys(config?.theme?.extend?.fontSize!).map(
+      'font-size': Object.keys(config?.theme?.extend?.fontSize || '').map(
         (key) => `text-${key}`,
       ),
     },

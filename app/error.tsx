@@ -12,7 +12,7 @@ export default function Error({
   return (
     <main className='mx-auto flex h-screen max-w-md flex-col items-center justify-center gap-4 px-4 text-center xs:px-0'>
       <div className='flex flex-col items-center'>
-        <p className='text-default-300'>#InternalError</p>
+        <p className='text-default-500'>#InternalError</p>
       </div>
       <h1 className='text-lg font-medium'>
         We are currently experiencing technical difficulties. We have identified

@@ -34,7 +34,6 @@ import {
   TSignInButton,
 } from '@/app/lib/types'
 
-import AILogo from '../ai-logo'
 import ClientButton from '../default-button'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
@@ -135,100 +134,96 @@ function SignIn() {
     : `Show ${ACCORDION_ITEM_KEY}`
 
   return (
-    <div className='flex min-h-screen flex-col justify-between p-4 md:p-8'>
-      <div className='flex flex-grow flex-col items-center justify-center text-center'>
-        <div className='mb-4 flex items-center justify-center'>
-          <Logo />
-        </div>
-        <InstallPWA />
-        <h1 className='mb-2 text-2xl font-semibold md:text-3xl'>
-          Welcome to {APP_NAME.FULL}
-        </h1>
-        <p className='text-default-500 md:text-lg'>{APP_DESCRIPTION}</p>
-        <Divider className='my-4 w-full bg-divider md:w-1/2' />
-        <div className='flex flex-col items-center space-y-2'>
-          <div className='mb-2 font-semibold'>
-            <p className='md:text-lg'>Start {APP_TITLE}</p>
-            <div className='flex items-center justify-center text-xxs md:text-xs'>
-              <span className='mr-1'>with</span>
-              <AILogo asIcon />
-              <span className='mr-1' />
-              <AILogo asText />
-            </div>
+    <>
+      <InstallPWA />
+      <div className='flex min-h-screen flex-col justify-between p-4 md:p-8'>
+        <div className='flex flex-grow flex-col items-center justify-center text-center'>
+          <div className='mb-4 flex items-center justify-center'>
+            <Logo />
           </div>
-          {signInButtons
-            .slice(0, 2)
-            .map(({ provider, title, isLoading, icon, hoverIcon }) => {
-              const buttonWithIcon = (icon: TIcon) => (
-                <ClientButton
-                  title={title}
-                  isDisabled={isAnyLoading}
-                  className='min-w-[220px] bg-foreground font-medium text-default-50'
-                  isLoading={isLoading}
-                  onClick={(e) => onSignIn(e, provider)}
-                  startContent={!isLoading && icon}
-                />
-              )
+          <h1 className='mb-1 text-2xl font-semibold md:text-3xl'>
+            Welcome to {APP_NAME.FULL}
+          </h1>
+          <p className='text-lg text-default-500 md:text-xl'>
+            {APP_DESCRIPTION}
+          </p>
+          <Divider className='my-4 w-full bg-divider md:w-1/2' />
+          <p className='mb-4'>Start {APP_TITLE}</p>
+          <div className='flex flex-col items-center space-y-2'>
+            {signInButtons
+              .slice(0, 2)
+              .map(({ provider, title, isLoading, icon, hoverIcon }) => {
+                const buttonWithIcon = (icon: TIcon) => (
+                  <ClientButton
+                    title={title}
+                    isDisabled={isAnyLoading}
+                    className='min-w-[220px] bg-foreground font-medium text-default-50'
+                    isLoading={isLoading}
+                    onClick={(e) => onSignIn(e, provider)}
+                    startContent={!isLoading && icon}
+                  />
+                )
 
-              return (
-                <HoverableElement
-                  key={provider}
-                  element={buttonWithIcon(icon)}
-                  hoveredElement={buttonWithIcon(hoverIcon)}
-                  withShift={false}
-                />
-              )
-            })}
-          <Accordion
-            isCompact
-            hideIndicator
-            onExpandedChange={onExpandedChange}
-          >
-            <AccordionItem
-              key={ACCORDION_ITEM_KEY}
+                return (
+                  <HoverableElement
+                    key={provider}
+                    element={buttonWithIcon(icon)}
+                    hoveredElement={buttonWithIcon(hoverIcon)}
+                    withShift={false}
+                  />
+                )
+              })}
+            <Accordion
               isCompact
-              isDisabled={isAnyLoading}
-              aria-label={accordionTitle}
-              title={accordionTitle}
-              classNames={{
-                title: 'text-center hover:opacity-hover ',
-              }}
+              hideIndicator
+              onExpandedChange={onExpandedChange}
             >
-              <div className='mt-2 flex flex-col items-center space-y-2'>
-                {signInButtons
-                  .slice(2)
-                  .map(({ provider, title, isLoading, icon, hoverIcon }) => {
-                    const buttonWithIcon = (icon: TIcon) => (
-                      <ClientButton
-                        title={title}
-                        isDisabled={isAnyLoading}
-                        className='min-w-[220px] bg-foreground font-medium text-default-50'
-                        isLoading={isLoading}
-                        onClick={(e) => onSignIn(e, provider)}
-                        startContent={!isLoading && icon}
-                      />
-                    )
+              <AccordionItem
+                key={ACCORDION_ITEM_KEY}
+                isCompact
+                isDisabled={isAnyLoading}
+                aria-label={accordionTitle}
+                title={accordionTitle}
+                classNames={{
+                  title: 'text-center hover:opacity-hover ',
+                }}
+              >
+                <div className='mt-2 flex flex-col items-center space-y-2'>
+                  {signInButtons
+                    .slice(2)
+                    .map(({ provider, title, isLoading, icon, hoverIcon }) => {
+                      const buttonWithIcon = (icon: TIcon) => (
+                        <ClientButton
+                          title={title}
+                          isDisabled={isAnyLoading}
+                          className='min-w-[220px] bg-foreground font-medium text-default-50'
+                          isLoading={isLoading}
+                          onClick={(e) => onSignIn(e, provider)}
+                          startContent={!isLoading && icon}
+                        />
+                      )
 
-                    return (
-                      <HoverableElement
-                        key={provider}
-                        element={buttonWithIcon(icon)}
-                        hoveredElement={buttonWithIcon(hoverIcon)}
-                        withShift={false}
-                      />
-                    )
-                  })}
-              </div>
-            </AccordionItem>
-          </Accordion>
+                      return (
+                        <HoverableElement
+                          key={provider}
+                          element={buttonWithIcon(icon)}
+                          hoveredElement={buttonWithIcon(hoverIcon)}
+                          withShift={false}
+                        />
+                      )
+                    })}
+                </div>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        </div>
+        <div className='mt-4 flex flex-col gap-2 text-center'>
+          <InfoText text='Signing in does not create an account.' />
+          <InfoText text='AES encryption protects your sensitive data.' />
+          <InfoText text='Your name and email will be visible on the site and serve as your primary identifiers.' />
         </div>
       </div>
-      <div className='mt-4 flex flex-col gap-1 text-center'>
-        <InfoText text='Signing in does not create an account.' />
-        <InfoText text='AES encryption protects your sensitive data.' />
-        <InfoText text='Your name and email will be visible on the site and serve as your primary identifiers.' />
-      </div>
-    </div>
+    </>
   )
 }
 

@@ -145,11 +145,11 @@ export default async function Home({
             userCategories={userCategories || DEFAULT_CATEGORIES}
           />
         </form>
-        <div className='text-center text-default-300'>
+        <div className='text-center text-default-500'>
           {transactions.length === 0 ? (
             <>
               <NoTransactionsPlug />
-              <div className='mt-2 flex flex-col gap-1'>
+              <div className='mt-2 flex flex-col gap-2'>
                 <InfoText text='The first written transaction means creating your account.' />
                 <InfoText text='The last deleted transaction means deleting your account.' />
               </div>
@@ -206,7 +206,7 @@ export default async function Home({
         ) : (
           hasSearchedTransactionsByQuery && (
             <div className='flex flex-col justify-center gap-2 text-center'>
-              <p className='mt-2 text-default-300 md:mt-4'>Searched Totals</p>
+              <p className='mt-2 text-default-500 md:mt-4'>Searched Totals</p>
               <div className='flex flex-col flex-wrap justify-center'>
                 <p>
                   {<PiArrowCircleUpFill className='mr-1 inline fill-success' />}
