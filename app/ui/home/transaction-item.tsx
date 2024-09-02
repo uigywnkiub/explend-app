@@ -135,10 +135,8 @@ Time: ${formatTime(createdAt)}`
                   {currency?.sign || DEFAULT_CURRENCY_SIGN}
                 </p>
               )}
-              <p className='text-balance text-sm font-medium text-default-500'>
-                {description}
-              </p>
-              <p className='text-xs font-medium text-default-300'>
+              <p className='text-balance text-sm font-medium'>{description}</p>
+              <p className='text-xs font-medium text-default-500'>
                 {isEdited && 'edited'} {formatTime(createdAt)}
               </p>
             </div>

@@ -107,7 +107,7 @@ function Category({
           <h2 className='text-lg md:text-xl'>
             {category.subject}
             <button className='ml-1 h-0' onClick={() => router.push('#hint-1')}>
-              <sup className='cursor-pointer p-1 text-xxs text-default-500 underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
+              <sup className='cursor-pointer p-1 text-xs text-default-500 underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
                 1
               </sup>
             </button>

@@ -25,8 +25,7 @@ export default function AILogo({
   iconSize,
 }: TProps) {
   const isMd = useMedia(getBreakpointWidth('md'), true)
-  const xxs = 10.88
-  const textSize = 'text-xxs md:text-xs'
+  const textSize = 'text-xs'
 
   const aiTitle = (
     <span
@@ -56,8 +55,8 @@ export default function AILogo({
           <PopoverTrigger className='focus-visible:hidden'>
             <Image
               src='/images/ai-logo.gif'
-              width={isMd ? (iconSize === 'sm' ? 14 : 12) : xxs}
-              height={isMd ? (iconSize === 'sm' ? 14 : 12) : xxs}
+              width={isMd ? (iconSize === 'sm' ? 14 : 12) : 12}
+              height={isMd ? (iconSize === 'sm' ? 14 : 12) : 12}
               alt={AI_NAME.FULL}
               priority
               unoptimized

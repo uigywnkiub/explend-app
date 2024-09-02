@@ -29,9 +29,6 @@ const config: Config = {
         inter: ['var(--font-inter)'],
         fracktif: ['var(--font-fracktif)'],
       },
-      fontSize: {
-        xxs: '0.68rem',
-      },
       screens: {
         xxs: '360px',
         xs: '480px',
@@ -64,6 +61,7 @@ const config: Config = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'ai-gradient': 'linear-gradient(to right, #61A5FA, #C084FC, #F87171)',
       },
       dropShadow: {
         ai: `0 0 1px ${AI}`,

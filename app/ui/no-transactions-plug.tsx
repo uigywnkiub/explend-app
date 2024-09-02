@@ -11,7 +11,7 @@ export default function NoTransactionsPlug({
 }: TProps) {
   return (
     <p
-      className={`rounded-medium ${withBackground && 'bg-content1'} p-${padding} text-${align} text-default-300`}
+      className={`rounded-medium ${withBackground && 'bg-content1'} p-${padding} text-${align} text-default-500`}
     >
       No transactions found.
     </p>

@@ -1,29 +1,19 @@
 'use client'
 
-import { Badge } from '@nextui-org/react'
-
 import { cn } from '../lib/helpers'
 
-type TSize = 'sm' | 'md' | 'lg'
-
 type TProps = {
-  size?: 'smallest' | 'xxs' | 'xs' | TSize
-  // badgeSize?: TSize
-  // withBadge?: boolean
+  size?: 'smallest' | 'xxs' | 'xs' | 'sm' | 'md'
 }
 
-export default function Logo({
-  size = 'md',
-  // badgeSize = 'md',
-  // withBadge = true,
-}: TProps) {
-  let logoSizeClass = 'h-40 w-40'
-  let textSizeClass = 'text-7xl'
+export default function Logo({ size = 'md' }: TProps) {
+  let logoSizeClass = 'h-32 w-32'
+  let textSizeClass = 'text-6xl'
 
   switch (size) {
     case 'smallest':
       logoSizeClass = 'h-5 w-5'
-      textSizeClass = 'text-xxs'
+      textSizeClass = 'text-xs'
       break
     case 'xxs':
       logoSizeClass = 'h-7 w-7'
@@ -37,43 +27,27 @@ export default function Logo({
       logoSizeClass = 'h-20 w-20'
       textSizeClass = 'text-4xl'
       break
-    case 'lg':
-      logoSizeClass = 'h-60 w-60'
-      textSizeClass = 'text-9xl'
-      break
   }
 
   return (
-    <Badge
-      content='beta'
-      color='warning'
-      variant='solid'
-      // size={badgeSize}
-      // isInvisible={!withBadge}
-      isInvisible={true}
-    >
-      <div className='flex items-center justify-center'>
-        <div
+    <div className='flex items-center justify-center'>
+      <div
+        className={cn(
+          'flex items-center justify-center rounded-3xl bg-logo-gradient',
+          logoSizeClass,
+          (size === 'sm' || size === 'xs') && 'rounded-2xl',
+          (size === 'xxs' || size === 'smallest') && 'rounded-md',
+        )}
+      >
+        <span
           className={cn(
-            'flex items-center justify-center bg-logo-gradient',
-            logoSizeClass,
-            size === 'smallest' || size === 'xxs'
-              ? 'rounded-lg'
-              : size === 'md' || size === 'lg'
-                ? 'rounded-3xl'
-                : 'rounded-2xl',
+            '-skew-x-6 transform-gpu cursor-default select-none font-inter font-bold text-light drop-shadow-md',
+            textSizeClass,
           )}
         >
-          <span
-            className={cn(
-              '-skew-x-6 transform-gpu cursor-default select-none font-inter font-bold text-light drop-shadow-md',
-              textSizeClass,
-            )}
-          >
-            Ex
-          </span>
-        </div>
+          Ex
+        </span>
       </div>
-    </Badge>
+    </div>
   )
 }

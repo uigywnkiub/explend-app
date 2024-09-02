@@ -9,7 +9,7 @@ type TProps = {
 
 function PaginationInfo({ startEntry, endEntry, totalEntries, limit }: TProps) {
   return (
-    <p className='text-sm text-default-300 hover:cursor-none hover:text-foreground'>
+    <p className='text-sm text-default-500 hover:cursor-none hover:text-foreground'>
       Showing {isNaN(startEntry) ? 1 : startEntry} to{' '}
       {isNaN(endEntry)
         ? limit > totalEntries

@@ -9,7 +9,7 @@ export default function NotFound() {
   const content = (
     <main className='mx-auto flex h-screen max-w-md flex-col items-center justify-center gap-4 px-4 text-center xs:px-0'>
       <div className='flex flex-col items-center'>
-        <p className='text-default-300'>#404NotFound</p>
+        <p className='text-default-500'>#404NotFound</p>
       </div>
       <h1 className='text-lg font-medium'>
         Could not find the requested transaction.
