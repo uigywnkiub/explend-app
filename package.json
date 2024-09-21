@@ -39,7 +39,7 @@
     "get-user-locale": "^2.3.2",
     "mongoose": "^8.6.1",
     "mongoose-encryption-decryption": "^1.2.1",
-    "next": "14.2.9",
+    "next": "14.2.10",
     "next-auth": "5.0.0-beta.20",
     "next-themes": "^0.3.0",
     "next13-progressbar": "^1.2.2",
