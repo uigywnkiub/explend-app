@@ -8,7 +8,12 @@ import {
   DEFAULT_CURRENCY_SIGN,
 } from '@/config/constants/main'
 
-import type { TCategories, TCategoriesItem, TTransaction } from '../types'
+import type {
+  TCategories,
+  TCategoriesItem,
+  TCategoryLimits,
+  TTransaction,
+} from '../types'
 
 const itemSchema = new Schema<TCategoriesItem>(
   {
@@ -17,11 +22,39 @@ const itemSchema = new Schema<TCategoriesItem>(
   },
   { _id: false },
 )
-
-const categorySchema = new Schema<TCategories>(
+const categoriesSchema = new Schema<TCategories>(
   {
     subject: { type: String, required: true },
     items: { type: [itemSchema], required: true },
+  },
+  { _id: false },
+)
+
+const currencySchema = new Schema<TTransaction['currency']>(
+  {
+    name: {
+      type: String,
+      required: true,
+      default: DEFAULT_CURRENCY_NAME,
+    },
+    code: {
+      type: String,
+      required: true,
+      default: DEFAULT_CURRENCY_CODE,
+    },
+    sign: {
+      type: String,
+      required: true,
+      default: DEFAULT_CURRENCY_SIGN,
+    },
+  },
+  { _id: false },
+)
+
+const categoryLimitsSchema = new Schema<TCategoryLimits>(
+  {
+    categoryName: { type: String, required: true },
+    limitAmount: { type: String, required: true },
   },
   { _id: false },
 )
@@ -57,23 +90,7 @@ const transactionSchema = new Schema<TTransaction>(
       type: String,
       required: true,
     },
-    currency: {
-      name: {
-        type: String,
-        required: true,
-        default: DEFAULT_CURRENCY_NAME,
-      },
-      code: {
-        type: String,
-        required: true,
-        default: DEFAULT_CURRENCY_CODE,
-      },
-      sign: {
-        type: String,
-        required: true,
-        default: DEFAULT_CURRENCY_SIGN,
-      },
-    },
+    currency: currencySchema,
     transactionLimit: {
       type: Number,
       default: null,
@@ -83,8 +100,12 @@ const transactionSchema = new Schema<TTransaction>(
       default: false,
     },
     categories: {
-      type: [categorySchema],
+      type: [categoriesSchema],
       default: DEFAULT_CATEGORIES,
+    },
+    categoryLimits: {
+      type: [categoryLimitsSchema],
+      default: [],
     },
   },
   {

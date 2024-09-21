@@ -1,5 +1,6 @@
 import { endOfDay, formatISO, isWithinInterval } from 'date-fns'
 
+import { getCategoryWithoutEmoji } from './helpers'
 import type {
   TCategoryData,
   TChartData,
@@ -61,20 +62,30 @@ export const calculateTotalAmount = (transactions: TTransaction[]) => {
   )
 }
 
+export const calculateTotalsByCategory = (
+  transactions: TTransaction[],
+  categoryWithoutEmoji: boolean = false,
+) => {
+  return transactions.reduce(
+    (totals, { category, amount }) => {
+      const modifiedCategory = categoryWithoutEmoji
+        ? getCategoryWithoutEmoji(category)
+        : category
+      totals[modifiedCategory] =
+        (totals[modifiedCategory] || 0) + parseFloat(amount)
+      return totals
+    },
+    {} as Record<string, number>,
+  )
+}
+
 export const calculateMonthlyReportData = (
   income: TTransaction[],
   expense: TTransaction[],
 ) => {
   const totalIncome = calculateTotalAmount(income)
   const totalExpense = calculateTotalAmount(expense)
-
-  const totalsByCategory = expense.reduce(
-    (totals, { category, amount }) => {
-      totals[category] = (totals[category] || 0) + parseFloat(amount)
-      return totals
-    },
-    {} as Record<string, number>,
-  )
+  const totalsByCategory = calculateTotalsByCategory(expense)
 
   // Do raw sorting data first to improve performance in some cases.
   const sortedEntries = Object.entries(totalsByCategory).sort(

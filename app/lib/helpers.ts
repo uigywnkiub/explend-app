@@ -106,10 +106,6 @@ export const formatDate = (dateStr: Date) => {
   return format(date, 'EEEE, MMMM d')
 }
 
-// export const formatTime = (dateStr: Date) => {
-//   const date = new Date(dateStr)
-//   return format(date, 'HH:mm')
-// }
 export const formatTime = (dateStr: Date): string => {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const date = new Date(dateStr)
@@ -288,9 +284,11 @@ export const pluralize = (
 //   }
 // }
 
-export const getCategoryItemNames = (category: TTransaction['categories']) => {
-  if (!category) return []
-  return category
+export const getCategoryItemNames = (
+  categories: TTransaction['categories'],
+) => {
+  if (!categories) return []
+  return categories
     .flatMap((subject) => subject.items.map((item) => item.name))
     .filter(Boolean) // Remove empty strings
 }
