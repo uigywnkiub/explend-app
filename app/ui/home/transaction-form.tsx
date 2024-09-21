@@ -295,14 +295,14 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   size='lg'
                   classNames={{
                     input:
-                      'border-none focus:ring-0 placeholder:text-default-500 text-default-500 text-center',
+                      'border-none focus:ring-0 placeholder:text-default-500 mt-0.5 text-default-500 text-center',
                     inputWrapper: 'h-12 w-full pl-3 md:px-4',
                   }}
                   endContent={
-                    <div className='pointer-events-none mt-[3px] flex items-center'>
+                    <div className='pointer-events-none mt-[4px] flex items-center'>
                       <span
                         className={cn(
-                          'text-md text-lg',
+                          'text-md',
                           parseFloat(amount) >= 1
                             ? 'text-foreground'
                             : 'text-default-500',

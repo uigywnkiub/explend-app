@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 
+import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
+
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import { getAllTransactions, getAuthSession } from '../lib/actions'
-import ConstructionPlug from '../ui/construction-plug'
+import { getAllTransactions, getAuthSession, getCurrency } from '../lib/actions'
+import Limits from '../ui/limits/limits'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
 
@@ -14,7 +16,11 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const [transactions] = await Promise.all([getAllTransactions(userId)])
+  const [transactions, currency] = await Promise.all([
+    getAllTransactions(userId),
+    getCurrency(userId),
+  ])
+  const [userCategories] = transactions.map((t) => t.categories).filter(Boolean)
 
   const content = (
     <>
@@ -25,8 +31,12 @@ export default async function Page() {
         {transactions.length === 0 ? (
           <NoTransactionsPlug />
         ) : (
-          // <Limits transactions={transactions} />
-          <ConstructionPlug pageTitle={NAV_TITLE.LIMITS} />
+          <Limits
+            userId={userId}
+            currency={currency}
+            transactions={transactions}
+            userCategories={userCategories || DEFAULT_CATEGORIES}
+          />
         )}
       </div>
     </>

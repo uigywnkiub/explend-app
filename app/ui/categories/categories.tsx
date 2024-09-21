@@ -183,7 +183,7 @@ function Categories({ userId, userCategories }: TProps) {
     setIsLoading({ subject: false, item: false, reset: true })
     try {
       await resetCategories(userId, DEFAULT_CATEGORIES)
-      toast.success('Categories reset.')
+      toast.success('All categories reset.')
     } catch (err) {
       toast.error('Failed to reset categories.')
       throw err
@@ -232,7 +232,10 @@ function Categories({ userId, userCategories }: TProps) {
         </Button>
       </div>
       <div className='mt-4 flex flex-col gap-2 md:mt-8'>
-        <InfoText text='If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.' />
+        <InfoText
+          withDoubleAsterisk
+          text='If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.'
+        />
         <InfoText text='Once editing, you will need to manually update your previous transactions with previous categories to new categories. You will see a badge on them.' />
         <InfoText text='The emoji picker may appear with a slight delay.' />
         <InfoText

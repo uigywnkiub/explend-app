@@ -28,6 +28,7 @@ import type {
   TBalance,
   TBalanceProjection,
   TCategories,
+  TCategoryLimits,
   TCookie,
   TGetTransactions,
   TRawTransaction,
@@ -173,7 +174,11 @@ export async function createTransaction(
   try {
     const newTransaction: Omit<
       TTransaction,
-      'createdAt' | 'updatedAt' | 'transactionLimit' | 'isEdited'
+      | 'createdAt'
+      | 'updatedAt'
+      | 'transactionLimit'
+      | 'isEdited'
+      | 'categoryLimits'
     > = {
       id: crypto.randomUUID(),
       userId,
@@ -473,6 +478,95 @@ export async function deleteAllTransactionsAndSignOut(
       TransactionModel.deleteMany({ userId }),
       signOutAccount(),
     ])
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function addCategoryLimit(
+  userId: TUserId,
+  categoryLimits: TTransaction['categoryLimits'],
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to add category limits.')
+  }
+  if (!categoryLimits) {
+    throw new Error('Category limits are required.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany({ userId }, { categoryLimits })
+    revalidatePath(ROUTE.LIMITS)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function deleteCategoryLimit(
+  userId: TUserId,
+  categoryName: TCategoryLimits['categoryName'],
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to delete a category limit.')
+  }
+  if (!categoryName) {
+    throw new Error('Category name is required.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne({ userId })
+    if (!transaction) {
+      throw new Error('Transaction data not found for the user.')
+    }
+    const updatedCategoryLimits = transaction.categoryLimits.filter(
+      (limit: TCategoryLimits) => limit.categoryName !== categoryName,
+    )
+    await TransactionModel.updateMany(
+      { userId },
+      { categoryLimits: updatedCategoryLimits },
+    )
+    revalidatePath(ROUTE.LIMITS)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function editCategoryLimit(
+  userId: TUserId,
+  categoryName: TCategoryLimits['categoryName'],
+  newLimitAmount: TCategoryLimits['limitAmount'],
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to edit a category limit.')
+  }
+  if (!categoryName) {
+    throw new Error('Category name is required.')
+  }
+  if (!newLimitAmount) {
+    throw new Error('New limit amount is required.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne({ userId })
+    if (!transaction) {
+      throw new Error('Transaction data not found for the user.')
+    }
+    const updatedCategoryLimits = transaction.categoryLimits.map(
+      (limit: TCategoryLimits) => {
+        if (limit.categoryName === categoryName) {
+          return {
+            categoryName,
+            limitAmount: newLimitAmount,
+          }
+        }
+        return limit
+      },
+    )
+    await TransactionModel.updateMany(
+      { userId },
+      { categoryLimits: updatedCategoryLimits },
+    )
+    revalidatePath(ROUTE.LIMITS)
   } catch (err) {
     throw err
   }

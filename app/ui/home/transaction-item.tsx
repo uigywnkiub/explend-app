@@ -61,6 +61,7 @@ type TProps = Omit<
   | 'transactionLimit'
   | 'categories'
   | 'hasCategoryChanged'
+  | 'categoryLimits'
 > & {
   hasCategoryChanged: boolean
 }
@@ -156,8 +157,13 @@ Time: ${formatTime(createdAt)}`
               isInvisible={!hasCategoryChanged}
             >
               <DropdownTrigger>
-                <Button variant='light' isIconOnly size='lg'>
-                  <PiDotsThreeOutlineVerticalFill className='fill-foreground' />
+                <Button
+                  variant='light'
+                  isIconOnly
+                  size='md'
+                  className='md:h-12 md:w-12'
+                >
+                  <PiDotsThreeOutlineVerticalFill className='h-4 w-4 fill-foreground' />
                 </Button>
               </DropdownTrigger>
             </Badge>
