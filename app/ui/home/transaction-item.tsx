@@ -61,6 +61,7 @@ type TProps = Omit<
   | 'transactionLimit'
   | 'categories'
   | 'hasCategoryChanged'
+  | 'categoryLimits'
 > & {
   hasCategoryChanged: boolean
 }

@@ -18,6 +18,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Salary',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -40,6 +46,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Groceries',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Weekly groceries',
         amount: '200',
         isIncome: false,
@@ -69,6 +81,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Groceries',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -88,6 +106,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Transport',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Bus fare',
         amount: '100',
         isIncome: false,
@@ -107,6 +131,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Groceries',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'More groceries',
         amount: '150',
         isIncome: false,
@@ -139,6 +169,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Salary',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -171,6 +207,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Groceries',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -199,6 +241,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Salary',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -221,6 +269,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Groceries',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -249,6 +303,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Salary',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -271,6 +331,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Groceries',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -299,6 +365,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Salary',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -321,6 +393,12 @@ describe('calculateMonthlyReportData', () => {
         userId: 'user1',
         category: 'Groceries',
         categories: DEFAULT_CATEGORIES,
+        categoryLimits: [
+          {
+            categoryName: 'Rent/Mortgage',
+            limitAmount: '30 000',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
