@@ -3,8 +3,6 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 
-import Image from 'next/image'
-
 import { Avatar, Select, SelectItem } from '@nextui-org/react'
 
 import {
@@ -36,10 +34,11 @@ const currencies: {
     code: CURRENCY_CODE.UAH,
     icon: (
       <Avatar
-        ImgComponent={Image}
+        // ImgComponent={Image}
+        ImgComponent={'img'}
         imgProps={{
           // @ts-ignore
-          quality: 100,
+          // quality: 100,
           width: DEFAULT_ICON_SIZE,
           height: DEFAULT_ICON_SIZE,
         }}

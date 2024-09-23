@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 import { User } from '@nextui-org/react'
 
 import { TDefaultSession } from '@/app/lib/types'
@@ -16,11 +14,12 @@ function UserProfileInfo({ user }: TProps) {
       name={user?.name}
       description={user?.email}
       avatarProps={{
-        ImgComponent: Image,
+        // ImgComponent: Image,
+        ImgComponent: 'img',
         imgProps: {
           // @ts-ignore
-          priority: true,
-          quality: 100,
+          // priority: true,
+          // quality: 100,
           width: 40,
           height: 40,
         },
