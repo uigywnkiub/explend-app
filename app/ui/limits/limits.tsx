@@ -38,6 +38,8 @@ import {
 import { endOfMonth, endOfToday, startOfMonth, startOfToday } from 'date-fns'
 
 import {
+  DEFAULT_CATEGORY,
+  DEFAULT_CATEGORY_EMOJI,
   DEFAULT_CURRENCY_CODE,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
@@ -158,10 +160,14 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     }
   })
 
-  const disabledCategories = transactionsByCurrMonth
-    .map((t) => t.categoryLimits)
-    .filter(Boolean)
-    .flatMap((c) => c.map((k) => k.categoryName))
+  const disabledCategories = [
+    ...new Set(
+      transactionsByCurrMonth
+        .map((t) => t.categoryLimits)
+        .filter(Boolean)
+        .flatMap((c) => c.map((k) => k.categoryName)),
+    ),
+  ]
 
   const getLimitAmount = (categoryName: string) => {
     const limit = userLimitsData.find((l) => l.categoryName === categoryName)
@@ -337,7 +343,9 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         items={userCategories}
                         selectedKeys={category}
                         onSelectionChange={setCategory}
-                        disabledKeys={disabledCategories}
+                        disabledKeys={disabledCategories.concat(
+                          DEFAULT_CATEGORY,
+                        )}
                       >
                         {userCategories.map((category, idx, arr) => (
                           <SelectSection
@@ -421,7 +429,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
               <div className='flex items-center md:w-1/2'>
                 <p className='mt-2 text-2xl md:text-3xl'>
                   {isCategoryChangedName
-                    ? '❓'
+                    ? DEFAULT_CATEGORY_EMOJI
                     : getEmojiFromCategory(
                         getCategoryWithEmoji(categoryName, userCategories),
                       )}

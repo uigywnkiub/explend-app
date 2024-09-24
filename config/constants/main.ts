@@ -1,6 +1,7 @@
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
 export const DEFAULT_CATEGORY: string = 'Unknown'
+export const DEFAULT_CATEGORY_EMOJI: string = '🤔'
 export const DEFAULT_ICON_SIZE: number = 18
 export const DEFAULT_TIME_ZONE: string = 'Europe/Kiev'
 export const DEFAULT_LANG: string = 'en'
