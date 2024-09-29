@@ -18,6 +18,7 @@ import { capitalizeFirstLetter, getFormattedCurrency } from '@/app/lib/helpers'
 import { TTransaction } from '@/app/lib/types'
 
 import CustomLegend from './custom-legend'
+import CustomTooltip from './custom-tooltip'
 
 type TProps = {
   transactions: TTransaction[]
@@ -47,8 +48,15 @@ function RadarChart({ transactions, currency }: TProps) {
         />
         <Legend content={<CustomLegend />} />
         <Tooltip
-          separator=': '
           contentStyle={{ backgroundColor: 'none' }}
+          content={
+            <CustomTooltip
+              active={false}
+              payload={[]}
+              label={''}
+              currency={currency}
+            />
+          }
           wrapperClassName='rounded-medium bg-background'
           formatter={(value, name) => [
             `${getFormattedCurrency(value as number)} ${currency?.code}`,
