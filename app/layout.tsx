@@ -38,6 +38,8 @@ const fracktif = localFont({
   variable: '--font-fracktif',
 })
 
+const testVar = 'remove it'
+
 export const metadata: Metadata = {
   title: {
     default: siteMeta.title as string,
