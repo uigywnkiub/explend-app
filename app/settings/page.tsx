@@ -130,6 +130,7 @@ export default async function Page() {
         title='Danger zone'
         subtitle='This section contains actions that may have severe consequences for your account or data.'
         withDivider={false}
+        titleClassName='text-danger'
       >
         <SectionItem
           title='Delete account'
