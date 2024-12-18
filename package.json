@@ -39,7 +39,7 @@
     "emoji-regex": "^10.4.0",
     "framer-motion": "^11.11.9",
     "get-user-locale": "^2.3.2",
-    "mongoose": "^8.7.2",
+    "mongoose": "^8.8.3",
     "mongoose-encryption-decryption": "^1.2.1",
     "next": "14.2.15",
     "next-auth": "5.0.0-beta.20",
