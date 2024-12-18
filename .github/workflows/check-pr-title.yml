@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   lint:
-    name: Lint PR title
+    name: PR title
     runs-on: ubuntu-latest
     steps:
       - name: Check PR title
