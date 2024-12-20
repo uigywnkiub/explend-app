@@ -1,9 +1,12 @@
-// @ts-check
+import type { NextConfig } from 'next'
+
 import withPWAInit from '@ducanh2912/next-pwa'
 import { withSentryConfig } from '@sentry/nextjs'
+import { RuleSetRule } from 'webpack'
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import { IS_PROD } from './config/constants/main'
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
@@ -22,8 +25,9 @@ const nextConfig = {
   },
   webpack: (config, _options) => {
     // Grab the existing rule that handles SVG imports.
-    const fileLoaderRule = config.module.rules.find((rule) =>
-      rule.test?.test?.('.svg'),
+    const fileLoaderRule = config.module.rules.find(
+      (rule: RuleSetRule) =>
+        rule.test instanceof RegExp && rule.test.test('.svg'),
     )
 
     config.module.rules.push(
@@ -73,7 +77,7 @@ const withPWA = withPWAInit({
   cacheOnFrontEndNav: true,
   aggressiveFrontEndNavCaching: true,
   extendDefaultRuntimeCaching: true,
-  disable: process.env.NODE_ENV === 'development',
+  disable: !IS_PROD,
 })
 
 const sentryConfig = {

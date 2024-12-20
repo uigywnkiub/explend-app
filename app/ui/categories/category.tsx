@@ -87,7 +87,7 @@ function Category({
             }}
           />
           <Button
-            onClick={() => onSaveTargetClick(index)}
+            onPress={() => onSaveTargetClick(index)}
             isLoading={isLoading.subject}
             color='success'
             className='px-0 font-medium text-background'
@@ -114,7 +114,7 @@ function Category({
             </button>
           </h2>
           <Button
-            onClick={() => onEditTargetClick(index, category.subject)}
+            onPress={() => onEditTargetClick(index, category.subject)}
             className='bg-foreground px-0 font-medium text-default-50'
           >
             <HoverableElement

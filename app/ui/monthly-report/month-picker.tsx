@@ -20,8 +20,9 @@ function MonthPicker({
   minTransaction,
   maxTransaction,
 }: TProps) {
-  const [dateRange, setDateRange] =
-    useState<RangeValue<DateValue>>(selectedDate)
+  const [dateRange, setDateRange] = useState<RangeValue<DateValue> | null>(
+    selectedDate,
+  )
 
   const daysInMonth = getDaysInMonth(new Date())
   const maxTransactionDayOfMonth = toCalendarDate(
@@ -34,9 +35,11 @@ function MonthPicker({
   })
 
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
-  const [isReady, cancel] = useDebounce(() => onDateSelection(dateRange), 300, [
-    dateRange,
-  ])
+  const [isReady, cancel] = useDebounce(
+    () => dateRange && onDateSelection(dateRange),
+    300,
+    [dateRange],
+  )
 
   useEffect(() => {
     if (!isReady()) cancel()
@@ -51,7 +54,9 @@ function MonthPicker({
           value={dateRange}
           minValue={minTransactionValue}
           maxValue={maxTransactionValue}
-          onChange={(range) => setDateRange(range)}
+          onChange={(range: RangeValue<DateValue> | null) =>
+            range && setDateRange(range)
+          }
         />
       </div>
     </div>

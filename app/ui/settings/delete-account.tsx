@@ -58,7 +58,7 @@ function DeleteAccount({ userId }: TProps) {
   const buttonWithIcon = (icon: TIcon) => (
     <Button
       className='w-full bg-danger font-medium text-default-50'
-      onClick={onOpen}
+      onPress={onOpen}
       startContent={icon}
     >
       Delete account

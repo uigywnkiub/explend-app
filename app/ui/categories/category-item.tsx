@@ -93,7 +93,7 @@ function CategoryItem({
               />
             </div>
             <Button
-              onClick={() => onSaveItemClick(categoryIndex, itemIndex)}
+              onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
               isLoading={isLoading.item}
               color='success'
               className='px-0 font-medium text-background'
@@ -133,7 +133,7 @@ function CategoryItem({
             </div>
           </div>
           <Button
-            onClick={() => onEditItemClick(categoryIndex, itemIndex, item.name)}
+            onPress={() => onEditItemClick(categoryIndex, itemIndex, item.name)}
             isDisabled={item.name === DEFAULT_CATEGORY}
             className='bg-foreground px-0 font-medium text-default-50'
           >

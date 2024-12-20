@@ -17,7 +17,7 @@ import {
 import { AuthError } from 'next-auth'
 import { signIn } from 'next-auth/react'
 
-import { Accordion, AccordionItem, Divider } from '@nextui-org/react'
+import { Accordion, AccordionItem, Button, Divider } from '@nextui-org/react'
 
 import {
   APP_DESCRIPTION,
@@ -60,10 +60,12 @@ function SignIn() {
     isLoading.notion
 
   const onSignIn = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e: Parameters<
+      NonNullable<React.ComponentProps<typeof Button>['onPress']>
+    >[0],
     provider: TAuthProvider,
   ) => {
-    e.preventDefault()
+    // e.preventDefault()
     setIsLoading((prev) => ({ ...prev, [provider]: true }))
     try {
       await signIn(provider, {
@@ -159,7 +161,7 @@ function SignIn() {
                     isDisabled={isAnyLoading}
                     className='min-w-[220px] bg-foreground font-medium text-default-50'
                     isLoading={isLoading}
-                    onClick={(e) => onSignIn(e, provider)}
+                    onPress={(e) => onSignIn(e, provider)}
                     startContent={!isLoading && icon}
                   />
                 )
@@ -199,7 +201,7 @@ function SignIn() {
                           isDisabled={isAnyLoading}
                           className='min-w-[220px] bg-foreground font-medium text-default-50'
                           isLoading={isLoading}
-                          onClick={(e) => onSignIn(e, provider)}
+                          onPress={(e) => onSignIn(e, provider)}
                           startContent={!isLoading && icon}
                         />
                       )

@@ -21,7 +21,7 @@ export default function Error({
       <ClientButton
         title='Try Again'
         className='max-w-md bg-primary font-medium text-default-50'
-        onClick={() => [reset()]}
+        onPress={() => [reset()]}
       />
     </main>
   )

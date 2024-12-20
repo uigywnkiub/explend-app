@@ -221,7 +221,7 @@ function Categories({ userId, userCategories }: TProps) {
         <Button
           isDisabled={haveCategoriesChanged}
           className='mx-auto w-full bg-danger font-medium text-default-50'
-          onClick={onOpen}
+          onPress={onOpen}
           startContent={
             <HoverableElement
               uKey='reset-categories'
