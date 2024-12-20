@@ -14,8 +14,8 @@ export const metadata: Metadata = {
   title: NAV_TITLE.FEEDBACK,
 }
 
-export default function Page() {
-  const cookieStore = cookies()
+export default async function Page() {
+  const cookieStore = await cookies()
   const feedbackCookie = cookieStore.get(FEEDBACK.NAME)
   const confettiCookie = cookieStore.get(CONFETTI.NAME)
   const isSentFeedback = feedbackCookie?.value === FEEDBACK.VALUE

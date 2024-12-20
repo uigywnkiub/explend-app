@@ -1,3 +1,5 @@
+import type { JSX } from 'react'
+
 type TProps = {
   title: string
   subtitle: string

@@ -329,6 +329,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 }}
               >
                 <Select
+                  // isVirtualized={false}
                   isDisabled={pending || isLoadingAIData}
                   isLoading={isLoadingAIData}
                   items={userCategories}

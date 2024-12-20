@@ -225,7 +225,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
         <Button
           isLoading={isLoadingTips}
           variant='flat'
-          onClick={getExpenseTipsAIData}
+          onPress={getExpenseTipsAIData}
           className='mx-auto mt-2 flex'
         >
           {!isLoadingTips && <AILogo asIcon iconSize='sm' />}{' '}

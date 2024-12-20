@@ -10,8 +10,7 @@ import { CUSTOM_DARK } from '@/config/constants/colors'
 import {
   APP_NAME,
   APP_URL,
-  AUTHOR_NAME,
-  AUTHOR_URL,
+  AUTHOR,
   DEFAULT_DIR,
   DEFAULT_LANG,
 } from '@/config/constants/main'
@@ -72,8 +71,8 @@ export const metadata: Metadata = {
   },
   authors: [
     {
-      name: AUTHOR_NAME,
-      url: AUTHOR_URL,
+      name: AUTHOR.NAME,
+      url: AUTHOR.URL,
     },
   ],
 }

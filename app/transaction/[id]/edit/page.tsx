@@ -12,7 +12,8 @@ export const metadata: Metadata = {
   title: PAGE_TITLE,
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params
   const { id } = params
   const [transaction, session] = await Promise.all([
     findTransactionById(id),

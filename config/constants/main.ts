@@ -1,3 +1,5 @@
+import type { TTheme } from '@/app/lib/types'
+
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
 export const DEFAULT_CATEGORY: string = 'Unknown'
@@ -6,6 +8,7 @@ export const DEFAULT_ICON_SIZE: number = 18
 export const DEFAULT_TIME_ZONE: string = 'Europe/Kiev'
 export const DEFAULT_LANG: string = 'en'
 export const DEFAULT_DIR = 'ltr'
+export const DEFAULT_THEME: TTheme = 'dark'
 
 export const enum CURRENCY_NAME {
   UAH = 'Ukrainian Hryvnia',
@@ -45,8 +48,10 @@ export const APP_LOCALHOST_URL: string = process.env.APP_LOCALHOST_URL
 //   SECURITY_ERROR_SCRIPT: `Script ${APP_URL}/sw.js load failed`,
 // }
 
-export const AUTHOR_NAME: string = 'Volodymyr'
-export const AUTHOR_URL: string = 'https://volodymyr-g.vercel.app'
+export const enum AUTHOR {
+  NAME = 'Volodymyr',
+  URL = 'https://volodymyr-g.vercel.app',
+}
 
 const AI_SUFFIX_NAME = 'Intelligence'
 export const enum AI_NAME {

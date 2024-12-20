@@ -227,7 +227,8 @@ export async function setCookie(
   value: TCookie['VALUE'],
   maxAge: TCookie['MAX_AGE'],
 ) {
-  cookies().set(name, value, {
+  const cookieStore = await cookies()
+  cookieStore.set(name, value, {
     maxAge,
     httpOnly: true,
     secure: true,

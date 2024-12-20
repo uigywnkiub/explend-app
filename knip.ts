@@ -3,14 +3,15 @@ import type { KnipConfig } from 'knip'
 const config: KnipConfig = {
   ignore: ['./app/sw.{js,ts}', './config/constants/colors.ts'],
   ignoreDependencies: [
-    // The react-is is used by Recharts.
-    'react-is',
-    '@types/react-is',
     '@testing-library/dom',
     '@testing-library/react',
     // 'postcss',
     'postcss-load-config',
     '@svgr/webpack',
+    // Libs are needed for nextjs 15 running dev mode with turbopack START
+    'import-in-the-middle',
+    'require-in-the-middle',
+    // Libs are needed for nextjs 15 running dev mode with turbopack END
   ],
 }
 

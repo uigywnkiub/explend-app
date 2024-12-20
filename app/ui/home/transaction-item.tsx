@@ -191,6 +191,7 @@ Time: ${formatTime(createdAt)}`
                   key={DROPDOWN_KEY.COPY}
                   startContent={
                     <HoverableElement
+                      uKey={DROPDOWN_KEY.COPY}
                       element={<PiCopy size={DEFAULT_ICON_SIZE} />}
                       hoveredElement={<PiCopyFill size={DEFAULT_ICON_SIZE} />}
                     />
@@ -203,6 +204,7 @@ Time: ${formatTime(createdAt)}`
                   key={DROPDOWN_KEY.EDIT}
                   startContent={
                     <HoverableElement
+                      uKey={DROPDOWN_KEY.EDIT}
                       element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
                       hoveredElement={
                         <PiNotePencilFill size={DEFAULT_ICON_SIZE} />
@@ -238,6 +240,7 @@ Time: ${formatTime(createdAt)}`
                   color='danger'
                   startContent={
                     <HoverableElement
+                      uKey={DROPDOWN_KEY.DELETE}
                       element={<PiTrash size={DEFAULT_ICON_SIZE} />}
                       hoveredElement={<PiTrashFill size={DEFAULT_ICON_SIZE} />}
                     />

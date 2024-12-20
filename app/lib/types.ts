@@ -1,6 +1,8 @@
+import type { JSX } from 'react'
+
 import type { DefaultSession, Session, User } from 'next-auth'
 
-import type { ObjectId } from 'mongoose'
+import { type ObjectId } from 'mongoose'
 
 import {
   CURRENCY_CODE,

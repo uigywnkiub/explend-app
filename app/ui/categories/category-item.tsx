@@ -93,13 +93,14 @@ function CategoryItem({
               />
             </div>
             <Button
-              onClick={() => onSaveItemClick(categoryIndex, itemIndex)}
+              onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
               isLoading={isLoading.item}
               color='success'
               className='px-0 font-medium text-background'
             >
               {!isLoading.item && (
                 <HoverableElement
+                  uKey={item.name}
                   element={<PiFloppyDisk size={DEFAULT_ICON_SIZE} />}
                   hoveredElement={<PiFloppyDiskFill size={DEFAULT_ICON_SIZE} />}
                   withShift={false}
@@ -132,11 +133,12 @@ function CategoryItem({
             </div>
           </div>
           <Button
-            onClick={() => onEditItemClick(categoryIndex, itemIndex, item.name)}
+            onPress={() => onEditItemClick(categoryIndex, itemIndex, item.name)}
             isDisabled={item.name === DEFAULT_CATEGORY}
             className='bg-foreground px-0 font-medium text-default-50'
           >
             <HoverableElement
+              uKey={item.name}
               element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
               hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
               withShift={false}

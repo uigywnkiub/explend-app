@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react'
 import { Toaster } from 'react-hot-toast'
 
 import { Next13ProgressBar } from 'next13-progressbar'
-import { ThemeProvider as NextThemesProvider } from 'next-themes'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 
 import { NextUIProvider } from '@nextui-org/react'
 
 import { SUCCESS } from '@/config/constants/colors'
+import { DEFAULT_THEME } from '@/config/constants/main'
 import {
   DARK_TOAST_OPTS,
   LIGHT_TOAST_OPTS,
@@ -18,6 +19,13 @@ import {
 
 import { userLocale } from './lib/helpers'
 import { TTheme } from './lib/types'
+
+const NextThemesProvider = dynamic(
+  () => import('next-themes').then((e) => e.ThemeProvider),
+  {
+    ssr: false,
+  },
+)
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -29,7 +37,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <NextUIProvider navigate={router.push} locale={userLocale}>
-      <NextThemesProvider attribute='class' defaultTheme='dark'>
+      <NextThemesProvider attribute='class' defaultTheme={DEFAULT_THEME}>
         <Toaster
           position={TOAST_POSITION}
           toastOptions={
