@@ -77,6 +77,7 @@ export function ThemeSwitcher() {
           key={theme.key}
           startContent={
             <HoverableElement
+              uKey={theme.key}
               element={theme.icon}
               hoveredElement={theme.hoverIcon}
             />

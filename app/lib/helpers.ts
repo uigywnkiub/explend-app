@@ -177,7 +177,7 @@ export const calculateEntryRange = (
 export const copyToClipboard = async (
   successTitle: string,
   errorTitle: string,
-  ref?: React.RefObject<THTMLElement>,
+  ref?: React.RefObject<THTMLElement | null>,
   text?: string,
 ): Promise<void> => {
   const content = text || ref?.current?.textContent || ''

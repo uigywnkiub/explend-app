@@ -94,6 +94,7 @@ function Category({
           >
             {!isLoading.subject && (
               <HoverableElement
+                uKey={category.subject}
                 element={<PiFloppyDisk size={DEFAULT_ICON_SIZE} />}
                 hoveredElement={<PiFloppyDiskFill size={DEFAULT_ICON_SIZE} />}
                 withShift={false}
@@ -117,6 +118,7 @@ function Category({
             className='bg-foreground px-0 font-medium text-default-50'
           >
             <HoverableElement
+              uKey={category.subject}
               element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
               hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
               withShift={false}
@@ -126,23 +128,25 @@ function Category({
         </div>
       )}
       <ul className='list-inside list-disc'>
-        {category.items?.map((item, itemIndex) => (
-          <CategoryItem
-            key={itemIndex}
-            item={item}
-            categoryIndex={index}
-            itemIndex={itemIndex}
-            onEditItemClick={onEditItemClick}
-            editingItemIndex={editingItemIndex}
-            newItemName={newItemName}
-            setNewItemName={setNewItemName}
-            onSaveItemClick={onSaveItemClick}
-            showEmojiPicker={showEmojiPicker}
-            toggleEmojiPicker={toggleEmojiPicker}
-            isLoading={isLoading}
-            onEmojiClick={onEmojiClick}
-          />
-        ))}
+        {category.items?.map((item, itemIndex) => {
+          return (
+            <CategoryItem
+              key={item.name}
+              item={item}
+              categoryIndex={index}
+              itemIndex={itemIndex}
+              onEditItemClick={onEditItemClick}
+              editingItemIndex={editingItemIndex}
+              newItemName={newItemName}
+              setNewItemName={setNewItemName}
+              onSaveItemClick={onSaveItemClick}
+              showEmojiPicker={showEmojiPicker}
+              toggleEmojiPicker={toggleEmojiPicker}
+              isLoading={isLoading}
+              onEmojiClick={onEmojiClick}
+            />
+          )
+        })}
       </ul>
     </div>
   )

@@ -13,6 +13,7 @@ import {
 import { getAllTransactions } from '../lib/actions'
 import { getTransactionsTotals } from '../lib/data'
 import {
+  cn,
   getFormattedBalance,
   getFormattedCurrency,
   getGreeting,
@@ -30,21 +31,16 @@ function BalanceCard({ balance, currency, user }: TProps) {
   const [isChangeInfo, setIsChangeInfo] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [total, setTotal] = useState<{
-    income: string
-    expense: string
+    income: number
+    expense: number
   }>({
-    income: '',
-    expense: '',
+    income: 0,
+    expense: 0,
   })
-  // const [isFocused, setIsFocused] = useState(false)
-  // const [position, setPosition] = useState({ x: 0, y: 0 })
-  // const [opacity, setOpacity] = useState(0)
-  // const divRef = useRef<HTMLDivElement>(null)
-  // const isMd = useMedia(getBreakpointWidth('md'), false)
 
-  // const isPositiveBalance = Number(balance) > 0
   const userId = user?.email
   const isTotalLoaded = total.income || total.income
+  const isPositiveBalance = Number(balance) > 0
   const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const greetingMsg = `${getGreeting(currentTimeZone || DEFAULT_TIME_ZONE)}, ${user?.name} 👋🏼`
 
@@ -57,17 +53,13 @@ function BalanceCard({ balance, currency, user }: TProps) {
     try {
       const transactions = await getAllTransactions(userId)
       setTotal({
-        income: getFormattedCurrency(
-          getTransactionsTotals(transactions).income,
-        ),
-        expense: getFormattedCurrency(
-          getTransactionsTotals(transactions).expense,
-        ),
+        income: getTransactionsTotals(transactions).income,
+        expense: getTransactionsTotals(transactions).expense,
       })
     } catch (err) {
       setTotal({
-        income: '',
-        expense: '',
+        income: 0,
+        expense: 0,
       })
       throw err
     } finally {
@@ -81,55 +73,21 @@ function BalanceCard({ balance, currency, user }: TProps) {
     }
   }, [getTotal, isChangeInfo, isTotalLoaded])
 
-  // const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-  //   if (!isMd) return
-  //   if (!divRef.current || isFocused) return
-  //   const div = divRef.current
-  //   const rect = div.getBoundingClientRect()
-  //   setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top })
-  // }
-
-  // const onFocus = () => {
-  //   if (!isMd) return
-  //   setIsFocused(true)
-  //   setOpacity(1)
-  // }
-
-  // const onBlur = () => {
-  //   if (!isMd) return
-  //   setIsFocused(false)
-  //   setOpacity(0)
-  // }
-
-  // const onMouseEnter = () => {
-  //   if (!isMd) return
-  //   setOpacity(1)
-  // }
-
-  // const onMouseLeave = () => {
-  //   if (!isMd) return
-  //   setOpacity(0)
-  //   divRef.current?.blur()
-  // }
+  useEffect(() => {
+    getTotal()
+  }, [balance, getTotal])
 
   return (
     <Card
-      // ref={divRef}
-      // onMouseMove={onMouseMove}
-      // onFocus={onFocus}
-      // onBlur={onBlur}
-      // onMouseEnter={onMouseEnter}
-      // onMouseLeave={onMouseLeave}
-      className='p-2'
+      className={cn(
+        'p-2',
+        isPositiveBalance
+          ? 'bg-gradient-radial from-success/20 to-content1'
+          : 'bg-gradient-radial from-danger/20 to-content1',
+      )}
       shadow='none'
     >
-      <div
-        className='pointer-events-none absolute -inset-px opacity-0 transition duration-300'
-        // style={{
-        //   opacity,
-        //   background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, ${isPositiveBalance ? SUCCESS : DANGER}${OPACITY.O20}, transparent 40%)`,
-        // }}
-      />
+      <div className='pointer-events-none absolute -inset-px opacity-0 transition duration-300' />
       <CardHeader className='flex flex-col items-center justify-between gap-4 px-2 md:px-4'>
         <div
           className='text-center text-xl'
@@ -142,16 +100,16 @@ function BalanceCard({ balance, currency, user }: TProps) {
               {!isLoading && isTotalLoaded ? (
                 <div className='flex cursor-pointer flex-wrap justify-center gap-0 text-lg font-semibold md:gap-2'>
                   <p>
-                    {
-                      <PiArrowCircleUpFill className='mr-1 inline fill-success' />
-                    }
-                    Income: {total.income} {currency?.code}
+                    <PiArrowCircleUpFill className='mr-1 inline fill-success' />
+                    <span className='text-sm text-default-500'>
+                      Income:
+                    </span>{' '}
+                    {getFormattedCurrency(total.income)} {currency?.code}
                   </p>
                   <p>
-                    {
-                      <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
-                    }
-                    Expense: {total.expense} {currency?.code}
+                    <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
+                    <span className='text-sm text-default-500'>Expense:</span>{' '}
+                    {getFormattedCurrency(total.expense)} {currency?.code}
                   </p>
                 </div>
               ) : (

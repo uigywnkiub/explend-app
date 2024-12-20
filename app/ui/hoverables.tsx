@@ -12,12 +12,14 @@ import { cn, getBreakpointWidth } from '../lib/helpers'
 import type { TNavLink, TSelect } from '../lib/types'
 
 type THoverableElement = {
+  uKey?: string
   element: TSelect['icon'] | string
   hoveredElement?: TSelect['hoverIcon']
   withScale?: boolean
   withShift?: boolean
 }
 export const HoverableElement = ({
+  uKey,
   element,
   hoveredElement,
   withScale = false,
@@ -28,6 +30,7 @@ export const HoverableElement = ({
   return useHover((hovered: boolean) => {
     return (
       <motion.div
+        key={uKey}
         initial={{ ...DIV.INITIAL, y: withShift ? -20 : 0 }}
         animate={{ ...DIV.ANIMATE(hovered, isMd && withScale), y: 0 }}
         transition={{ ...DIV.TRANSITION }}
@@ -56,6 +59,7 @@ export const HoverableNavLink = ({
 }: THoverableNavLink) => {
   return useHover((hovered: boolean) => (
     <Link
+      key={link.title}
       href={link.url}
       className={cn(
         'flex w-full items-center gap-4 rounded-medium py-2 text-2xl md:text-base',

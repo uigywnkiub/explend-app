@@ -45,14 +45,13 @@ import NoTransactionsPlug from './ui/no-transactions-plug'
 import PaginationList from './ui/pagination/pagination-list'
 import WithSidebar from './ui/sidebar/with-sidebar'
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams?: {
+export default async function Home(props: {
+  searchParams?: Promise<{
     [SEARCH_PARAM.QUERY]?: string
     [SEARCH_PARAM.PAGE]?: string
-  }
+  }>
 }) {
+  const searchParams = await props.searchParams
   const session = await getCachedAuthSession()
   const userId = session?.user?.email
   const query = searchParams?.[SEARCH_PARAM.QUERY] || ''

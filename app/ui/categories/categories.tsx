@@ -194,27 +194,29 @@ function Categories({ userId, userCategories }: TProps) {
 
   return (
     <>
-      {categories.map((category, index) => (
-        <Category
-          key={index}
-          category={category}
-          index={index}
-          editingIndex={editingIndex}
-          newTargetName={newTargetName}
-          onEditTargetClick={onEditTargetClick}
-          setNewTargetName={setNewTargetName}
-          onSaveTargetClick={onSaveTargetClick}
-          onEditItemClick={onEditItemClick}
-          editingItemIndex={editingItemIndex}
-          newItemName={newItemName}
-          setNewItemName={setNewItemName}
-          onSaveItemClick={onSaveItemClick}
-          showEmojiPicker={showEmojiPicker}
-          toggleEmojiPicker={toggleEmojiPicker}
-          isLoading={isLoading}
-          onEmojiClick={onEmojiClick}
-        />
-      ))}
+      {categories.map((category, index) => {
+        return (
+          <Category
+            key={category.subject}
+            category={category}
+            index={index}
+            editingIndex={editingIndex}
+            newTargetName={newTargetName}
+            onEditTargetClick={onEditTargetClick}
+            setNewTargetName={setNewTargetName}
+            onSaveTargetClick={onSaveTargetClick}
+            onEditItemClick={onEditItemClick}
+            editingItemIndex={editingItemIndex}
+            newItemName={newItemName}
+            setNewItemName={setNewItemName}
+            onSaveItemClick={onSaveItemClick}
+            showEmojiPicker={showEmojiPicker}
+            toggleEmojiPicker={toggleEmojiPicker}
+            isLoading={isLoading}
+            onEmojiClick={onEmojiClick}
+          />
+        )
+      })}
       <div className='mx-auto max-w-md'>
         <Button
           isDisabled={haveCategoriesChanged}
@@ -222,6 +224,7 @@ function Categories({ userId, userCategories }: TProps) {
           onClick={onOpen}
           startContent={
             <HoverableElement
+              uKey='reset-categories'
               element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
               hoveredElement={<PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />}
               withShift={false}

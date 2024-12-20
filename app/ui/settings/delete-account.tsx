@@ -68,6 +68,7 @@ function DeleteAccount({ userId }: TProps) {
   return (
     <>
       <HoverableElement
+        uKey='delete-account'
         element={buttonWithIcon(<PiUserMinus size={DEFAULT_ICON_SIZE} />)}
         hoveredElement={buttonWithIcon(
           <PiUserMinusFill size={DEFAULT_ICON_SIZE} />,

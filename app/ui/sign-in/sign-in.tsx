@@ -167,6 +167,7 @@ function SignIn() {
                 return (
                   <HoverableElement
                     key={provider}
+                    uKey={provider}
                     element={buttonWithIcon(icon)}
                     hoveredElement={buttonWithIcon(hoverIcon)}
                     withShift={false}
@@ -206,6 +207,7 @@ function SignIn() {
                       return (
                         <HoverableElement
                           key={provider}
+                          uKey={provider}
                           element={buttonWithIcon(icon)}
                           hoveredElement={buttonWithIcon(hoverIcon)}
                           withShift={false}

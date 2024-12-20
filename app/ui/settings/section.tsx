@@ -1,3 +1,5 @@
+import type { JSX } from 'react'
+
 import { Divider, Spacer } from '@nextui-org/react'
 import { type ClassValue } from 'clsx'
 

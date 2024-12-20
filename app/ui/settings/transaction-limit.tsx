@@ -99,6 +99,7 @@ function TransactionLimit({
           key={limit.key}
           startContent={
             <HoverableElement
+              uKey={limit.key + limit.value}
               element={limit.icon}
               hoveredElement={limit.hoverIcon}
             />
