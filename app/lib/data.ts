@@ -8,6 +8,13 @@ import type {
   TTransaction,
 } from './types'
 
+export const calculateTotalAmount = (transactions: TTransaction[]) => {
+  return transactions.reduce(
+    (total, { amount }) => total + parseFloat(amount),
+    0,
+  )
+}
+
 export const filterTransactions = (transactions: TTransaction[]) => ({
   income: transactions.filter((t) => t.isIncome),
   expense: transactions.filter((t) => !t.isIncome),
@@ -53,13 +60,6 @@ export const calculateChartData = (
   })
 
   return chartData
-}
-
-export const calculateTotalAmount = (transactions: TTransaction[]) => {
-  return transactions.reduce(
-    (total, { amount }) => total + parseFloat(amount),
-    0,
-  )
 }
 
 export const calculateTotalsByCategory = (
