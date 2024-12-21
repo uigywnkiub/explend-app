@@ -333,6 +333,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         </span>
                       </p>
                       <Select
+                        isVirtualized={false}
                         isRequired
                         isDisabled={false}
                         name='category'

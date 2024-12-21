@@ -86,6 +86,7 @@ function TransactionLimit({
 
   return (
     <Select
+      isVirtualized={false}
       label='Select a limit'
       items={limits}
       isDisabled={!transactionsCount}

@@ -126,6 +126,7 @@ function Currency({ userId, currency }: TProps) {
 
   return (
     <Select
+      isVirtualized={false}
       label='Select a currency'
       items={currencies}
       isDisabled={!currency}

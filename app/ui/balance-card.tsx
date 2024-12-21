@@ -108,8 +108,8 @@ function BalanceCard({ balance, currency, user }: TProps) {
               {!isLoading && isTotalLoaded ? (
                 <motion.div
                   className='flex select-none flex-wrap justify-center gap-0 text-lg font-semibold md:gap-2'
-                  initial={{ opacity: 0, scale: 0, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ ...DIV.TRANSITION_SPRING }}
                 >
                   <p>
@@ -128,14 +128,14 @@ function BalanceCard({ balance, currency, user }: TProps) {
               ) : (
                 <motion.div
                   className='flex h-7 items-center justify-center gap-2'
-                  initial={{ opacity: 0, scale: 0, y: 0 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ ...DIV.TRANSITION_SPRING }}
                 >
                   <Loading
                     size='sm'
                     inline
-                    wrapperCN='flex flex-col items-center mb-1'
+                    wrapperClassName='flex flex-col items-center mb-1'
                   />
                   <p className='text-sm'>Loading totals...</p>
                 </motion.div>
@@ -146,10 +146,10 @@ function BalanceCard({ balance, currency, user }: TProps) {
               className='select-none font-semibold'
               initial={
                 isTotalLoaded
-                  ? { opacity: 0, scale: 0, y: -20 }
-                  : { opacity: 1, scale: 1, y: 0 }
+                  ? { opacity: 0, scale: 0 }
+                  : { opacity: 1, scale: 1 }
               }
-              animate={{ opacity: 1, scale: 1, y: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ ...DIV.TRANSITION_SPRING }}
             >
               {getFormattedBalance(balance)}{' '}

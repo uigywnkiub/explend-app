@@ -56,6 +56,7 @@ export function ThemeSwitcher() {
 
   return (
     <Select
+      isVirtualized={false}
       label='Select a theme'
       items={themes}
       isDisabled={isLoading}

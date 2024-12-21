@@ -42,7 +42,7 @@ function CustomTooltip({ active, payload, label, currency }: TProps) {
             <span className='text-xs text-default-500 md:text-sm'>
               {capitalizeFirstLetter(item.dataKey)}:{' '}
             </span>
-            <span className='font-semibold'>
+            <span>
               {getFormattedCurrency(item.value)} {currency?.code}
             </span>
           </p>

@@ -1,23 +1,24 @@
 import { Spinner, SpinnerProps } from '@nextui-org/react'
+import { ClassValue } from 'clsx'
 
 import { cn } from './lib/helpers'
 
 type TProps = {
   size?: SpinnerProps['size']
   inline?: boolean
-  wrapperCN?: string
+  wrapperClassName?: ClassValue
 }
 
 export default function Loading({
   size = 'lg',
   inline = false,
-  wrapperCN,
+  wrapperClassName,
 }: TProps) {
   return (
     <div
       className={cn(
         !inline && 'flex h-screen flex-col items-center justify-center gap-4',
-        wrapperCN,
+        wrapperClassName,
       )}
     >
       <Spinner
