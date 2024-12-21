@@ -1,14 +1,16 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
 import { Card, CardHeader } from '@nextui-org/react'
+import { motion } from 'framer-motion'
 
 import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_TIME_ZONE,
 } from '@/config/constants/main'
+import { DIV } from '@/config/constants/motion'
 
 import { getAllTransactions } from '../lib/actions'
 import { getTransactionsTotals } from '../lib/data'
@@ -28,6 +30,7 @@ type TProps = {
 }
 
 function BalanceCard({ balance, currency, user }: TProps) {
+  const hasMounted = useRef(false)
   const [isChangeInfo, setIsChangeInfo] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [total, setTotal] = useState<{
@@ -74,8 +77,13 @@ function BalanceCard({ balance, currency, user }: TProps) {
   }, [getTotal, isChangeInfo, isTotalLoaded])
 
   useEffect(() => {
-    getTotal()
-  }, [balance, getTotal])
+    if (hasMounted.current) {
+      // Don't run on first render.
+      getTotal()
+    } else {
+      hasMounted.current = true
+    }
+  }, [getTotal, balance])
 
   return (
     <Card
@@ -90,7 +98,7 @@ function BalanceCard({ balance, currency, user }: TProps) {
       <div className='pointer-events-none absolute -inset-px opacity-0 transition duration-300' />
       <CardHeader className='flex flex-col items-center justify-between gap-4 px-2 md:px-4'>
         <div
-          className='text-center text-xl'
+          className='cursor-pointer text-center text-xl'
           onClick={onChangeInfo}
           aria-hidden='true'
         >
@@ -98,7 +106,12 @@ function BalanceCard({ balance, currency, user }: TProps) {
           {isChangeInfo ? (
             <>
               {!isLoading && isTotalLoaded ? (
-                <div className='flex cursor-pointer flex-wrap justify-center gap-0 text-lg font-semibold md:gap-2'>
+                <motion.div
+                  className='flex select-none flex-wrap justify-center gap-0 text-lg font-semibold md:gap-2'
+                  initial={{ opacity: 0, scale: 0, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ ...DIV.TRANSITION_SPRING }}
+                >
                   <p>
                     <PiArrowCircleUpFill className='mr-1 inline fill-success' />
                     <span className='text-sm text-default-500'>
@@ -111,20 +124,37 @@ function BalanceCard({ balance, currency, user }: TProps) {
                     <span className='text-sm text-default-500'>Expense:</span>{' '}
                     {getFormattedCurrency(total.expense)} {currency?.code}
                   </p>
-                </div>
+                </motion.div>
               ) : (
-                <Loading
-                  size='sm'
-                  inline
-                  wrapperCN='flex flex-col items-center py-1'
-                />
+                <motion.div
+                  className='flex h-7 items-center justify-center gap-2'
+                  initial={{ opacity: 0, scale: 0, y: 0 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ ...DIV.TRANSITION_SPRING }}
+                >
+                  <Loading
+                    size='sm'
+                    inline
+                    wrapperCN='flex flex-col items-center mb-1'
+                  />
+                  <p className='text-sm'>Loading totals...</p>
+                </motion.div>
               )}
             </>
           ) : (
-            <p className='cursor-pointer font-semibold'>
+            <motion.p
+              className='select-none font-semibold'
+              initial={
+                isTotalLoaded
+                  ? { opacity: 0, scale: 0, y: -20 }
+                  : { opacity: 1, scale: 1, y: 0 }
+              }
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ ...DIV.TRANSITION_SPRING }}
+            >
               {getFormattedBalance(balance)}{' '}
               {currency?.code || DEFAULT_CURRENCY_CODE}
-            </p>
+            </motion.p>
           )}
         </div>
       </CardHeader>

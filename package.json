@@ -33,7 +33,7 @@
     "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",
     "clsx": "^2.1.1",
-    "date-fns": "^3.6.0",
+    "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "emoji-picker-react": "^4.12.0",
     "emoji-regex": "^10.4.0",
