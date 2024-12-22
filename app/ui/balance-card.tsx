@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
 import { Card, CardHeader } from '@nextui-org/react'
@@ -30,8 +30,7 @@ type TProps = {
 }
 
 function BalanceCard({ balance, currency, user }: TProps) {
-  const hasMounted = useRef(false)
-  const [isChangeInfo, setIsChangeInfo] = useState(false)
+  const [isShowTotals, setIsChangeInfo] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [total, setTotal] = useState<{
     income: number
@@ -71,27 +70,20 @@ function BalanceCard({ balance, currency, user }: TProps) {
   }, [userId])
 
   useEffect(() => {
-    if (isChangeInfo && !isTotalLoaded) {
+    if (isShowTotals && !isTotalLoaded) {
       getTotal()
     }
-  }, [getTotal, isChangeInfo, isTotalLoaded])
-
-  useEffect(() => {
-    if (hasMounted.current) {
-      // Don't run on first render.
-      getTotal()
-    } else {
-      hasMounted.current = true
-    }
-  }, [getTotal, balance])
+  }, [getTotal, isShowTotals, isTotalLoaded])
 
   return (
     <Card
       className={cn(
         'p-2',
-        isPositiveBalance
-          ? 'bg-gradient-radial from-success/20 to-content1'
-          : 'bg-gradient-radial from-danger/20 to-content1',
+        isShowTotals && isTotalLoaded
+          ? isPositiveBalance
+            ? 'bg-gradient-radial from-success/15 to-content1'
+            : 'bg-gradient-radial from-danger/15 to-content1'
+          : 'bg-content1',
       )}
       shadow='none'
     >
@@ -103,7 +95,7 @@ function BalanceCard({ balance, currency, user }: TProps) {
           aria-hidden='true'
         >
           <p className='mb-4 text-xs'>{greetingMsg}</p>
-          {isChangeInfo ? (
+          {isShowTotals ? (
             <>
               {!isLoading && isTotalLoaded ? (
                 <motion.div
