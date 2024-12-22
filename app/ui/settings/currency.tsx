@@ -126,6 +126,7 @@ function Currency({ userId, currency }: TProps) {
 
   return (
     <Select
+      isVirtualized={false}
       label='Select a currency'
       items={currencies}
       isDisabled={!currency}
@@ -137,9 +138,15 @@ function Currency({ userId, currency }: TProps) {
       {currencies.map((currency) => (
         <SelectItem
           key={currency.name}
-          startContent={<HoverableElement element={currency.icon} />}
+          startContent={
+            <HoverableElement uKey={currency.name} element={currency.icon} />
+          }
           endContent={
-            <HoverableElement element={currency.code} withScale={false} />
+            <HoverableElement
+              uKey={currency.code}
+              element={currency.code}
+              withScale={false}
+            />
           }
         >
           {currency.name}

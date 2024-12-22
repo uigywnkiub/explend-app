@@ -1,6 +1,12 @@
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
-import { capitalizeFirstLetter, getFormattedCurrency } from '@/app/lib/helpers'
+import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
+
+import {
+  capitalizeFirstLetter,
+  cn,
+  getFormattedCurrency,
+} from '@/app/lib/helpers'
 import type { TTransaction } from '@/app/lib/types'
 
 type TProps = {
@@ -14,35 +20,34 @@ function CustomTooltip({ active, payload, label, currency }: TProps) {
   if (!active && !payload?.length) return null
 
   return (
-    <div className='rounded-medium border-1 border-[#ccc] bg-background p-2'>
-      <>
-        <p className='mb-2'>{label}</p>
-        {payload?.map((item, index) => (
-          <>
-            {item.dataKey === 'income' ? (
-              <>
-                {item.payload.income > 0 && (
-                  <p key={index} className='text-sm'>
-                    <PiArrowCircleUpFill className='inline fill-success' />{' '}
-                    {capitalizeFirstLetter(item.dataKey)}:{' '}
-                    {getFormattedCurrency(item.value)} {currency?.code}
-                  </p>
-                )}
-              </>
-            ) : (
-              <>
-                {item.payload.expense > 0 && (
-                  <p key={index} className='text-sm'>
-                    <PiArrowCircleDownFill className='inline fill-danger' />{' '}
-                    {capitalizeFirstLetter(item.dataKey)}:{' '}
-                    {getFormattedCurrency(item.value)} {currency?.code}
-                  </p>
-                )}
-              </>
-            )}
-          </>
-        ))}
-      </>
+    <div className='rounded-medium bg-background/90 p-2 drop-shadow-md md:p-4'>
+      <p className='mb-2 text-sm md:text-medium'>{label}</p>
+      {payload?.map((item, idx) => {
+        const isIncome = item.dataKey === 'income'
+        const isPositive = isIncome
+          ? item.payload?.income > 0
+          : item.payload?.expense > 0
+
+        if (!isPositive) return null
+
+        const Icon = isIncome ? PiArrowCircleUpFill : PiArrowCircleDownFill
+        const iconClassName = isIncome ? 'fill-success' : 'fill-danger'
+
+        return (
+          <p key={idx} className='text-sm md:text-medium'>
+            <Icon
+              size={DEFAULT_ICON_SIZE}
+              className={cn('inline', iconClassName)}
+            />{' '}
+            <span className='text-xs text-default-500 md:text-sm'>
+              {capitalizeFirstLetter(item.dataKey)}:{' '}
+            </span>
+            <span>
+              {getFormattedCurrency(item.value)} {currency?.code}
+            </span>
+          </p>
+        )
+      })}
     </div>
   )
 }

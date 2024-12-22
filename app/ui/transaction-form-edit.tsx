@@ -220,6 +220,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                 }
               >
                 <Select
+                  isVirtualized={false}
                   isDisabled={isLoading}
                   name='category'
                   label='Select a category'

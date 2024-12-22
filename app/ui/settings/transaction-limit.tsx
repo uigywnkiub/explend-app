@@ -86,6 +86,7 @@ function TransactionLimit({
 
   return (
     <Select
+      isVirtualized={false}
       label='Select a limit'
       items={limits}
       isDisabled={!transactionsCount}
@@ -99,6 +100,7 @@ function TransactionLimit({
           key={limit.key}
           startContent={
             <HoverableElement
+              uKey={limit.key + limit.value}
               element={limit.icon}
               hoveredElement={limit.hoverIcon}
             />

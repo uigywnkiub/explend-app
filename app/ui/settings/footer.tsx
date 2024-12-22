@@ -12,7 +12,7 @@ import Link from 'next/link'
 
 import { getYear } from 'date-fns'
 
-import { APP_NAME, AUTHOR_NAME, AUTHOR_URL } from '@/config/constants/main'
+import { APP_NAME, AUTHOR } from '@/config/constants/main'
 
 import { getBreakpointWidth } from '@/app/lib/helpers'
 import type { TSocialLink } from '@/app/lib/types'
@@ -42,9 +42,9 @@ function Footer() {
           {/* {<Logo size='smallest' withBadge={false} />}  */}
           {APP_NAME.SHORT} &copy; {getYear(new Date())}. All rights reserved |
           design by{' '}
-          <Link href={AUTHOR_URL} target='_blank'>
+          <Link href={AUTHOR.URL} target='_blank'>
             <span className='cursor-pointer underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
-              {AUTHOR_NAME}
+              {AUTHOR.NAME}
             </span>
           </Link>
           .
@@ -59,6 +59,7 @@ function Footer() {
                 className='cursor-pointer hover:text-foreground md:hover:opacity-hover'
               >
                 <HoverableElement
+                  uKey={link.url}
                   element={link.icon}
                   hoveredElement={isMd ? link.hoverIcon : undefined}
                   withShift={false}

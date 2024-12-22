@@ -58,7 +58,7 @@ function DeleteAccount({ userId }: TProps) {
   const buttonWithIcon = (icon: TIcon) => (
     <Button
       className='w-full bg-danger font-medium text-default-50'
-      onClick={onOpen}
+      onPress={onOpen}
       startContent={icon}
     >
       Delete account
@@ -68,6 +68,7 @@ function DeleteAccount({ userId }: TProps) {
   return (
     <>
       <HoverableElement
+        uKey='delete-account'
         element={buttonWithIcon(<PiUserMinus size={DEFAULT_ICON_SIZE} />)}
         hoveredElement={buttonWithIcon(
           <PiUserMinusFill size={DEFAULT_ICON_SIZE} />,

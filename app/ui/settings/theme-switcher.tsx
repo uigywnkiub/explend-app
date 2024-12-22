@@ -56,6 +56,7 @@ export function ThemeSwitcher() {
 
   return (
     <Select
+      isVirtualized={false}
       label='Select a theme'
       items={themes}
       isDisabled={isLoading}
@@ -77,6 +78,7 @@ export function ThemeSwitcher() {
           key={theme.key}
           startContent={
             <HoverableElement
+              uKey={theme.key}
               element={theme.icon}
               hoveredElement={theme.hoverIcon}
             />

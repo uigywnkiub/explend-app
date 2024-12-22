@@ -28,6 +28,7 @@ function ExitAccount() {
 
   return (
     <HoverableElement
+      uKey='exit-account'
       element={buttonWithIcon(<PiUserSwitch size={DEFAULT_ICON_SIZE} />)}
       hoveredElement={buttonWithIcon(
         <PiUserSwitchFill size={DEFAULT_ICON_SIZE} />,

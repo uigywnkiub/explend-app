@@ -11,6 +11,8 @@ Sentry.init({
 
   enabled: IS_PROD,
 
+  autoSessionTracking: IS_PROD,
+
   // Docs https://docs.sentry.io/platforms/javascript/configuration/filtering/#using-before-send
   // beforeSend(event) {
   //   if (

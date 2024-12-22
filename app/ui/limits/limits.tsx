@@ -288,6 +288,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
             className='min-w-4'
           >
             <HoverableElement
+              uKey='reset'
               element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
               hoveredElement={<PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />}
               withShift={false}
@@ -300,6 +301,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
             className='min-w-4'
           >
             <HoverableElement
+              uKey='add'
               element={<PiPlusCircle size={DEFAULT_ICON_SIZE} />}
               hoveredElement={<PiPlusCircleFill size={DEFAULT_ICON_SIZE} />}
               withShift={false}
@@ -331,6 +333,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         </span>
                       </p>
                       <Select
+                        isVirtualized={false}
                         isRequired
                         isDisabled={false}
                         name='category'
@@ -504,6 +507,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         key={DROPDOWN_KEY.EDIT}
                         startContent={
                           <HoverableElement
+                            uKey={DROPDOWN_KEY.EDIT}
                             element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
                             hoveredElement={
                               <PiNotePencilFill size={DEFAULT_ICON_SIZE} />
@@ -522,6 +526,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         color='danger'
                         startContent={
                           <HoverableElement
+                            uKey={DROPDOWN_KEY.DELETE}
                             element={<PiTrash size={DEFAULT_ICON_SIZE} />}
                             hoveredElement={
                               <PiTrashFill size={DEFAULT_ICON_SIZE} />

@@ -102,7 +102,7 @@ function Navbar({ linksGroup, withLogo }: TProps) {
       {navLinks.map((link, idx) => {
         return (
           <HoverableNavLink
-            key={link.url}
+            key={link.title}
             idx={idx}
             link={link}
             isActiveLink={pathname === link.url}

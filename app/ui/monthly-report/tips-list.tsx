@@ -7,17 +7,29 @@ type TProps = {
 export default function TipsList({ tipsDataAI }: TProps) {
   return (
     <>
-      {tipsDataAI.map((tip, idx) => (
-        <div key={idx}>
-          <h2 className='mb-1 font-semibold'>{tip.category}</h2>
-          <ul className='text-sm'>
-            <li className='mb-3 md:mb-6'>
-              <p>{tip.tip}</p>
-              <p className='text-success-700'>{tip.savings}</p>
-            </li>
-          </ul>
-        </div>
-      ))}
+      {tipsDataAI.map((tip, idx) => {
+        return (
+          <div key={tip.category || idx}>
+            <h2 className='mb-2 font-semibold'>{tip.category}</h2>
+            <ul className='list-disc text-sm'>
+              <div className='mb-4 ml-8 md:mb-6'>
+                <li className='mb-1'>
+                  <p>
+                    <span className='text-default-500'>Tip: </span>
+                    <span>{tip.tip}</span>
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <span className='text-default-500'>Savings: </span>
+                    <span>{tip.savings}</span>
+                  </p>
+                </li>
+              </div>
+            </ul>
+          </div>
+        )
+      })}
     </>
   )
 }

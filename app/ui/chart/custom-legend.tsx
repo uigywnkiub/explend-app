@@ -8,14 +8,15 @@ import { capitalizeFirstLetter } from '@/app/lib/helpers'
 
 function CustomLegend({ payload }: LegendProps) {
   return (
-    <ul className='mb-4 flex list-none justify-center gap-2'>
-      {payload?.map((entry, index) => {
+    <ul className='mb-2 flex list-none justify-center gap-2 text-sm md:mb-4 md:text-medium'>
+      {payload?.map((entry) => {
         const Icon =
           entry.dataKey === 'income'
             ? PiArrowCircleUpFill
             : PiArrowCircleDownFill
+
         return (
-          <li key={`item-${index}`} className='flex items-center'>
+          <li key={entry.value} className='flex items-center'>
             <div
               className={`flex h-[${DEFAULT_ICON_SIZE}px] items-center justify-center`}
             >

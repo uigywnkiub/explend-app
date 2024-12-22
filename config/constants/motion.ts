@@ -7,6 +7,10 @@ export const DIV = {
     return {}
   },
   TRANSITION: { type: 'tween', duration: 0.2 },
+  TRANSITION_SPRING: {
+    scale: { type: 'spring', visualDuration: 0.2, bounce: 0.2 },
+    duration: 0.2,
+  },
 }
 
 // Comment the custom view transition function until all modern browsers support it.

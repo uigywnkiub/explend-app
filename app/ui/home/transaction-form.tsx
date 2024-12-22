@@ -94,7 +94,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
   const resetAllStates = () => {
     setIsSwitchedOn(false)
-    setIsExpanded(false)
+    // setIsExpanded(false)
     setAmount('')
     setDescription('')
     setIsLoadingAIData(false)
@@ -329,6 +329,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 }}
               >
                 <Select
+                  isVirtualized={false}
                   isDisabled={pending || isLoadingAIData}
                   isLoading={isLoadingAIData}
                   items={userCategories}
