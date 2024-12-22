@@ -99,7 +99,7 @@ function BalanceCard({ balance, currency, user }: TProps) {
             <>
               {!isLoading && isTotalLoaded ? (
                 <motion.div
-                  className='flex select-none flex-wrap justify-center gap-0 text-lg font-semibold md:gap-2'
+                  className='flex select-none flex-wrap justify-center gap-0 text-lg md:gap-2'
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ ...DIV.TRANSITION_SPRING }}
@@ -109,12 +109,16 @@ function BalanceCard({ balance, currency, user }: TProps) {
                     <span className='text-sm text-default-500'>
                       Income:
                     </span>{' '}
-                    {getFormattedCurrency(total.income)} {currency?.code}
+                    <span className='font-semibold'>
+                      {getFormattedCurrency(total.income)} {currency?.code}
+                    </span>
                   </p>
                   <p>
                     <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
                     <span className='text-sm text-default-500'>Expense:</span>{' '}
-                    {getFormattedCurrency(total.expense)} {currency?.code}
+                    <span className='font-semibold'>
+                      {getFormattedCurrency(total.expense)} {currency?.code}
+                    </span>
                   </p>
                 </motion.div>
               ) : (

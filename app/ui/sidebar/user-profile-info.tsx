@@ -17,7 +17,6 @@ function UserProfileInfo({ user }: TProps) {
         // ImgComponent: Image,
         ImgComponent: 'img',
         imgProps: {
-          // @ts-ignore
           // priority: true,
           // quality: 100,
           width: 40,
