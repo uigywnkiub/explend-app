@@ -59,7 +59,7 @@ function TransactionFormEdit({ transaction }: TProps) {
         : [getCategoryWithoutEmoji(transaction.category)],
     ),
   )
-  // @ts-ignore
+  // @ts-expect-error - Property 'size' does not exist on type 'Selection', but it does.
   const isCategorySelect = Boolean(category.size)
   const categoryName = Array.from(category)[0]?.toString()
   const userCategories = transaction.categories || DEFAULT_CATEGORIES
@@ -80,9 +80,8 @@ function TransactionFormEdit({ transaction }: TProps) {
     newData: Partial<TTransaction>,
     oldData: TTransaction,
   ) => {
-    const { amount, ...restOldData } = oldData
     const modifiedOldData: TTransaction = {
-      ...restOldData,
+      ...oldData,
       amount: getFormattedCurrency(oldData.amount),
     }
     return Object.keys(newData).some((key) => {

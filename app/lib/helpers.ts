@@ -189,7 +189,7 @@ export const copyToClipboard = async (
   try {
     await navigator.clipboard.writeText(content)
     toast.success(successTitle)
-  } catch (err) {
+  } catch {
     toast.error(errorTitle)
   }
 }

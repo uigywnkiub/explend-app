@@ -46,29 +46,38 @@ type TProps = {
 function MonthlyReport({ transactions, currency }: TProps) {
   const [tipsDataAI, setTipsDataAI] = useState<TExpenseAdvice[] | null>(null)
   const [isLoadingTips, setIsLoadingTips] = useState(false)
+
   const { canAttempt, registerAttempt } = useAttemptTracker('expense-ai-tips')
   const { minTransaction, maxTransaction } = useMemo(
     () => getMinMaxTransactionsByDate(transactions),
     [transactions],
   )
-  const minTransactionCalendarDate = toCalendarDate(minTransaction?.createdAt!)
+
+  const minTransactionCalendarDate = minTransaction
+    ? toCalendarDate(minTransaction.createdAt)
+    : null
   const startOfMonthCalendarDate = toCalendarDate(startOfMonth(startOfToday()))
   const endOfMonthCalendarDate = toCalendarDate(endOfMonth(endOfToday()))
+
   const isMinTransactionAfterStartOfMonth =
+    minTransactionCalendarDate &&
     minTransactionCalendarDate.day > 1 &&
     minTransactionCalendarDate.month === startOfMonthCalendarDate.month
+
   const [selectedDate, setSelectedDate] = useState<RangeValue<DateValue>>({
     start: isMinTransactionAfterStartOfMonth
       ? minTransactionCalendarDate
       : startOfMonthCalendarDate,
     end: endOfMonthCalendarDate,
   })
-  const startDate = selectedDate?.start.toDate(getLocalTimeZone())
-  const endDate = selectedDate?.end.toDate(getLocalTimeZone())
-  const formattedDateRange = useMemo(
-    () => `${format(startDate, 'MMMM d')} — ${format(endDate, 'MMMM d')}`,
-    [startDate, endDate],
-  )
+
+  const startDate = selectedDate.start?.toDate(getLocalTimeZone()) || null
+  const endDate = selectedDate.end?.toDate(getLocalTimeZone()) || null
+
+  const formattedDateRange = useMemo(() => {
+    if (!startDate || !endDate) return ''
+    return `${format(startDate, 'MMMM d')} — ${format(endDate, 'MMMM d')}`
+  }, [startDate, endDate])
 
   const onDateSelection = useCallback((dateRange: RangeValue<DateValue>) => {
     setSelectedDate(dateRange)

@@ -37,7 +37,6 @@ const currencies: {
         // ImgComponent={Image}
         ImgComponent={'img'}
         imgProps={{
-          // @ts-ignore
           // quality: 100,
           width: DEFAULT_ICON_SIZE,
           height: DEFAULT_ICON_SIZE,

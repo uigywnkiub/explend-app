@@ -56,7 +56,6 @@ export default function manifest(): MetadataRoute.Manifest {
         src: '/images/screenshots/home.png',
         sizes: SCREENSHOT_SIZE_DESKTOP,
         type: SCREENSHOT_TYPE,
-        // @ts-ignore
         form_factor: SCREENSHOT_FORM_FACTOR_DESKTOP,
         label: NAV_TITLE.HOME,
       },
@@ -64,7 +63,6 @@ export default function manifest(): MetadataRoute.Manifest {
         src: '/images/screenshots/monthly-report.png',
         sizes: SCREENSHOT_SIZE_DESKTOP,
         type: SCREENSHOT_TYPE,
-        // @ts-ignore
         form_factor: SCREENSHOT_FORM_FACTOR_DESKTOP,
         label: NAV_TITLE.MONTHLY_REPORT,
       },
@@ -72,7 +70,6 @@ export default function manifest(): MetadataRoute.Manifest {
         src: '/images/screenshots/chart.png',
         sizes: SCREENSHOT_SIZE_DESKTOP,
         type: SCREENSHOT_TYPE,
-        // @ts-ignore
         form_factor: SCREENSHOT_FORM_FACTOR_DESKTOP,
         label: NAV_TITLE.CHART,
       },
@@ -80,7 +77,6 @@ export default function manifest(): MetadataRoute.Manifest {
         src: '/images/screenshots/home-mobile.png',
         sizes: SCREENSHOT_SIZE_MOBILE,
         type: SCREENSHOT_TYPE,
-        // @ts-ignore
         form_factor: SCREENSHOT_FORM_FACTOR_MOBILE,
         label: `${NAV_TITLE.HOME} ${SCREENSHOT_MOBILE_SUFFIX}`,
       },
@@ -88,7 +84,6 @@ export default function manifest(): MetadataRoute.Manifest {
         src: '/images/screenshots/monthly-report-mobile.png',
         sizes: SCREENSHOT_SIZE_MOBILE,
         type: SCREENSHOT_TYPE,
-        // @ts-ignore
         form_factor: SCREENSHOT_FORM_FACTOR_MOBILE,
         label: `${NAV_TITLE.MONTHLY_REPORT} ${SCREENSHOT_MOBILE_SUFFIX}`,
       },
@@ -96,7 +91,6 @@ export default function manifest(): MetadataRoute.Manifest {
         src: '/images/screenshots/categories-mobile.png',
         sizes: SCREENSHOT_SIZE_MOBILE,
         type: SCREENSHOT_TYPE,
-        // @ts-ignore
         form_factor: SCREENSHOT_FORM_FACTOR_MOBILE,
         label: `${NAV_TITLE.CATEGORIES} ${SCREENSHOT_MOBILE_SUFFIX}`,
       },

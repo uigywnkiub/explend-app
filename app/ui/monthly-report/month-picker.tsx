@@ -25,14 +25,18 @@ function MonthPicker({
   )
 
   const daysInMonth = getDaysInMonth(new Date())
-  const maxTransactionDayOfMonth = toCalendarDate(
-    maxTransaction?.createdAt!,
-  ).day
+  const maxTransactionDayOfMonth = maxTransaction?.createdAt
+    ? toCalendarDate(maxTransaction.createdAt).day
+    : 1
 
-  const minTransactionValue = toCalendarDate(minTransaction?.createdAt!)
-  const maxTransactionValue = toCalendarDate(maxTransaction?.createdAt!).add({
-    days: daysInMonth - maxTransactionDayOfMonth,
-  })
+  const minTransactionValue = minTransaction
+    ? toCalendarDate(minTransaction.createdAt)
+    : null
+  const maxTransactionValue = maxTransaction
+    ? toCalendarDate(maxTransaction.createdAt).add({
+        days: daysInMonth - maxTransactionDayOfMonth,
+      })
+    : null
 
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
