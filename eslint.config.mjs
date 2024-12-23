@@ -2,9 +2,7 @@ import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import typescriptEslintEslintPlugin from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
-import jsxA11y from 'eslint-plugin-jsx-a11y'
 import prettier from 'eslint-plugin-prettier'
-import unusedImports from 'eslint-plugin-unused-imports'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -16,25 +14,21 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 })
 
-export default [
+const config = [
   ...compat.extends('next', 'next/core-web-vitals', 'prettier'),
   {
     plugins: {
       prettier,
-      jsxA11y,
-      'unused-imports': unusedImports,
     },
 
     rules: {
+      'prettier/prettier': 'error',
       camelcase: 'off',
-      'react/no-unused-prop-types': 'off',
+      'import/prefer-default-export': 'error',
       'react/jsx-filename-extension': 'off',
       'react/jsx-props-no-spreading': 'off',
+      'react/no-unused-prop-types': 'off',
       'react/require-default-props': 'off',
-      'prettier/prettier': 'error',
-      'import/prefer-default-export': 'error',
-      'unused-imports/no-unused-imports': 'error',
-      // "padding-line-between-statements": ["error", { blankLine: "always", prev: "*", next: "return" }],
 
       'import/extensions': [
         'error',
@@ -75,13 +69,60 @@ export default [
     },
 
     rules: {
-      'no-use-before-define': [0],
-      '@typescript-eslint/no-use-before-define': [1],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
+      'no-use-before-define': [0],
+      '@typescript-eslint/no-use-before-define': [1],
+      '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-var-requires': 'off',
-      '@typescript-eslint/no-unused-vars': 'warn',
-      '@typescript-eslint/no-explicit-any': 'error',
     },
   },
+  {
+    ignores: [
+      // Node modules
+      'node_modules/',
+
+      // Build directories
+      '.next/',
+      '.turbo/',
+      '_next/',
+      '__tmp__/',
+      'dist/',
+      'target/',
+      'compiled/',
+      'build/',
+      'public/',
+      'out/',
+
+      // Configuration files
+      'config/',
+      '.husky/',
+      '.vscode/',
+      '.idea/',
+      '.DS_Store',
+
+      // Lock files
+      'yarn.lock',
+      'package-lock.json',
+      'pnpm-lock.yaml',
+      'composer.lock',
+
+      // Logs
+      'logs/',
+      '*.log',
+
+      // Environment files
+      '.env',
+      '.env.*',
+
+      // Tests
+      '__tests__/',
+      'coverage/',
+
+      // Other
+      'instrumentation.ts',
+    ],
+  },
 ]
+
+export default config
