@@ -89,7 +89,7 @@ export const getTransactionsWithChangedCategory = (
           (item) => `${item.emoji} ${item.name}` === t.category,
         )
       })
-    } catch (err) {
+    } catch {
       // Do not throw any error, it is auto-handle to avoid showing a user error page.
     }
   })
@@ -226,7 +226,7 @@ export const getGreeting = (timeZoneIANA: string): string => {
   }
 }
 
-const deepEqual = (obj1: any, obj2: any): boolean => {
+const deepEqual = <T>(obj1: T, obj2: T): boolean => {
   if (obj1 === obj2) return true // If both values are strictly equal, they are deeply equal.
 
   if (
@@ -238,28 +238,34 @@ const deepEqual = (obj1: any, obj2: any): boolean => {
     return false // If either value is not an object or is null, they are not deeply equal.
   }
 
-  const keys1 = Object.keys(obj1)
-  const keys2 = Object.keys(obj2)
+  const keys1 = Object.keys(obj1 as object)
+  const keys2 = Object.keys(obj2 as object)
 
   if (keys1.length !== keys2.length) {
     return false // If the objects have different numbers of keys, they are not deeply equal.
   }
 
   for (const key of keys1) {
-    if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+    if (
+      !keys2.includes(key) ||
+      !deepEqual(
+        (obj1 as Record<string, unknown>)[key],
+        (obj2 as Record<string, unknown>)[key],
+      )
+    ) {
       return false // If the keys or their values are not deeply equal, return false.
     }
   }
 
   return true // If all keys and values are deeply equal, return true.
 }
-export const deepCompareArrays = (array1: any[], array2: any[]): boolean => {
-  if (array1.length !== array2.length) {
+export const deepCompareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
+  if (arr1.length !== arr2.length) {
     return false // If the arrays have different lengths, they are not identical.
   }
 
-  for (let i = 0; i < array1.length; i++) {
-    if (!deepEqual(array1[i], array2[i])) {
+  for (let i = 0; i < arr1.length; i++) {
+    if (!deepEqual(arr1[i], arr2[i])) {
       return false // If any elements are not deeply equal, the arrays are not identical.
     }
   }

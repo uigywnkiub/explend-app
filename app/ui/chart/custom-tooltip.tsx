@@ -1,5 +1,11 @@
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
+import type { TooltipProps } from 'recharts'
+import {
+  NameType,
+  ValueType,
+} from 'recharts/types/component/DefaultTooltipContent'
+
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import {
@@ -11,7 +17,7 @@ import type { TTransaction } from '@/app/lib/types'
 
 type TProps = {
   active: boolean
-  payload: any[]
+  payload: TooltipProps<ValueType, NameType>['payload']
   label: string
   currency: TTransaction['currency']
 }
@@ -40,10 +46,12 @@ function CustomTooltip({ active, payload, label, currency }: TProps) {
               className={cn('inline', iconClassName)}
             />{' '}
             <span className='text-xs text-default-500 md:text-sm'>
-              {capitalizeFirstLetter(item.dataKey)}:{' '}
+              {capitalizeFirstLetter(item.dataKey as string)}:{' '}
             </span>
             <span className='font-semibold'>
-              {getFormattedCurrency(item.value)} {currency?.code}
+              {item.value !== undefined &&
+                getFormattedCurrency(item.value as string | number)}{' '}
+              {currency?.code}
             </span>
           </p>
         )

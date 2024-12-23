@@ -6,7 +6,7 @@ const ATTEMPT_RESET_INTERVAL = 60 * 60 * 1000 // 1 hour in milliseconds.
 // 24 * 60 * 60 * 1000; // 24 hours in milliseconds.
 // 10 * 1000; // 10 seconds in milliseconds.
 
-export const useAttemptTracker = (
+const useAttemptTracker = (
   storageKey: string,
   attemptLimit: number = ATTEMPT_LIMIT,
   attemptResetInterval: number = ATTEMPT_RESET_INTERVAL,
@@ -49,3 +49,5 @@ export const useAttemptTracker = (
 
   return { canAttempt, registerAttempt }
 }
+
+export default useAttemptTracker

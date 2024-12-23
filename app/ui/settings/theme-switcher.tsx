@@ -43,7 +43,7 @@ const themes: TSelect[] = [
   },
 ]
 
-export function ThemeSwitcher() {
+export default function ThemeSwitcher() {
   const [isLoading, setIsLoading] = useState(false)
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()
