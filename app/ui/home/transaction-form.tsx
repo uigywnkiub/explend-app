@@ -142,7 +142,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           !isNaN(Number(rawAmountAI)) &&
           rawAmountAI.length <= AMOUNT_LENGTH
         ) {
-          setAmount(getFormattedCurrency(rawAmountAI))
+          setAmount(getFormattedCurrency(rawAmountAI, false))
           setIsAmountAIValid(true)
         }
         if (transactionTypeAI === 'true') {
@@ -179,7 +179,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawAmount = formatAmount(e.target.value)
     if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
-      setAmount(getFormattedCurrency(rawAmount))
+      setAmount(getFormattedCurrency(rawAmount, false))
     }
   }
 
@@ -232,7 +232,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
             color='success'
             name='isIncome'
             value='isIncome'
-            aria-label='Income Switch'
+            aria-label='Income switch'
             onValueChange={(isSelected) => setIsSwitchedOn(isSelected)}
           >
             Income

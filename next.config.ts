@@ -2,7 +2,7 @@ import type { NextConfig } from 'next'
 
 import withPWAInit from '@ducanh2912/next-pwa'
 import { withSentryConfig } from '@sentry/nextjs'
-import { RuleSetRule } from 'webpack'
+import type { RuleSetRule } from 'webpack'
 
 import { IS_PROD } from './config/constants/main'
 
@@ -68,6 +68,14 @@ const nextConfig: NextConfig = {
       '@nextui-org/react',
       '@sentry/nextjs',
       'framer-motion',
+      'tailwind-merge',
+      'resend',
+      'next-themes',
+      'react-confetti',
+      'next13-progressbar',
+      'emoji-regex',
+      'emoji-picker-react',
+      'react-hot-toast',
     ],
   },
 }

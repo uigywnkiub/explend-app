@@ -1,5 +1,6 @@
 import Footer from '../settings/footer'
 import Hamburger from './hamburger'
+import MaskAmountInfo from './mask-amount-info'
 import Navbar from './navbar'
 import User from './user'
 
@@ -33,6 +34,7 @@ export default function WithSidebar({
         </main>
       </div>
       <Hamburger />
+      <MaskAmountInfo />
     </div>
   )
 }
