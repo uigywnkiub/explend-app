@@ -29,6 +29,14 @@ const config = [
       'react/jsx-props-no-spreading': 'off',
       'react/no-unused-prop-types': 'off',
       'react/require-default-props': 'off',
+      'react/function-component-definition': [
+        'error',
+        { namedComponents: 'function-declaration' },
+      ],
+      'padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: '*', next: 'return' },
+      ],
 
       'import/extensions': [
         'error',
@@ -73,8 +81,8 @@ const config = [
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       'no-use-before-define': [0],
       '@typescript-eslint/no-use-before-define': [1],
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-var-requires': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-var-requires': 'error',
     },
   },
   {

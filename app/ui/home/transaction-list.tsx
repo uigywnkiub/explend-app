@@ -69,6 +69,7 @@ function TransactionList({
                 ?.sort((t1, t2) => {
                   const t1Time = new Date(t1.createdAt).getTime()
                   const t2Time = new Date(t2.createdAt).getTime()
+
                   return t2Time - t1Time
                 })
                 .map((t) => {

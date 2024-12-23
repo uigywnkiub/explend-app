@@ -22,6 +22,7 @@ export const filterTransactions = (transactions: TTransaction[]) => ({
 
 export const getTransactionsTotals = (transactions: TTransaction[]) => {
   const { income, expense } = filterTransactions(transactions)
+
   return {
     income: calculateTotalAmount(income),
     expense: calculateTotalAmount(expense),
@@ -38,6 +39,7 @@ export const calculateChartData = (
         t.category,
         (totals.get(t.category) || 0) + parseFloat(t.amount),
       )
+
       return totals
     }, new Map<string, number>())
 
@@ -52,6 +54,7 @@ export const calculateChartData = (
   const chartData: TChartData[] = Array.from(allCategories).map((category) => {
     const expense = categoryExpenseTotals.get(category) || 0
     const income = categoryIncomeTotals.get(category) || 0
+
     return {
       category,
       income,
@@ -73,6 +76,7 @@ export const calculateTotalsByCategory = (
         : category
       totals[modifiedCategory] =
         (totals[modifiedCategory] || 0) + parseFloat(amount)
+
       return totals
     },
     {} as Record<string, number>,
@@ -117,6 +121,7 @@ export const filterTransactionsByDateRange = (
 ): TTransaction[] => {
   return transactions.filter((t) => {
     const transactionDate = formatISO(t.createdAt)
+
     return isWithinInterval(transactionDate, {
       start: startDate,
       end: endOfDay(endDate),
@@ -141,6 +146,7 @@ export const getMinMaxTransactionsByDate = (
       ) {
         acc.maxTransaction = transaction
       }
+
       return acc
     },
     { minTransaction: null, maxTransaction: null },

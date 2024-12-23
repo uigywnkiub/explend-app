@@ -40,6 +40,7 @@ import type {
 export const getAuthSession = async (): Promise<TSession> => {
   try {
     const session = await auth()
+
     return session
   } catch (err) {
     throw err
@@ -72,13 +73,16 @@ export async function getBalance(
     ] as TBalanceProjection).lean<TBalance[]>({
       transform: (doc: TRawTransaction) => {
         delete doc?._id
+
         return doc
       },
     })
     const balance = transactions.reduce((acc, t) => {
       const amount = parseFloat(t.amount)
+
       return t.isIncome ? acc + amount : acc - amount
     }, 0)
+
     return balance.toString()
   } catch (err) {
     throw err
@@ -98,6 +102,7 @@ export async function getTransactionLimit(
       { userId },
       { transactionLimit: 1, _id: 0 },
     ).lean<{ transactionLimit: TTransaction['transactionLimit'] }>()
+
     return transaction?.transactionLimit
   } catch (err) {
     throw err
@@ -117,6 +122,7 @@ export async function getCurrency(
       { userId },
       { currency: 1, _id: 0 },
     ).lean<{ currency: TTransaction['currency'] }>()
+
     return transaction?.currency
   } catch (err) {
     throw err
@@ -267,6 +273,7 @@ export async function getCountDocuments(
   }
   try {
     await dbConnect()
+
     return await TransactionModel.countDocuments({ userId })
   } catch (err) {
     throw err
@@ -293,12 +300,14 @@ export async function getTransactions(
           transform: (doc: TRawTransaction) => {
             delete doc?._id
             delete doc?.__v
+
             return doc
           },
         }),
       getCountDocuments(userId),
     ])
     const totalPages = Math.ceil(totalEntries / limit)
+
     return { transactions, totalEntries, totalPages }
   } catch (err) {
     throw err
@@ -314,10 +323,12 @@ export async function getAllTransactions(
   }
   try {
     await dbConnect()
+
     return TransactionModel.find({ userId }).lean<TTransaction[]>({
       transform: (doc: TRawTransaction) => {
         delete doc?._id
         delete doc?.__v
+
         return doc
       },
     })
@@ -458,9 +469,11 @@ export async function findTransactionById(
       transform: (doc: TRawTransaction) => {
         delete doc?._id
         delete doc?.__v
+
         return doc
       },
     })
+
     return transaction
   } catch (err) {
     throw err
@@ -560,6 +573,7 @@ export async function editCategoryLimit(
             limitAmount: newLimitAmount,
           }
         }
+
         return limit
       },
     )
@@ -588,6 +602,7 @@ export async function getCategoryItemNameAI(
 
     const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()
+
     return text
   } catch (err) {
     throw err
@@ -608,6 +623,7 @@ export async function getAmountAI(
 
     const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()
+
     return text
   } catch (err) {
     throw err
@@ -627,6 +643,7 @@ export async function getTransactionTypeAI(
 
     const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()
+
     return text
   } catch (err) {
     throw err
@@ -646,6 +663,7 @@ export async function getExpenseTipsAI(categories: string[]): Promise<string> {
 
     const content = await ExpenseTipsAIModel.generateContent(prompt)
     const text = content.response.text().trim()
+
     return text
   } catch (err) {
     throw err

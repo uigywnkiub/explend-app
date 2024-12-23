@@ -80,6 +80,7 @@ function Categories({ userId, userCategories }: TProps) {
         setEditingIndex(null)
         setNewTargetName('')
         toast.error('No changes detected.')
+
         return
       }
 
@@ -141,6 +142,7 @@ function Categories({ userId, userCategories }: TProps) {
         setEditingItemIndex(null)
         setNewItemName('')
         toast.error('No changes detected.')
+
         return
       }
 

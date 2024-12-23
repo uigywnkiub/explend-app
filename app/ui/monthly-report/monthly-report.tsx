@@ -76,6 +76,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
 
   const formattedDateRange = useMemo(() => {
     if (!startDate || !endDate) return ''
+
     return `${format(startDate, 'MMMM d')} — ${format(endDate, 'MMMM d')}`
   }, [startDate, endDate])
 
@@ -106,10 +107,12 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const getExpenseTipsAIData = useCallback(async () => {
     if (monthlyReportData.length === 0) {
       toast.error('No expenses found.')
+
       return
     }
     if (!canAttempt()) {
       toast.error('Try again later.')
+
       return
     }
     setIsLoadingTips(true)

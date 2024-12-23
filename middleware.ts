@@ -10,11 +10,13 @@ export default auth((req: NextRequest & { auth: TSession }) => {
 
   if (!req.auth) {
     url.pathname = ROUTE.SIGNIN
+
     return NextResponse.rewrite(url)
   }
 
   if (req.nextUrl.pathname === ROUTE.SIGNIN) {
     url.pathname = ROUTE.HOME
+
     return NextResponse.rewrite(url)
   }
 

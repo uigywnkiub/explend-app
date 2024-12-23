@@ -53,6 +53,7 @@ export const getBreakpointWidth = (
 
 export const capitalizeFirstLetter = (str: string): string => {
   if (!str) return str
+
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
@@ -61,6 +62,7 @@ export const getEmojiFromCategory = (
 ): string => {
   const regex = emojiRegex()
   const match = category.match(regex)
+
   return match ? match[0] : ''
 }
 
@@ -68,6 +70,7 @@ export const getCategoryWithoutEmoji = (
   category: TTransaction['category'],
 ): string => {
   const regex = emojiRegex()
+
   // Replace the emoji(s) at the beginning of the category with an empty string
   return category.replace(regex, '').trim()
 }
@@ -103,6 +106,7 @@ export const formatDate = (dateStr: Date) => {
   if (isToday(date)) return 'Today'
   if (isYesterday(date)) return 'Yesterday'
   if (dateYear !== currentYear) return format(date, 'EEEE, MMMM d, yyyy')
+
   return format(date, 'EEEE, MMMM d')
 }
 
@@ -110,6 +114,7 @@ export const formatTime = (dateStr: Date): string => {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const date = new Date(dateStr)
   const formatStr = userTimeZone.includes('America') ? 'hh:mm a' : 'HH:mm'
+
   return formatInTimeZone(date, userTimeZone || DEFAULT_TIME_ZONE, formatStr)
 }
 
@@ -132,6 +137,7 @@ export const getCategoryWithEmoji = (
       return `${foundCategory.emoji} ${category}`
     }
   }
+
   return category
 }
 
@@ -156,11 +162,13 @@ export const getFormattedCurrency = (
   if (isAmountHidden) return '*'.repeat(numericValue.toString().length)
 
   const formattedNumber = new Intl.NumberFormat('de-DE').format(numericValue)
+
   return formattedNumber.replace(/\./g, ' ')
 }
 
 export const getFormattedBalance = (balance: TTransaction['balance']) => {
   const formattedCurrency = getFormattedCurrency(balance)
+
   return Number(balance) < 0
     ? `- ${formattedCurrency.slice(1)}`
     : formattedCurrency
@@ -171,6 +179,7 @@ export const formatAmount = (value: string): string => {
     ?.replace(/\s/g, '')
     ?.replace(',', '.')
     ?.replace(/^0+/, '')
+
   return rawAmount
 }
 
@@ -184,6 +193,7 @@ export const calculateEntryRange = (
   const parsedTotalEntries = toNumber(totalEntries)
   const startEntry = (parsedPage - 1) * parsedLimit + 1
   const endEntry = Math.min(parsedPage * parsedLimit, parsedTotalEntries)
+
   return { startEntry, endEntry }
 }
 
@@ -197,6 +207,7 @@ export const copyToClipboard = async (
 
   if (!content) {
     toast.error(errorTitle)
+
     return
   }
   try {
@@ -280,6 +291,7 @@ export const pluralize = (
 ): string => {
   const pluralRules = new Intl.PluralRules(DEFAULT_LANG)
   const pluralCategory = pluralRules.select(count)
+
   return pluralCategory === 'one' || pluralCategory === 'zero' || count === 0
     ? singular
     : plural
@@ -307,6 +319,7 @@ export const getCategoryItemNames = (
   categories: TTransaction['categories'],
 ) => {
   if (!categories) return []
+
   return categories
     .flatMap((subject) => subject.items.map((item) => item.name))
     .filter(Boolean) // Remove empty strings

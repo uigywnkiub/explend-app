@@ -30,14 +30,17 @@ const useAttemptTracker = (
     // Reset attempts if attemptResetInterval or ATTEMPT_RESET_INTERVAL number value have passed.
     if (currentTime - lastAttemptTime > attemptResetInterval) {
       resetAttempts()
+
       return true
     }
+
     return count < attemptLimit
   }, [attemptLimit, attemptResetInterval, attemptsData, resetAttempts])
 
   const registerAttempt = useCallback(() => {
     if (!attemptsData) {
       setAttemptsData({ count: 1, lastAttemptTime: Date.now() })
+
       return
     }
     const { count } = attemptsData
