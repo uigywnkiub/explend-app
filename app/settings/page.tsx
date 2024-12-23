@@ -16,6 +16,7 @@ import NoTransactionsPlug from '../ui/no-transactions-plug'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
 import ExitAccount from '../ui/settings/exit-account'
+import MaskAmount from '../ui/settings/mask-amount'
 import Section from '../ui/settings/section'
 import SectionItem from '../ui/settings/section-item'
 import { ThemeSwitcher } from '../ui/settings/theme-switcher'
@@ -44,20 +45,32 @@ export default async function Page() {
         {NAV_TITLE.SETTINGS}
       </h1>
       <Section title='General' subtitle='Configure your general preferences.'>
-        <SectionItem
-          title='Theme switcher'
-          subtitle='Select your favorite theme to give the app a new look that matches your style.'
-        >
-          <>
-            <div className='my-2 flex flex-col gap-2'>
-              <InfoText text='Will reload the page.' />
-              <InfoText text='When you select the system theme, the general pop-up will always be dark.' />
-            </div>
+        <>
+          <SectionItem
+            title='Mask amounts'
+            subtitle='Mask your amounts with asterisks to keep them private.'
+          >
             <div className='max-w-xs'>
-              <ThemeSwitcher />
+              <Spacer y={2} />
+              <MaskAmount />
             </div>
-          </>
-        </SectionItem>
+          </SectionItem>
+          <Spacer y={4} />
+          <SectionItem
+            title='Theme switcher'
+            subtitle='Select your favorite theme to give the app a new look that matches your style.'
+          >
+            <>
+              <div className='my-2 flex flex-col gap-2'>
+                <InfoText text='Will reload the page.' />
+                <InfoText text='When you select the system theme, the general pop-up will always be dark.' />
+              </div>
+              <div className='max-w-xs'>
+                <ThemeSwitcher />
+              </div>
+            </>
+          </SectionItem>
+        </>
       </Section>
 
       <Section title='Account' subtitle='Change your account preferences.'>

@@ -9,7 +9,7 @@ export default function TipsList({ tipsDataAI }: TProps) {
     <>
       {tipsDataAI.map((tip, idx) => {
         return (
-          <div key={tip.category || idx}>
+          <div key={tip.category || idx} className='text-balance'>
             <h2 className='mb-2 font-semibold'>{tip.category}</h2>
             <ul className='list-disc text-sm'>
               <div className='mb-4 ml-8 md:mb-6'>

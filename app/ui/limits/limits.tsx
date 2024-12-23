@@ -271,7 +271,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawAmount = formatAmount(e.target.value)
     if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
-      setAmount(getFormattedCurrency(rawAmount))
+      setAmount(getFormattedCurrency(rawAmount, false))
     }
   }
 

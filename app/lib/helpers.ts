@@ -139,9 +139,22 @@ export const toNumber = (value: number | string | null) => {
   return value == null ? NaN : Number(value)
 }
 
-export const getFormattedCurrency = (value: number | string | null) => {
+export const getIsAmountHidden = (): boolean => {
+  return localStorage.getItem('isAmountHidden') === 'true'
+}
+
+export const setIsAmountHidden = () => {
+  localStorage.setItem('isAmountHidden', (!getIsAmountHidden()).toString())
+}
+
+export const getFormattedCurrency = (
+  value: number | string | null,
+  isAmountHidden: boolean = getIsAmountHidden(),
+) => {
   const numericValue = toNumber(value)
   if (isNaN(numericValue)) return ''
+  if (isAmountHidden) return '*'.repeat(numericValue.toString().length)
+
   const formattedNumber = new Intl.NumberFormat('de-DE').format(numericValue)
   return formattedNumber.replace(/\./g, ' ')
 }

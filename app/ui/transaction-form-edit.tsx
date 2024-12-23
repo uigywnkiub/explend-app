@@ -48,7 +48,9 @@ function TransactionFormEdit({ transaction }: TProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSwitchedOn, setIsSwitchedOn] = useState(transaction.isIncome)
   const [description, setDescription] = useState(transaction.description)
-  const [amount, setAmount] = useState(getFormattedCurrency(transaction.amount))
+  const [amount, setAmount] = useState(
+    getFormattedCurrency(transaction.amount, false),
+  )
   const isTransactionWithChangedCategory = !!getTransactionsWithChangedCategory(
     [transaction],
   ).length
@@ -72,7 +74,7 @@ function TransactionFormEdit({ transaction }: TProps) {
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawAmount = formatAmount(e.target.value)
     if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
-      setAmount(getFormattedCurrency(rawAmount))
+      setAmount(getFormattedCurrency(rawAmount, false))
     }
   }
 
@@ -82,7 +84,7 @@ function TransactionFormEdit({ transaction }: TProps) {
   ) => {
     const modifiedOldData: TTransaction = {
       ...oldData,
-      amount: getFormattedCurrency(oldData.amount),
+      amount: getFormattedCurrency(oldData.amount, false),
     }
     return Object.keys(newData).some((key) => {
       const newKey = key as keyof typeof newData
@@ -136,7 +138,7 @@ function TransactionFormEdit({ transaction }: TProps) {
           color='success'
           name='isIncome'
           value='isIncome'
-          aria-label='Income Switch'
+          aria-label='Income switch'
           isSelected={isSwitchedOn}
           onValueChange={(isSelected) => setIsSwitchedOn(isSelected)}
         >
