@@ -107,6 +107,7 @@ export default async function Home(props: {
       acc[date] = []
     }
     acc[date].unshift(t)
+
     return acc
   }, {})
 
@@ -119,10 +120,12 @@ export default async function Home(props: {
           } else {
             totals.expense += parseFloat(t.amount)
           }
+
           return totals
         },
         { income: 0, expense: 0 },
       )
+
       return [date, totals]
     }),
   )

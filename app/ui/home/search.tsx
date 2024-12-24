@@ -52,6 +52,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
       if (newState) {
         isInitialExpanded.current = true
       }
+
       return newState
     })
   }
@@ -64,6 +65,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
     // Skip the first render
     if (isInitialRender.current) {
       isInitialRender.current = false
+
       return
     }
 

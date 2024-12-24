@@ -14,6 +14,7 @@ import {
   startOfToday,
 } from 'date-fns'
 
+import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_SIGN,
@@ -31,7 +32,7 @@ import {
   getFormattedCurrency,
   toCalendarDate,
 } from '@/app/lib/helpers'
-import { useAttemptTracker } from '@/app/lib/hooks'
+import useAttemptTracker from '@/app/lib/hooks'
 import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
 
 import AILogo from '../ai-logo'
@@ -47,7 +48,9 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const [tipsDataAI, setTipsDataAI] = useState<TExpenseAdvice[] | null>(null)
   const [isLoadingTips, setIsLoadingTips] = useState(false)
 
-  const { canAttempt, registerAttempt } = useAttemptTracker('expense-ai-tips')
+  const { canAttempt, registerAttempt } = useAttemptTracker(
+    LOCAL_STORAGE_KEY.AI_EXPENSE_TIPS,
+  )
   const { minTransaction, maxTransaction } = useMemo(
     () => getMinMaxTransactionsByDate(transactions),
     [transactions],
@@ -76,6 +79,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
 
   const formattedDateRange = useMemo(() => {
     if (!startDate || !endDate) return ''
+
     return `${format(startDate, 'MMMM d')} — ${format(endDate, 'MMMM d')}`
   }, [startDate, endDate])
 
@@ -106,10 +110,12 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const getExpenseTipsAIData = useCallback(async () => {
     if (monthlyReportData.length === 0) {
       toast.error('No expenses found.')
+
       return
     }
     if (!canAttempt()) {
       toast.error('Try again later.')
+
       return
     }
     setIsLoadingTips(true)

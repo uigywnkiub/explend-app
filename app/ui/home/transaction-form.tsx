@@ -119,6 +119,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     ): Promise<UseDebounceReturn | undefined> => {
       if (!trimmedDescription) {
         resetAIRelatedStates()
+
         return [() => null, () => undefined]
       }
 

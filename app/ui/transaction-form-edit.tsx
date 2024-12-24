@@ -86,8 +86,10 @@ function TransactionFormEdit({ transaction }: TProps) {
       ...oldData,
       amount: getFormattedCurrency(oldData.amount, false),
     }
+
     return Object.keys(newData).some((key) => {
       const newKey = key as keyof typeof newData
+
       return (
         newData[newKey] !== undefined &&
         newData[newKey] !== modifiedOldData[newKey]
@@ -111,6 +113,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     if (!hasChanges(newTransactionData, transaction)) {
       toast.error('No changes detected.')
       setIsLoading(false)
+
       return
     }
     newTransactionData.isEdited = true

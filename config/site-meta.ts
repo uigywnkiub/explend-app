@@ -38,7 +38,7 @@ export const siteMeta: TSiteMeta = {
     card: 'summary_large_image',
     title: _TITLE,
     description: _DESCRIPTION,
-    // @ts-ignore
+    // @ts-expect-error - `image` is not a valid property, but it valid.
     image: _IMAGE,
     creator: '@woldemar_g',
   },

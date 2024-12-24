@@ -171,6 +171,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
 
   const getLimitAmount = (categoryName: string) => {
     const limit = userLimitsData.find((l) => l.categoryName === categoryName)
+
     return limit ? limit.limitAmount : null
   }
 
@@ -209,6 +210,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   ) => {
     if (!categoryName) {
       toast.error('Invalid category name.')
+
       return
     }
     setIsLoadingDelete(true)
@@ -245,14 +247,17 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   ) => {
     if (!categoryName) {
       toast.error('Invalid category name.')
+
       return
     }
     if (!limitAmount) {
       toast.error('Invalid limit amount.')
+
       return
     }
     if (limitAmount === tempLimitAmount) {
       toast.error('Limit amount is the same.')
+
       return
     }
     setIsLoadingEdit(true)

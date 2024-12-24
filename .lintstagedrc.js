@@ -1,12 +1,14 @@
-import { relative } from 'path'
+// import { relative } from 'path'
 
-const buildEslintCommand = (filenames) =>
-  `next lint --fix --file ${filenames
-    .map((f) => relative(process.cwd(), f))
-    .join(' --file ')}`
+// const buildEslintCommand = (filenames) =>
+//   `eslint --fix --file ${filenames
+//     .map((f) => relative(process.cwd(), f))
+//     .join(' --file ')}`
 
 const config = {
-  '*.{js,jsx,ts,tsx}': [buildEslintCommand],
+  // '*.{js,jsx,ts,tsx}': [buildEslintCommand],
+  // '**/*': [buildEslintCommand],
+  '**/*': ['pnpm lint:fix'],
   '**/*': ['pnpm prettier:fix'],
 }
 

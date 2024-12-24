@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import { NextUIProvider } from '@nextui-org/react'
 
 import { SUCCESS } from '@/config/constants/colors'
+import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_THEME } from '@/config/constants/main'
 import {
   DARK_TOAST_OPTS,
@@ -32,7 +33,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<TTheme | undefined>(undefined)
 
   useEffect(() => {
-    setTheme(localStorage.getItem('theme') as TTheme)
+    setTheme(localStorage.getItem(LOCAL_STORAGE_KEY.THEME) as TTheme)
   }, [])
 
   return (
