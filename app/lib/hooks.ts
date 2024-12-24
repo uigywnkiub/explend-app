@@ -11,13 +11,10 @@ const useAttemptTracker = (
   attemptLimit: number = ATTEMPT_LIMIT,
   attemptResetInterval: number = ATTEMPT_RESET_INTERVAL,
 ) => {
-  const [attemptsData, setAttemptsData] = useLocalStorage(
-    `${storageKey}-attempt`,
-    {
-      count: 0,
-      lastAttemptTime: Date.now(),
-    },
-  )
+  const [attemptsData, setAttemptsData] = useLocalStorage(storageKey, {
+    count: 0,
+    lastAttemptTime: Date.now(),
+  })
 
   const resetAttempts = useCallback(() => {
     setAttemptsData({ count: 0, lastAttemptTime: Date.now() })

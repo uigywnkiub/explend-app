@@ -17,6 +17,7 @@ import getUserLocale from 'get-user-locale'
 import { extendTailwindMerge } from 'tailwind-merge'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
+import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
   CURRENCY_CODE,
   DEFAULT_CATEGORY,
@@ -145,12 +146,20 @@ export const toNumber = (value: number | string | null) => {
   return value == null ? NaN : Number(value)
 }
 
-export const getIsAmountHidden = (): boolean => {
-  return localStorage.getItem('isAmountHidden') === 'true'
+const isLocalStorageAvailable = (): boolean => {
+  return typeof localStorage !== 'undefined'
 }
+export const getIsAmountHidden = (): boolean => {
+  if (!isLocalStorageAvailable()) return false
 
+  return localStorage.getItem(LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN) === 'true'
+}
 export const setIsAmountHidden = () => {
-  localStorage.setItem('isAmountHidden', (!getIsAmountHidden()).toString())
+  if (!isLocalStorageAvailable()) return false
+  localStorage.setItem(
+    LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
+    (!getIsAmountHidden()).toString(),
+  )
 }
 
 export const getFormattedCurrency = (

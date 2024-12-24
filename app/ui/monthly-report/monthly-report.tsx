@@ -14,6 +14,7 @@ import {
   startOfToday,
 } from 'date-fns'
 
+import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_SIGN,
@@ -47,7 +48,9 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const [tipsDataAI, setTipsDataAI] = useState<TExpenseAdvice[] | null>(null)
   const [isLoadingTips, setIsLoadingTips] = useState(false)
 
-  const { canAttempt, registerAttempt } = useAttemptTracker('expense-ai-tips')
+  const { canAttempt, registerAttempt } = useAttemptTracker(
+    LOCAL_STORAGE_KEY.AI_EXPENSE_TIPS,
+  )
   const { minTransaction, maxTransaction } = useMemo(
     () => getMinMaxTransactionsByDate(transactions),
     [transactions],
