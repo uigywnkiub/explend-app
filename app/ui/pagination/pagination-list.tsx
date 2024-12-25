@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect } from 'react'
 
-import { useRouter } from 'next/navigation'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { Pagination } from '@nextui-org/react'
 

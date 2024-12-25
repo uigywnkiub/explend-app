@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDebounce } from 'react-use'
 
-import { useRouter } from 'next/navigation'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { Accordion, AccordionItem, Input } from '@nextui-org/react'
 
@@ -26,9 +25,9 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get(SEARCH_PARAM.QUERY)?.toString() || '',
   )
-  const [isExpanded, setIsExpanded] = useState(!!searchTerm)
+  const [isExpanded, setIsExpanded] = useState(Boolean(searchTerm))
   const isInitialRender = useRef(true)
-  const isInitialExpanded = useRef(!!searchTerm)
+  const isInitialExpanded = useRef(Boolean(searchTerm))
 
   const onSearchChange = (term: string) => {
     const params = new URLSearchParams(searchParams)

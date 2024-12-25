@@ -484,9 +484,9 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       variant='light'
                       isIconOnly
                       size='md'
-                      className='md:h-12 md:w-12'
+                      className='md:size-12'
                     >
-                      <PiDotsThreeOutlineVerticalFill className='h-4 w-4 fill-foreground' />
+                      <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
                     </Button>
                   </DropdownTrigger>
                   <DropdownMenu

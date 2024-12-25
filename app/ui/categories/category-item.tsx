@@ -61,7 +61,7 @@ function CategoryItem({
       editingItemIndex.categoryIndex === categoryIndex &&
       editingItemIndex.itemIndex === itemIndex ? (
         <div className='w-full'>
-          <div className='text-md flex h-auto w-full items-center justify-between gap-2 rounded-medium bg-content1 px-3 py-2 text-left md:text-lg'>
+          <div className='flex h-auto w-full items-center justify-between gap-2 rounded-medium bg-content1 px-3 py-2 text-left md:text-lg'>
             <div className='flex h-[52px] items-center'>
               <div
                 className='z-10 mr-2 cursor-pointer rounded-medium bg-success-50 px-3 py-2 text-xl hover:bg-success-100 md:text-2xl'
@@ -88,7 +88,7 @@ function CategoryItem({
                 color='success'
                 classNames={{
                   input:
-                    'border-none focus:ring-0 placeholder:text-default-500 text-md md:text-lg',
+                    'border-none focus:ring-0 placeholder:text-default-500 md:text-lg',
                 }}
               />
             </div>
@@ -115,7 +115,7 @@ function CategoryItem({
           />
         </div>
       ) : (
-        <div className='text-md flex h-auto w-full items-center justify-between gap-2 break-all rounded-medium bg-content1 px-3 py-2 text-left md:text-lg'>
+        <div className='flex h-auto w-full items-center justify-between gap-2 break-all rounded-medium bg-content1 px-3 py-2 text-left md:text-lg'>
           <div className='flex h-[52px] items-center'>
             <div className='z-10 mr-2 rounded-medium bg-content2 px-3 py-2 text-xl md:text-2xl'>
               <motion.div

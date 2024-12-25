@@ -112,7 +112,7 @@ function DeleteAccount({ userId }: TProps) {
                 <Input
                   isDisabled={isLoading}
                   type='text'
-                  placeholder={CONFIRM_TEXT.slice(0, INVALID_LENGTH) + '...'}
+                  placeholder={`${CONFIRM_TEXT.slice(0, INVALID_LENGTH)}...`}
                   isInvalid={isInvalidText && inputText.length > INVALID_LENGTH}
                   errorMessage={INVALID_TEXT_ERROR}
                   size='lg'

@@ -22,8 +22,7 @@ import { EmojiClickData } from 'emoji-picker-react'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
-import { updateCategories } from '@/app/lib/actions'
-import { resetCategories } from '@/app/lib/actions'
+import { resetCategories, updateCategories } from '@/app/lib/actions'
 import { capitalizeFirstLetter, deepCompareArrays } from '@/app/lib/helpers'
 import {
   TCategoriesLoading,
