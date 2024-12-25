@@ -51,9 +51,9 @@ function TransactionFormEdit({ transaction }: TProps) {
   const [amount, setAmount] = useState(
     getFormattedCurrency(transaction.amount, false),
   )
-  const isTransactionWithChangedCategory = !!getTransactionsWithChangedCategory(
-    [transaction],
-  ).length
+  const isTransactionWithChangedCategory = Boolean(
+    getTransactionsWithChangedCategory([transaction]).length,
+  )
   const [category, setCategory] = useState<Selection>(
     new Set(
       isTransactionWithChangedCategory
@@ -265,7 +265,9 @@ function TransactionFormEdit({ transaction }: TProps) {
                 isDisabled={
                   !amount || amount === '0' || isLoading || !isCategorySelect
                 }
-                className={`${isCategorySelect && isTransactionWithChangedCategory ? `animate-blink-${(theme as TTheme) === 'system' ? 'light' : theme}-once` : ''} cursor-pointer bg-background px-0`}
+                className={cn(
+                  `${isCategorySelect && isTransactionWithChangedCategory ? `animate-blink-${(theme as TTheme) === 'system' ? 'light' : theme}-once` : ''} cursor-pointer bg-background px-0`,
+                )}
                 size='sm'
               >
                 <Kbd keys={['enter']}>Enter</Kbd>

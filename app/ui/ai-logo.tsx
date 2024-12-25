@@ -72,7 +72,7 @@ export default function AILogo({
         </Popover>
       )}
       {!asIcon &&
-        (!!textBefore && asText ? (
+        (Boolean(textBefore) && asText ? (
           <span className={twJoin(textSize)}>
             {textBefore} {aiTitle}
           </span>

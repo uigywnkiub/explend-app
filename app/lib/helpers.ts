@@ -143,7 +143,7 @@ export const getCategoryWithEmoji = (
 }
 
 export const toNumber = (value: number | string | null) => {
-  return value == null ? NaN : Number(value)
+  return value === null ? NaN : Number(value)
 }
 
 const isLocalStorageAvailable = (): boolean => {

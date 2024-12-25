@@ -196,7 +196,7 @@ export async function createTransaction(
         formData.get('category'),
         userCategories || DEFAULT_CATEGORIES,
       ) as TTransaction['category'],
-      isIncome: !!formData.get('isIncome'),
+      isIncome: Boolean(formData.get('isIncome')),
       balance: '0' as TTransaction['balance'],
       currency,
       categories: userCategories,

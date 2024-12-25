@@ -5,6 +5,8 @@ import { useFormStatus } from 'react-dom'
 
 import { Button, Kbd, Textarea } from '@nextui-org/react'
 
+import { cn } from '@/app/lib/helpers'
+
 import InfoText from '../info-text'
 
 const MAX_TEXT_LENGTH = 1000
@@ -44,7 +46,9 @@ export default function Feedback() {
       />
       <div className='mt-4 flex justify-end'>
         <p
-          className={`text-sm text-default-${pending || feedback.length < MIN_TEXT_LENGTH ? '300' : '500'}`}
+          className={cn(
+            `text-default- text-sm${pending || feedback.length < MIN_TEXT_LENGTH ? '300' : '500'}`,
+          )}
         >
           <span className='hidden md:inline'>Press </span>
           <span className='inline md:hidden'>Tap </span>

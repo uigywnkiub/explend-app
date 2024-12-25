@@ -161,7 +161,7 @@ export default async function Home(props: {
               <Search
                 hasSearchedTransactionsByQuery={hasSearchedTransactionsByQuery}
               />
-              <div className='mb-2 mt-2'>
+              <div className='my-2'>
                 {!hasSearchedTransactionsByQuery ? (
                   <p>No Transactions Found</p>
                 ) : (

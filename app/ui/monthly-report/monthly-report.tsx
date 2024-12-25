@@ -144,11 +144,9 @@ function MonthlyReport({ transactions, currency }: TProps) {
     () =>
       monthlyReportData.map((category) => (
         <Fragment key={category.category}>
-          <div className='text-md overflow-hidden text-ellipsis whitespace-nowrap md:text-lg'>
-            {category.category}
-          </div>
-          <div className='text-md md:text-lg'>{category.percentage} %</div>
-          <div className='text-md md:text-lg'>
+          <div className='truncate md:text-lg'>{category.category}</div>
+          <div className='md:text-lg'>{category.percentage} %</div>
+          <div className='md:text-lg'>
             {getFormattedCurrency(category.spent)}{' '}
             {currency?.sign || DEFAULT_CURRENCY_SIGN}
           </div>

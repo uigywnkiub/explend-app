@@ -1,3 +1,5 @@
+import { cn } from '../lib/helpers'
+
 type TProps = {
   withBackground?: boolean
   align?: 'left' | 'center' | 'right'
@@ -11,7 +13,9 @@ export default function NoTransactionsPlug({
 }: TProps) {
   return (
     <p
-      className={`rounded-medium ${withBackground && 'bg-content1'} p-${padding} text-${align} text-default-500`}
+      className={cn(
+        `rounded-medium ${withBackground && 'bg-content1'} p-${padding} text-${align} text-default-500`,
+      )}
     >
       No transactions found.
     </p>

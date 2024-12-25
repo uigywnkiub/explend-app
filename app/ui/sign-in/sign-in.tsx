@@ -139,7 +139,7 @@ function SignIn() {
     <>
       <InstallPWA />
       <div className='flex min-h-screen flex-col justify-between p-4 md:p-8'>
-        <div className='flex flex-grow flex-col items-center justify-center text-center'>
+        <div className='flex grow flex-col items-center justify-center text-center'>
           <div className='mb-4 flex items-center justify-center'>
             <Logo />
           </div>

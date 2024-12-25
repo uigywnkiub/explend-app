@@ -4,7 +4,7 @@ import type { LegendProps } from 'recharts'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
-import { capitalizeFirstLetter } from '@/app/lib/helpers'
+import { capitalizeFirstLetter, cn } from '@/app/lib/helpers'
 
 function CustomLegend({ payload }: LegendProps) {
   return (
@@ -18,9 +18,11 @@ function CustomLegend({ payload }: LegendProps) {
         return (
           <li key={entry.value} className='flex items-center'>
             <div
-              className={`flex h-[${DEFAULT_ICON_SIZE}px] items-center justify-center`}
+              className={cn(
+                `flex h-[${DEFAULT_ICON_SIZE}px] items-center justify-center`,
+              )}
             >
-              <Icon className='h-full w-full' fill={entry.color} />
+              <Icon className='size-full' fill={entry.color} />
             </div>
             <span className='ml-1'>{capitalizeFirstLetter(entry.value)}</span>
           </li>
