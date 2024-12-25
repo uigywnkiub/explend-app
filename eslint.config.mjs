@@ -9,7 +9,6 @@ import tailwind from 'eslint-plugin-tailwindcss'
 import unusedImports from 'eslint-plugin-unused-imports'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import ts from 'typescript-eslint'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -20,7 +19,7 @@ const compat = new FlatCompat({
 })
 
 const config = [
-  ...ts.configs.recommended,
+  // ...ts.configs.recommended,
   ...tailwind.configs['flat/recommended'],
   ...compat.extends('next', 'next/core-web-vitals', 'prettier'),
   {
