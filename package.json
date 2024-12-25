@@ -28,7 +28,7 @@
     "@google/generative-ai": "^0.21.0",
     "@internationalized/date": "^3.6.0",
     "@next/third-parties": "15.1.2",
-    "@nextui-org/react": "^2.6.8",
+    "@nextui-org/react": "^2.6.10",
     "@sentry/nextjs": "^8.47.0",
     "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",
@@ -55,7 +55,7 @@
     "recharts": "^2.15.0",
     "require-in-the-middle": "^7.4.0",
     "resend": "^4.0.1",
-    "tailwind-merge": "^2.5.5"
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
@@ -69,8 +69,8 @@
     "@types/node": "^22.10.2",
     "@types/react": "19.0.2",
     "@types/react-dom": "19.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.18.1",
-    "@typescript-eslint/parser": "^8.18.1",
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^9.17.0",
