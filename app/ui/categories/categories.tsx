@@ -35,12 +35,19 @@ import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import Category from './category'
 
+const RESET_CATEGORIES_BTN_TEXT = 'Reset categories'
+
 type TProps = {
   userId: TUserId
   userCategories: TTransaction['categories']
+  areCategoriesLengthMismatch: boolean
 }
 
-function Categories({ userId, userCategories }: TProps) {
+function Categories({
+  userId,
+  userCategories,
+  areCategoriesLengthMismatch,
+}: TProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [categories, setCategories] = useState(userCategories)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
@@ -232,9 +239,18 @@ function Categories({ userId, userCategories }: TProps) {
             />
           }
         >
-          Reset categories
+          {RESET_CATEGORIES_BTN_TEXT}
         </Button>
       </div>
+      {areCategoriesLengthMismatch && (
+        <p className='mt-4 text-center text-sm text-warning'>
+          <PiWarningOctagonFill className='inline animate-pulse' /> We detected
+          a mismatch between your current categories and the default ones.
+          <br />
+          Press &quot;{RESET_CATEGORIES_BTN_TEXT}&quot; to restore the default
+          and overwrite your current categories.
+        </p>
+      )}
       <div className='mt-4 flex flex-col gap-2 md:mt-8'>
         <InfoText
           withDoubleAsterisk

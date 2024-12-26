@@ -18,6 +18,8 @@ export default async function Page() {
   const userId = session?.user?.email
   const transactions = await getAllTransactions(userId)
   const [userCategories] = transactions.map((t) => t.categories).filter(Boolean)
+  const areCategoriesLengthMismatch =
+    userCategories.length !== DEFAULT_CATEGORIES.length
 
   const content = (
     <>
@@ -31,6 +33,7 @@ export default async function Page() {
           <Categories
             userId={userId}
             userCategories={userCategories || DEFAULT_CATEGORIES}
+            areCategoriesLengthMismatch={areCategoriesLengthMismatch}
           />
         )}
       </div>
