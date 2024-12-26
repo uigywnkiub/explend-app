@@ -41,7 +41,7 @@ function BalanceCard({ balance, currency, user }: TProps) {
   })
 
   const userId = user?.email
-  const isTotalLoaded = total.income || total.income
+  const isTotalLoaded = Boolean(total.income) || Boolean(total.expense)
   const isPositiveBalance = Number(balance) > 0
   const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const greetingMsg = `${getGreeting(currentTimeZone || DEFAULT_TIME_ZONE)}, ${user?.name} 👋🏼`
