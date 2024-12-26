@@ -67,7 +67,7 @@ export default function AILogo({
             />
           </PopoverTrigger>
           <PopoverContent>
-            <span>{aiTitle} is experimental so double-check the info</span>
+            <span>{aiTitle} may be inaccurate.</span>
           </PopoverContent>
         </Popover>
       )}

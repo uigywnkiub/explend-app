@@ -168,7 +168,7 @@ export const getFormattedCurrency = (
 ) => {
   const numericValue = toNumber(value)
   if (isNaN(numericValue)) return ''
-  if (isAmountHidden) return '*'.repeat(numericValue.toString().length)
+  if (isAmountHidden) return '✳︎'.repeat(numericValue.toString().length)
 
   const formattedNumber = new Intl.NumberFormat('de-DE').format(numericValue)
 
