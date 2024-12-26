@@ -25,7 +25,6 @@ import {
   APP_TITLE,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
-import { ROUTE } from '@/config/constants/routes'
 
 import {
   TAuthProvider,
@@ -69,7 +68,8 @@ function SignIn() {
     setIsLoading((prev) => ({ ...prev, [provider]: true }))
     try {
       await signIn(provider, {
-        callbackUrl: ROUTE.HOME,
+        // If no callbackUrl is provided, the user will be redirected to the previous page.
+        // callbackUrl: ROUTE.HOME,
       })
     } catch (err) {
       if (err instanceof AuthError) {

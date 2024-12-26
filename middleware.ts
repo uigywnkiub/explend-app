@@ -17,7 +17,7 @@ export default auth((req: NextRequest & { auth: TSession }) => {
   if (req.nextUrl.pathname === ROUTE.SIGNIN) {
     url.pathname = ROUTE.HOME
 
-    return NextResponse.rewrite(url)
+    return NextResponse.redirect(url)
   }
 
   return NextResponse.next()
