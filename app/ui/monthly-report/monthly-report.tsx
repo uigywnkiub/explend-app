@@ -247,8 +247,8 @@ function MonthlyReport({ transactions, currency }: TProps) {
               ? 'Refreshing...'
               : 'Getting...'
             : isTipsDataExist
-              ? 'Refresh Tips'
-              : 'Get Tips'}
+              ? 'Refresh tips'
+              : 'Get tips'}
         </Button>
       </div>
     </>
