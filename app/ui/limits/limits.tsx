@@ -15,7 +15,6 @@ import {
   PiWarningOctagonFill,
 } from 'react-icons/pi'
 
-import { getLocalTimeZone } from '@internationalized/date'
 import {
   Button,
   Divider,
@@ -35,7 +34,6 @@ import {
   SelectSection,
   useDisclosure,
 } from '@nextui-org/react'
-import { endOfMonth, endOfToday, startOfMonth, startOfToday } from 'date-fns'
 
 import {
   DEFAULT_CATEGORY,
@@ -52,7 +50,7 @@ import {
 import {
   calculateTotalsByCategory,
   filterTransactions,
-  filterTransactionsByDateRange,
+  getTransactionsByCurrMonth,
 } from '@/app/lib/data'
 import {
   cn,
@@ -61,7 +59,6 @@ import {
   getCategoryWithEmoji,
   getEmojiFromCategory,
   getFormattedCurrency,
-  toCalendarDate,
 } from '@/app/lib/helpers'
 import type { TCategoryLimits, TTransaction, TUserId } from '@/app/lib/types'
 
@@ -110,14 +107,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   const [isLoadingReset, setIsLoadingReset] = useState(false)
   const [isLoadingAddLimit, setIsLoadingAddLimit] = useState(false)
 
-  const startOfMonthCalendarDate = toCalendarDate(startOfMonth(startOfToday()))
-  const endOfMonthCalendarDate = toCalendarDate(endOfMonth(endOfToday()))
-  const startDate = startOfMonthCalendarDate.toDate(getLocalTimeZone())
-  const endDate = endOfMonthCalendarDate.toDate(getLocalTimeZone())
   // useMemo hooks
   const transactionsByCurrMonth = useMemo(
-    () => filterTransactionsByDateRange(transactions, startDate, endDate),
-    [endDate, startDate, transactions],
+    () => getTransactionsByCurrMonth(transactions),
+    [transactions],
   )
   if (transactionsByCurrMonth.length === 0) {
     return (
@@ -133,9 +126,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   const { expense } = filterTransactions(transactionsByCurrMonth)
   const totalsByCategory = calculateTotalsByCategory(expense, true)
 
-  const [userLimitsData] = transactionsByCurrMonth
+  const [_userLimitsData] = transactionsByCurrMonth
     .map((e) => e.categoryLimits)
     .filter(Boolean)
+  const userLimitsData = _userLimitsData || []
 
   const changedCategoryNames = userLimitsData
     .map((e) => e.categoryName)
@@ -165,7 +159,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       transactionsByCurrMonth
         .map((t) => t.categoryLimits)
         .filter(Boolean)
-        .flatMap((c) => c.map((k) => k.categoryName)),
+        .flatMap((c) => c!.map((k) => k.categoryName)),
     ),
   ]
 
@@ -342,6 +336,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         isRequired
                         isDisabled={false}
                         name='category'
+                        aria-label='Category'
                         placeholder='Select a category'
                         className='w-full'
                         classNames={{
@@ -371,6 +366,11 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                                       {getLimitAmount(item.name)}{' '}
                                       {currency?.code || DEFAULT_CURRENCY_CODE}
                                     </span>
+                                  ) : item.name === DEFAULT_CATEGORY ? (
+                                    <InfoText
+                                      text='Default category'
+                                      withAsterisk={false}
+                                    />
                                   ) : null
                                 }
                               >
