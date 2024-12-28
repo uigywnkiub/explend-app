@@ -497,6 +497,25 @@ export async function deleteAllTransactionsAndSignOut(
   }
 }
 
+export async function getCategoryLimits(
+  userId: TUserId,
+): Promise<TTransaction['categoryLimits']> {
+  if (!userId) {
+    throw new Error('User ID is required to add category limits.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne(
+      { userId },
+      { categoryLimits: 1, _id: 0 },
+    ).lean<{ categoryLimits: TTransaction['categoryLimits'] }>()
+
+    return transaction?.categoryLimits
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function addCategoryLimit(
   userId: TUserId,
   categoryLimits: TTransaction['categoryLimits'],

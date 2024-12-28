@@ -32,6 +32,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [theme, setTheme] = useState<TTheme | undefined>(undefined)
 
+  const toastOptions =
+    theme === 'dark' || theme === 'system' ? DARK_TOAST_OPTS : LIGHT_TOAST_OPTS
+
   useEffect(() => {
     setTheme(localStorage.getItem(LOCAL_STORAGE_KEY.THEME) as TTheme)
   }, [])
@@ -39,14 +42,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <NextUIProvider navigate={router.push} locale={userLocale}>
       <NextThemesProvider attribute='class' defaultTheme={DEFAULT_THEME}>
-        <Toaster
-          position={TOAST_POSITION}
-          toastOptions={
-            theme === 'dark' || theme === 'system'
-              ? DARK_TOAST_OPTS
-              : LIGHT_TOAST_OPTS
-          }
-        />
+        <Toaster position={TOAST_POSITION} toastOptions={toastOptions} />
         {children}
         <Next13ProgressBar
           height='3px'

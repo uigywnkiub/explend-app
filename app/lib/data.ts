@@ -1,6 +1,15 @@
-import { endOfDay, formatISO, isWithinInterval } from 'date-fns'
+import { getLocalTimeZone } from '@internationalized/date'
+import {
+  endOfDay,
+  endOfMonth,
+  endOfToday,
+  formatISO,
+  isWithinInterval,
+  startOfMonth,
+  startOfToday,
+} from 'date-fns'
 
-import { getCategoryWithoutEmoji } from './helpers'
+import { getCategoryWithoutEmoji, toCalendarDate } from './helpers'
 import type {
   TCategoryData,
   TChartData,
@@ -127,6 +136,15 @@ export const filterTransactionsByDateRange = (
       end: endOfDay(endDate),
     })
   })
+}
+
+export const getTransactionsByCurrMonth = (transactions: TTransaction[]) => {
+  const startOfMonthCalendarDate = toCalendarDate(startOfMonth(startOfToday()))
+  const endOfMonthCalendarDate = toCalendarDate(endOfMonth(endOfToday()))
+  const startDate = startOfMonthCalendarDate.toDate(getLocalTimeZone())
+  const endDate = endOfMonthCalendarDate.toDate(getLocalTimeZone())
+
+  return filterTransactionsByDateRange(transactions, startDate, endDate)
 }
 
 export const getMinMaxTransactionsByDate = (

@@ -146,7 +146,7 @@ export const toNumber = (value: number | string | null) => {
   return value === null ? NaN : Number(value)
 }
 
-const isLocalStorageAvailable = (): boolean => {
+export const isLocalStorageAvailable = (): boolean => {
   return typeof localStorage !== 'undefined'
 }
 export const getIsAmountHidden = (): boolean => {
