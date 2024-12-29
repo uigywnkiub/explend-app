@@ -1,8 +1,4 @@
-import {
-  PiArrowCircleDownFill,
-  PiArrowCircleUpFill,
-  PiWarningOctagonFill,
-} from 'react-icons/pi'
+import { PiWarningOctagonFill } from 'react-icons/pi'
 
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 
@@ -22,11 +18,9 @@ import {
   getCachedTransactions,
   resetCategories,
 } from './lib/actions'
-import { getTransactionsTotals } from './lib/data'
 import {
   formatDate,
   getCategoryWithoutEmoji,
-  getFormattedCurrency,
   getTransactionsWithChangedCategory,
   pluralize,
   toLowerCase,
@@ -38,6 +32,7 @@ import type {
 } from './lib/types'
 import BalanceCard from './ui/balance-card'
 import Search from './ui/home/search'
+import SearchedTransactions from './ui/home/searched-transactions'
 import TransactionForm from './ui/home/transaction-form'
 import TransactionList from './ui/home/transaction-list'
 import InfoText from './ui/info-text'
@@ -207,29 +202,10 @@ export default async function Home(props: {
           />
         ) : (
           hasSearchedTransactionsByQuery && (
-            <div className='flex flex-col justify-center gap-2 text-center'>
-              <p className='mt-2 text-default-500 md:mt-4'>Searched Totals</p>
-              <div className='flex flex-col flex-wrap justify-center'>
-                <p>
-                  <PiArrowCircleUpFill className='mr-1 inline fill-success' />
-                  <span className='text-sm text-default-500'>Income:</span>{' '}
-                  {getFormattedCurrency(
-                    getTransactionsTotals(searchedTransactionsByQuery).income,
-                  )}{' '}
-                  {currency?.code}
-                </p>
-                <p>
-                  <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
-                  <span className='text-sm text-default-500'>
-                    Expense:
-                  </span>{' '}
-                  {getFormattedCurrency(
-                    getTransactionsTotals(searchedTransactionsByQuery).expense,
-                  )}{' '}
-                  {currency?.code}
-                </p>
-              </div>
-            </div>
+            <SearchedTransactions
+              currency={currency}
+              searchedTransactionsByQuery={searchedTransactionsByQuery}
+            />
           )
         )}
         {countTransactionsWithChangedCategory > 0 && (
