@@ -39,15 +39,14 @@ function Footer() {
     <>
       <footer className='mt-32 flex flex-col-reverse items-center justify-center gap-2 text-center text-default-500'>
         <div className='text-xs md:text-sm'>
-          {/* {<Logo size='smallest' withBadge={false} />}  */}
-          {APP_NAME.SHORT} &copy; {getYear(new Date())}. All rights reserved |
-          design by{' '}
+          {/* {<Logo size='smallest' />} */}
+          &copy; {getYear(new Date())}{' '}
+          <span className='text-foreground'>{APP_NAME.SHORT}</span> · Built by{' '}
           <Link href={AUTHOR.URL} target='_blank'>
             <span className='cursor-pointer underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
               {AUTHOR.NAME}
             </span>
           </Link>
-          .
         </div>
         <div className='flex justify-center gap-2'>
           {socialLinks.map((link) => {
