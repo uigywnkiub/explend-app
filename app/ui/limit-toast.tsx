@@ -85,9 +85,6 @@ export default function LimitToast({ triggerBy }: TProps) {
             ),
           ),
           duration: TOAST_DURATION * 2,
-          style: {
-            color: DANGER,
-          },
         })
       }
     } catch (err) {
