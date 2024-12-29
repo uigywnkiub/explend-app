@@ -6,7 +6,6 @@ import { useDebounce } from 'react-use'
 
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 
-import { DANGER } from '@/config/constants/colors'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { TOAST_DURATION } from '@/config/constants/toast'
 
