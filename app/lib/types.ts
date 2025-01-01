@@ -186,3 +186,8 @@ export type TExpenseAdvice = {
   tip: string
   savings: string
 }
+
+export type TReceipt = {
+  description: TTransaction['description']
+  amount: number
+}

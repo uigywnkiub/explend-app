@@ -51,7 +51,6 @@ export const CompletionAIModel = genAI.getGenerativeModel({
   model: process.env.GEMINI_MODEL,
   // Docs https://ai.google.dev/api/generate-content#v1beta.GenerationConfig
   generationConfig: {
-    candidateCount: 1,
     stopSequences: ['\n'],
     // A token is equivalent to about 4 characters for Gemini models. 100 tokens are about 60-80 English words.
     maxOutputTokens: 10,
@@ -63,7 +62,6 @@ export const CompletionAIModel = genAI.getGenerativeModel({
 export const ExpenseTipsAIModel = genAI.getGenerativeModel({
   model: process.env.GEMINI_RICHER_MODEL,
   generationConfig: {
-    candidateCount: 1,
     temperature: 2,
     // Docs https://ai.google.dev/gemini-api/docs/json-mode?lang=node
     responseMimeType: 'application/json',
@@ -84,6 +82,30 @@ export const ExpenseTipsAIModel = genAI.getGenerativeModel({
         },
         // Type: `TExpenseAdvice`
         required: ['category', 'tip', 'savings'],
+      },
+    },
+  },
+  safetySettings,
+})
+
+export const UploadReceiptAIModel = genAI.getGenerativeModel({
+  model: process.env.GEMINI_RICHER_MODEL,
+  generationConfig: {
+    // Docs https://ai.google.dev/gemini-api/docs/json-mode?lang=node
+    responseMimeType: 'application/json',
+    responseSchema: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          description: {
+            type: SchemaType.STRING,
+          },
+          amount: {
+            type: SchemaType.NUMBER,
+          },
+        },
+        required: ['description', 'amount'],
       },
     },
   },
