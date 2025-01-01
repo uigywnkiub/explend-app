@@ -1,8 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import toast from 'react-hot-toast'
+import { PiCamera, PiCameraFill } from 'react-icons/pi'
 import { useDebounce } from 'react-use'
 import type { UseDebounceReturn } from 'react-use/lib/useDebounce'
 
@@ -19,16 +20,21 @@ import {
   SelectSection,
   Switch,
 } from '@nextui-org/react'
+import Compressor from 'compressorjs'
+import heic2any from 'heic2any'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
   DEFAULT_CATEGORY,
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_SIGN,
+  DEFAULT_ICON_SIZE,
   IS_PROD,
 } from '@/config/constants/main'
+import { TOAST_DURATION } from '@/config/constants/toast'
 
 import {
+  getAnalyzedReceiptAI,
   getCachedAmountAI,
   getCachedCategoryItemAI,
   getCachedTransactionTypeAI,
@@ -43,8 +49,9 @@ import {
   getFormattedCurrency,
   isLocalStorageAvailable,
 } from '../../lib/helpers'
-import type { TTransaction } from '../../lib/types'
+import type { TReceipt, TTransaction } from '../../lib/types'
 import AILogo from '../ai-logo'
+import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import LimitToast from '../limit-toast'
 
@@ -60,6 +67,16 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const { pending } = useFormStatus()
   const [isSwitchedOn, setIsSwitchedOn] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  // Receipt AI-related state
+  const [receiptAIData, setReceiptAIData] = useState<
+    {
+      description: TReceipt['description']
+      amount: TTransaction['amount']
+    }[]
+  >([])
+  const [currReceiptAIDataIdx, setCurrReceiptAIDataIdx] = useState(0)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const hasReceiptAIData = receiptAIData.length > 0
   const [amount, setAmount] = useState('')
   const [description, setDescription] = useState('')
   // AI-related states
@@ -81,12 +98,12 @@ function TransactionForm({ currency, userCategories }: TProps) {
     () => getCategoryItemNames(userCategories).includes(categoryItemNameAI),
     [categoryItemNameAI, userCategories],
   )
-  const categoryItemName = isCategoryItemNameAIValid
-    ? categoryItemNameAI
-    : approxCategoryItemName
-      ? approxCategoryItemName
-      : DEFAULT_CATEGORY
+  const categoryItemName = useMemo(() => {
+    if (isCategoryItemNameAIValid) return categoryItemNameAI
+    if (approxCategoryItemName) return approxCategoryItemName
 
+    return DEFAULT_CATEGORY
+  }, [isCategoryItemNameAIValid, categoryItemNameAI, approxCategoryItemName])
   const newCategoryState = useMemo(
     () => new Set([categoryItemName]),
     [categoryItemName],
@@ -110,7 +127,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
       localStorage.removeItem(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
   }, [categoryName])
 
-  const resetAllStates = () => {
+  const resetAllStates = useCallback(() => {
     setIsSwitchedOn(false)
     // setIsExpanded(false)
     setAmount('')
@@ -120,15 +137,109 @@ function TransactionForm({ currency, userCategories }: TProps) {
     setIsTransactionTypeAIValid(false)
     setCategoryItemNameAI('')
     setCategory(new Set([DEFAULT_CATEGORY]))
-  }
+    setReceiptAIData([])
+  }, [])
 
-  const resetAIRelatedStates = () => {
+  const resetAIRelatedStates = useCallback(() => {
     setIsAmountAIValid(false)
     setIsTransactionTypeAIValid(false)
     setIsSwitchedOn(false)
-    setAmount('')
+    if (!hasReceiptAIData) setAmount('')
     setCategoryItemNameAI('')
+  }, [hasReceiptAIData])
+
+  const getReceiptAIData = async (compressedFile: File) => {
+    try {
+      const res = await toast.promise(getAnalyzedReceiptAI(compressedFile), {
+        loading: 'Analyzing receipt...',
+        success: 'Receipt successfully analyzed.',
+        error: 'Failed to analyze receipt.',
+      })
+      const parsedRes: TReceipt[] = JSON.parse(res)
+      const modifiedText = parsedRes.map((item) => ({
+        ...item,
+        amount: getFormattedCurrency(Math.round(item.amount), false),
+      }))
+
+      setReceiptAIData(modifiedText)
+      if (modifiedText.length > 0) {
+        setDescription(modifiedText[0].description)
+        setAmount(modifiedText[0].amount)
+      } else {
+        setTimeout(() => {
+          toast.error('Not a valid receipt.')
+        }, TOAST_DURATION)
+      }
+    } catch (err) {
+      throw err
+    }
   }
+
+  const onUploadReceipt = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const targetFile = e.target.files?.[0]
+    if (!targetFile || !(targetFile instanceof File)) return
+
+    try {
+      let processedFile: File | Blob = targetFile
+
+      // Convert HEIC to jpeg
+      if (targetFile.type === 'image/heic') {
+        const convertedBlob = await toast.promise(
+          heic2any({
+            blob: targetFile,
+            toType: 'image/jpeg',
+          }),
+          {
+            loading: 'Converting receipt...',
+            success: 'Receipt converted successfully.',
+            error: 'Failed to convert receipt.',
+          },
+        )
+
+        processedFile = new File(
+          [convertedBlob as Blob],
+          targetFile.name.replace(/\.\w+$/, '.jpg'),
+          { type: 'image/jpeg' },
+        )
+      }
+
+      // Compress
+      new Compressor(processedFile, {
+        quality: 0.8,
+        maxWidth: 800,
+        maxHeight: 800,
+        convertSize: 1000000,
+        checkOrientation: false,
+        success: (compressedFile: File) => {
+          getReceiptAIData(compressedFile)
+        },
+        error: (err) => {
+          throw err
+        },
+      })
+    } catch (err) {
+      throw err
+    }
+  }
+
+  const onSubmitReceiptTransaction = useCallback(() => {
+    const nextIndex = currReceiptAIDataIdx + 1
+    if (nextIndex < receiptAIData.length) {
+      toast.success(`${nextIndex}/${receiptAIData.length} transactions added.`)
+
+      setCurrReceiptAIDataIdx(nextIndex)
+      setDescription(receiptAIData[nextIndex].description)
+      setAmount(receiptAIData[nextIndex].amount)
+    } else {
+      toast.success(
+        `${receiptAIData.length}/${receiptAIData.length} transactions added.`,
+      )
+      setTimeout(() => {
+        toast.success('All transactions added.')
+      }, TOAST_DURATION)
+      resetAllStates()
+    }
+  }, [currReceiptAIDataIdx, receiptAIData, resetAllStates])
 
   const getCompletionAIData = useCallback(
     async (
@@ -148,10 +259,12 @@ function TransactionForm({ currency, userCategories }: TProps) {
         const [categoryItemNameAI, amountAI, transactionTypeAI] =
           await Promise.all([
             getCachedCategoryItemAI(categories, userPrompt),
-            getCachedAmountAI(
-              currency?.code || DEFAULT_CURRENCY_CODE,
-              userPrompt,
-            ),
+            !hasReceiptAIData
+              ? getCachedAmountAI(
+                  currency?.code || DEFAULT_CURRENCY_CODE,
+                  userPrompt,
+                )
+              : Promise.resolve(''),
             getCachedTransactionTypeAI(userPrompt),
           ])
 
@@ -159,7 +272,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
         const rawAmountAI = formatAmount(amountAI)
         if (
           !isNaN(Number(rawAmountAI)) &&
-          rawAmountAI.length <= AMOUNT_LENGTH
+          rawAmountAI.length <= AMOUNT_LENGTH &&
+          !hasReceiptAIData
         ) {
           setAmount(getFormattedCurrency(rawAmountAI, false))
           setIsAmountAIValid(true)
@@ -175,7 +289,12 @@ function TransactionForm({ currency, userCategories }: TProps) {
         setIsLoadingAIData(false)
       }
     },
-    [currency?.code, trimmedDescription],
+    [
+      currency?.code,
+      hasReceiptAIData,
+      resetAIRelatedStates,
+      trimmedDescription,
+    ],
   )
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
@@ -210,11 +329,21 @@ function TransactionForm({ currency, userCategories }: TProps) {
     if (pending) {
       // Abort useDebounce after form submit.
       cancel()
+      if (hasReceiptAIData) {
+        return onSubmitReceiptTransaction()
+      }
       resetAllStates()
+
       // The idea is to show toast after async form action.
       setTimeout(() => toast.success('Transaction added.'), 0)
     }
-  }, [cancel, pending])
+  }, [
+    cancel,
+    onSubmitReceiptTransaction,
+    hasReceiptAIData,
+    pending,
+    resetAllStates,
+  ])
 
   const accordionTitle = isExpanded
     ? `Hide ${ACCORDION_ITEM_KEY}`
@@ -287,6 +416,30 @@ function TransactionForm({ currency, userCategories }: TProps) {
               input: 'border-none focus:ring-0 placeholder:text-default-500',
               inputWrapper: 'h-16 md:h-20 my-2 px-3',
             }}
+            startContent={
+              <>
+                <input
+                  type='file'
+                  accept='image/*, .heic'
+                  onChange={onUploadReceipt}
+                  className='hidden'
+                  ref={fileInputRef}
+                />
+                <Button
+                  isIconOnly
+                  onPress={() => fileInputRef.current?.click()}
+                  className='bg-transparent'
+                  size='sm'
+                >
+                  <HoverableElement
+                    uKey='camera'
+                    element={<PiCamera size={DEFAULT_ICON_SIZE} />}
+                    hoveredElement={<PiCameraFill size={DEFAULT_ICON_SIZE} />}
+                    withShift={false}
+                  />
+                </Button>
+              </>
+            }
             endContent={
               <div className='w-[154px] md:w-36'>
                 <Badge
@@ -389,7 +542,9 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 <Button
                   aria-label='Enter'
                   type='submit'
-                  isDisabled={!amount || amount === '0' || pending}
+                  isDisabled={
+                    !amount || amount === '0' || pending || isLoadingAIData
+                  }
                   className='cursor-pointer bg-background px-0'
                   size='sm'
                 >

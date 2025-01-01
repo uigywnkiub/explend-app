@@ -4,7 +4,9 @@ import { CUSTOM_DARK, CUSTOM_LIGHT, DANGER, SUCCESS } from './colors'
 
 export const TOAST_POSITION: ToastPosition = 'bottom-center'
 
-export const TOAST_DURATION = 2000
+export const TOAST_DURATION = 2000 // ms
+
+const FONT_WEIGHT = 600 // semibold
 
 export const DARK_TOAST_OPTS: DefaultToastOptions = {
   duration: TOAST_DURATION,
@@ -16,6 +18,7 @@ export const DARK_TOAST_OPTS: DefaultToastOptions = {
     style: {
       background: CUSTOM_DARK,
       color: CUSTOM_LIGHT,
+      fontWeight: FONT_WEIGHT,
     },
   },
   error: {
@@ -26,6 +29,14 @@ export const DARK_TOAST_OPTS: DefaultToastOptions = {
     style: {
       background: CUSTOM_DARK,
       color: CUSTOM_LIGHT,
+      fontWeight: FONT_WEIGHT,
+    },
+  },
+  loading: {
+    style: {
+      background: CUSTOM_DARK,
+      color: CUSTOM_LIGHT,
+      fontWeight: FONT_WEIGHT,
     },
   },
 }
@@ -40,6 +51,7 @@ export const LIGHT_TOAST_OPTS: DefaultToastOptions = {
     style: {
       background: CUSTOM_LIGHT,
       color: CUSTOM_DARK,
+      fontWeight: FONT_WEIGHT,
     },
   },
   error: {
@@ -50,6 +62,14 @@ export const LIGHT_TOAST_OPTS: DefaultToastOptions = {
     style: {
       background: CUSTOM_LIGHT,
       color: CUSTOM_DARK,
+      fontWeight: FONT_WEIGHT,
+    },
+  },
+  loading: {
+    style: {
+      background: CUSTOM_LIGHT,
+      color: CUSTOM_DARK,
+      fontWeight: FONT_WEIGHT,
     },
   },
 }

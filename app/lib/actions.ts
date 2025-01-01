@@ -17,7 +17,11 @@ import { ROUTE } from '@/config/constants/routes'
 
 import TransactionModel from '@/app/lib/models/transaction.model'
 
-import { CompletionAIModel, ExpenseTipsAIModel } from './ai'
+import {
+  CompletionAIModel,
+  ExpenseTipsAIModel,
+  UploadReceiptAIModel,
+} from './ai'
 import {
   capitalizeFirstLetter,
   getCategoryItemNames,
@@ -689,3 +693,33 @@ export async function getExpenseTipsAI(categories: string[]): Promise<string> {
   }
 }
 export const getCachedExpenseTipsAI = cache(getExpenseTipsAI)
+
+export async function getAnalyzedReceiptAI(file: Blob): Promise<string> {
+  if (!file) {
+    throw new Error('File blob is required.')
+  }
+
+  const prompt =
+    'Analyze the provided image of a receipt and return valid information about each item on the receipt. Stop analyzing before the general summary amount. If this is not the receipt image, return an empty array.'
+
+  try {
+    const imageParts = [
+      {
+        inlineData: {
+          data: Buffer.from(await file.arrayBuffer()).toString('base64'),
+          mimeType: file.type,
+        },
+      },
+    ]
+
+    const content = await UploadReceiptAIModel.generateContent([
+      prompt,
+      ...imageParts,
+    ])
+    const text = content.response.text().trim()
+
+    return text
+  } catch (err) {
+    throw err
+  }
+}
