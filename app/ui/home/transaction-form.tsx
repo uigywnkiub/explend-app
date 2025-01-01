@@ -429,7 +429,6 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   isIconOnly
                   onPress={() => fileInputRef.current?.click()}
                   className='bg-transparent'
-                  size='sm'
                 >
                   <HoverableElement
                     uKey='camera'
