@@ -397,13 +397,13 @@ function TransactionForm({ currency, userCategories }: TProps) {
             aria-label='Description'
             description={
               <div className='flex flex-wrap items-center xxs:gap-0 xs:gap-1'>
+                <div className='flex'>
+                  <AILogo asText={isAnyAIDataExist && !isLoadingAIData} />
+                </div>
                 <InfoText
-                  text='Type thoughtfully to complete the remaining fields with'
+                  text='fills in the remaining fields.'
                   withAsterisk={false}
                 />
-                <div className='flex'>
-                  <AILogo asText={isAnyAIDataExist && !isLoadingAIData} />.
-                </div>
               </div>
             }
             value={description}
