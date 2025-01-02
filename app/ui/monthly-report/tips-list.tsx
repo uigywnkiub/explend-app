@@ -11,18 +11,18 @@ export default function TipsList({ tipsDataAI }: TProps) {
         return (
           <div key={tip.category || idx} className='text-balance'>
             <h2 className='mb-2 font-semibold'>{tip.category}</h2>
-            <ul className='list-disc text-sm'>
+            <ul className='text-sm'>
               <div className='mb-4 ml-8 md:mb-6'>
                 <li className='mb-1'>
                   <p>
-                    <span className='text-default-500'>Tip: </span>
-                    <span>{tip.tip}</span>
+                    <span>Tip: </span>
+                    <span className='text-default-500'>{tip.tip}</span>
                   </p>
                 </li>
                 <li>
                   <p>
-                    <span className='text-default-500'>Savings: </span>
-                    <span>{tip.savings}</span>
+                    <span>Savings: </span>
+                    <span className='text-default-500'>{tip.savings}</span>
                   </p>
                 </li>
               </div>
