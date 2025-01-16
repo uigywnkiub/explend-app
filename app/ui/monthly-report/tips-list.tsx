@@ -15,14 +15,14 @@ export default function TipsList({ tipsDataAI }: TProps) {
               <div className='mb-4 ml-8 md:mb-6'>
                 <li className='mb-1'>
                   <p>
-                    <span>Tip: </span>
-                    <span className='text-default-500'>{tip.tip}</span>
+                    <span className='text-default-500'>Tip: </span>
+                    <span>{tip.tip}</span>
                   </p>
                 </li>
                 <li>
                   <p>
-                    <span>Savings: </span>
-                    <span className='text-default-500'>{tip.savings}</span>
+                    <span className='text-default-500'>Savings: </span>
+                    <span>{tip.savings}</span>
                   </p>
                 </li>
               </div>

@@ -299,6 +299,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
     () =>
+      // In dev mode, we may get an error or bug like the one below with an empty category after successfully analyzing the receipt.
+      // Error: Transaction validation failed: category: Path `category` is required.
       IS_PROD
         ? getCompletionAIData(
             userCategories,
