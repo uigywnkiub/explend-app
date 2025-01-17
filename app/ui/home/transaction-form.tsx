@@ -19,7 +19,7 @@ import {
   SelectItem,
   SelectSection,
   Switch,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import Compressor from 'compressorjs'
 import heic2any from 'heic2any'
 

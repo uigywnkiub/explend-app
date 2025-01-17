@@ -3,7 +3,7 @@
 import { useFormStatus } from 'react-dom'
 import { PiUserSwitch, PiUserSwitchFill } from 'react-icons/pi'
 
-import { Button } from '@nextui-org/react'
+import { Button } from '@heroui/react'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 

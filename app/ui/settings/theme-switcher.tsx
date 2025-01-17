@@ -13,7 +13,7 @@ import {
 
 import { useTheme } from 'next-themes'
 
-import { Select, SelectItem } from '@nextui-org/react'
+import { Select, SelectItem } from '@heroui/react'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { TOAST_DURATION } from '@/config/constants/toast'

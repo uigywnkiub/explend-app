@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { Button } from '@nextui-org/react'
+import { Button } from '@heroui/react'
 import { motion } from 'framer-motion'
 
 import { DIV } from '@/config/constants/motion'

@@ -8,7 +8,7 @@ import {
 
 import { useRouter } from 'next/navigation'
 
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'

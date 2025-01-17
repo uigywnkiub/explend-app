@@ -17,7 +17,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'

@@ -27,7 +27,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { motion } from 'framer-motion'
 
 import { BLINK_DURATION } from '@/config/constants/animation'

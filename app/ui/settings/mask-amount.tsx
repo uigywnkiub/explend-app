@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { Switch } from '@nextui-org/react'
+import { Switch } from '@heroui/react'
 
 import { getIsAmountHidden, setIsAmountHidden } from '@/app/lib/helpers'
 

@@ -6,7 +6,7 @@ import {
   PiNotePencilFill,
 } from 'react-icons/pi'
 
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 import { motion } from 'framer-motion'
 
@@ -66,7 +66,6 @@ function CategoryItem({
               <div
                 className='z-10 mr-2 cursor-pointer rounded-medium bg-success-50 px-3 py-2 text-xl hover:bg-success-100 md:text-2xl'
                 onClick={toggleEmojiPicker}
-                aria-hidden='true'
               >
                 <motion.div
                   drag
