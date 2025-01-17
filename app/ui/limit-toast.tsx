@@ -22,6 +22,7 @@ import {
   formatAmount,
   getCategoryWithEmoji,
   getEmojiFromCategory,
+  getFromLocalStorage,
 } from '@/app/lib/helpers'
 
 type TProps = {
@@ -31,7 +32,7 @@ type TProps = {
 export default function LimitToast({ triggerBy }: TProps) {
   const init = async () => {
     try {
-      const selectedCategoryName = localStorage.getItem(
+      const selectedCategoryName = getFromLocalStorage(
         LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME,
       )
       if (!selectedCategoryName) return null

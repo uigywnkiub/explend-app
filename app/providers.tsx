@@ -18,7 +18,11 @@ import {
   TOAST_POSITION,
 } from '@/config/constants/toast'
 
-import { getBooleanFromLocalStorage, userLocale } from './lib/helpers'
+import {
+  getBooleanFromLocalStorage,
+  getFromLocalStorage,
+  userLocale,
+} from './lib/helpers'
 import { TTheme } from './lib/types'
 
 const NextThemesProvider = dynamic(
@@ -40,7 +44,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     theme === 'dark' || theme === 'system' ? DARK_TOAST_OPTS : LIGHT_TOAST_OPTS
 
   useEffect(() => {
-    setTheme(localStorage.getItem(LOCAL_STORAGE_KEY.THEME) as TTheme)
+    setTheme(getFromLocalStorage(LOCAL_STORAGE_KEY.THEME) as TTheme)
   }, [])
 
   return (
