@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 
 import { HeroUIProvider } from '@heroui/react'
 
-import { SUCCESS } from '@/config/constants/colors'
+import { DANGER, SUCCESS } from '@/config/constants/colors'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_THEME } from '@/config/constants/main'
 import {
@@ -18,7 +18,7 @@ import {
   TOAST_POSITION,
 } from '@/config/constants/toast'
 
-import { userLocale } from './lib/helpers'
+import { getBooleanFromLocalStorage, userLocale } from './lib/helpers'
 import { TTheme } from './lib/types'
 
 const NextThemesProvider = dynamic(
@@ -31,6 +31,10 @@ const NextThemesProvider = dynamic(
 export default function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [theme, setTheme] = useState<TTheme | undefined>(undefined)
+  // Getting only when reloading the page.
+  const [isPositiveBalance] = useState(
+    getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE),
+  )
 
   const toastOptions =
     theme === 'dark' || theme === 'system' ? DARK_TOAST_OPTS : LIGHT_TOAST_OPTS
@@ -46,7 +50,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         {children}
         <Next13ProgressBar
           height='3px'
-          color={SUCCESS}
+          color={isPositiveBalance ? SUCCESS : DANGER}
           options={{ showSpinner: false }}
           showOnShallow={true}
         />
