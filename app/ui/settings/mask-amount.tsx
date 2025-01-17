@@ -6,11 +6,18 @@ import { useRouter } from 'next/navigation'
 
 import { Switch } from '@heroui/react'
 
-import { getIsAmountHidden, setIsAmountHidden } from '@/app/lib/helpers'
+import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
+
+import {
+  getBooleanFromLocalStorage,
+  toggleBooleanInLocalStorage,
+} from '@/app/lib/helpers'
 
 export default function MaskAmount() {
   const router = useRouter()
-  const [isMasked, setIsMasked] = useState(getIsAmountHidden())
+  const [isMasked, setIsMasked] = useState(
+    getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN),
+  )
 
   return (
     <Switch
@@ -20,7 +27,7 @@ export default function MaskAmount() {
       isSelected={isMasked}
       onValueChange={(isSelected) => [
         setIsMasked(isSelected),
-        setIsAmountHidden(),
+        toggleBooleanInLocalStorage(LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN),
         router.refresh(),
       ]}
     >

@@ -47,7 +47,8 @@ import {
   formatAmount,
   getCategoryItemNames,
   getFormattedCurrency,
-  isLocalStorageAvailable,
+  removeFromLocalStorage,
+  setInLocalStorage,
 } from '../../lib/helpers'
 import type { TReceipt, TTransaction } from '../../lib/types'
 import AILogo from '../ai-logo'
@@ -114,17 +115,12 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
   const categoryName = Array.from(category)[0]?.toString()
   useEffect(() => {
-    if (isLocalStorageAvailable()) {
-      if (categoryName && categoryName !== DEFAULT_CATEGORY) {
-        localStorage.setItem(
-          LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME,
-          categoryName,
-        )
-      }
+    if (categoryName && categoryName !== DEFAULT_CATEGORY) {
+      setInLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME, categoryName)
     }
 
     return () =>
-      localStorage.removeItem(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
+      removeFromLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
   }, [categoryName])
 
   const resetAllStates = useCallback(() => {

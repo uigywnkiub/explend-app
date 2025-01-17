@@ -149,22 +149,44 @@ export const toNumber = (value: number | string | null) => {
 export const isLocalStorageAvailable = (): boolean => {
   return typeof localStorage !== 'undefined'
 }
-export const getIsAmountHidden = (): boolean => {
-  if (!isLocalStorageAvailable()) return false
 
-  return localStorage.getItem(LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN) === 'true'
+export const getBooleanFromLocalStorage = (
+  key: string,
+): boolean | undefined => {
+  if (!isLocalStorageAvailable()) return
+
+  return localStorage.getItem(key) === 'true'
 }
-export const setIsAmountHidden = () => {
-  if (!isLocalStorageAvailable()) return false
-  localStorage.setItem(
-    LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
-    (!getIsAmountHidden()).toString(),
-  )
+
+export const toggleBooleanInLocalStorage = (key: string) => {
+  if (!isLocalStorageAvailable()) return
+
+  localStorage.setItem(key, (!getBooleanFromLocalStorage(key)).toString())
+}
+
+export const setInLocalStorage = (key: string, value: string) => {
+  if (!isLocalStorageAvailable()) return
+
+  localStorage.setItem(key, value)
+}
+
+export const removeFromLocalStorage = (key: string) => {
+  if (!isLocalStorageAvailable()) return
+
+  localStorage.removeItem(key)
+}
+
+export const getFromLocalStorage = (key: string): string | null => {
+  if (!isLocalStorageAvailable()) return null
+
+  return localStorage.getItem(key)
 }
 
 export const getFormattedCurrency = (
   value: number | string | null,
-  isAmountHidden: boolean = getIsAmountHidden(),
+  isAmountHidden: boolean = getBooleanFromLocalStorage(
+    LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
+  ) || false,
 ) => {
   const numericValue = toNumber(value)
   if (isNaN(numericValue)) return ''

@@ -2,12 +2,16 @@
 
 import { PiLock, PiLockFill } from 'react-icons/pi'
 
-import { getIsAmountHidden } from '@/app/lib/helpers'
+import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
+
+import { getBooleanFromLocalStorage } from '@/app/lib/helpers'
 
 import { HoverableElement } from '../hoverables'
 
 export default function MaskAmountInfo() {
-  if (!getIsAmountHidden()) return null
+  if (!getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN)) {
+    return null
+  }
 
   return (
     <div

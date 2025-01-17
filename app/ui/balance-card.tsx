@@ -6,6 +6,7 @@ import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 import { Card, CardHeader } from '@heroui/react'
 import { motion } from 'framer-motion'
 
+import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_TIME_ZONE,
@@ -19,6 +20,7 @@ import {
   getFormattedBalance,
   getFormattedCurrency,
   getGreeting,
+  setInLocalStorage,
 } from '../lib/helpers'
 import type { TTransaction, TUser } from '../lib/types'
 import Loading from '../loading'
@@ -74,6 +76,13 @@ function BalanceCard({ balance, currency, user }: TProps) {
       getTotal()
     }
   }, [getTotal, isShowTotals, isTotalLoaded])
+
+  useEffect(() => {
+    setInLocalStorage(
+      LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE,
+      String(isPositiveBalance),
+    )
+  }, [isPositiveBalance])
 
   return (
     <Card
