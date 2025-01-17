@@ -4,7 +4,7 @@ import { useCallback, useEffect } from 'react'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { Pagination } from '@nextui-org/react'
+import { Pagination } from '@heroui/react'
 
 import { SEARCH_PARAM } from '@/config/constants/navigation'
 

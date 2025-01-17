@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useFormStatus } from 'react-dom'
 
-import { Button, Kbd, Textarea } from '@nextui-org/react'
+import { Button, Kbd, Textarea } from '@heroui/react'
 
 import { cn } from '@/app/lib/helpers'
 

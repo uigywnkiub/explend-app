@@ -4,7 +4,7 @@ import { useMedia } from 'react-use'
 
 import Image from 'next/image'
 
-import { Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
+import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react'
 import { twJoin } from 'tailwind-merge'
 
 import { AI_NAME } from '@/config/constants/main'

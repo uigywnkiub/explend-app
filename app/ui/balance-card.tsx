@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
-import { Card, CardHeader } from '@nextui-org/react'
+import { Card, CardHeader } from '@heroui/react'
 import { motion } from 'framer-motion'
 
 import {
@@ -81,8 +81,8 @@ function BalanceCard({ balance, currency, user }: TProps) {
         'p-2',
         isShowTotals && isTotalLoaded
           ? isPositiveBalance
-            ? 'bg-gradient-radial from-success/15 to-content1'
-            : 'bg-gradient-radial from-danger/15 to-content1'
+            ? 'bg-gradient-radial from-success/10 to-content1'
+            : 'bg-gradient-radial from-danger/10 to-content1'
           : 'bg-content1',
       )}
       shadow='none'
@@ -92,7 +92,6 @@ function BalanceCard({ balance, currency, user }: TProps) {
         <div
           className='cursor-pointer text-center text-xl'
           onClick={onChangeInfo}
-          aria-hidden='true'
         >
           <p className='mb-4 text-xs'>{greetingMsg}</p>
           {isShowTotals ? (

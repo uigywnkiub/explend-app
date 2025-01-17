@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react'
 import { useDebounce } from 'react-use'
 
-import { DateRangePicker, DateValue, RangeValue } from '@nextui-org/react'
+import { DateRangePicker, DateValue, RangeValue } from '@heroui/react'
 import { getDaysInMonth } from 'date-fns'
 
 import { toCalendarDate } from '@/app/lib/helpers'

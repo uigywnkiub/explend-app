@@ -17,7 +17,7 @@ import {
   SelectItem,
   SelectSection,
   Switch,
-} from '@nextui-org/react'
+} from '@heroui/react'
 
 import { DEFAULT_CURRENCY_SIGN } from '@/config/constants/main'
 import { ROUTE } from '@/config/constants/routes'

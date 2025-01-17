@@ -7,7 +7,7 @@ import {
   PiListMagnifyingGlassFill,
 } from 'react-icons/pi'
 
-import { Select, SelectItem } from '@nextui-org/react'
+import { Select, SelectItem } from '@heroui/react'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'

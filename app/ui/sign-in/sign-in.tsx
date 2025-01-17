@@ -17,7 +17,7 @@ import {
 import { AuthError } from 'next-auth'
 import { signIn } from 'next-auth/react'
 
-import { Accordion, AccordionItem, Button, Divider } from '@nextui-org/react'
+import { Accordion, AccordionItem, Button, Divider } from '@heroui/react'
 
 import {
   APP_DESCRIPTION,

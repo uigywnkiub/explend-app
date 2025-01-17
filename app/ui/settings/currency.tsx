@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 
-import { Avatar, Select, SelectItem } from '@nextui-org/react'
+import { Avatar, Select, SelectItem } from '@heroui/react'
 
 import {
   CURRENCY_CODE,

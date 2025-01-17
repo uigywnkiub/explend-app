@@ -7,7 +7,7 @@ import { Next13ProgressBar } from 'next13-progressbar'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 
-import { NextUIProvider } from '@nextui-org/react'
+import { HeroUIProvider } from '@heroui/react'
 
 import { SUCCESS } from '@/config/constants/colors'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
@@ -40,7 +40,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <NextUIProvider navigate={router.push} locale={userLocale}>
+    <HeroUIProvider navigate={router.push} locale={userLocale}>
       <NextThemesProvider attribute='class' defaultTheme={DEFAULT_THEME}>
         <Toaster position={TOAST_POSITION} toastOptions={toastOptions} />
         {children}
@@ -51,6 +51,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           showOnShallow={true}
         />
       </NextThemesProvider>
-    </NextUIProvider>
+    </HeroUIProvider>
   )
 }

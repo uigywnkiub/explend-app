@@ -1,6 +1,6 @@
 'use client'
 
-import { User } from '@nextui-org/react'
+import { User } from '@heroui/react'
 
 import { TDefaultSession } from '@/app/lib/types'
 

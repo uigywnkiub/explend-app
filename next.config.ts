@@ -65,7 +65,7 @@ const nextConfig: NextConfig = {
     },
     optimizePackageImports: [
       '@ducanh2912/next-pwa',
-      '@nextui-org/react',
+      '@heroui/react',
       '@sentry/nextjs',
       'framer-motion',
       'tailwind-merge',

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { Spacer } from '@nextui-org/react'
+import { Spacer } from '@heroui/react'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 

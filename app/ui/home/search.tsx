@@ -6,7 +6,7 @@ import { useDebounce } from 'react-use'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { Accordion, AccordionItem, Input } from '@nextui-org/react'
+import { Accordion, AccordionItem, Input } from '@heroui/react'
 
 import { SEARCH_PARAM } from '@/config/constants/navigation'
 

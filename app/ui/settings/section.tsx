@@ -1,6 +1,6 @@
 import type { JSX } from 'react'
 
-import { Divider, Spacer } from '@nextui-org/react'
+import { Divider, Spacer } from '@heroui/react'
 import { type ClassValue } from 'clsx'
 
 import { cn } from '@/app/lib/helpers'

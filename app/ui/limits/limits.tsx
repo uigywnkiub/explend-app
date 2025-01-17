@@ -33,7 +33,7 @@ import {
   SelectItem,
   SelectSection,
   useDisclosure,
-} from '@nextui-org/react'
+} from '@heroui/react'
 
 import {
   DEFAULT_CATEGORY,
