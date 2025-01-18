@@ -121,7 +121,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     try {
       await editTransactionById(transactionId, newTransactionData)
       toast.success('Transaction edited.')
-      router.push(ROUTE.HOME)
+      router.back()
     } catch (err) {
       toast.error('Failed to edit transaction.')
       throw err
