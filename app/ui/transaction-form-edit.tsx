@@ -20,7 +20,6 @@ import {
 } from '@heroui/react'
 
 import { DEFAULT_CURRENCY_SIGN } from '@/config/constants/main'
-import { ROUTE } from '@/config/constants/routes'
 
 import { editTransactionById } from '../lib/actions'
 import {
