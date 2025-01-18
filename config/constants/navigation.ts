@@ -17,3 +17,5 @@ export const enum SEARCH_PARAM {
   QUERY = 'query',
   PAGE = 'page',
 }
+
+export const DEFAULT_PAGE_NUMBER: string = '1'

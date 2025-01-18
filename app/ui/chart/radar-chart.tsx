@@ -1,5 +1,9 @@
 'use client'
 
+import { memo, useCallback } from 'react'
+
+import { useRouter } from 'next/navigation'
+
 import {
   Legend,
   PolarAngleAxis,
@@ -21,6 +25,7 @@ import {
 import {
   capitalizeFirstLetter,
   cn,
+  createHrefWithCategory,
   getFormattedCurrency,
 } from '@/app/lib/helpers'
 import { TTransaction } from '@/app/lib/types'
@@ -34,11 +39,20 @@ type TProps = {
 }
 
 function RadarChart({ transactions, currency }: TProps) {
+  const router = useRouter()
+
   const { income, expense } = filterTransactions(transactions)
   const chartData = calculateChartData(income, expense)
   const transactionsTotals = getTransactionsTotals([...income, ...expense])
   const isPositiveBalance =
     transactionsTotals.income > transactionsTotals.expense
+
+  const createHrefWithCategoryCallback = useCallback(
+    (category: TTransaction['category']) => {
+      router.push(createHrefWithCategory(category))
+    },
+    [router],
+  )
 
   return (
     <ResponsiveContainer width='100%' height='100%' className='-mt-8'>
@@ -50,15 +64,20 @@ function RadarChart({ transactions, currency }: TProps) {
         />
         <PolarAngleAxis
           dataKey='category'
-          tick={(props) => (
-            <text
-              {...props}
-              className='fill-foreground text-sm md:text-medium'
-              alignmentBaseline='central'
-            >
-              {props.payload.value}
-            </text>
-          )}
+          tick={(props) => {
+            const category = props.payload.value
+
+            return (
+              <text
+                {...props}
+                className='cursor-pointer fill-foreground text-sm hover:opacity-hover md:text-medium'
+                alignmentBaseline='central'
+                onClick={() => createHrefWithCategoryCallback(category)}
+              >
+                {category}
+              </text>
+            )
+          }}
         />
         <Radar
           dataKey='income'
@@ -100,4 +119,4 @@ function RadarChart({ transactions, currency }: TProps) {
   )
 }
 
-export default RadarChart
+export default memo(RadarChart)

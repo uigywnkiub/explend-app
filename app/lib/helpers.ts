@@ -24,6 +24,11 @@ import {
   DEFAULT_LANG,
   DEFAULT_TIME_ZONE,
 } from '@/config/constants/main'
+import {
+  DEFAULT_PAGE_NUMBER,
+  SEARCH_PARAM,
+} from '@/config/constants/navigation'
+import { ROUTE } from '@/config/constants/routes'
 
 import type {
   TApproxCategory,
@@ -60,7 +65,7 @@ export const capitalizeFirstLetter = (str: string): string => {
 
 export const getEmojiFromCategory = (
   category: TTransaction['category'],
-): string => {
+): TTransaction['category'] => {
   const regex = emojiRegex()
   const match = category.match(regex)
 
@@ -69,7 +74,7 @@ export const getEmojiFromCategory = (
 
 export const getCategoryWithoutEmoji = (
   category: TTransaction['category'],
-): string => {
+): TTransaction['category'] => {
   const regex = emojiRegex()
 
   // Replace the emoji(s) at the beginning of the category with an empty string
@@ -122,7 +127,7 @@ export const formatTime = (dateStr: Date): string => {
 export const getCategoryWithEmoji = (
   category: FormDataEntryValue | null | undefined,
   categories: TTransaction['categories'],
-): string => {
+): TTransaction['category'] => {
   if (
     typeof category !== 'string' ||
     category === null ||
@@ -401,4 +406,10 @@ export const getExpenseCategoriesList = (
   return isGetTheFirstThree
     ? categoriesData.slice(0, 3).map((c) => c.category)
     : categoriesData.map((c) => c.category)
+}
+
+export const createHrefWithCategory = (
+  category: TTransaction['category'],
+): TTransaction['category'] => {
+  return `${ROUTE.HOME}?${SEARCH_PARAM.PAGE}=${DEFAULT_PAGE_NUMBER}&${SEARCH_PARAM.QUERY}=${getCategoryWithoutEmoji(category)}`
 }

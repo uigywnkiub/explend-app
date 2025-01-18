@@ -4,6 +4,8 @@ import { Fragment, useCallback, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
+import Link from 'next/link'
+
 import { Button, DateValue, Divider, RangeValue } from '@heroui/react'
 import { getLocalTimeZone } from '@internationalized/date'
 import {
@@ -28,6 +30,7 @@ import {
   getMinMaxTransactionsByDate,
 } from '@/app/lib/data'
 import {
+  createHrefWithCategory,
   getExpenseCategoriesList,
   getFormattedCurrency,
   toCalendarDate,
@@ -144,7 +147,14 @@ function MonthlyReport({ transactions, currency }: TProps) {
     () =>
       monthlyReportData.map((category) => (
         <Fragment key={category.category}>
-          <div className='truncate md:text-lg'>{category.category}</div>
+          <div className='truncate md:text-lg'>
+            <Link
+              href={createHrefWithCategory(category.category)}
+              className='hover:opacity-hover'
+            >
+              {category.category}
+            </Link>
+          </div>
           <div className='md:text-lg'>{category.percentage} %</div>
           <div className='md:text-lg'>
             {getFormattedCurrency(category.spent)}{' '}
