@@ -5,6 +5,8 @@ import {
   SchemaType,
 } from '@google/generative-ai'
 
+import { TExpenseAdvice, TReceiptState } from './types'
+
 const { GEMINI_API_KEY, GEMINI_MODEL, GEMINI_RICHER_MODEL } = process.env
 
 if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY not defined')
@@ -80,8 +82,11 @@ export const ExpenseTipsAIModel = genAI.getGenerativeModel({
             type: SchemaType.STRING,
           },
         },
-        // Type: `TExpenseAdvice`
-        required: ['category', 'tip', 'savings'],
+        required: [
+          'category',
+          'tip',
+          'savings',
+        ] satisfies readonly (keyof TExpenseAdvice)[],
       },
     },
   },
@@ -105,7 +110,10 @@ export const UploadReceiptAIModel = genAI.getGenerativeModel({
             type: SchemaType.NUMBER,
           },
         },
-        required: ['description', 'amount'],
+        required: [
+          'description',
+          'amount',
+        ] satisfies readonly (keyof TReceiptState)[],
       },
     },
   },
