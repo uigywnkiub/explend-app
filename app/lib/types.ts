@@ -191,3 +191,8 @@ export type TReceipt = {
   description: TTransaction['description']
   amount: number
 }
+
+export type TReceiptState = {
+  description: TTransaction['description']
+  amount: TTransaction['amount']
+}

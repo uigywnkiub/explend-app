@@ -6,7 +6,17 @@ export const TOAST_POSITION: ToastPosition = 'bottom-center'
 
 export const TOAST_DURATION = 2000 // ms
 
-const FONT_WEIGHT = 600 // semibold
+export const TOAST_FONT_WEIGHT = 600 // semibold
+export const TOAST_DARK_STYLE = {
+  background: CUSTOM_DARK,
+  color: CUSTOM_LIGHT,
+  fontWeight: TOAST_FONT_WEIGHT,
+}
+export const TOAST_LIGHT_STYLE = {
+  background: CUSTOM_LIGHT,
+  color: CUSTOM_DARK,
+  fontWeight: TOAST_FONT_WEIGHT,
+}
 
 export const DARK_TOAST_OPTS: DefaultToastOptions = {
   duration: TOAST_DURATION,
@@ -15,29 +25,17 @@ export const DARK_TOAST_OPTS: DefaultToastOptions = {
       primary: CUSTOM_DARK,
       secondary: SUCCESS,
     },
-    style: {
-      background: CUSTOM_DARK,
-      color: CUSTOM_LIGHT,
-      fontWeight: FONT_WEIGHT,
-    },
+    style: TOAST_DARK_STYLE,
   },
   error: {
     iconTheme: {
       primary: CUSTOM_DARK,
       secondary: DANGER,
     },
-    style: {
-      background: CUSTOM_DARK,
-      color: CUSTOM_LIGHT,
-      fontWeight: FONT_WEIGHT,
-    },
+    style: TOAST_DARK_STYLE,
   },
   loading: {
-    style: {
-      background: CUSTOM_DARK,
-      color: CUSTOM_LIGHT,
-      fontWeight: FONT_WEIGHT,
-    },
+    style: TOAST_DARK_STYLE,
   },
 }
 
@@ -48,28 +46,16 @@ export const LIGHT_TOAST_OPTS: DefaultToastOptions = {
       primary: CUSTOM_LIGHT,
       secondary: SUCCESS,
     },
-    style: {
-      background: CUSTOM_LIGHT,
-      color: CUSTOM_DARK,
-      fontWeight: FONT_WEIGHT,
-    },
+    style: TOAST_LIGHT_STYLE,
   },
   error: {
     iconTheme: {
       primary: CUSTOM_LIGHT,
       secondary: DANGER,
     },
-    style: {
-      background: CUSTOM_LIGHT,
-      color: CUSTOM_DARK,
-      fontWeight: FONT_WEIGHT,
-    },
+    style: TOAST_LIGHT_STYLE,
   },
   loading: {
-    style: {
-      background: CUSTOM_LIGHT,
-      color: CUSTOM_DARK,
-      fontWeight: FONT_WEIGHT,
-    },
+    style: TOAST_LIGHT_STYLE,
   },
 }
