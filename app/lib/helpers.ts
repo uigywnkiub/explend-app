@@ -413,3 +413,21 @@ export const createHrefWithCategory = (
 ): TTransaction['category'] => {
   return `${ROUTE.HOME}?${SEARCH_PARAM.PAGE}=${DEFAULT_PAGE_NUMBER}&${SEARCH_PARAM.QUERY}=${getCategoryWithoutEmoji(category)}`
 }
+
+export const validateArrayWithKeys = (
+  data: unknown,
+  requiredKeys: string[],
+): boolean => {
+  // Check if it's an array.
+  if (!Array.isArray(data)) return false
+
+  // Validate each object in the array.
+  return data.every((item) => {
+    if (typeof item !== 'object' || !item) return false
+
+    // Ensure all required keys are present and their values are strings.
+    return requiredKeys.every(
+      (key) => key in item && typeof item[key] === 'string',
+    )
+  })
+}

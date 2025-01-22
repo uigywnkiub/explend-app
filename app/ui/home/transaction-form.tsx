@@ -2,10 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom'
-import toast from 'react-hot-toast'
+import toast, { type ToastOptions } from 'react-hot-toast'
 import { PiCamera, PiCameraFill } from 'react-icons/pi'
-import { useDebounce } from 'react-use'
+import { useDebounce, useLocalStorage } from 'react-use'
 import type { UseDebounceReturn } from 'react-use/lib/useDebounce'
+
+import { useTheme } from 'next-themes'
 
 import {
   Accordion,
@@ -18,6 +20,7 @@ import {
   Selection,
   SelectItem,
   SelectSection,
+  Spacer,
   Switch,
 } from '@heroui/react'
 import Compressor from 'compressorjs'
@@ -31,7 +34,11 @@ import {
   DEFAULT_ICON_SIZE,
   IS_PROD,
 } from '@/config/constants/main'
-import { TOAST_DURATION } from '@/config/constants/toast'
+import {
+  TOAST_DARK_STYLE,
+  TOAST_DURATION,
+  TOAST_LIGHT_STYLE,
+} from '@/config/constants/toast'
 
 import {
   getAnalyzedReceiptAI,
@@ -47,10 +54,17 @@ import {
   formatAmount,
   getCategoryItemNames,
   getFormattedCurrency,
+  pluralize,
   removeFromLocalStorage,
   setInLocalStorage,
+  validateArrayWithKeys,
 } from '../../lib/helpers'
-import type { TReceipt, TTransaction } from '../../lib/types'
+import type {
+  TReceipt,
+  TReceiptState,
+  TTheme,
+  TTransaction,
+} from '../../lib/types'
 import AILogo from '../ai-logo'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
@@ -66,20 +80,41 @@ type TProps = {
 
 function TransactionForm({ currency, userCategories }: TProps) {
   const { pending } = useFormStatus()
-  const [isSwitchedOn, setIsSwitchedOn] = useState(false)
+  const { theme } = useTheme()
   const [isExpanded, setIsExpanded] = useState(false)
-  // Receipt AI-related state
-  const [receiptAIData, setReceiptAIData] = useState<
-    {
-      description: TReceipt['description']
-      amount: TTransaction['amount']
-    }[]
-  >([])
-  const [currReceiptAIDataIdx, setCurrReceiptAIDataIdx] = useState(0)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const hasReceiptAIData = receiptAIData.length > 0
-  const [amount, setAmount] = useState('')
+  const [isSwitchedOn, setIsSwitchedOn] = useState(false)
   const [description, setDescription] = useState('')
+  const [amount, setAmount] = useState('')
+  // Receipt AI-related states
+  const [
+    receiptAIDataLocalStorageRaw,
+    setReceiptAIDataLocalStorage,
+    rmReceiptAIDataLocalStorage,
+  ] = useLocalStorage(LOCAL_STORAGE_KEY.AI_RECEIPT_DATA)
+  const isValidReceiptAIDataLocalStorage = validateArrayWithKeys(
+    receiptAIDataLocalStorageRaw,
+    ['description', 'amount'] as (keyof TReceiptState)[],
+  )
+  const receiptAIDataLocalStorage = isValidReceiptAIDataLocalStorage
+    ? (receiptAIDataLocalStorageRaw as TReceiptState[])
+    : []
+  const [receiptAIData, setReceiptAIData] = useState<TReceiptState[]>(
+    receiptAIDataLocalStorage,
+  )
+  const hasReceiptAIData = receiptAIData.length > 0
+  const [currReceiptAIDataIdx, setCurrReceiptAIDataIdx] = useState(0)
+  const [hasCurrOrPrevReceiptAIData, setHasCurrOrPrevReceiptAIData] =
+    useState(false)
+  const [
+    attemptResumeAIReceiptData,
+    setAttemptResumeAIReceiptData,
+    rmAttemptResumeAIReceiptData,
+  ] = useLocalStorage(LOCAL_STORAGE_KEY.ATTEMPT_RESUME_AI_RECEIPT_DATA, 0)
+  const isValidAttemptResumeAIReceiptData =
+    typeof attemptResumeAIReceiptData === 'number' &&
+    [0, 1, 2].includes(attemptResumeAIReceiptData)
+  const toastShownRef = useRef(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   // AI-related states
   const [isLoadingAIData, setIsLoadingAIData] = useState(false)
   const [isAmountAIValid, setIsAmountAIValid] = useState(false)
@@ -133,8 +168,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
     setIsTransactionTypeAIValid(false)
     setCategoryItemNameAI('')
     setCategory(new Set([DEFAULT_CATEGORY]))
-    setReceiptAIData([])
-  }, [])
+    if (hasCurrOrPrevReceiptAIData) setReceiptAIData([])
+  }, [hasCurrOrPrevReceiptAIData])
 
   const resetAIRelatedStates = useCallback(() => {
     setIsAmountAIValid(false)
@@ -152,15 +187,16 @@ function TransactionForm({ currency, userCategories }: TProps) {
         error: 'Failed to analyze receipt.',
       })
       const parsedRes: TReceipt[] = JSON.parse(res)
-      const modifiedText = parsedRes.map((item) => ({
+      const modifiedReceiptData = parsedRes.map((item) => ({
         ...item,
         amount: getFormattedCurrency(Math.round(item.amount), false),
       }))
 
-      setReceiptAIData(modifiedText)
-      if (modifiedText.length > 0) {
-        setDescription(modifiedText[0].description)
-        setAmount(modifiedText[0].amount)
+      setReceiptAIData(modifiedReceiptData)
+      setReceiptAIDataLocalStorage(modifiedReceiptData)
+      if (modifiedReceiptData.length > 0) {
+        setDescription(modifiedReceiptData[0].description)
+        setAmount(modifiedReceiptData[0].amount)
       } else {
         setTimeout(() => {
           toast.error('Not a valid receipt.')
@@ -208,6 +244,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         checkOrientation: false,
         success: (compressedFile: File) => {
           getReceiptAIData(compressedFile)
+          setHasCurrOrPrevReceiptAIData(true)
         },
         error: (err) => {
           throw err
@@ -223,19 +260,29 @@ function TransactionForm({ currency, userCategories }: TProps) {
     if (nextIndex < receiptAIData.length) {
       toast.success(`${nextIndex}/${receiptAIData.length} transactions added.`)
 
+      setReceiptAIDataLocalStorage(receiptAIData.slice(nextIndex))
+
       setCurrReceiptAIDataIdx(nextIndex)
       setDescription(receiptAIData[nextIndex].description)
       setAmount(receiptAIData[nextIndex].amount)
     } else {
       toast.success(
-        `${receiptAIData.length}/${receiptAIData.length} transactions added.`,
+        `${receiptAIData.length}/${receiptAIData.length} ${pluralize(receiptAIData.length, 'transaction', 'transactions')} added.`,
       )
       setTimeout(() => {
         toast.success('All transactions added.')
+
+        rmReceiptAIDataLocalStorage()
       }, TOAST_DURATION)
       resetAllStates()
     }
-  }, [currReceiptAIDataIdx, receiptAIData, resetAllStates])
+  }, [
+    currReceiptAIDataIdx,
+    receiptAIData,
+    resetAllStates,
+    rmReceiptAIDataLocalStorage,
+    setReceiptAIDataLocalStorage,
+  ])
 
   const getCompletionAIData = useCallback(
     async (
@@ -327,7 +374,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     if (pending) {
       // Abort useDebounce after form submit.
       cancel()
-      if (hasReceiptAIData) {
+      if (hasReceiptAIData && hasCurrOrPrevReceiptAIData) {
         return onSubmitReceiptTransaction()
       }
       resetAllStates()
@@ -341,7 +388,91 @@ function TransactionForm({ currency, userCategories }: TProps) {
     hasReceiptAIData,
     pending,
     resetAllStates,
+    hasCurrOrPrevReceiptAIData,
   ])
+
+  useDebounce(
+    () => {
+      if (!isValidReceiptAIDataLocalStorage || toastShownRef.current) return
+
+      toast(
+        // May contain slightly different keys in t than ToastOptions.
+        (t: ToastOptions) => {
+          return (
+            <div className='text-center'>
+              <div className='flex justify-center gap-2'>
+                <p>🙋</p>
+                <p>Resume previous receipt?</p>
+              </div>
+              <Spacer y={4} />
+              <div className='flex justify-center gap-2'>
+                <Button
+                  variant='light'
+                  onPress={() => {
+                    if (isValidAttemptResumeAIReceiptData) {
+                      setAttemptResumeAIReceiptData(
+                        attemptResumeAIReceiptData + 1,
+                      )
+                    }
+                    toast.dismiss(t.id)
+                  }}
+                >
+                  Dismiss
+                </Button>
+                {attemptResumeAIReceiptData === 3 && (
+                  <Button
+                    color='danger'
+                    variant='flat'
+                    onPress={() => {
+                      rmReceiptAIDataLocalStorage()
+                      rmAttemptResumeAIReceiptData()
+                      toast.dismiss(t.id)
+                    }}
+                  >
+                    <div className='flex gap-2'>
+                      <p>🧨</p>
+                      <p>Burn it</p>
+                    </div>
+                  </Button>
+                )}
+                <Button
+                  color='primary'
+                  variant='flat'
+                  onPress={() => {
+                    setDescription(receiptAIData[0].description)
+                    setAmount(receiptAIData[0].amount)
+                    setHasCurrOrPrevReceiptAIData(true)
+                    toast.dismiss(t.id)
+                  }}
+                >
+                  <div className='flex gap-2'>
+                    <p>📥</p>
+                    <p>Resume</p>
+                  </div>
+                </Button>
+              </div>
+              <Spacer y={2} />
+              <InfoText
+                text={`${receiptAIDataLocalStorage.length} ${pluralize(receiptAIDataLocalStorage.length, 'transaction', 'transactions')} remaining`}
+                withAsterisk={false}
+              />
+            </div>
+          )
+        },
+        {
+          style:
+            (theme as TTheme) === 'dark' || (theme as TTheme) === 'system'
+              ? TOAST_DARK_STYLE
+              : TOAST_LIGHT_STYLE,
+          duration: Infinity,
+        },
+      )
+
+      toastShownRef.current = true // Set flag to true after the toast is shown.
+    },
+    1000,
+    [],
+  )
 
   const accordionTitle = isExpanded
     ? `Hide ${ACCORDION_ITEM_KEY}`

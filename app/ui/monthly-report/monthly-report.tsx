@@ -52,7 +52,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const [isLoadingTips, setIsLoadingTips] = useState(false)
 
   const { canAttempt, registerAttempt } = useAttemptTracker(
-    LOCAL_STORAGE_KEY.AI_EXPENSE_TIPS,
+    LOCAL_STORAGE_KEY.ATTEMPT_AI_EXPENSE_TIPS,
   )
   const { minTransaction, maxTransaction } = useMemo(
     () => getMinMaxTransactionsByDate(transactions),

@@ -40,7 +40,7 @@ import NoTransactionsPlug from './ui/no-transactions-plug'
 import PaginationList from './ui/pagination/pagination-list'
 import WithSidebar from './ui/sidebar/with-sidebar'
 
-export default async function Home(props: {
+export default async function Page(props: {
   searchParams?: Promise<{
     [SEARCH_PARAM.QUERY]?: string
     [SEARCH_PARAM.PAGE]?: string
