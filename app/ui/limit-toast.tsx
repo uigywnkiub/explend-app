@@ -93,7 +93,7 @@ export default function LimitToast({ triggerBy }: TProps) {
   }
 
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
-  const [isReady, cancel] = useDebounce(() => init(), 200, [triggerBy])
+  const [isReady, cancel] = useDebounce(() => init(), 300, [triggerBy])
 
   useEffect(() => {
     if (!isReady()) cancel()

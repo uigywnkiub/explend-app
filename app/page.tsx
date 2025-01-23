@@ -83,12 +83,13 @@ export default async function Page(props: {
     transactionsWithChangedCategory.length
 
   const searchedTransactionsByQuery = transactions.filter((t) => {
+    const queryLower = toLowerCase(query)
+
     return (
-      toLowerCase(t.description).includes(toLowerCase(query)) ||
-      toLowerCase(t.amount).includes(toLowerCase(query)) ||
-      toLowerCase(getCategoryWithoutEmoji(t.category)).includes(
-        toLowerCase(query),
-      )
+      toLowerCase(t.description).includes(queryLower) ||
+      toLowerCase(t.amount).includes(queryLower) ||
+      toLowerCase(getCategoryWithoutEmoji(t.category)).includes(queryLower) ||
+      toLowerCase(formatDate(t.createdAt)).includes(queryLower)
     )
   })
   const hasSearchedTransactionsByQuery = searchedTransactionsByQuery.length > 0
