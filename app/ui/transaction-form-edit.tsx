@@ -19,7 +19,10 @@ import {
   Switch,
 } from '@heroui/react'
 
-import { DEFAULT_CURRENCY_SIGN } from '@/config/constants/main'
+import {
+  DEFAULT_CATEGORY,
+  DEFAULT_CURRENCY_SIGN,
+} from '@/config/constants/main'
 
 import { editTransactionById } from '../lib/actions'
 import {
@@ -244,7 +247,18 @@ function TransactionFormEdit({ transaction }: TProps) {
                       title={category.subject}
                     >
                       {category.items.map((item) => (
-                        <SelectItem key={item.name}>
+                        <SelectItem
+                          key={item.name}
+                          endContent={
+                            item.name === DEFAULT_CATEGORY && (
+                              <InfoText
+                                text='default'
+                                withAsterisk={false}
+                                withHover={false}
+                              />
+                            )
+                          }
+                        >
                           {`${item.emoji} ${item.name}`}
                         </SelectItem>
                       ))}

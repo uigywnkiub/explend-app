@@ -93,7 +93,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
   ] = useLocalStorage(LOCAL_STORAGE_KEY.AI_RECEIPT_DATA)
   const isValidReceiptAIDataLocalStorage = validateArrayWithKeys(
     receiptAIDataLocalStorageRaw,
-    ['description', 'amount'] as (keyof TReceiptState)[],
+    ['description', 'amount'] satisfies readonly (keyof TReceiptState)[],
   )
   const receiptAIDataLocalStorage = isValidReceiptAIDataLocalStorage
     ? (receiptAIDataLocalStorageRaw as TReceiptState[])
@@ -150,7 +150,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
   const categoryName = Array.from(category)[0]?.toString()
   useEffect(() => {
-    if (categoryName && categoryName !== DEFAULT_CATEGORY) {
+    if (categoryName) {
       setInLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME, categoryName)
     }
 
@@ -653,7 +653,18 @@ function TransactionForm({ currency, userCategories }: TProps) {
                         title={category.subject}
                       >
                         {category.items.map((item) => (
-                          <SelectItem key={item.name}>
+                          <SelectItem
+                            key={item.name}
+                            endContent={
+                              item.name === DEFAULT_CATEGORY && (
+                                <InfoText
+                                  text='default'
+                                  withAsterisk={false}
+                                  withHover={false}
+                                />
+                              )
+                            }
+                          >
                             {`${item.emoji} ${item.name}`}
                           </SelectItem>
                         ))}

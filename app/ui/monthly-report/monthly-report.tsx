@@ -2,7 +2,12 @@
 
 import { Fragment, useCallback, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
-import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
+import {
+  PiArrowCircleDownFill,
+  PiArrowCircleUpFill,
+  PiWarningOctagonFill,
+} from 'react-icons/pi'
+import { useLocalStorage } from 'react-use'
 
 import Link from 'next/link'
 
@@ -31,9 +36,12 @@ import {
 } from '@/app/lib/data'
 import {
   createHrefWithCategory,
+  deepCompareArrays,
   getExpenseCategoriesList,
   getFormattedCurrency,
+  sortArrayByKeyByReferenceArray,
   toCalendarDate,
+  validateArrayWithKeys,
 } from '@/app/lib/helpers'
 import useAttemptTracker from '@/app/lib/hooks'
 import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
@@ -41,6 +49,8 @@ import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
 import AILogo from '../ai-logo'
 import MonthPicker from './month-picker'
 import TipsList from './tips-list'
+
+const REFRESH_TIPS_BTN_TEXT = 'Refresh tips'
 
 type TProps = {
   transactions: TTransaction[]
@@ -50,6 +60,18 @@ type TProps = {
 function MonthlyReport({ transactions, currency }: TProps) {
   const [tipsDataAI, setTipsDataAI] = useState<TExpenseAdvice[] | null>(null)
   const [isLoadingTips, setIsLoadingTips] = useState(false)
+
+  const [expenseTipsAIDataLocalStorageRaw, setExpenseTipsAIDataLocalStorage] =
+    useLocalStorage(LOCAL_STORAGE_KEY.AI_EXPENSE_TIPS_DATA)
+  const isValidExpenseTipsAIDataLocalStorage = validateArrayWithKeys(
+    expenseTipsAIDataLocalStorageRaw,
+    ['category', 'tip', 'savings'] satisfies readonly (keyof TExpenseAdvice)[],
+  )
+  const expenseTipsAIDataLocalStorage = useMemo(() => {
+    return isValidExpenseTipsAIDataLocalStorage
+      ? (expenseTipsAIDataLocalStorageRaw as TExpenseAdvice[])
+      : []
+  }, [isValidExpenseTipsAIDataLocalStorage, expenseTipsAIDataLocalStorageRaw])
 
   const { canAttempt, registerAttempt } = useAttemptTracker(
     LOCAL_STORAGE_KEY.ATTEMPT_AI_EXPENSE_TIPS,
@@ -107,12 +129,34 @@ function MonthlyReport({ transactions, currency }: TProps) {
     () => getExpenseCategoriesList(monthlyReportData, false),
     [monthlyReportData],
   )
+  const isMissMatchLocalStorageAndCurrMonthExpenses = useMemo(
+    () =>
+      !deepCompareArrays(
+        expenseTipsAIDataLocalStorage.map((e) => e.category).sort(),
+        monthlyReportData.map((e) => e.category).sort(),
+      ),
+    [expenseTipsAIDataLocalStorage, monthlyReportData],
+  )
 
   const isTipsDataExist = tipsDataAI && tipsDataAI?.length > 0
 
   const getExpenseTipsAIData = useCallback(async () => {
     if (monthlyReportData.length === 0) {
       toast.error('No expenses found.')
+
+      return
+    }
+    if (isValidExpenseTipsAIDataLocalStorage && !isTipsDataExist) {
+      const sortedExpenseTipsAIDataLocalStorage =
+        sortArrayByKeyByReferenceArray(
+          expenseTipsAIDataLocalStorage,
+          monthlyReportData,
+          'category',
+        )
+
+      setTipsDataAI(sortedExpenseTipsAIDataLocalStorage)
+      setExpenseTipsAIDataLocalStorage(sortedExpenseTipsAIDataLocalStorage)
+      toast.success('Restored from memory.')
 
       return
     }
@@ -124,7 +168,9 @@ function MonthlyReport({ transactions, currency }: TProps) {
     setIsLoadingTips(true)
     try {
       const res = await getCachedExpenseTipsAI(expenseCategories)
-      setTipsDataAI(JSON.parse(res))
+      const parsedRes = JSON.parse(res)
+      setTipsDataAI(parsedRes)
+      setExpenseTipsAIDataLocalStorage(parsedRes)
       registerAttempt()
       toast.success(isTipsDataExist ? 'Tips refreshed.' : 'Tips loaded.')
     } catch (err) {
@@ -138,9 +184,12 @@ function MonthlyReport({ transactions, currency }: TProps) {
   }, [
     canAttempt,
     expenseCategories,
+    expenseTipsAIDataLocalStorage,
     isTipsDataExist,
-    monthlyReportData.length,
+    isValidExpenseTipsAIDataLocalStorage,
+    monthlyReportData,
     registerAttempt,
+    setExpenseTipsAIDataLocalStorage,
   ])
 
   const memorizedMonthlyReportData = useMemo(
@@ -257,10 +306,18 @@ function MonthlyReport({ transactions, currency }: TProps) {
               ? 'Refreshing...'
               : 'Getting...'
             : isTipsDataExist
-              ? 'Refresh tips'
+              ? REFRESH_TIPS_BTN_TEXT
               : 'Get tips'}
         </Button>
       </div>
+      {isMissMatchLocalStorageAndCurrMonthExpenses && isTipsDataExist && (
+        <p className='mt-4 text-center text-sm text-warning'>
+          <PiWarningOctagonFill className='inline animate-pulse' /> Tips from
+          memory do not match the current month&apos;s expense tips.
+          <br />
+          Press &apos;{REFRESH_TIPS_BTN_TEXT}&apos; to update and sync them.
+        </p>
+      )}
     </>
   )
 }

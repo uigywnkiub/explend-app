@@ -5,6 +5,7 @@ type TProps = {
   text: string
   withAsterisk?: boolean
   withDoubleAsterisk?: boolean
+  withHover?: boolean
   isSm?: boolean
 }
 
@@ -13,14 +14,16 @@ export default function InfoText({
   text,
   withAsterisk = true,
   withDoubleAsterisk = false,
+  withHover = true,
   isSm = false,
 }: TProps) {
   return (
     <p
       id={id}
       className={cn(
-        'text-default-500 hover:cursor-none hover:text-foreground',
+        'text-default-500',
         isSm ? 'text-xs md:text-sm' : 'text-xs',
+        withHover && 'hover:cursor-none hover:text-foreground',
       )}
     >
       {withDoubleAsterisk && ' ** '}

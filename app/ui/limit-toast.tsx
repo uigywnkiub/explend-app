@@ -84,7 +84,7 @@ export default function LimitToast({ triggerBy }: TProps) {
               userCategories || DEFAULT_CATEGORIES,
             ),
           ),
-          duration: TOAST_DURATION * 2,
+          duration: TOAST_DURATION * 1.5,
         })
       }
     } catch (err) {
