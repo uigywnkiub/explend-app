@@ -431,3 +431,26 @@ export const validateArrayWithKeys = (
     )
   })
 }
+
+export const sortArrayByKeyByReferenceArray = <
+  T extends object,
+  U extends object,
+>(
+  arrToSort: T[],
+  refArr: U[],
+  key: keyof T & keyof U, // Ensure the key exists in both types.
+): T[] => {
+  // Create a map of key values to their index in refArr.
+  const keyOrderMap = new Map(
+    refArr.map((item, idx) => [String(item[key]), idx]),
+  )
+
+  return arrToSort.toSorted((a, b) => {
+    const aKey = String(a[key])
+    const bKey = String(b[key])
+    const aIdx = keyOrderMap.get(aKey) ?? Number.MAX_SAFE_INTEGER
+    const bIdx = keyOrderMap.get(bKey) ?? Number.MAX_SAFE_INTEGER
+
+    return aIdx - bIdx
+  })
+}

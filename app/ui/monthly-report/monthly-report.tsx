@@ -36,8 +36,10 @@ import {
 } from '@/app/lib/data'
 import {
   createHrefWithCategory,
+  deepCompareArrays,
   getExpenseCategoriesList,
   getFormattedCurrency,
+  sortArrayByKeyByReferenceArray,
   toCalendarDate,
   validateArrayWithKeys,
 } from '@/app/lib/helpers'
@@ -127,11 +129,16 @@ function MonthlyReport({ transactions, currency }: TProps) {
     () => getExpenseCategoriesList(monthlyReportData, false),
     [monthlyReportData],
   )
+  const isMissMatchLocalStorageAndCurrMonthExpenses = useMemo(
+    () =>
+      !deepCompareArrays(
+        expenseTipsAIDataLocalStorage.map((e) => e.category).sort(),
+        monthlyReportData.map((e) => e.category).sort(),
+      ),
+    [expenseTipsAIDataLocalStorage, monthlyReportData],
+  )
 
   const isTipsDataExist = tipsDataAI && tipsDataAI?.length > 0
-
-  const isMissMatchLocalStorageAndCurrMonthExpenses =
-    expenseTipsAIDataLocalStorage.length !== monthlyReportData.length
 
   const getExpenseTipsAIData = useCallback(async () => {
     if (monthlyReportData.length === 0) {
@@ -140,7 +147,15 @@ function MonthlyReport({ transactions, currency }: TProps) {
       return
     }
     if (isValidExpenseTipsAIDataLocalStorage && !isTipsDataExist) {
-      setTipsDataAI(expenseTipsAIDataLocalStorage)
+      const sortedExpenseTipsAIDataLocalStorage =
+        sortArrayByKeyByReferenceArray(
+          expenseTipsAIDataLocalStorage,
+          monthlyReportData,
+          'category',
+        )
+
+      setTipsDataAI(sortedExpenseTipsAIDataLocalStorage)
+      setExpenseTipsAIDataLocalStorage(sortedExpenseTipsAIDataLocalStorage)
       toast.success('Restored from memory.')
 
       return
@@ -172,7 +187,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
     expenseTipsAIDataLocalStorage,
     isTipsDataExist,
     isValidExpenseTipsAIDataLocalStorage,
-    monthlyReportData.length,
+    monthlyReportData,
     registerAttempt,
     setExpenseTipsAIDataLocalStorage,
   ])

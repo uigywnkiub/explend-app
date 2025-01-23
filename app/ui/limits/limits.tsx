@@ -346,9 +346,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         items={userCategories}
                         selectedKeys={category}
                         onSelectionChange={setCategory}
-                        disabledKeys={disabledCategories.concat(
-                          DEFAULT_CATEGORY,
-                        )}
+                        disabledKeys={disabledCategories}
                       >
                         {userCategories.map((category, idx, arr) => (
                           <SelectSection
@@ -368,8 +366,9 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                                     </span>
                                   ) : item.name === DEFAULT_CATEGORY ? (
                                     <InfoText
-                                      text='Default category'
+                                      text='default'
                                       withAsterisk={false}
+                                      withHover={false}
                                     />
                                   ) : null
                                 }
