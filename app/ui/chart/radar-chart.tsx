@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, useCallback } from 'react'
+import { memo } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -25,7 +25,8 @@ import {
 import {
   capitalizeFirstLetter,
   cn,
-  createHrefWithCategory,
+  createSearchHrefWithKeyword,
+  getCategoryWithoutEmoji,
   getFormattedCurrency,
 } from '@/app/lib/helpers'
 import { TTransaction } from '@/app/lib/types'
@@ -47,13 +48,6 @@ function RadarChart({ transactions, currency }: TProps) {
   const isPositiveBalance =
     transactionsTotals.income > transactionsTotals.expense
 
-  const createHrefWithCategoryCallback = useCallback(
-    (category: TTransaction['category']) => {
-      router.push(createHrefWithCategory(category))
-    },
-    [router],
-  )
-
   return (
     <ResponsiveContainer width='100%' height='100%' className='-mt-8'>
       <RechartRadarChart cx='50%' cy='50%' outerRadius='75%' data={chartData}>
@@ -72,7 +66,13 @@ function RadarChart({ transactions, currency }: TProps) {
                 {...props}
                 className='cursor-pointer fill-foreground text-sm hover:opacity-hover md:text-medium'
                 alignmentBaseline='central'
-                onClick={() => createHrefWithCategoryCallback(category)}
+                onClick={() =>
+                  router.push(
+                    createSearchHrefWithKeyword(
+                      getCategoryWithoutEmoji(category),
+                    ),
+                  )
+                }
               >
                 {category}
               </text>
