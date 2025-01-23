@@ -15,7 +15,6 @@
 - **Security**: Your transaction data are secured with AES encryption, ensuring your financial information remains private. Encrypted data looks something like this: "5c007dc6c2db3395a8…”.
 - **PWA Mobile Version**: Access Explend on the go with its Progressive Web App mobile version, offering a seamless experience across different devices. (Add to Home Screen)
 - **Theme Customization**: Customize the appearance of the app with support for light, dark, and system themes.
-- **Future Enhancements**: Some advanced features are currently in development and may become available in a premium version.
 
 ## Review
 
