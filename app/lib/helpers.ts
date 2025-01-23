@@ -408,10 +408,8 @@ export const getExpenseCategoriesList = (
     : categoriesData.map((c) => c.category)
 }
 
-export const createHrefWithCategory = (
-  category: TTransaction['category'],
-): TTransaction['category'] => {
-  return `${ROUTE.HOME}?${SEARCH_PARAM.PAGE}=${DEFAULT_PAGE_NUMBER}&${SEARCH_PARAM.QUERY}=${getCategoryWithoutEmoji(category)}`
+export const createSearchHrefWithKeyword = (keyword: string): string => {
+  return `${ROUTE.HOME}?${SEARCH_PARAM.PAGE}=${DEFAULT_PAGE_NUMBER}&${SEARCH_PARAM.QUERY}=${encodeURIComponent(keyword)}`
 }
 
 export const validateArrayWithKeys = (

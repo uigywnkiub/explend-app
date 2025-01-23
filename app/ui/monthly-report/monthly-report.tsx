@@ -35,8 +35,9 @@ import {
   getMinMaxTransactionsByDate,
 } from '@/app/lib/data'
 import {
-  createHrefWithCategory,
+  createSearchHrefWithKeyword,
   deepCompareArrays,
+  getCategoryWithoutEmoji,
   getExpenseCategoriesList,
   getFormattedCurrency,
   sortArrayByKeyByReferenceArray,
@@ -198,7 +199,9 @@ function MonthlyReport({ transactions, currency }: TProps) {
         <Fragment key={category.category}>
           <div className='truncate md:text-lg'>
             <Link
-              href={createHrefWithCategory(category.category)}
+              href={createSearchHrefWithKeyword(
+                getCategoryWithoutEmoji(category.category),
+              )}
               className='hover:opacity-hover'
             >
               {category.category}
@@ -240,9 +243,14 @@ function MonthlyReport({ transactions, currency }: TProps) {
           maxTransaction={maxTransaction}
         />
         <div className='mb-3 flex-none items-end justify-between md:mb-6 md:flex'>
-          <p className='mb-2 text-xl text-default-500 md:mb-0 md:text-2xl'>
-            {formattedDateRange}
-          </p>
+          <Link
+            href={createSearchHrefWithKeyword(format(startDate, 'MMMM'))}
+            className='hover:opacity-hover'
+          >
+            <span className='mb-2 inline-block text-xl text-default-500 md:mb-0 md:text-2xl'>
+              {formattedDateRange}
+            </span>
+          </Link>
           <div className='flex gap-4 md:gap-8'>
             <div>
               <p className='text-xs text-default-500 md:text-sm'>

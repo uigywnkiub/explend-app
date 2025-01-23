@@ -25,7 +25,8 @@ import {
 import {
   capitalizeFirstLetter,
   cn,
-  createHrefWithCategory,
+  createSearchHrefWithKeyword,
+  getCategoryWithoutEmoji,
   getFormattedCurrency,
 } from '@/app/lib/helpers'
 import { TTransaction } from '@/app/lib/types'
@@ -49,7 +50,9 @@ function RadarChart({ transactions, currency }: TProps) {
 
   const createHrefWithCategoryCallback = useCallback(
     (category: TTransaction['category']) => {
-      router.push(createHrefWithCategory(category))
+      router.push(
+        createSearchHrefWithKeyword(getCategoryWithoutEmoji(category)),
+      )
     },
     [router],
   )
