@@ -65,7 +65,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
     useLocalStorage(LOCAL_STORAGE_KEY.AI_EXPENSE_TIPS_DATA)
   const isValidExpenseTipsAIDataLocalStorage = validateArrayWithKeys(
     expenseTipsAIDataLocalStorageRaw,
-    ['category', 'tip', 'savings'] as (keyof TExpenseAdvice)[],
+    ['category', 'tip', 'savings'] satisfies readonly (keyof TExpenseAdvice)[],
   )
   const expenseTipsAIDataLocalStorage = useMemo(() => {
     return isValidExpenseTipsAIDataLocalStorage

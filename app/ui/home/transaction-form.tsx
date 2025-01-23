@@ -93,7 +93,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
   ] = useLocalStorage(LOCAL_STORAGE_KEY.AI_RECEIPT_DATA)
   const isValidReceiptAIDataLocalStorage = validateArrayWithKeys(
     receiptAIDataLocalStorageRaw,
-    ['description', 'amount'] as (keyof TReceiptState)[],
+    ['description', 'amount'] satisfies readonly (keyof TReceiptState)[],
   )
   const receiptAIDataLocalStorage = isValidReceiptAIDataLocalStorage
     ? (receiptAIDataLocalStorageRaw as TReceiptState[])
