@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
 import { useTheme } from 'next-themes'
@@ -19,6 +19,7 @@ import {
   Switch,
 } from '@heroui/react'
 
+import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
   DEFAULT_CATEGORY,
   DEFAULT_CURRENCY_SIGN,
@@ -33,10 +34,13 @@ import {
   getCategoryWithoutEmoji,
   getFormattedCurrency,
   getTransactionsWithChangedCategory,
+  removeFromLocalStorage,
+  setInLocalStorage,
 } from '../lib/helpers'
 import type { TTheme, TTransaction } from '../lib/types'
 import Loading from '../loading'
 import InfoText from './info-text'
+import LimitToast from './limit-toast'
 
 const AMOUNT_LENGTH = 6
 
@@ -66,6 +70,14 @@ function TransactionFormEdit({ transaction }: TProps) {
   // @ts-expect-error - Property 'size' does not exist on type 'Selection', but it does.
   const isCategorySelect = Boolean(category.size)
   const categoryName = Array.from(category)[0]?.toString()
+  useEffect(() => {
+    if (categoryName) {
+      setInLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME, categoryName)
+    }
+
+    return () =>
+      removeFromLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
+  }, [categoryName])
   const userCategories = transaction.categories || DEFAULT_CATEGORIES
   const categoryWithEmoji = getCategoryWithEmoji(categoryName, userCategories)
   const prevCategory = transaction.category
@@ -137,6 +149,7 @@ function TransactionFormEdit({ transaction }: TProps) {
 
   return (
     <>
+      <LimitToast triggerBy={categoryName} />
       <form onSubmit={onSubmit}>
         <Switch
           isDisabled={isLoading}
