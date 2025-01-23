@@ -1,5 +1,7 @@
 import { TGetTransactions } from '@/app/lib/types'
 
+import InfoText from '../info-text'
+
 type TProps = {
   startEntry: number
   endEntry: number
@@ -9,15 +11,17 @@ type TProps = {
 
 function PaginationInfo({ startEntry, endEntry, totalEntries, limit }: TProps) {
   return (
-    <p className='text-sm text-default-500 hover:cursor-none hover:text-foreground'>
-      Showing {isNaN(startEntry) ? 1 : startEntry} to{' '}
-      {isNaN(endEntry)
-        ? limit > totalEntries
-          ? totalEntries
-          : limit
-        : endEntry}{' '}
-      of {totalEntries} Entries
-    </p>
+    <InfoText
+      isSm
+      withAsterisk={false}
+      text={`${`Showing ${isNaN(startEntry) ? 1 : startEntry} to ${
+        isNaN(endEntry)
+          ? limit > totalEntries
+            ? totalEntries
+            : limit
+          : endEntry
+      } of ${totalEntries} Entries`}`}
+    />
   )
 }
 
