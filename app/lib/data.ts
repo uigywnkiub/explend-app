@@ -170,3 +170,24 @@ export const getMinMaxTransactionsByDate = (
     { minTransaction: null, maxTransaction: null },
   )
 }
+
+export const getFirstAndLastTransactions = (transactions: TTransaction[]) => {
+  // Use for method O(n) complexity instead of sort method O(n log n).
+  let firstTransaction = transactions[0]
+  let lastTransaction = transactions[0]
+
+  for (let i = 1; i < transactions.length; i++) {
+    const currentTransaction = transactions[i]
+    const currentCreatedAt = new Date(currentTransaction.createdAt)
+
+    if (currentCreatedAt < new Date(firstTransaction.createdAt)) {
+      firstTransaction = currentTransaction
+    }
+
+    if (currentCreatedAt > new Date(lastTransaction.createdAt)) {
+      lastTransaction = currentTransaction
+    }
+  }
+
+  return { firstTransaction, lastTransaction }
+}

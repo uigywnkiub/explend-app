@@ -9,7 +9,6 @@ import {
   getCountDocuments,
 } from '../lib/actions'
 import Chart from '../ui/chart/chart'
-import InfoText from '../ui/info-text'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
 
@@ -39,12 +38,7 @@ export default async function Page() {
           <NoTransactionsPlug />
         </div>
       ) : (
-        <>
-          <Chart />
-          <div className='mx-auto -mt-2 text-center'>
-            <InfoText text='Visualization of all-time transactions.' />
-          </div>
-        </>
+        <Chart />
       )}
     </>
   )
