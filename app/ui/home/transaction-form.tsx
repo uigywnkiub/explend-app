@@ -52,6 +52,7 @@ import {
   cn,
   findApproxCategoryByValue,
   formatAmount,
+  getBooleanFromLocalStorage,
   getCategoryItemNames,
   getFormattedCurrency,
   pluralize,
@@ -113,8 +114,12 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const isValidAttemptResumeAIReceiptData =
     typeof attemptResumeAIReceiptData === 'number' &&
     [0, 1, 2].includes(attemptResumeAIReceiptData)
-  const toastShownRef = useRef(false)
+  const [isAutoSubmitReceiptAIData] = useState(
+    getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_AUTO_SUBMIT),
+  )
+  const resumeToastShownRef = useRef(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const submitBtnRef = useRef<HTMLButtonElement>(null)
   // AI-related states
   const [isLoadingAIData, setIsLoadingAIData] = useState(false)
   const [isAmountAIValid, setIsAmountAIValid] = useState(false)
@@ -147,7 +152,6 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const [category, setCategory] = useState<Selection>(newCategoryState)
   // Synchronize category state with derived value
   useEffect(() => setCategory(newCategoryState), [newCategoryState])
-
   const categoryName = Array.from(category)[0]?.toString()
   useEffect(() => {
     if (categoryName) {
@@ -157,6 +161,9 @@ function TransactionForm({ currency, userCategories }: TProps) {
     return () =>
       removeFromLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
   }, [categoryName])
+
+  const resumeToastId = 'resumeToastId'
+  const autoProcessingToastId = 'auto-processing'
 
   const resetAllStates = useCallback(() => {
     setIsSwitchedOn(false)
@@ -200,6 +207,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
       } else {
         setTimeout(() => {
           toast.error('Not a valid receipt.')
+          setHasCurrOrPrevReceiptAIData(false)
         }, TOAST_DURATION)
       }
     } catch (err) {
@@ -210,6 +218,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const onUploadReceipt = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const targetFile = e.target.files?.[0]
     if (!targetFile || !(targetFile instanceof File)) return
+
+    toast.dismiss(resumeToastId)
 
     try {
       let processedFile: File | Blob = targetFile
@@ -245,6 +255,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         success: (compressedFile: File) => {
           getReceiptAIData(compressedFile)
           setHasCurrOrPrevReceiptAIData(true)
+          setAttemptResumeAIReceiptData(0)
         },
         error: (err) => {
           throw err
@@ -255,10 +266,47 @@ function TransactionForm({ currency, userCategories }: TProps) {
     }
   }
 
-  const onSubmitReceiptTransaction = useCallback(() => {
+  const onSubmitReceiptAIDataTransaction = useCallback(() => {
     const nextIndex = currReceiptAIDataIdx + 1
+    const progressPercentage = Number(
+      ((nextIndex / receiptAIData.length) * 100).toFixed(2),
+    )
+
+    if (isAutoSubmitReceiptAIData) {
+      toast.dismiss(autoProcessingToastId)
+      toast(
+        () => {
+          return (
+            <div className='text-center'>
+              <div className='flex flex-col justify-center gap-2'>
+                <p>Auto processing...</p>
+                <div className='relative h-2 overflow-hidden rounded-full bg-content1'>
+                  <div
+                    className='h-full animate-pulse-fast rounded-full bg-success transition-all duration-300'
+                    style={{
+                      width: `${progressPercentage}%`,
+                    }}
+                  ></div>
+                </div>
+                <div>{`${Math.round(progressPercentage)}%`}</div>
+              </div>
+            </div>
+          )
+        },
+        {
+          style:
+            (theme as TTheme) === 'dark' || (theme as TTheme) === 'system'
+              ? TOAST_DARK_STYLE
+              : TOAST_LIGHT_STYLE,
+          duration: Infinity,
+          position: 'top-center',
+          id: autoProcessingToastId,
+        },
+      )
+    }
+
     if (nextIndex < receiptAIData.length) {
-      toast.success(`${nextIndex}/${receiptAIData.length} transactions added.`)
+      toast.loading(`${nextIndex}/${receiptAIData.length} transactions added.`)
 
       setReceiptAIDataLocalStorage(receiptAIData.slice(nextIndex))
 
@@ -269,9 +317,17 @@ function TransactionForm({ currency, userCategories }: TProps) {
       toast.success(
         `${receiptAIData.length}/${receiptAIData.length} ${pluralize(receiptAIData.length, 'transaction', 'transactions')} added.`,
       )
-      setTimeout(() => {
-        toast.success('All transactions added.')
 
+      setTimeout(() => {
+        if (isAutoSubmitReceiptAIData) {
+          toast.success('Done.', {
+            id: autoProcessingToastId,
+            duration: TOAST_DURATION,
+          })
+        }
+        toast.success('All transactions added.')
+        setHasCurrOrPrevReceiptAIData(false)
+        setCurrReceiptAIDataIdx(0)
         rmReceiptAIDataLocalStorage()
       }, TOAST_DURATION)
       resetAllStates()
@@ -282,6 +338,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
     resetAllStates,
     rmReceiptAIDataLocalStorage,
     setReceiptAIDataLocalStorage,
+    isAutoSubmitReceiptAIData,
+    theme,
   ])
 
   const getCompletionAIData = useCallback(
@@ -357,8 +415,6 @@ function TransactionForm({ currency, userCategories }: TProps) {
     if (!isReady()) cancel()
   }, [cancel, isReady])
 
-  const isInitialExpanded = isExpanded ? [ACCORDION_ITEM_KEY] : ['']
-
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawAmount = formatAmount(e.target.value)
     if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
@@ -370,34 +426,20 @@ function TransactionForm({ currency, userCategories }: TProps) {
     setIsExpanded((prev) => !prev)
   }
 
-  useEffect(() => {
-    if (pending) {
-      // Abort useDebounce after form submit.
-      cancel()
-      if (hasReceiptAIData && hasCurrOrPrevReceiptAIData) {
-        return onSubmitReceiptTransaction()
-      }
-      resetAllStates()
-
-      // The idea is to show toast after async form action.
-      setTimeout(() => toast.success('Transaction added.'), 0)
-    }
-  }, [
-    cancel,
-    onSubmitReceiptTransaction,
-    hasReceiptAIData,
-    pending,
-    resetAllStates,
-    hasCurrOrPrevReceiptAIData,
-  ])
-
   useDebounce(
     () => {
-      if (!isValidReceiptAIDataLocalStorage || toastShownRef.current) return
+      const shouldTrigger =
+        !isValidReceiptAIDataLocalStorage ||
+        resumeToastShownRef.current ||
+        !isExpanded
+      if (shouldTrigger) return
 
       toast(
         // May contain slightly different keys in t than ToastOptions.
         (t: ToastOptions) => {
+          const isOverAttemptResumeAIReceiptData =
+            attemptResumeAIReceiptData === 3
+
           return (
             <div className='text-center'>
               <div className='flex justify-center gap-2'>
@@ -419,7 +461,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 >
                   Dismiss
                 </Button>
-                {attemptResumeAIReceiptData === 3 && (
+                {isOverAttemptResumeAIReceiptData && (
                   <Button
                     color='danger'
                     variant='flat'
@@ -453,9 +495,19 @@ function TransactionForm({ currency, userCategories }: TProps) {
               </div>
               <Spacer y={2} />
               <InfoText
-                text={`${receiptAIDataLocalStorage.length} ${pluralize(receiptAIDataLocalStorage.length, 'transaction', 'transactions')} remaining`}
+                text={`${receiptAIDataLocalStorage.length} ${pluralize(receiptAIDataLocalStorage.length, 'transaction', 'transactions')} remaining.`}
                 withAsterisk={false}
               />
+              {isOverAttemptResumeAIReceiptData && (
+                <>
+                  <Spacer y={1} />
+                  <InfoText
+                    text='Burning permanently deletes the receipt.'
+                    withAsterisk={true}
+                    withDoubleAsterisk={true}
+                  />
+                </>
+              )}
             </div>
           )
         },
@@ -465,15 +517,61 @@ function TransactionForm({ currency, userCategories }: TProps) {
               ? TOAST_DARK_STYLE
               : TOAST_LIGHT_STYLE,
           duration: Infinity,
+          id: resumeToastId,
         },
       )
 
-      toastShownRef.current = true // Set flag to true after the toast is shown.
+      resumeToastShownRef.current = true // Set flag to true after the toast is shown.
     },
-    1000,
-    [],
+    300,
+    [isExpanded],
   )
 
+  // Auto submit START.
+  const onAutoSubmitCallback = useCallback(() => {
+    const shouldSubmit =
+      !submitBtnRef.current?.disabled &&
+      !isLoadingAIData &&
+      hasCurrOrPrevReceiptAIData &&
+      Boolean(categoryItemNameAI)
+
+    if (shouldSubmit) submitBtnRef.current?.click()
+  }, [categoryItemNameAI, hasCurrOrPrevReceiptAIData, isLoadingAIData])
+  const [isReadyAutoSubmit, cancelAutoSubmit] = useDebounce(
+    () =>
+      IS_PROD && isAutoSubmitReceiptAIData
+        ? onAutoSubmitCallback()
+        : [() => null, () => undefined],
+    0,
+    [isLoadingAIData, hasCurrOrPrevReceiptAIData, categoryItemNameAI],
+  )
+  useEffect(() => {
+    if (!isReadyAutoSubmit()) cancelAutoSubmit()
+  }, [cancelAutoSubmit, isReadyAutoSubmit])
+  // Auto submit END.
+
+  useEffect(() => {
+    if (pending) {
+      // Abort useDebounce after form submit.
+      cancel()
+      if (hasReceiptAIData && hasCurrOrPrevReceiptAIData) {
+        return onSubmitReceiptAIDataTransaction()
+      }
+      resetAllStates()
+
+      // The idea is to show toast after async form action.
+      setTimeout(() => toast.success('Transaction added.'), 0)
+    }
+  }, [
+    cancel,
+    onSubmitReceiptAIDataTransaction,
+    hasReceiptAIData,
+    pending,
+    resetAllStates,
+    hasCurrOrPrevReceiptAIData,
+  ])
+
+  const isInitialExpanded = isExpanded ? [ACCORDION_ITEM_KEY] : ['']
   const accordionTitle = isExpanded
     ? `Hide ${ACCORDION_ITEM_KEY}`
     : `Show ${ACCORDION_ITEM_KEY}`
@@ -619,7 +717,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
               </div>
             }
           />
-          <div className='flex justify-between'>
+          <div className='mt-1.5 flex justify-between'>
             <div className='flex items-center gap-2'>
               <div className='flex w-full flex-wrap gap-4 md:flex-nowrap'>
                 <Badge
@@ -679,6 +777,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 <span className='hidden md:inline'>Press </span>
                 <span className='inline md:hidden'>Tap </span>
                 <Button
+                  ref={submitBtnRef}
                   aria-label='Enter'
                   type='submit'
                   isDisabled={

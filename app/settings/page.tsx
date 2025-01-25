@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 
-import { Spacer } from '@heroui/react'
+import { Divider, Spacer } from '@heroui/react'
 
+import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
@@ -16,9 +17,9 @@ import NoTransactionsPlug from '../ui/no-transactions-plug'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
 import ExitAccount from '../ui/settings/exit-account'
-import MaskAmount from '../ui/settings/mask-amount'
 import Section from '../ui/settings/section'
 import SectionItem from '../ui/settings/section-item'
+import LocalStorageSwitch from '../ui/settings/switch'
 import ThemeSwitcher from '../ui/settings/theme-switcher'
 import TransactionLimit from '../ui/settings/transaction-limit'
 import User from '../ui/sidebar/user'
@@ -46,16 +47,30 @@ export default async function Page() {
       </h1>
       <Section title='General' subtitle='Configure your general preferences.'>
         <>
-          <SectionItem
-            title='Mask amounts'
-            subtitle='Mask your amounts with asterisks to keep them private.'
-          >
-            <div className='max-w-xs'>
-              <Spacer y={2} />
-              <MaskAmount />
-            </div>
-          </SectionItem>
-          <Spacer y={4} />
+          <div className='flex justify-between gap-2'>
+            <SectionItem
+              title='Automated submission'
+              subtitle='Automatically submit receipt transactions for seamless processing.'
+            />
+            <LocalStorageSwitch
+              localStorageKey={LOCAL_STORAGE_KEY.IS_AUTO_SUBMIT}
+            />
+          </div>
+
+          <Divider className='my-4' />
+
+          <div className='flex justify-between gap-2'>
+            <SectionItem
+              title='Mask amounts'
+              subtitle='Mask your amounts with asterisks to keep them private.'
+            />
+            <LocalStorageSwitch
+              localStorageKey={LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN}
+            />
+          </div>
+
+          <Divider className='my-4' />
+
           <SectionItem
             title='Theme switcher'
             subtitle='Select your favorite theme to give the app a new look that matches your style.'
@@ -94,9 +109,11 @@ export default async function Page() {
                 </>
               )}
               <Currency userId={userId} currency={currency} />
-              <Spacer y={4} />
             </div>
           </SectionItem>
+
+          <Divider className='my-4' />
+
           <SectionItem
             title='Transactions limit'
             subtitle='Select how many transactions you would like to see per page. This setting helps you manage the amount of data displayed and can improve loading times.'
@@ -120,9 +137,11 @@ export default async function Page() {
                 userTransactionLimit={userTransactionLimit}
                 transactionsCount={transactionsCount}
               />
-              <Spacer y={4} />
             </div>
           </SectionItem>
+
+          <Divider className='my-4' />
+
           <SectionItem
             title='Exit account'
             subtitle='Signing out of your account will end your current session. You will need to sign in again or switch accounts.'
