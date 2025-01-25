@@ -50,11 +50,17 @@ const config: Config = {
           '0%': { filter: 'brightness(1.6)' },
           '100%': { filter: 'brightness(1)' },
         },
+        ['transform-scale']: {
+          '0%': { transform: 'scaleX(1)' },
+          '50%': { transform: 'scaleX(1.2)' },
+          '100%': { transform: 'scaleX(1)' },
+        },
       },
       animation: {
         'blink-light-once': `blink-light ${BLINK_DURATION}s linear`,
         'blink-dark-once': `blink-dark ${BLINK_DURATION}s linear`,
         'pulse-fast': `${BLINK_DURATION}s cubic-bezier(.4, 0, .6, 1) infinite pulse`,
+        'transform-scale': 'transform-scale 1s infinite',
       },
       backgroundImage: {
         'logo-gradient': `linear-gradient(to bottom, ${SUCCESS}, ${DANGER})`,

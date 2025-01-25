@@ -26,7 +26,7 @@ export default function Section({
       <p className='text-balance text-default-500'>{subtitle}</p>
       <Spacer y={8} />
       {children}
-      {withDivider && <Divider className='my-6' />}
+      {withDivider && <Divider className='my-6 h-2 rounded-full' />}
     </div>
   )
 }
