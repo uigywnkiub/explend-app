@@ -41,6 +41,10 @@ const config: Config = {
         bronze: BRONZE,
         ai: AI,
       },
+      boxShadow: {
+        'inset-line-light': `inset 0 -1px 0 0 ${CUSTOM_LIGHT}`,
+        'inset-line-dark': `inset 0 -1px 0 0 ${CUSTOM_DARK}`,
+      },
       keyframes: {
         ['blink-light']: {
           '0%': { filter: 'brightness(0.8)' },

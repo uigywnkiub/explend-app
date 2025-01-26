@@ -16,16 +16,17 @@ export default function Page() {
         {NAV_TITLE.ISSUE}
       </h1>
       <div className='mx-auto text-center'>
-        <p className='mb-4'>
+        <p className='mb-4 text-balance'>
           If you encounter any problems or would like to suggest something,
           please report them on GitHub.
         </p>
         <Link
           href='https://github.com/uigywnkiub/explend-app/issues'
-          className='text-primary underline md:hover:no-underline md:hover:opacity-hover'
+          // hover:shadow-inset-line-dark dark:hover:shadow-inset-line-light
+          className='border-b border-foreground pb-1 transition-all duration-200 hover:pb-0.5 hover:opacity-hover'
           target='_blank'
         >
-          Report Link ↗
+          Report
         </Link>
       </div>
     </>
