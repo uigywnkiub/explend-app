@@ -528,15 +528,16 @@ function TransactionForm({ currency, userCategories }: TProps) {
   )
 
   // Auto submit START.
-  const onAutoSubmitCallback = useCallback(() => {
-    const shouldSubmit =
-      !submitBtnRef.current?.disabled &&
-      !isLoadingAIData &&
-      hasCurrOrPrevReceiptAIData &&
-      Boolean(categoryItemNameAI)
+  const shouldAutoSubmit =
+    !submitBtnRef.current?.disabled &&
+    !isLoadingAIData &&
+    hasCurrOrPrevReceiptAIData &&
+    Boolean(categoryItemNameAI)
 
-    if (shouldSubmit) submitBtnRef.current?.click()
-  }, [categoryItemNameAI, hasCurrOrPrevReceiptAIData, isLoadingAIData])
+  const onAutoSubmitCallback = useCallback(() => {
+    if (shouldAutoSubmit) submitBtnRef.current?.click()
+  }, [shouldAutoSubmit])
+
   const [isReadyAutoSubmit, cancelAutoSubmit] = useDebounce(
     () =>
       IS_PROD && isAutoSubmitReceiptAIData
@@ -550,6 +551,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
   }, [cancelAutoSubmit, isReadyAutoSubmit])
   // Auto submit END.
 
+  // Submit transaction START.
   useEffect(() => {
     if (pending) {
       // Abort useDebounce after form submit.
@@ -562,6 +564,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
       // The idea is to show toast after async form action.
       setTimeout(() => toast.success('Transaction added.'), 0)
     }
+
+    return () => {
+      toast.dismiss(autoProcessingToastId)
+      toast.dismiss(resumeToastId)
+    }
   }, [
     cancel,
     onSubmitReceiptAIDataTransaction,
@@ -570,6 +577,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     resetAllStates,
     hasCurrOrPrevReceiptAIData,
   ])
+  // Submit transaction END.
 
   const isInitialExpanded = isExpanded ? [ACCORDION_ITEM_KEY] : ['']
   const accordionTitle = isExpanded
