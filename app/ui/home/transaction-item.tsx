@@ -115,11 +115,12 @@ Time: ${formatTime(createdAt)}`
         className={`h-auto w-full rounded-medium bg-content1 px-4 py-2 text-left md:px-6 md:py-4 ${isBlinkTransaction && 'animate-blink-light-once dark:animate-blink-dark-once'}`}
       >
         <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-2 truncate break-keep'>
-            <div className='rounded-medium bg-content2 px-3 py-2 text-2xl md:px-4 md:py-3'>
+          <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
+            <div className='rounded-medium bg-content2 px-4 py-2 text-2xl md:px-4 md:py-2 md:text-[28px]'>
               <motion.div
                 drag
                 dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
+                className='pt-1.5 md:pt-2'
               >
                 {getEmojiFromCategory(category)}
               </motion.div>
