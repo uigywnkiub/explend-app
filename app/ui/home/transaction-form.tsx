@@ -528,15 +528,14 @@ function TransactionForm({ currency, userCategories }: TProps) {
   )
 
   // Auto submit START.
-  const shouldAutoSubmit =
-    !submitBtnRef.current?.disabled &&
-    !isLoadingAIData &&
-    hasCurrOrPrevReceiptAIData &&
-    Boolean(categoryItemNameAI)
-
   const onAutoSubmitCallback = useCallback(() => {
+    const shouldAutoSubmit =
+      !submitBtnRef.current?.disabled &&
+      !isLoadingAIData &&
+      hasCurrOrPrevReceiptAIData &&
+      Boolean(categoryItemNameAI)
     if (shouldAutoSubmit) submitBtnRef.current?.click()
-  }, [shouldAutoSubmit])
+  }, [categoryItemNameAI, hasCurrOrPrevReceiptAIData, isLoadingAIData])
 
   const [isReadyAutoSubmit, cancelAutoSubmit] = useDebounce(
     () =>
