@@ -412,12 +412,14 @@ export const createSearchHrefWithKeyword = (keyword: string): string => {
   return `${ROUTE.HOME}?${SEARCH_PARAM.PAGE}=${DEFAULT_PAGE_NUMBER}&${SEARCH_PARAM.QUERY}=${encodeURIComponent(keyword)}`
 }
 
-export const validateArrayWithKeys = (
+export const isValidArrayWithKeys = (
   data: unknown,
   requiredKeys: string[],
 ): boolean => {
   // Check if it's an array.
   if (!Array.isArray(data)) return false
+  // Check if it's not empty.
+  if (data.length === 0) return false
 
   // Validate each object in the array.
   return data.every((item) => {

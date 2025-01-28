@@ -40,9 +40,9 @@ import {
   getCategoryWithoutEmoji,
   getExpenseCategoriesList,
   getFormattedCurrency,
+  isValidArrayWithKeys,
   sortArrayByKeyByReferenceArray,
   toCalendarDate,
-  validateArrayWithKeys,
 } from '@/app/lib/helpers'
 import useAttemptTracker from '@/app/lib/hooks'
 import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
@@ -64,7 +64,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
 
   const [expenseTipsAIDataLocalStorageRaw, setExpenseTipsAIDataLocalStorage] =
     useLocalStorage(LOCAL_STORAGE_KEY.AI_EXPENSE_TIPS_DATA)
-  const isValidExpenseTipsAIDataLocalStorage = validateArrayWithKeys(
+  const isValidExpenseTipsAIDataLocalStorage = isValidArrayWithKeys(
     expenseTipsAIDataLocalStorageRaw,
     ['category', 'tip', 'savings'] satisfies readonly (keyof TExpenseAdvice)[],
   )

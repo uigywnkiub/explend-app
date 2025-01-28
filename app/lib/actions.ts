@@ -700,7 +700,7 @@ export async function getAnalyzedReceiptAI(file: Blob): Promise<string> {
   }
 
   const prompt =
-    'Analyze the provided image of a receipt and return valid information about each item on the receipt, avoiding negative amount items. Stop analyzing before the general summary amount. If this is not the receipt image, return an empty array.'
+    'Analyze the provided receipt image. Extract and return structured information for each valid product, including details such as product description and amount, while excluding items with negative amounts or irrelevant entries (e.g., cashier names, cash register details, or non-product-related text). Do not include general summaries, totals, or subtotals. If the input is not a receipt image or contains invalid data, return an empty array.'
 
   try {
     const imageParts = [

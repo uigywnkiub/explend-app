@@ -55,10 +55,10 @@ import {
   getBooleanFromLocalStorage,
   getCategoryItemNames,
   getFormattedCurrency,
+  isValidArrayWithKeys,
   pluralize,
   removeFromLocalStorage,
   setInLocalStorage,
-  validateArrayWithKeys,
 } from '../../lib/helpers'
 import type {
   TReceipt,
@@ -92,7 +92,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     setReceiptAIDataLocalStorage,
     rmReceiptAIDataLocalStorage,
   ] = useLocalStorage(LOCAL_STORAGE_KEY.AI_RECEIPT_DATA)
-  const isValidReceiptAIDataLocalStorage = validateArrayWithKeys(
+  const isValidReceiptAIDataLocalStorage = isValidArrayWithKeys(
     receiptAIDataLocalStorageRaw,
     ['description', 'amount'] satisfies readonly (keyof TReceiptState)[],
   )
@@ -421,7 +421,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
       setAmount(getFormattedCurrency(rawAmount, false))
     }
   }
-
+  // console.log(isValidReceiptAIDataLocalStorage)
   const onExpandedChange = () => {
     setIsExpanded((prev) => !prev)
   }
