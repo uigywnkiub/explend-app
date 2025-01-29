@@ -37,6 +37,7 @@ import {
 import {
   createSearchHrefWithKeyword,
   deepCompareArrays,
+  formatDate,
   getCategoryWithoutEmoji,
   getExpenseCategoriesList,
   getFormattedCurrency,
@@ -106,7 +107,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const formattedDateRange = useMemo(() => {
     if (!startDate || !endDate) return ''
 
-    return `${format(startDate, 'MMMM d')} — ${format(endDate, 'MMMM d')}`
+    return `${formatDate(startDate, true)} - ${formatDate(endDate, true)}`
   }, [startDate, endDate])
 
   const onDateSelection = useCallback((dateRange: RangeValue<DateValue>) => {
@@ -220,13 +221,15 @@ function MonthlyReport({ transactions, currency }: TProps) {
   if (filteredTransactions.length === 0) {
     return (
       <div className='rounded-medium bg-content1 p-4 md:p-8'>
-        <MonthPicker
-          selectedDate={selectedDate}
-          onDateSelection={onDateSelection}
-          minTransaction={minTransaction}
-          maxTransaction={maxTransaction}
-        />
-        <p className='text-default-500'>
+        <div className='mb-6'>
+          <MonthPicker
+            selectedDate={selectedDate}
+            onDateSelection={onDateSelection}
+            minTransaction={minTransaction}
+            maxTransaction={maxTransaction}
+          />
+        </div>
+        <p className='text-balance text-center text-default-500'>
           No transactions found from {formattedDateRange}
         </p>
       </div>
@@ -236,18 +239,20 @@ function MonthlyReport({ transactions, currency }: TProps) {
   return (
     <>
       <div className='rounded-medium bg-content1 p-4 md:p-8'>
-        <MonthPicker
-          selectedDate={selectedDate}
-          onDateSelection={onDateSelection}
-          minTransaction={minTransaction}
-          maxTransaction={maxTransaction}
-        />
+        <div className='mb-6'>
+          <MonthPicker
+            selectedDate={selectedDate}
+            onDateSelection={onDateSelection}
+            minTransaction={minTransaction}
+            maxTransaction={maxTransaction}
+          />
+        </div>
         <div className='mb-3 flex-none items-end justify-between md:mb-6 md:flex'>
           <Link
             href={createSearchHrefWithKeyword(format(startDate, 'MMMM'))}
             className='hover:opacity-hover'
           >
-            <span className='mb-2 inline-block text-xl text-default-500 md:mb-0 md:text-2xl'>
+            <span className='mb-2 inline-block text-balance text-xl text-default-500 md:mb-0 md:text-2xl'>
               {formattedDateRange}
             </span>
           </Link>

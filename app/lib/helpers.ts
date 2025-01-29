@@ -104,16 +104,20 @@ export const getTransactionsWithChangedCategory = (
   })
 }
 
-export const formatDate = (dateStr: Date) => {
+export const formatDate = (dateStr: Date, withoutDay: boolean = false) => {
   const date = new Date(dateStr)
-  const currentYear = new Date().getFullYear()
+  const currYear = new Date().getFullYear()
   const dateYear = date.getFullYear()
 
   if (isToday(date)) return 'Today'
   if (isYesterday(date)) return 'Yesterday'
-  if (dateYear !== currentYear) return format(date, 'EEEE, MMMM d, yyyy')
+  if (dateYear !== currYear) {
+    return withoutDay
+      ? format(date, 'MMMM d, yyyy')
+      : format(date, 'EEEE, MMMM d, yyyy')
+  }
 
-  return format(date, 'EEEE, MMMM d')
+  return withoutDay ? format(date, 'MMMM d') : format(date, 'EEEE, MMMM d')
 }
 
 export const formatTime = (dateStr: Date): string => {
