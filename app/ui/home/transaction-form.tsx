@@ -114,8 +114,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const isValidAttemptResumeAIReceiptData =
     typeof attemptResumeAIReceiptData === 'number' &&
     [0, 1, 2].includes(attemptResumeAIReceiptData)
-  const [isAutoSubmitReceiptAIData] = useState(
-    getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_AUTO_SUBMIT),
+  const isAutoSubmitReceiptAIData = getBooleanFromLocalStorage(
+    LOCAL_STORAGE_KEY.IS_AUTO_SUBMIT,
   )
   const resumeToastShownRef = useRef(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
