@@ -19,7 +19,7 @@ export default async function Page() {
   const transactions = await getAllTransactions(userId)
   const [userCategories] = transactions.map((t) => t.categories).filter(Boolean)
   const areCategoriesLengthMismatch =
-    userCategories.length !== DEFAULT_CATEGORIES.length
+    userCategories?.length !== DEFAULT_CATEGORIES?.length
 
   const content = (
     <>
