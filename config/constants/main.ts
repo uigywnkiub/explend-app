@@ -1,3 +1,5 @@
+import { MetadataRoute } from 'next/types'
+
 import type { TTheme } from '@/app/lib/types'
 
 export const IS_PROD = process.env.NODE_ENV === 'production'
@@ -7,7 +9,7 @@ export const DEFAULT_CATEGORY_EMOJI: string = '🤔'
 export const DEFAULT_ICON_SIZE: number = 18
 export const DEFAULT_TIME_ZONE: string = 'Europe/Kiev'
 export const DEFAULT_LANG: string = 'en'
-export const DEFAULT_DIR: string = 'ltr'
+export const DEFAULT_DIR: MetadataRoute.Manifest['dir'] = 'ltr'
 export const DEFAULT_THEME: TTheme = 'dark'
 export const DEFAULT_LOADING_TEXT: string = 'Just a second...'
 
