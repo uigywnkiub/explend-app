@@ -17,6 +17,7 @@ import {
 import {
   calculateTotalsByCategory,
   getTransactionsByCurrMonth,
+  getUserCategories,
 } from '@/app/lib/data'
 import {
   formatAmount,
@@ -44,9 +45,7 @@ export default function LimitToast({ triggerBy }: TProps) {
         getAllTransactions(userId),
       ])
 
-      const [userCategories] = transactions
-        .map((t) => t.categories)
-        .filter(Boolean)
+      const userCategories = getUserCategories(transactions)
 
       const totals = calculateTotalsByCategory(
         getTransactionsByCurrMonth(transactions),

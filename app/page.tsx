@@ -18,6 +18,7 @@ import {
   getCachedTransactions,
   resetCategories,
 } from './lib/actions'
+import { getUserCategories } from './lib/data'
 import {
   formatDate,
   getCategoryWithoutEmoji,
@@ -31,6 +32,7 @@ import type {
   TTransaction,
 } from './lib/types'
 import BalanceCard from './ui/balance-card'
+import ClientRouterRefresh from './ui/client-router-refresh'
 import Search from './ui/home/search'
 import SearchedTransactions from './ui/home/searched-transactions'
 import TransactionForm from './ui/home/transaction-form'
@@ -63,11 +65,15 @@ export default async function Page(props: {
       getCachedTransactions(userId, offset, limit),
     ])
 
-  const haveCategories = transactions.every((t) => t.categories)
-  if (!haveCategories) {
-    await resetCategories(userId, DEFAULT_CATEGORIES)
+  const allHaveCategories = transactions.every(
+    (t) => Array.isArray(t.categories) && t.categories.length > 0,
+  )
+  if (!allHaveCategories) {
+    await resetCategories(userId, DEFAULT_CATEGORIES, false)
+
+    return <ClientRouterRefresh loadingText='Refreshing categories...' />
   }
-  const [userCategories] = transactions.map((t) => t.categories).filter(Boolean)
+  const userCategories = getUserCategories(transactions)
 
   const createTransactionWithUserId = createTransaction.bind(
     null,

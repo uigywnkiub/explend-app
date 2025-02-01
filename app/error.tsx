@@ -1,6 +1,6 @@
 'use client'
 
-import ClientButton from './ui/default-button'
+import ClientButton from './ui/client-button'
 
 export default function Error({
   // eslint-disable-next-line unused-imports/no-unused-vars

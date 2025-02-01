@@ -33,7 +33,7 @@ import {
   TSignInButton,
 } from '@/app/lib/types'
 
-import ClientButton from '../default-button'
+import ClientButton from '../client-button'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import InstallPWA from '../install-pwa-button'

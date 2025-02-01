@@ -11,6 +11,7 @@ import {
 
 import { getCategoryWithoutEmoji, toCalendarDate } from './helpers'
 import type {
+  TCategories,
   TCategoryData,
   TChartData,
   TMinMaxTransactionByDate,
@@ -190,4 +191,14 @@ export const getFirstAndLastTransactions = (transactions: TTransaction[]) => {
   }
 
   return { firstTransaction, lastTransaction }
+}
+
+export const getUserCategories = (
+  transactions: TTransaction[],
+): TCategories[] => {
+  return (
+    transactions.find(
+      (t) => Array.isArray(t.categories) && t.categories.length > 0,
+    )?.categories ?? []
+  )
 }

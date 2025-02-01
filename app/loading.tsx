@@ -7,12 +7,14 @@ type TProps = {
   size?: SpinnerProps['size']
   inline?: boolean
   wrapperClassName?: ClassValue
+  text?: string
 }
 
 export default function Loading({
   size = 'lg',
   inline = false,
   wrapperClassName,
+  text = 'Just a second...',
 }: TProps) {
   return (
     <div
@@ -28,7 +30,7 @@ export default function Loading({
           circle1: 'border-b-success',
           circle2: 'border-b-danger',
         }}
-        label={!inline ? 'Just a second...' : undefined}
+        label={!inline ? text : undefined}
       />
     </div>
   )

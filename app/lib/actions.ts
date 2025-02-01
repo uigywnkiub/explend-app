@@ -431,6 +431,7 @@ export async function updateCategories(
 export async function resetCategories(
   userId: TUserId,
   categories: TTransaction['categories'],
+  withPathRevalidate: boolean = true,
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to update categories.')
@@ -438,7 +439,7 @@ export async function resetCategories(
   try {
     await dbConnect()
     await TransactionModel.updateMany({ userId }, { categories })
-    revalidatePath(ROUTE.CATEGORIES)
+    if (withPathRevalidate) revalidatePath(ROUTE.CATEGORIES)
   } catch (err) {
     throw err
   }

@@ -5,6 +5,7 @@ import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import { getAllTransactions, getAuthSession } from '../lib/actions'
+import { getUserCategories } from '../lib/data'
 import Categories from '../ui/categories/categories'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
@@ -17,9 +18,9 @@ export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
   const transactions = await getAllTransactions(userId)
-  const [userCategories] = transactions.map((t) => t.categories).filter(Boolean)
+  const userCategories = getUserCategories(transactions)
   const areCategoriesLengthMismatch =
-    userCategories?.length !== DEFAULT_CATEGORIES?.length
+    userCategories.length !== DEFAULT_CATEGORIES.length
 
   const content = (
     <>

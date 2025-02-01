@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { ROUTE } from '@/config/constants/routes'
 
-import ClientButton from '@/app/ui/default-button'
+import ClientButton from '@/app/ui/client-button'
 import WithSidebar from '@/app/ui/sidebar/with-sidebar'
 
 export default function NotFound() {
