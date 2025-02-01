@@ -49,6 +49,18 @@ export default async function Page() {
         <>
           <div className='flex justify-between gap-2'>
             <SectionItem
+              title='Chart by current month'
+              subtitle='Display the chart for the current month only.'
+            />
+            <LocalStorageSwitch
+              localStorageKey={LOCAL_STORAGE_KEY.IS_CHART_BY_CURR_MONTH}
+            />
+          </div>
+
+          <Divider className='my-4' />
+
+          <div className='flex justify-between gap-2'>
+            <SectionItem
               title='Automated submission'
               subtitle='Automatically submit receipt transactions for seamless processing.'
             />

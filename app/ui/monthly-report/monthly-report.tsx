@@ -32,7 +32,7 @@ import {
   calculateMonthlyReportData,
   filterTransactions,
   filterTransactionsByDateRange,
-  getMinMaxTransactionsByDate,
+  getFirstAndLastTransactions,
 } from '@/app/lib/data'
 import {
   createSearchHrefWithKeyword,
@@ -78,10 +78,8 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const { canAttempt, registerAttempt } = useAttemptTracker(
     LOCAL_STORAGE_KEY.ATTEMPT_AI_EXPENSE_TIPS,
   )
-  const { minTransaction, maxTransaction } = useMemo(
-    () => getMinMaxTransactionsByDate(transactions),
-    [transactions],
-  )
+  const { firstTransaction: minTransaction, lastTransaction: maxTransaction } =
+    useMemo(() => getFirstAndLastTransactions(transactions), [transactions])
 
   const minTransactionCalendarDate = minTransaction
     ? toCalendarDate(minTransaction.createdAt)

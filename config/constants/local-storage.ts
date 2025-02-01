@@ -3,6 +3,7 @@ export const enum LOCAL_STORAGE_KEY {
   IS_AMOUNT_HIDDEN = 'isAmountHidden',
   IS_POSITIVE_BALANCE = 'isPositiveBalance',
   IS_AUTO_SUBMIT = 'isAutoSubmit',
+  IS_CHART_BY_CURR_MONTH = 'isChartByCurrMonth',
   AI_EXPENSE_TIPS_DATA = 'AIExpenseTipsData',
   ATTEMPT_AI_EXPENSE_TIPS = 'attemptAIExpenseTips',
   AI_RECEIPT_DATA = 'AIReceiptData',
