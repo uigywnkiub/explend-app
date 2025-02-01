@@ -1,6 +1,8 @@
 import { Spinner, SpinnerProps } from '@heroui/react'
 import { ClassValue } from 'clsx'
 
+import { DEFAULT_LOADING_TEXT } from '@/config/constants/main'
+
 import { cn } from './lib/helpers'
 
 type TProps = {
@@ -14,7 +16,7 @@ export default function Loading({
   size = 'lg',
   inline = false,
   wrapperClassName,
-  text = 'Just a second...',
+  text = DEFAULT_LOADING_TEXT,
 }: TProps) {
   return (
     <div
