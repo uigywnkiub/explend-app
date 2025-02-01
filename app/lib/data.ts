@@ -14,7 +14,6 @@ import type {
   TCategories,
   TCategoryData,
   TChartData,
-  TMinMaxTransactionByDate,
   TTransaction,
 } from './types'
 
@@ -146,30 +145,6 @@ export const getTransactionsByCurrMonth = (transactions: TTransaction[]) => {
   const endDate = endOfMonthCalendarDate.toDate(getLocalTimeZone())
 
   return filterTransactionsByDateRange(transactions, startDate, endDate)
-}
-
-export const getMinMaxTransactionsByDate = (
-  transactions: TTransaction[],
-): TMinMaxTransactionByDate => {
-  return transactions.reduce<TMinMaxTransactionByDate>(
-    (acc, transaction) => {
-      if (
-        !acc.minTransaction ||
-        transaction.createdAt < acc.minTransaction.createdAt
-      ) {
-        acc.minTransaction = transaction
-      }
-      if (
-        !acc.maxTransaction ||
-        transaction.createdAt > acc.maxTransaction.createdAt
-      ) {
-        acc.maxTransaction = transaction
-      }
-
-      return acc
-    },
-    { minTransaction: null, maxTransaction: null },
-  )
 }
 
 export const getFirstAndLastTransactions = (transactions: TTransaction[]) => {
