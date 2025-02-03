@@ -118,9 +118,9 @@ Time: ${formatTime(createdAt)}`
           <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
             <div className='rounded-medium bg-content2 px-4 py-2 text-2xl md:px-4 md:py-2 md:text-[28px]'>
               <motion.div
-                drag
-                dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
-                className='pt-1.5 md:pt-2'
+                // drag
+                // dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
+                className='select-none pt-1.5 md:pt-2'
               >
                 {getEmojiFromCategory(category)}
               </motion.div>
@@ -198,6 +198,9 @@ Time: ${formatTime(createdAt)}`
                     />
                   }
                   description='Copy transaction data'
+                  classNames={{
+                    description: 'text-default-500',
+                  }}
                 >
                   Copy
                 </DropdownItem>
@@ -230,6 +233,9 @@ Time: ${formatTime(createdAt)}`
                       Edit transaction details
                     </Badge>
                   }
+                  classNames={{
+                    description: 'text-default-500',
+                  }}
                 >
                   Edit
                 </DropdownItem>
@@ -247,6 +253,9 @@ Time: ${formatTime(createdAt)}`
                     />
                   }
                   description='Permanently delete the transaction'
+                  classNames={{
+                    description: 'text-default-500',
+                  }}
                 >
                   Delete
                 </DropdownItem>
