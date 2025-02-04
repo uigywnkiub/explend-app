@@ -11,17 +11,19 @@ type TProps = {
 
 function PaginationInfo({ startEntry, endEntry, totalEntries, limit }: TProps) {
   return (
-    <InfoText
-      isSm
-      withAsterisk={false}
-      text={`${`Showing ${isNaN(startEntry) ? 1 : startEntry} to ${
-        isNaN(endEntry)
-          ? limit > totalEntries
-            ? totalEntries
-            : limit
-          : endEntry
-      } of ${totalEntries} Entries`}`}
-    />
+    <div className='inline-block'>
+      <InfoText
+        isSm
+        withAsterisk={false}
+        text={`${`Showing ${isNaN(startEntry) ? 1 : startEntry} to ${
+          isNaN(endEntry)
+            ? limit > totalEntries
+              ? totalEntries
+              : limit
+            : endEntry
+        } of ${totalEntries} Entries`}`}
+      />
+    </div>
   )
 }
 
