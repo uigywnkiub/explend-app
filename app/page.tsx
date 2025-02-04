@@ -108,7 +108,7 @@ export default async function Page(props: {
     if (!acc[date]) {
       acc[date] = []
     }
-    acc[date].unshift(t)
+    acc[date].push(t)
 
     return acc
   }, {})
@@ -117,10 +117,11 @@ export default async function Page(props: {
     Object.entries(groupedTransactionsByDate).map(([date, transactions]) => {
       const totals = transactions.reduce(
         (totals, t) => {
+          const amount = parseFloat(t.amount)
           if (t.isIncome) {
-            totals.income += parseFloat(t.amount)
+            totals.income += amount
           } else {
-            totals.expense += parseFloat(t.amount)
+            totals.expense += amount
           }
 
           return totals
@@ -218,7 +219,7 @@ export default async function Page(props: {
         {countTransactionsWithChangedCategory > 0 && (
           <p className='mt-4 text-center text-sm text-warning'>
             <PiWarningOctagonFill className='inline animate-pulse' />{' '}
-            {`You still have ${countTransactionsWithChangedCategory} ${pluralize(countTransactionsWithChangedCategory, 'transaction', 'transactions')} with the old category.`}
+            {`You have ${countTransactionsWithChangedCategory} ${pluralize(countTransactionsWithChangedCategory, 'transaction', 'transactions')} with the old category.`}
           </p>
         )}
       </div>
