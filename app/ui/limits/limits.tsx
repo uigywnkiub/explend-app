@@ -346,7 +346,9 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         items={userCategories}
                         selectedKeys={category}
                         onSelectionChange={setCategory}
-                        disabledKeys={disabledCategories}
+                        disabledKeys={disabledCategories.concat(
+                          DEFAULT_CATEGORY,
+                        )}
                       >
                         {userCategories.map((category, idx, arr) => (
                           <SelectSection
@@ -519,6 +521,9 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                           />
                         }
                         description='Edit category limit'
+                        classNames={{
+                          description: 'text-default-500',
+                        }}
                       >
                         Edit
                       </DropdownItem>
@@ -538,6 +543,9 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                           />
                         }
                         description='Permanently delete category limit'
+                        classNames={{
+                          description: 'text-default-500',
+                        }}
                       >
                         Delete
                       </DropdownItem>
@@ -550,10 +558,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         })}
       </ul>
       <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
-        <InfoText
-          withDoubleAsterisk
-          text='The calculation of limits is based on transactions by the current month.'
-        />
+        <InfoText text='The calculation of limits is based on transactions by the current month.' />
         <InfoText text='Your limits will not be deleted automatically in the new month.' />
       </div>
 

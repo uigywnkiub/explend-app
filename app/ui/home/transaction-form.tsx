@@ -154,7 +154,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
   useEffect(() => setCategory(newCategoryState), [newCategoryState])
   const categoryName = Array.from(category)[0]?.toString()
   useEffect(() => {
-    if (categoryName) {
+    if (categoryName && categoryName !== DEFAULT_CATEGORY) {
       setInLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME, categoryName)
     }
 

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { useDebounce } from 'react-use'
+import { useAudio, useDebounce } from 'react-use'
 
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 
@@ -31,13 +31,17 @@ type TProps = {
 }
 
 export default function LimitToast({ triggerBy }: TProps) {
-  const init = async () => {
-    try {
-      const selectedCategoryName = getFromLocalStorage(
-        LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME,
-      )
-      if (!selectedCategoryName) return null
+  const [audio, , audioControls] = useAudio({
+    src: '/sounds/error-limit-over.mp3',
+  })
 
+  const init = async () => {
+    const selectedCategoryName = getFromLocalStorage(
+      LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME,
+    )
+    if (!selectedCategoryName) return
+
+    try {
       const session = await getCachedAuthSession()
       const userId = session?.user?.email
       const [limitsRaw, transactions] = await Promise.all([
@@ -85,6 +89,7 @@ export default function LimitToast({ triggerBy }: TProps) {
           ),
           duration: TOAST_DURATION * 1.5,
         })
+        audioControls.play()
       }
     } catch (err) {
       throw err
@@ -98,5 +103,5 @@ export default function LimitToast({ triggerBy }: TProps) {
     if (!isReady()) cancel()
   }, [cancel, isReady])
 
-  return null
+  return audio
 }
