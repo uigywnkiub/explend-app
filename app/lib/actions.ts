@@ -683,7 +683,7 @@ export async function getExpenseTipsAI(categories: string[]): Promise<string> {
   try {
     const categoriesStr = categories.join(', ')
 
-    const prompt = `Provide a few actionable tips on decreasing expenses for the following categories: ${categoriesStr}. Include practical strategies, potential savings opportunities, and any recommendations that could help manage and reduce costs within these categories. The output category field must be with an emoji. Advice must be one per category.`
+    const prompt = `Provide actionable tips on decreasing expenses for the following categories: ${categoriesStr}. Include practical strategies, potential savings opportunities, and any recommendations that could help manage and reduce costs within these categories. The output category field must be with an emoji. Advice must be one per category.`
 
     const content = await ExpenseTipsAIModel.generateContent(prompt)
     const text = content.response.text().trim()

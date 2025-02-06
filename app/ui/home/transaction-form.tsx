@@ -126,8 +126,6 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const [isTransactionTypeAIValid, setIsTransactionTypeAIValid] =
     useState(false)
   const [categoryItemNameAI, setCategoryItemNameAI] = useState('')
-  const isAnyAIDataExist =
-    isAmountAIValid || isTransactionTypeAIValid || Boolean(categoryItemNameAI)
   const trimmedDescription = description.trim()
   // Memoized values
   const approxCategoryItemName = useMemo(
@@ -370,6 +368,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           ])
 
         setCategoryItemNameAI(categoryItemNameAI)
+
         const rawAmountAI = formatAmount(amountAI)
         if (
           !isNaN(Number(rawAmountAI)) &&
@@ -379,6 +378,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           setAmount(getFormattedCurrency(rawAmountAI, false))
           setIsAmountAIValid(true)
         }
+
         if (transactionTypeAI === 'true') {
           setIsSwitchedOn(true)
           setIsTransactionTypeAIValid(true)
@@ -632,7 +632,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
             description={
               <div className='flex flex-wrap items-center gap-1'>
                 <div className='flex'>
-                  <AILogo asText={isAnyAIDataExist && !isLoadingAIData} />
+                  <AILogo />
                 </div>
                 <InfoText
                   text='fills in the remaining fields.'

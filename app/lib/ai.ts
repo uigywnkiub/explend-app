@@ -49,6 +49,7 @@ const safetySettings = [
 // TPD: Tokens per day
 
 export const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+
 export const CompletionAIModel = genAI.getGenerativeModel({
   model: process.env.GEMINI_MODEL,
   // Docs https://ai.google.dev/api/generate-content#v1beta.GenerationConfig
