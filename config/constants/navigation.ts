@@ -7,6 +7,7 @@ export const enum NAV_TITLE {
   CHART = 'Chart',
   LIMITS = 'Limits',
   CATEGORIES = 'Categories',
+  SUBSCRIPTIONS = 'Subscriptions',
   SETTINGS = 'Settings',
   FEEDBACK = 'Give Feedback',
   ISSUE = 'Report Issue',

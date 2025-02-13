@@ -341,7 +341,8 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         className='w-full'
                         classNames={{
                           trigger:
-                            'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                            'h-12 min-h-12 py-1.5 px-3 md:h-13 md:min-h-13 md:py-2',
+                          innerWrapper: 'pl-1 text-default-500',
                         }}
                         items={userCategories}
                         selectedKeys={category}
@@ -427,7 +428,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   Math.max(0, ((limitAmount - difference) / limitAmount) * 100),
                 )
               : 0
-          const isCategoryChangedName =
+          const isChangedCategoryName =
             changedCategoryNames.includes(categoryName)
 
           return (
@@ -437,7 +438,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
             >
               <div className='flex items-center md:w-1/2'>
                 <p className='mt-2 text-2xl md:text-3xl'>
-                  {isCategoryChangedName
+                  {isChangedCategoryName
                     ? DEFAULT_CATEGORY_EMOJI
                     : getEmojiFromCategory(
                         getCategoryWithEmoji(categoryName, userCategories),
@@ -448,13 +449,13 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                     <p
                       className={cn(
                         'truncate text-sm md:text-lg',
-                        isCategoryChangedName &&
+                        isChangedCategoryName &&
                           'text-default-500 line-through',
                       )}
                     >
                       {categoryName}
                     </p>
-                    {isCategoryChangedName && (
+                    {isChangedCategoryName && (
                       <p className='text-xs'>No longer exists</p>
                     )}
                   </div>
@@ -520,7 +521,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                             }
                           />
                         }
-                        description='Edit category limit'
+                        description='Edit category limit details'
                         classNames={{
                           description: 'text-default-500',
                         }}
@@ -562,7 +563,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         <InfoText text='Your limits will not be deleted automatically in the new month.' />
       </div>
 
-      {/* Reset user category limits modal */}
+      {/* Reset user category limits modal. */}
       <Modal
         isOpen={isOpenReset}
         onOpenChange={onOpenChangeReset}
@@ -580,9 +581,9 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 <p className='text-default-500'>
                   Are you sure you want to{' '}
                   <span className='text-foreground'>
-                    reset all your category limits
-                  </span>
-                  ? This action is irreversible.
+                    reset all your category limits?
+                  </span>{' '}
+                  This action is irreversible.
                 </p>
               </ModalBody>
               <ModalFooter>
@@ -602,7 +603,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         </ModalContent>
       </Modal>
 
-      {/* Edit category limits modal */}
+      {/* Edit category limits modal. */}
       <Modal
         isOpen={isOpenEdit}
         onOpenChange={onOpenChangeEdit}
@@ -650,7 +651,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         </ModalContent>
       </Modal>
 
-      {/* Delete category limits modal */}
+      {/* Delete category limits modal. */}
       <Modal isOpen={isOpenDelete} onOpenChange={onOpenChangeDelete}>
         <ModalContent>
           {(onCloseDelete) => (

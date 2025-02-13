@@ -12,6 +12,7 @@ import type {
   TCategories,
   TCategoriesItem,
   TCategoryLimits,
+  TSubscriptions,
   TTransaction,
 } from '../types'
 
@@ -59,6 +60,12 @@ const categoryLimitsSchema = new Schema<TCategoryLimits>(
   { _id: false },
 )
 
+const subscriptionsSchema = new Schema<TSubscriptions>({
+  category: { type: String, required: true },
+  description: { type: String, required: true },
+  amount: { type: String, required: true },
+})
+
 const transactionSchema = new Schema<TTransaction>(
   {
     id: {
@@ -105,6 +112,10 @@ const transactionSchema = new Schema<TTransaction>(
     },
     categoryLimits: {
       type: [categoryLimitsSchema],
+      default: [],
+    },
+    subscriptions: {
+      type: [subscriptionsSchema],
       default: [],
     },
   },

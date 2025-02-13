@@ -8,6 +8,7 @@ import { cookies } from 'next/headers'
 import { auth, signOut } from '@/auth'
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { SignOutError } from '@auth/core/errors'
+import { isObjectIdOrHexString } from 'mongoose'
 import { Resend } from 'resend'
 
 import { FEEDBACK } from '@/config/constants/cookies'
@@ -24,6 +25,7 @@ import {
 } from './ai'
 import {
   capitalizeFirstLetter,
+  formatObjectIdToString,
   getCategoryItemNames,
   getCategoryWithEmoji,
 } from './helpers'
@@ -37,6 +39,7 @@ import type {
   TGetTransactions,
   TRawTransaction,
   TSession,
+  TSubscriptions,
   TTransaction,
   TUserId,
 } from './types'
@@ -189,6 +192,7 @@ export async function createTransaction(
       | 'transactionLimit'
       | 'isEdited'
       | 'categoryLimits'
+      | 'subscriptions'
     > = {
       id: crypto.randomUUID(),
       userId,
@@ -506,7 +510,7 @@ export async function getCategoryLimits(
   userId: TUserId,
 ): Promise<TTransaction['categoryLimits']> {
   if (!userId) {
-    throw new Error('User ID is required to add category limits.')
+    throw new Error('User ID is required to get category limits.')
   }
   try {
     await dbConnect()
@@ -606,6 +610,134 @@ export async function editCategoryLimit(
       { categoryLimits: updatedCategoryLimits },
     )
     revalidatePath(ROUTE.LIMITS)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function addSubscription(
+  userId: TUserId,
+  subscription: Omit<TSubscriptions, '_id'>,
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to add subscription.')
+  }
+  if (!subscription) {
+    throw new Error('Subscription is required.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany(
+      { userId },
+      { $push: { subscriptions: subscription } },
+    )
+    revalidatePath(ROUTE.SUBSCRIPTIONS)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getSubscriptions(
+  userId: TUserId,
+): Promise<TTransaction['subscriptions']> {
+  if (!userId) {
+    throw new Error('User ID is required to get subscriptions.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne(
+      { userId },
+      { subscriptions: 1, _id: 1 },
+    ).lean<{ subscriptions: TTransaction['subscriptions'] }>({
+      transform: (doc: TRawTransaction) => {
+        if (doc._id && isObjectIdOrHexString(doc._id)) {
+          // @ts-expect-error: doc._id is ObjectId and it has toString method. To avoid undefined we use to boolean checking.
+          doc._id = formatObjectIdToString(doc._id)
+        }
+
+        return doc
+      },
+    })
+
+    return transaction?.subscriptions || []
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function editSubscription(
+  userId: TUserId,
+  _id: TTransaction['id'],
+  category: TSubscriptions['category'],
+  description: TSubscriptions['description'],
+  amount: TSubscriptions['amount'],
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to edit subscriptions.')
+  }
+  if (!_id) {
+    throw new Error('_id is required to edit subscription.')
+  }
+  if (!category) {
+    throw new Error('Category is required to edit subscription.')
+  }
+  if (!description) {
+    throw new Error('Description is required to edit subscription.')
+  }
+  if (!amount) {
+    throw new Error('Amount is required to edit subscription.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany(
+      { userId, 'subscriptions._id': _id },
+      {
+        $set: {
+          'subscriptions.$.category': category,
+          'subscriptions.$.description': description,
+          'subscriptions.$.amount': amount,
+        },
+      },
+    )
+    revalidatePath(ROUTE.SUBSCRIPTIONS)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function deleteSubscription(
+  userId: TUserId,
+  _id: TTransaction['id'],
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to delete subscription.')
+  }
+  if (!_id) {
+    throw new Error('_id is required to delete subscription.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany(
+      { userId },
+      { $pull: { subscriptions: { _id } } },
+    )
+    revalidatePath(ROUTE.SUBSCRIPTIONS)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function resetAllSubscriptions(userId: TUserId): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to remove all subscriptions.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany(
+      { userId },
+      { $set: { subscriptions: [] } },
+    )
+    revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
     throw err
   }

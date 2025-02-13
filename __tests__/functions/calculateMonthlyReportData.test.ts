@@ -24,6 +24,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -50,6 +58,14 @@ describe('calculateMonthlyReportData', () => {
           {
             categoryName: 'Rent/Mortgage',
             limitAmount: '30 000',
+          },
+        ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
           },
         ],
         description: 'Weekly groceries',
@@ -87,6 +103,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -112,6 +136,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Bus fare',
         amount: '100',
         isIncome: false,
@@ -135,6 +167,14 @@ describe('calculateMonthlyReportData', () => {
           {
             categoryName: 'Rent/Mortgage',
             limitAmount: '30 000',
+          },
+        ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
           },
         ],
         description: 'More groceries',
@@ -175,6 +215,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -213,6 +261,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -247,6 +303,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -273,6 +337,14 @@ describe('calculateMonthlyReportData', () => {
           {
             categoryName: 'Rent/Mortgage',
             limitAmount: '30 000',
+          },
+        ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
           },
         ],
         description: 'Groceries',
@@ -309,6 +381,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -335,6 +415,14 @@ describe('calculateMonthlyReportData', () => {
           {
             categoryName: 'Rent/Mortgage',
             limitAmount: '30 000',
+          },
+        ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
           },
         ],
         description: 'Groceries',
@@ -371,6 +459,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -397,6 +493,14 @@ describe('calculateMonthlyReportData', () => {
           {
             categoryName: 'Rent/Mortgage',
             limitAmount: '30 000',
+          },
+        ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
           },
         ],
         description: 'Groceries',

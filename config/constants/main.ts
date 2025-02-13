@@ -38,7 +38,7 @@ export const enum APP_NAME {
 }
 export const APP_TITLE: string = 'Your Financial Wellness Journey'
 export const APP_DESCRIPTION: string =
-  'Stop wondering where your money goes. Track Income & Expense.'
+  'Stop wondering where your money goes. Track Income & Expense with AI.'
 export const APP_URL: string = process.env.APP_URL
 export const APP_LOCALHOST_URL: string = process.env.APP_LOCALHOST_URL
 // This regex will match any URL that starts with https://explend-, followed by any alphanumeric and hyphenated string, and ends with -projects.vercel.app.

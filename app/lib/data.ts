@@ -177,3 +177,23 @@ export const getUserCategories = (
     )?.categories ?? []
   )
 }
+
+// export const getTransactionArrayByKey = <
+//   TTransaction,
+//   TKey extends keyof Pick<
+//     TTransaction,
+//     // @ts-expect-error - Type 'string' does not satisfy the constraint 'keyof TTransaction'
+//     'categories' | 'categoryLimits' | 'subscriptions'
+//   >,
+// >(
+//   transactions: TTransaction[],
+//   key: TKey,
+//   // @ts-expect-error - Type 'TKey' cannot be used to index type 'TTransaction'.
+// ): TTransaction[TKey] extends Array<unknown> ? TTransaction[TKey] : never => {
+//   return (
+//     // @ts-expect-error - Type 'TKey' cannot be used to index type 'NonNullable<TTransaction>'.
+//     transactions.find((t) => Array.isArray(t[key]) && t[key].length > 0)?.[
+//       key
+//     ] ?? [] // Default to an empty array if not found or not valid
+//   )
+// }

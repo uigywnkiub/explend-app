@@ -62,6 +62,7 @@ type TProps = Omit<
   | 'categories'
   | 'hasCategoryChanged'
   | 'categoryLimits'
+  | 'subscriptions'
 > & {
   hasCategoryChanged: boolean
 }

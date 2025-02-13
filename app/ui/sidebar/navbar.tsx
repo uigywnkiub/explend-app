@@ -15,6 +15,8 @@ import {
   PiPolygonFill,
   PiPresentationChart,
   PiPresentationChartFill,
+  PiRepeat,
+  PiRepeatFill,
   PiStack,
   PiStackFill,
 } from 'react-icons/pi'
@@ -55,6 +57,12 @@ const topNavLinks: TNavLink[] = [
     url: ROUTE.LIMITS,
     icon: <PiEscalatorUp size={NAV_ICON_SIZE} />,
     hoverIcon: <PiEscalatorUpFill size={NAV_ICON_SIZE} />,
+  },
+  {
+    title: NAV_TITLE.SUBSCRIPTIONS,
+    url: ROUTE.SUBSCRIPTIONS,
+    icon: <PiRepeat size={NAV_ICON_SIZE} />,
+    hoverIcon: <PiRepeatFill size={NAV_ICON_SIZE} />,
   },
   {
     title: NAV_TITLE.CATEGORIES,
