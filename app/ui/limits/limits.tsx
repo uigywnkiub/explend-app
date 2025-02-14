@@ -662,7 +662,12 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
               <ModalBody>
                 <p className='overflow-hidden text-ellipsis text-default-500'>
                   Are you sure you want to delete the{' '}
-                  <span className='text-foreground'>{tempCategoryName}</span>{' '}
+                  <span className='text-foreground'>
+                    {getEmojiFromCategory(
+                      getCategoryWithEmoji(tempCategoryName, userCategories),
+                    ) || DEFAULT_CATEGORY_EMOJI}{' '}
+                    {tempCategoryName}
+                  </span>{' '}
                   category limit? This action is permanent and cannot be undone.
                 </p>
               </ModalBody>
