@@ -25,7 +25,7 @@ export default function SearchedTransactions({
           {getFormattedCurrency(
             getTransactionsTotals(searchedTransactionsByQuery).income,
           )}{' '}
-          {currency?.code}
+          {currency.code}
         </p>
         <p>
           <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
@@ -33,7 +33,7 @@ export default function SearchedTransactions({
           {getFormattedCurrency(
             getTransactionsTotals(searchedTransactionsByQuery).expense,
           )}{' '}
-          {currency?.code}
+          {currency.code}
         </p>
       </div>
     </div>

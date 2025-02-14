@@ -24,6 +24,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -37,6 +45,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -52,6 +61,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Weekly groceries',
         amount: '200',
         isIncome: false,
@@ -65,6 +82,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -87,6 +105,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -100,6 +126,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
       {
         id: '2',
@@ -110,6 +137,14 @@ describe('calculateMonthlyReportData', () => {
           {
             categoryName: 'Rent/Mortgage',
             limitAmount: '30 000',
+          },
+        ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
           },
         ],
         description: 'Bus fare',
@@ -125,6 +160,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
       {
         id: '3',
@@ -135,6 +171,14 @@ describe('calculateMonthlyReportData', () => {
           {
             categoryName: 'Rent/Mortgage',
             limitAmount: '30 000',
+          },
+        ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
           },
         ],
         description: 'More groceries',
@@ -150,6 +194,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -175,6 +220,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -188,6 +241,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -213,6 +267,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -226,6 +288,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -247,6 +310,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -260,6 +331,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -275,6 +347,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -288,6 +368,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -309,6 +390,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -322,6 +411,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: 40,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -337,6 +427,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -350,6 +448,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: 40,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -371,6 +470,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Monthly Salary',
         amount: '1000',
         isIncome: true,
@@ -384,6 +491,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: 30,
         createdAt: new Date('2024-07-01'),
         updatedAt: new Date('2024-07-01'),
+        isSubscription: false,
       },
     ]
 
@@ -399,6 +507,14 @@ describe('calculateMonthlyReportData', () => {
             limitAmount: '30 000',
           },
         ],
+        subscriptions: [
+          {
+            category: '🛒 Groceries',
+            description: 'Deezer Premium test',
+            amount: '123',
+            _id: 'test-id',
+          },
+        ],
         description: 'Groceries',
         amount: '200',
         isIncome: false,
@@ -412,6 +528,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: 30,
         createdAt: new Date('2024-08-01'),
         updatedAt: new Date('2024-08-01'),
+        isSubscription: false,
       },
     ]
 

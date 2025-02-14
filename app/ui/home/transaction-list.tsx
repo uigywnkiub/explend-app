@@ -2,8 +2,6 @@
 
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
-import { DEFAULT_CURRENCY_CODE } from '@/config/constants/main'
-
 import TransactionItem from '@/app/ui/home/transaction-item'
 
 import { cn, getFormattedCurrency } from '../../lib/helpers'
@@ -39,7 +37,7 @@ function TransactionList({
         const incomeIcon = <PiArrowCircleUpFill className='fill-success' />
         const expenseIcon = <PiArrowCircleDownFill className='fill-danger' />
         const totalWrapper = 'flex items-center gap-1'
-        const totalCurrency = currency?.code || DEFAULT_CURRENCY_CODE
+        const totalCurrency = currency.code
 
         return (
           <div
@@ -88,6 +86,7 @@ function TransactionList({
                       currency={t.currency}
                       isIncome={t.isIncome}
                       isEdited={t.isEdited}
+                      isSubscription={t.isSubscription}
                       createdAt={t.createdAt}
                       hasCategoryChanged={hasCategoryChanged}
                     />

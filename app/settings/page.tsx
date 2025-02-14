@@ -13,7 +13,6 @@ import {
   signOutAccount,
 } from '../lib/actions'
 import InfoText from '../ui/info-text'
-import NoTransactionsPlug from '../ui/no-transactions-plug'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
 import ExitAccount from '../ui/settings/exit-account'
@@ -108,19 +107,11 @@ export default async function Page() {
           >
             <div className='max-w-xs'>
               <Spacer y={2} />
-              {!transactionsCount && (
-                <>
-                  <div className='text-sm'>
-                    <NoTransactionsPlug
-                      align='right'
-                      withBackground={false}
-                      padding={0}
-                    />
-                  </div>
-                  <Spacer y={2} />
-                </>
-              )}
-              <Currency userId={userId} currency={currency} />
+              <Currency
+                userId={userId}
+                currency={currency}
+                transactionsCount={transactionsCount}
+              />
             </div>
           </SectionItem>
 
@@ -132,18 +123,6 @@ export default async function Page() {
           >
             <div className='max-w-xs'>
               <Spacer y={2} />
-              {!transactionsCount && (
-                <>
-                  <div className='text-sm'>
-                    <NoTransactionsPlug
-                      align='right'
-                      withBackground={false}
-                      padding={0}
-                    />
-                  </div>
-                  <Spacer y={2} />
-                </>
-              )}
               <TransactionLimit
                 userId={userId}
                 userTransactionLimit={userTransactionLimit}

@@ -32,9 +32,11 @@ import { ROUTE } from '@/config/constants/routes'
 
 import type {
   TApproxCategory,
+  TCategoriesItem,
   TCategoryData,
   TGetTransactions,
   THTMLElement,
+  TRawTransaction,
   TTransaction,
 } from './types'
 
@@ -77,8 +79,25 @@ export const getCategoryWithoutEmoji = (
 ): TTransaction['category'] => {
   const regex = emojiRegex()
 
-  // Replace the emoji(s) at the beginning of the category with an empty string
+  // Replace the emoji(s) at the beginning of the category with an empty string.
   return category.replace(regex, '').trim()
+}
+
+export const getCategoryWithEmoji = (
+  category: FormDataEntryValue | null | undefined,
+  categories: TTransaction['categories'],
+): TTransaction['category'] => {
+  if (!category || typeof category !== 'string') {
+    return DEFAULT_CATEGORY
+  }
+  for (const { items } of categories) {
+    const foundCategory = items.find((item) => item.name === category)
+    if (foundCategory) {
+      return `${foundCategory.emoji} ${category}`
+    }
+  }
+
+  return category
 }
 
 export const toLowerCase = (str: string) => str.toLowerCase()
@@ -126,29 +145,6 @@ export const formatTime = (dateStr: Date): string => {
   const formatStr = userTimeZone.includes('America') ? 'hh:mm a' : 'HH:mm'
 
   return formatInTimeZone(date, userTimeZone || DEFAULT_TIME_ZONE, formatStr)
-}
-
-export const getCategoryWithEmoji = (
-  category: FormDataEntryValue | null | undefined,
-  categories: TTransaction['categories'],
-): TTransaction['category'] => {
-  if (
-    typeof category !== 'string' ||
-    category === null ||
-    category === undefined
-  ) {
-    return DEFAULT_CATEGORY
-  }
-  for (const categoryGroup of categories) {
-    const foundCategory = categoryGroup.items.find(
-      (item) => item.name === category,
-    )
-    if (foundCategory) {
-      return `${foundCategory.emoji} ${category}`
-    }
-  }
-
-  return category
 }
 
 export const toNumber = (value: number | string | null) => {
@@ -457,4 +453,57 @@ export const sortArrayByKeyByReferenceArray = <
 
     return aIdx - bIdx
   })
+}
+
+export const formatObjectIdToString = (
+  _id: NonNullable<TRawTransaction['_id']>,
+) => {
+  return _id.toString()
+}
+
+export const getCategoriesMap = (
+  categories: TTransaction['categories'],
+): Map<string, TCategoriesItem> => {
+  return new Map(
+    categories.flatMap((category) =>
+      category.items.map((item) => [item.name, item]),
+    ),
+  )
+}
+
+export const getRandomValue = <T>(
+  input: T[] | Iterable<T> | string | number | boolean,
+): T | null => {
+  // Check for falsy input
+  if (!input) return null
+
+  // Handle boolean case
+  if (typeof input === 'boolean') {
+    return (Math.random() < 0.5 ? true : false) as T // Cast to T
+  }
+
+  // Handle number case
+  if (typeof input === 'number') {
+    return Math.floor(Math.random() * input) as T // Cast to T
+  }
+
+  // Handle string case
+  if (typeof input === 'string') {
+    return input[Math.floor(Math.random() * input.length)] as T // Cast to T
+  }
+
+  // Handle iterable cases
+  const array = Array.from(input) // Convert iterable to array
+  if (array.length === 0) return null // Handle empty iterable
+
+  return array[Math.floor(Math.random() * array.length)]
+}
+
+export const createFormData = (data: Record<string, unknown>): FormData => {
+  const formData = new FormData()
+  Object.entries(data).forEach(([key, value]) => {
+    formData.append(key, String(value)) // Convert non-string values to strings
+  })
+
+  return formData
 }

@@ -7,10 +7,7 @@ import { Card, CardHeader } from '@heroui/react'
 import { motion } from 'framer-motion'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
-import {
-  DEFAULT_CURRENCY_CODE,
-  DEFAULT_TIME_ZONE,
-} from '@/config/constants/main'
+import { DEFAULT_TIME_ZONE } from '@/config/constants/main'
 import { DIV } from '@/config/constants/motion'
 
 import { getAllTransactions } from '../lib/actions'
@@ -26,12 +23,13 @@ import type { TTransaction, TUser } from '../lib/types'
 import Loading from '../loading'
 
 type TProps = {
+  user: TUser | undefined
   balance: TTransaction['balance']
   currency: TTransaction['currency']
-  user: TUser | undefined
+  hasTransactions: boolean
 }
 
-function BalanceCard({ balance, currency, user }: TProps) {
+function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
   const [isShowTotals, setIsChangeInfo] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [total, setTotal] = useState<{
@@ -49,6 +47,7 @@ function BalanceCard({ balance, currency, user }: TProps) {
   const greetingMsg = `${getGreeting(currentTimeZone || DEFAULT_TIME_ZONE)}, ${user?.name} 👋🏼`
 
   const onChangeInfo = () => {
+    if (!hasTransactions) return
     setIsChangeInfo((prev) => !prev)
   }
 
@@ -99,7 +98,10 @@ function BalanceCard({ balance, currency, user }: TProps) {
       <div className='pointer-events-none absolute -inset-px opacity-0 transition duration-300' />
       <CardHeader className='flex flex-col items-center justify-between gap-4 px-2 md:px-4'>
         <div
-          className='cursor-pointer text-center text-xl'
+          className={cn(
+            'text-center text-xl',
+            hasTransactions && 'cursor-pointer',
+          )}
           onClick={onChangeInfo}
         >
           <p className='mb-4 text-xs'>{greetingMsg}</p>
@@ -118,14 +120,14 @@ function BalanceCard({ balance, currency, user }: TProps) {
                       Income:
                     </span>{' '}
                     <span className='font-semibold'>
-                      {getFormattedCurrency(total.income)} {currency?.code}
+                      {getFormattedCurrency(total.income)} {currency.code}
                     </span>
                   </p>
                   <p>
                     <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
                     <span className='text-sm text-default-500'>Expense:</span>{' '}
                     <span className='font-semibold'>
-                      {getFormattedCurrency(total.expense)} {currency?.code}
+                      {getFormattedCurrency(total.expense)} {currency.code}
                     </span>
                   </p>
                 </motion.div>
@@ -156,8 +158,7 @@ function BalanceCard({ balance, currency, user }: TProps) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ ...DIV.TRANSITION_SPRING }}
             >
-              {getFormattedBalance(balance)}{' '}
-              {currency?.code || DEFAULT_CURRENCY_CODE}
+              {getFormattedBalance(balance)} {currency.code}
             </motion.p>
           )}
         </div>

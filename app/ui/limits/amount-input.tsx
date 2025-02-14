@@ -1,6 +1,6 @@
-import { Input } from '@heroui/react'
+import { memo } from 'react'
 
-import { DEFAULT_CURRENCY_SIGN } from '@/config/constants/main'
+import { Input } from '@heroui/react'
 
 import { cn } from '@/app/lib/helpers'
 import type { TTransaction } from '@/app/lib/types'
@@ -45,7 +45,7 @@ function AmountInput({
         pattern='[\d\s,]+'
         inputMode='decimal'
         placeholder='0'
-        size='lg'
+        // size='lg'
         classNames={{
           input:
             'border-none focus:ring-0 placeholder:text-default-500 mt-0.5 text-default-500 text-left',
@@ -62,7 +62,7 @@ function AmountInput({
                   : 'text-default-500',
               )}
             >
-              {currency?.sign || DEFAULT_CURRENCY_SIGN}
+              {currency.sign}
             </span>
           </div>
         }
@@ -71,4 +71,4 @@ function AmountInput({
   )
 }
 
-export default AmountInput
+export default memo(AmountInput)

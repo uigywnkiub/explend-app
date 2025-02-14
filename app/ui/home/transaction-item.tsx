@@ -31,11 +31,7 @@ import {
 import { motion } from 'framer-motion'
 
 import { BLINK_DURATION } from '@/config/constants/animation'
-import {
-  APP_NAME,
-  DEFAULT_CURRENCY_SIGN,
-  DEFAULT_ICON_SIZE,
-} from '@/config/constants/main'
+import { APP_NAME, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { deleteTransaction } from '../../lib/actions'
 import {
@@ -62,6 +58,7 @@ type TProps = Omit<
   | 'categories'
   | 'hasCategoryChanged'
   | 'categoryLimits'
+  | 'subscriptions'
 > & {
   hasCategoryChanged: boolean
 }
@@ -74,6 +71,7 @@ function TransactionItem({
   currency,
   isIncome,
   isEdited,
+  isSubscription,
   createdAt,
   hasCategoryChanged,
 }: TProps) {
@@ -85,7 +83,7 @@ function TransactionItem({
 ${isIncome ? 'Type: Income' : 'Type: Expense'}
 Category: ${category}
 Description: ${description}
-Amount: ${isIncome ? '+' : '-'} ${getFormattedCurrency(amount)} ${currency?.sign || DEFAULT_CURRENCY_SIGN}
+Amount: ${isIncome ? '+' : '-'} ${getFormattedCurrency(amount)} ${currency.sign}
 Time: ${formatTime(createdAt)}`
 
   const onBlinkTransaction = async () => {
@@ -128,18 +126,19 @@ Time: ${formatTime(createdAt)}`
             <div className='font-semibold'>
               {isIncome ? (
                 <p className='text-lg text-success'>
-                  + {getFormattedCurrency(amount)}{' '}
-                  {currency?.sign || DEFAULT_CURRENCY_SIGN}
+                  + {getFormattedCurrency(amount)} {currency.sign}
                 </p>
               ) : (
                 <p className='text-lg'>
-                  - {getFormattedCurrency(amount)}{' '}
-                  {currency?.sign || DEFAULT_CURRENCY_SIGN}
+                  - {getFormattedCurrency(amount)} {currency.sign}
                 </p>
               )}
               <p className='text-balance text-sm font-medium'>{description}</p>
-              <p className='text-xs font-medium text-default-500'>
-                {isEdited && 'edited'} {formatTime(createdAt)}
+              <p className='text-xs font-medium italic text-default-500'>
+                {formatTime(createdAt)} {isEdited && 'edited'}{' '}
+                {isSubscription && (
+                  <span className='text-primary-700'>subscription</span>
+                )}
               </p>
             </div>
           </div>
@@ -281,7 +280,9 @@ Time: ${formatTime(createdAt)}`
               <ModalBody>
                 <p className='overflow-hidden text-ellipsis text-default-500'>
                   Are you sure you want to delete the{' '}
-                  <span className='text-foreground'>{description}</span>{' '}
+                  <span className='text-foreground'>
+                    {getEmojiFromCategory(category)} {description}
+                  </span>{' '}
                   transaction? This action is permanent and cannot be undone.
                 </p>
               </ModalBody>

@@ -17,7 +17,7 @@ export default function NoTransactionsPlug({
         `rounded-medium ${withBackground && 'bg-content1'} p-${padding} text-${align} text-default-500`,
       )}
     >
-      No transactions found.
+      No Transactions Found
     </p>
   )
 }

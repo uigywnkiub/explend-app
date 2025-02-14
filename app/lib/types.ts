@@ -27,11 +27,6 @@ export type TCategories = {
   items: TCategoriesItem[]
 }
 
-export type TCategoryLimits = {
-  categoryName: string
-  limitAmount: string
-}
-
 export type TCurrency = {
   name: CURRENCY_NAME
   code: CURRENCY_CODE
@@ -44,15 +39,29 @@ export type TTransaction = {
   category: string
   categories: TCategories[]
   categoryLimits: TCategoryLimits[] | undefined
+  subscriptions: TSubscriptions[] | []
   description: string
   amount: string
   isIncome: boolean
   balance: string
-  currency: TCurrency | undefined
+  currency: TCurrency
   transactionLimit: number | null | undefined
   isEdited: boolean
+  isSubscription: boolean
   createdAt: Date
   updatedAt: Date
+}
+
+export type TCategoryLimits = {
+  categoryName: TTransaction['category']
+  limitAmount: TTransaction['amount']
+}
+
+export type TSubscriptions = {
+  _id: TTransaction['id']
+  category: TTransaction['category']
+  description: TTransaction['description']
+  amount: TTransaction['amount']
 }
 
 export type TRawTransaction = TTransaction & {

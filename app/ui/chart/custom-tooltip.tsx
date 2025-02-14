@@ -51,7 +51,7 @@ function CustomTooltip({ active, payload, label, currency }: TProps) {
             <span className='font-semibold'>
               {item.value !== undefined &&
                 getFormattedCurrency(item.value as string | number)}{' '}
-              {currency?.code}
+              {currency.code}
             </span>
           </p>
         )

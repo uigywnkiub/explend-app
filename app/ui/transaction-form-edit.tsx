@@ -6,7 +6,6 @@ import toast from 'react-hot-toast'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/navigation'
 
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import {
   Badge,
   Button,
@@ -20,10 +19,7 @@ import {
 } from '@heroui/react'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
-import {
-  DEFAULT_CATEGORY,
-  DEFAULT_CURRENCY_SIGN,
-} from '@/config/constants/main'
+import { DEFAULT_CATEGORY } from '@/config/constants/main'
 
 import { editTransactionById } from '../lib/actions'
 import {
@@ -78,7 +74,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     return () =>
       removeFromLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
   }, [categoryName])
-  const userCategories = transaction.categories || DEFAULT_CATEGORIES
+  const userCategories = transaction.categories
   const categoryWithEmoji = getCategoryWithEmoji(categoryName, userCategories)
   const prevCategory = transaction.category
   const currency = transaction.currency
@@ -212,7 +208,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                         : 'text-default-500',
                     )}
                   >
-                    {transaction.currency?.sign || DEFAULT_CURRENCY_SIGN}
+                    {transaction.currency.sign}
                   </span>
                 </div>
               }

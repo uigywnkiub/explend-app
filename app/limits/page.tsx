@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
-
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import { getAllTransactions, getAuthSession, getCurrency } from '../lib/actions'
@@ -36,7 +34,7 @@ export default async function Page() {
             userId={userId}
             currency={currency}
             transactions={transactions}
-            userCategories={userCategories || DEFAULT_CATEGORIES}
+            userCategories={userCategories}
           />
         )}
       </div>

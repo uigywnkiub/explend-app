@@ -4,6 +4,7 @@ export const enum ROUTE {
   MONTHLY_REPORT = '/monthly-report',
   CHART = '/chart',
   LIMITS = '/limits',
+  SUBSCRIPTIONS = '/subscriptions',
   CATEGORIES = '/categories',
   SETTINGS = '/settings',
   FEEDBACK = '/feedback',

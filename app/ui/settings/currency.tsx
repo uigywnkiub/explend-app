@@ -17,7 +17,12 @@ import {
 
 import { updateCurrency } from '@/app/lib/actions'
 import { getSlicedCurrencyCode } from '@/app/lib/helpers'
-import { TSelect, TTransaction, TUserId } from '@/app/lib/types'
+import type {
+  TGetTransactions,
+  TSelect,
+  TTransaction,
+  TUserId,
+} from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
 
@@ -103,9 +108,10 @@ const getCurrencyData = (code: CURRENCY_NAME): TTransaction['currency'] => {
 type TProps = {
   userId: TUserId
   currency: TTransaction['currency']
+  transactionsCount: TGetTransactions['totalEntries']
 }
 
-function Currency({ userId, currency }: TProps) {
+function Currency({ userId, currency, transactionsCount }: TProps) {
   const [isLoading, setIsLoading] = useState(false)
 
   const onChangeCurrency = async (key: string) => {
@@ -121,14 +127,14 @@ function Currency({ userId, currency }: TProps) {
     }
   }
 
-  const disableState = currency?.name || DEFAULT_CURRENCY_NAME
+  const disableState = currency.name
 
   return (
     <Select
       isVirtualized={false}
       label='Select a currency'
       items={currencies}
-      isDisabled={!currency}
+      isDisabled={!transactionsCount}
       isLoading={isLoading}
       disabledKeys={[disableState]}
       defaultSelectedKeys={[disableState]}

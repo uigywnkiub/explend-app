@@ -21,6 +21,7 @@ export default function Feedback() {
       <Textarea
         name='feedback'
         label='Feedback'
+        labelPlacement='outside'
         placeholder='Type feedback...'
         description={
           <InfoText

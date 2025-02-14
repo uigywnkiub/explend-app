@@ -6,12 +6,17 @@ import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 
 import { auth, signOut } from '@/auth'
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { SignOutError } from '@auth/core/errors'
+import { isObjectIdOrHexString } from 'mongoose'
 import { Resend } from 'resend'
 
 import { FEEDBACK } from '@/config/constants/cookies'
-import { APP_NAME, CURRENCY_CODE } from '@/config/constants/main'
+import {
+  APP_NAME,
+  DEFAULT_CURRENCY_CODE,
+  DEFAULT_CURRENCY_NAME,
+  DEFAULT_CURRENCY_SIGN,
+} from '@/config/constants/main'
 import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
@@ -24,6 +29,7 @@ import {
 } from './ai'
 import {
   capitalizeFirstLetter,
+  formatObjectIdToString,
   getCategoryItemNames,
   getCategoryWithEmoji,
 } from './helpers'
@@ -34,9 +40,11 @@ import type {
   TCategories,
   TCategoryLimits,
   TCookie,
+  TCurrency,
   TGetTransactions,
   TRawTransaction,
   TSession,
+  TSubscriptions,
   TTransaction,
   TUserId,
 } from './types'
@@ -127,7 +135,13 @@ export async function getCurrency(
       { currency: 1, _id: 0 },
     ).lean<{ currency: TTransaction['currency'] }>()
 
-    return transaction?.currency
+    return (
+      transaction?.currency || {
+        name: DEFAULT_CURRENCY_NAME,
+        code: DEFAULT_CURRENCY_CODE,
+        sign: DEFAULT_CURRENCY_SIGN,
+      }
+    )
   } catch (err) {
     throw err
   }
@@ -177,9 +191,15 @@ export async function createTransaction(
   currency: TTransaction['currency'],
   userCategories: TTransaction['categories'],
   formData: FormData,
+  withPathRevalidate: boolean = true,
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to create a transaction.')
+  }
+  if (!userCategories || userCategories.length === 0) {
+    throw new Error(
+      'At least one category is required to create a transaction.',
+    )
   }
   try {
     const newTransaction: Omit<
@@ -189,6 +209,7 @@ export async function createTransaction(
       | 'transactionLimit'
       | 'isEdited'
       | 'categoryLimits'
+      | 'subscriptions'
     > = {
       id: crypto.randomUUID(),
       userId,
@@ -198,9 +219,10 @@ export async function createTransaction(
       amount: formData.get('amount') as TTransaction['amount'],
       category: getCategoryWithEmoji(
         formData.get('category'),
-        userCategories || DEFAULT_CATEGORIES,
+        userCategories,
       ) as TTransaction['category'],
       isIncome: Boolean(formData.get('isIncome')),
+      isSubscription: Boolean(formData.get('isSubscription')),
       balance: '0' as TTransaction['balance'],
       currency,
       categories: userCategories,
@@ -221,7 +243,7 @@ export async function createTransaction(
       await TransactionModel.create([newTransaction], { session })
       await session.commitTransaction()
       session.endSession()
-      revalidatePath(ROUTE.HOME)
+      if (withPathRevalidate) revalidatePath(ROUTE.HOME)
     } catch (err) {
       await session.abortTransaction()
       session.endSession()
@@ -493,10 +515,8 @@ export async function deleteAllTransactionsAndSignOut(
   }
   try {
     await dbConnect()
-    await Promise.all([
-      TransactionModel.deleteMany({ userId }),
-      signOutAccount(),
-    ])
+    await TransactionModel.deleteMany({ userId })
+    await signOutAccount()
   } catch (err) {
     throw err
   }
@@ -506,7 +526,7 @@ export async function getCategoryLimits(
   userId: TUserId,
 ): Promise<TTransaction['categoryLimits']> {
   if (!userId) {
-    throw new Error('User ID is required to add category limits.')
+    throw new Error('User ID is required to get category limits.')
   }
   try {
     await dbConnect()
@@ -611,6 +631,134 @@ export async function editCategoryLimit(
   }
 }
 
+export async function addSubscription(
+  userId: TUserId,
+  subscription: Omit<TSubscriptions, '_id'>,
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to add subscription.')
+  }
+  if (!subscription) {
+    throw new Error('Subscription is required.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany(
+      { userId },
+      { $push: { subscriptions: subscription } },
+    )
+    revalidatePath(ROUTE.SUBSCRIPTIONS)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getSubscriptions(
+  userId: TUserId,
+): Promise<TTransaction['subscriptions']> {
+  if (!userId) {
+    throw new Error('User ID is required to get subscriptions.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne(
+      { userId },
+      { subscriptions: 1, _id: 1 },
+    ).lean<{ subscriptions: TTransaction['subscriptions'] }>({
+      transform: (doc: TRawTransaction) => {
+        if (doc._id && isObjectIdOrHexString(doc._id)) {
+          // @ts-expect-error: doc._id is ObjectId and it has toString method. To avoid undefined we use to boolean checking.
+          doc._id = formatObjectIdToString(doc._id)
+        }
+
+        return doc
+      },
+    })
+
+    return transaction?.subscriptions || []
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function editSubscription(
+  userId: TUserId,
+  _id: TTransaction['id'],
+  category: TSubscriptions['category'],
+  description: TSubscriptions['description'],
+  amount: TSubscriptions['amount'],
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to edit subscriptions.')
+  }
+  if (!_id) {
+    throw new Error('_id is required to edit subscription.')
+  }
+  if (!category) {
+    throw new Error('Category is required to edit subscription.')
+  }
+  if (!description) {
+    throw new Error('Description is required to edit subscription.')
+  }
+  if (!amount) {
+    throw new Error('Amount is required to edit subscription.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany(
+      { userId, 'subscriptions._id': _id },
+      {
+        $set: {
+          'subscriptions.$.category': category,
+          'subscriptions.$.description': description,
+          'subscriptions.$.amount': amount,
+        },
+      },
+    )
+    revalidatePath(ROUTE.SUBSCRIPTIONS)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function deleteSubscription(
+  userId: TUserId,
+  _id: TTransaction['id'],
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to delete subscription.')
+  }
+  if (!_id) {
+    throw new Error('_id is required to delete subscription.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany(
+      { userId },
+      { $pull: { subscriptions: { _id } } },
+    )
+    revalidatePath(ROUTE.SUBSCRIPTIONS)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function resetAllSubscriptions(userId: TUserId): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to remove all subscriptions.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany(
+      { userId },
+      { $set: { subscriptions: [] } },
+    )
+    revalidatePath(ROUTE.SUBSCRIPTIONS)
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function getCategoryItemNameAI(
   categories: TTransaction['categories'],
   userPrompt: string,
@@ -622,7 +770,7 @@ export async function getCategoryItemNameAI(
   try {
     const categoriesStr = getCategoryItemNames(categories).join(', ')
 
-    const prompt = `Given the list of categories: ${categoriesStr} — choose the most relevant category for the prompt '${userPrompt}' in one word.`
+    const prompt = `Given the list of categories: ${categoriesStr} - choose the most relevant category for the prompt '${userPrompt}' in one word.`
 
     const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()
@@ -635,7 +783,7 @@ export async function getCategoryItemNameAI(
 export const getCachedCategoryItemAI = cache(getCategoryItemNameAI)
 
 export async function getAmountAI(
-  currency: CURRENCY_CODE | string,
+  currency: TCurrency,
   userPrompt: string,
 ): Promise<string> {
   if (!currency || !userPrompt) {
@@ -643,7 +791,7 @@ export async function getAmountAI(
   }
 
   try {
-    const prompt = `${userPrompt}. Provide a numerical estimate of the cost in ${currency}, disregarding real-time price fluctuations. Omit any decimal points, commas, or other symbols.`
+    const prompt = `${userPrompt}. Provide a numerical estimate of the cost in ${currency.code}, disregarding real-time price fluctuations. Omit any decimal points, commas, or other symbols.`
 
     const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()
