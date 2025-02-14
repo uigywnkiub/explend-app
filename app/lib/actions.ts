@@ -185,6 +185,11 @@ export async function createTransaction(
   if (!userId) {
     throw new Error('User ID is required to create a transaction.')
   }
+  if (!userCategories || userCategories.length === 0) {
+    throw new Error(
+      'At least one category is required to create a transaction.',
+    )
+  }
   try {
     const newTransaction: Omit<
       TTransaction,
@@ -499,10 +504,8 @@ export async function deleteAllTransactionsAndSignOut(
   }
   try {
     await dbConnect()
-    await Promise.all([
-      TransactionModel.deleteMany({ userId }),
-      signOutAccount(),
-    ])
+    await TransactionModel.deleteMany({ userId })
+    await signOutAccount()
   } catch (err) {
     throw err
   }

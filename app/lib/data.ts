@@ -1,3 +1,4 @@
+import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { getLocalTimeZone } from '@internationalized/date'
 import {
   endOfDay,
@@ -174,7 +175,7 @@ export const getUserCategories = (
   return (
     transactions.find(
       (t) => Array.isArray(t.categories) && t.categories.length > 0,
-    )?.categories ?? []
+    )?.categories ?? DEFAULT_CATEGORIES
   )
 }
 

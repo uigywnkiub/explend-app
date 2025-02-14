@@ -33,7 +33,7 @@ export default async function Page() {
         ) : (
           <Categories
             userId={userId}
-            userCategories={userCategories || DEFAULT_CATEGORIES}
+            userCategories={userCategories}
             areCategoriesLengthMismatch={areCategoriesLengthMismatch}
           />
         )}

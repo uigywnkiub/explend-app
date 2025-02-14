@@ -37,7 +37,6 @@ import Search from './ui/home/search'
 import SearchedTransactions from './ui/home/searched-transactions'
 import TransactionForm from './ui/home/transaction-form'
 import TransactionList from './ui/home/transaction-list'
-import InfoText from './ui/info-text'
 import NoTransactionsPlug from './ui/no-transactions-plug'
 import PaginationList from './ui/pagination/pagination-list'
 import WithSidebar from './ui/sidebar/with-sidebar'
@@ -140,25 +139,22 @@ export default async function Page(props: {
       </h1>
       <div className='mx-auto flex max-w-3xl flex-col gap-y-0'>
         <BalanceCard
+          user={session?.user}
           balance={balance}
           currency={currency}
-          user={session?.user}
+          hasTransactions={transactions.length > 0}
         />
         <form action={createTransactionWithUserId} className='mt-4'>
           <TransactionForm
             currency={currency}
-            userCategories={userCategories || DEFAULT_CATEGORIES}
+            userCategories={userCategories}
           />
         </form>
         <div className='text-center text-default-500'>
           {transactions.length === 0 ? (
-            <>
+            <div className='mt-4'>
               <NoTransactionsPlug />
-              <div className='mt-2 flex flex-col gap-2'>
-                <InfoText text='The first written transaction means creating your account.' />
-                <InfoText text='The last deleted transaction means deleting your account.' />
-              </div>
-            </>
+            </div>
           ) : (
             <>
               <Search
