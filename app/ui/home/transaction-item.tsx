@@ -75,6 +75,7 @@ function TransactionItem({
   currency,
   isIncome,
   isEdited,
+  isSubscription,
   createdAt,
   hasCategoryChanged,
 }: TProps) {
@@ -139,8 +140,11 @@ Time: ${formatTime(createdAt)}`
                 </p>
               )}
               <p className='text-balance text-sm font-medium'>{description}</p>
-              <p className='text-xs font-medium text-default-500'>
-                {isEdited && 'edited'} {formatTime(createdAt)}
+              <p className='text-xs font-medium italic text-default-500'>
+                {formatTime(createdAt)} {isEdited && 'edited'}{' '}
+                {isSubscription && (
+                  <span className='text-primary-700'>subscription</span>
+                )}
               </p>
             </div>
           </div>
@@ -282,7 +286,9 @@ Time: ${formatTime(createdAt)}`
               <ModalBody>
                 <p className='overflow-hidden text-ellipsis text-default-500'>
                   Are you sure you want to delete the{' '}
-                  <span className='text-foreground'>{description}</span>{' '}
+                  <span className='text-foreground'>
+                    {getEmojiFromCategory(category)} {description}
+                  </span>{' '}
                   transaction? This action is permanent and cannot be undone.
                 </p>
               </ModalBody>

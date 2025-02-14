@@ -106,6 +106,10 @@ const transactionSchema = new Schema<TTransaction>(
       type: Boolean,
       default: false,
     },
+    isSubscription: {
+      type: Boolean,
+      default: false,
+    },
     categories: {
       type: [categoriesSchema],
       default: DEFAULT_CATEGORIES,

@@ -45,6 +45,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -81,6 +82,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -124,6 +126,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
       {
         id: '2',
@@ -157,6 +160,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
       {
         id: '3',
@@ -190,6 +194,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -236,6 +241,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -282,6 +288,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -324,6 +331,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -360,6 +368,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -402,6 +411,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: 40,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -438,6 +448,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: 40,
         createdAt: new Date(),
         updatedAt: new Date(),
+        isSubscription: false,
       },
     ]
 
@@ -480,6 +491,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: 30,
         createdAt: new Date('2024-07-01'),
         updatedAt: new Date('2024-07-01'),
+        isSubscription: false,
       },
     ]
 
@@ -516,6 +528,7 @@ describe('calculateMonthlyReportData', () => {
         transactionLimit: 30,
         createdAt: new Date('2024-08-01'),
         updatedAt: new Date('2024-08-01'),
+        isSubscription: false,
       },
     ]
 

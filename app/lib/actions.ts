@@ -180,6 +180,7 @@ export async function createTransaction(
   currency: TTransaction['currency'],
   userCategories: TTransaction['categories'],
   formData: FormData,
+  withPathRevalidate: boolean = true,
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to create a transaction.')
@@ -205,6 +206,7 @@ export async function createTransaction(
         userCategories || DEFAULT_CATEGORIES,
       ) as TTransaction['category'],
       isIncome: Boolean(formData.get('isIncome')),
+      isSubscription: Boolean(formData.get('isSubscription')),
       balance: '0' as TTransaction['balance'],
       currency,
       categories: userCategories,
@@ -225,7 +227,7 @@ export async function createTransaction(
       await TransactionModel.create([newTransaction], { session })
       await session.commitTransaction()
       session.endSession()
-      revalidatePath(ROUTE.HOME)
+      if (withPathRevalidate) revalidatePath(ROUTE.HOME)
     } catch (err) {
       await session.abortTransaction()
       session.endSession()

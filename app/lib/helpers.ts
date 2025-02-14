@@ -498,3 +498,12 @@ export const getRandomValue = <T>(
 
   return array[Math.floor(Math.random() * array.length)]
 }
+
+export const createFormData = (data: Record<string, unknown>): FormData => {
+  const formData = new FormData()
+  Object.entries(data).forEach(([key, value]) => {
+    formData.append(key, String(value)) // Convert non-string values to strings
+  })
+
+  return formData
+}

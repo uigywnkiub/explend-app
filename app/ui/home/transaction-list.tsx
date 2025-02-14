@@ -88,6 +88,7 @@ function TransactionList({
                       currency={t.currency}
                       isIncome={t.isIncome}
                       isEdited={t.isEdited}
+                      isSubscription={t.isSubscription}
                       createdAt={t.createdAt}
                       hasCategoryChanged={hasCategoryChanged}
                     />

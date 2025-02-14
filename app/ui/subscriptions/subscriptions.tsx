@@ -41,12 +41,14 @@ import {
 
 import {
   addSubscription,
+  createTransaction,
   deleteSubscription,
   editSubscription,
   resetAllSubscriptions,
 } from '@/app/lib/actions'
 import {
   capitalizeFirstLetter,
+  createFormData,
   formatAmount,
   getCategoriesMap,
   getCategoryWithEmoji,
@@ -64,6 +66,7 @@ import DescriptionInput from './description-input'
 import SelectInput from './select-input'
 
 const enum DROPDOWN_KEY {
+  ADD = 'add',
   EDIT = 'edit',
   DELETE = 'delete',
 }
@@ -134,7 +137,7 @@ export default function Subscriptions({
 
   const changedCategoryNames = useMemo(() => {
     return subscriptionsData
-      .map((e) => getCategoryWithoutEmoji(e.category))
+      .map((s) => getCategoryWithoutEmoji(s.category))
       .filter((name) => !userCategoriesMap.has(name))
   }, [subscriptionsData, userCategoriesMap])
 
@@ -178,6 +181,29 @@ export default function Subscriptions({
       setIsLoadingCreate(false)
       onClose()
     }
+  }
+
+  const onAddAsTransaction = async (
+    subscriptionData: Omit<TSubscriptions, '_id'> & {
+      isSubscription: TTransaction['isSubscription']
+    },
+  ) => {
+    const newSubscription = createFormData(subscriptionData)
+    await toast.promise(
+      createTransaction(
+        userId,
+        currency,
+        userCategories,
+        newSubscription,
+        false,
+      ),
+      {
+        loading: 'Processing as transactions...',
+        success: 'Transaction added.',
+        error: 'Failed to add as transaction.',
+      },
+    )
+    resetStates()
   }
 
   const onEditSubscription = async (
@@ -368,8 +394,8 @@ export default function Subscriptions({
           <p className='text-center text-default-500'>No Subscriptions Found</p>
         )}
 
-        {subscriptionsData.map((data) => {
-          const { _id, category, description, amount } = data
+        {subscriptionsData.map((s) => {
+          const { _id, category, description, amount } = s
           const isChangedCategoryName = changedCategoryNames.includes(
             getCategoryWithoutEmoji(category),
           )
@@ -444,6 +470,17 @@ export default function Subscriptions({
                         setTempDescription(currSubscription.description)
                         setTempAmount(currSubscription.amount)
 
+                        if (key === DROPDOWN_KEY.ADD) {
+                          onAddAsTransaction({
+                            category: getCategoryWithEmoji(
+                              category,
+                              userCategories,
+                            ),
+                            description,
+                            amount,
+                            isSubscription: true,
+                          })
+                        }
                         if (key === DROPDOWN_KEY.EDIT) {
                           onOpenEdit()
                         }
@@ -453,6 +490,26 @@ export default function Subscriptions({
                       }}
                     >
                       <DropdownSection title='Actions' showDivider>
+                        <DropdownItem
+                          key={DROPDOWN_KEY.ADD}
+                          startContent={
+                            <HoverableElement
+                              uKey={DROPDOWN_KEY.ADD}
+                              element={
+                                <PiPlusCircle size={DEFAULT_ICON_SIZE} />
+                              }
+                              hoveredElement={
+                                <PiPlusCircleFill size={DEFAULT_ICON_SIZE} />
+                              }
+                            />
+                          }
+                          description='Add subscription as transaction'
+                          classNames={{
+                            description: 'text-default-500',
+                          }}
+                        >
+                          Add
+                        </DropdownItem>
                         <DropdownItem
                           key={DROPDOWN_KEY.EDIT}
                           startContent={
