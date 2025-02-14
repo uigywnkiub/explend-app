@@ -2,6 +2,8 @@
 
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
+import { DEFAULT_CURRENCY_CODE } from '@/config/constants/main'
+
 import { getTransactionsTotals } from '@/app/lib/data'
 import { getFormattedCurrency } from '@/app/lib/helpers'
 import type { TTransaction } from '@/app/lib/types'
@@ -25,7 +27,7 @@ export default function SearchedTransactions({
           {getFormattedCurrency(
             getTransactionsTotals(searchedTransactionsByQuery).income,
           )}{' '}
-          {currency?.code}
+          {currency?.code || DEFAULT_CURRENCY_CODE}
         </p>
         <p>
           <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
@@ -33,7 +35,7 @@ export default function SearchedTransactions({
           {getFormattedCurrency(
             getTransactionsTotals(searchedTransactionsByQuery).expense,
           )}{' '}
-          {currency?.code}
+          {currency?.code || DEFAULT_CURRENCY_CODE}
         </p>
       </div>
     </div>

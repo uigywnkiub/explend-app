@@ -6,7 +6,6 @@ import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 
 import { auth, signOut } from '@/auth'
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { SignOutError } from '@auth/core/errors'
 import { isObjectIdOrHexString } from 'mongoose'
 import { Resend } from 'resend'
@@ -185,6 +184,9 @@ export async function createTransaction(
   if (!userId) {
     throw new Error('User ID is required to create a transaction.')
   }
+  // if (!currency) {
+  //   throw new Error('Currency is required to create a transaction.')
+  // }
   if (!userCategories || userCategories.length === 0) {
     throw new Error(
       'At least one category is required to create a transaction.',
@@ -208,7 +210,7 @@ export async function createTransaction(
       amount: formData.get('amount') as TTransaction['amount'],
       category: getCategoryWithEmoji(
         formData.get('category'),
-        userCategories || DEFAULT_CATEGORIES,
+        userCategories,
       ) as TTransaction['category'],
       isIncome: Boolean(formData.get('isIncome')),
       isSubscription: Boolean(formData.get('isSubscription')),

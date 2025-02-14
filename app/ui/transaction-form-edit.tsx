@@ -6,7 +6,6 @@ import toast from 'react-hot-toast'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/navigation'
 
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import {
   Badge,
   Button,
@@ -78,7 +77,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     return () =>
       removeFromLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
   }, [categoryName])
-  const userCategories = transaction.categories || DEFAULT_CATEGORIES
+  const userCategories = transaction.categories
   const categoryWithEmoji = getCategoryWithEmoji(categoryName, userCategories)
   const prevCategory = transaction.category
   const currency = transaction.currency

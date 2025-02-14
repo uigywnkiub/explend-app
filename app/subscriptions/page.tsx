@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
-
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
@@ -42,7 +40,7 @@ export default async function Page() {
             userId={userId}
             currency={currency}
             subscriptionsData={userSubscriptions}
-            userCategories={userCategories || DEFAULT_CATEGORIES}
+            userCategories={userCategories}
           />
         )}
       </div>

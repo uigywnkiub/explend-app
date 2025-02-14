@@ -4,8 +4,6 @@ import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useAudio, useDebounce } from 'react-use'
 
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
-
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { TOAST_DURATION } from '@/config/constants/toast'
 
@@ -84,7 +82,7 @@ export default function LimitToast({ triggerBy }: TProps) {
           icon: getEmojiFromCategory(
             getCategoryWithEmoji(
               foundCategoryLimit.categoryName,
-              userCategories || DEFAULT_CATEGORIES,
+              userCategories,
             ),
           ),
           duration: TOAST_DURATION * 1.5,
