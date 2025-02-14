@@ -28,9 +28,9 @@ export const enum CURRENCY_SIGN {
   USD = '$',
   EUR = '€',
 }
-export const DEFAULT_CURRENCY_CODE: string = CURRENCY_CODE.USD
-export const DEFAULT_CURRENCY_SIGN: string = CURRENCY_SIGN.USD
-export const DEFAULT_CURRENCY_NAME: string = CURRENCY_NAME.USD
+export const DEFAULT_CURRENCY_NAME = CURRENCY_NAME.USD
+export const DEFAULT_CURRENCY_CODE = CURRENCY_CODE.USD
+export const DEFAULT_CURRENCY_SIGN = CURRENCY_SIGN.USD
 
 export const enum APP_NAME {
   FULL = 'Explend App',

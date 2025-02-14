@@ -31,11 +31,7 @@ import {
 import { motion } from 'framer-motion'
 
 import { BLINK_DURATION } from '@/config/constants/animation'
-import {
-  APP_NAME,
-  DEFAULT_CURRENCY_SIGN,
-  DEFAULT_ICON_SIZE,
-} from '@/config/constants/main'
+import { APP_NAME, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { deleteTransaction } from '../../lib/actions'
 import {
@@ -87,7 +83,7 @@ function TransactionItem({
 ${isIncome ? 'Type: Income' : 'Type: Expense'}
 Category: ${category}
 Description: ${description}
-Amount: ${isIncome ? '+' : '-'} ${getFormattedCurrency(amount)} ${currency?.sign || DEFAULT_CURRENCY_SIGN}
+Amount: ${isIncome ? '+' : '-'} ${getFormattedCurrency(amount)} ${currency.sign}
 Time: ${formatTime(createdAt)}`
 
   const onBlinkTransaction = async () => {
@@ -130,13 +126,11 @@ Time: ${formatTime(createdAt)}`
             <div className='font-semibold'>
               {isIncome ? (
                 <p className='text-lg text-success'>
-                  + {getFormattedCurrency(amount)}{' '}
-                  {currency?.sign || DEFAULT_CURRENCY_SIGN}
+                  + {getFormattedCurrency(amount)} {currency.sign}
                 </p>
               ) : (
                 <p className='text-lg'>
-                  - {getFormattedCurrency(amount)}{' '}
-                  {currency?.sign || DEFAULT_CURRENCY_SIGN}
+                  - {getFormattedCurrency(amount)} {currency.sign}
                 </p>
               )}
               <p className='text-balance text-sm font-medium'>{description}</p>

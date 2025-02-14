@@ -97,7 +97,15 @@ const transactionSchema = new Schema<TTransaction>(
       type: String,
       required: true,
     },
-    currency: currencySchema,
+    currency: {
+      type: currencySchema,
+      default: {
+        name: DEFAULT_CURRENCY_NAME,
+        code: DEFAULT_CURRENCY_CODE,
+        sign: DEFAULT_CURRENCY_SIGN,
+      },
+      required: true,
+    },
     transactionLimit: {
       type: Number,
       default: null,

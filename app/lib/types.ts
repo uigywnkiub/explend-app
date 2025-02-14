@@ -44,7 +44,7 @@ export type TTransaction = {
   amount: string
   isIncome: boolean
   balance: string
-  currency: TCurrency | undefined
+  currency: TCurrency
   transactionLimit: number | null | undefined
   isEdited: boolean
   isSubscription: boolean

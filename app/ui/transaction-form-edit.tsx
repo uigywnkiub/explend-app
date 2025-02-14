@@ -19,10 +19,7 @@ import {
 } from '@heroui/react'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
-import {
-  DEFAULT_CATEGORY,
-  DEFAULT_CURRENCY_SIGN,
-} from '@/config/constants/main'
+import { DEFAULT_CATEGORY } from '@/config/constants/main'
 
 import { editTransactionById } from '../lib/actions'
 import {
@@ -211,7 +208,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                         : 'text-default-500',
                     )}
                   >
-                    {transaction.currency?.sign || DEFAULT_CURRENCY_SIGN}
+                    {transaction.currency.sign}
                   </span>
                 </div>
               }

@@ -125,7 +125,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
             }
             wrapperClassName='rounded-medium bg-background'
             formatter={(value, name) => [
-              `${getFormattedCurrency(value as number)} ${currency?.code}`,
+              `${getFormattedCurrency(value as number)} ${currency.code}`,
               capitalizeFirstLetter(name as string),
             ]}
           />

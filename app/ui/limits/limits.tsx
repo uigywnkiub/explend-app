@@ -38,7 +38,6 @@ import {
 import {
   DEFAULT_CATEGORY,
   DEFAULT_CATEGORY_EMOJI,
-  DEFAULT_CURRENCY_CODE,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
 
@@ -365,7 +364,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                                     <span className='text-xs'>
                                       already added by{' '}
                                       {getLimitAmount(item.name)}{' '}
-                                      {currency?.code || DEFAULT_CURRENCY_CODE}
+                                      {currency.code}
                                     </span>
                                   ) : item.name === DEFAULT_CATEGORY ? (
                                     <InfoText
@@ -473,11 +472,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
               <div className='flex items-center gap-2'>
                 <div className='text-right'>
                   <p className='text-sm md:text-lg'>
-                    {getFormattedCurrency(limitAmount)}{' '}
-                    {currency?.code || DEFAULT_CURRENCY_CODE}{' '}
+                    {getFormattedCurrency(limitAmount)} {currency.code}{' '}
                   </p>
                   <p className='text-xs text-default-500 md:text-sm'>
-                    {status} {currency?.code || DEFAULT_CURRENCY_CODE}
+                    {status} {currency.code}
                   </p>
                 </div>
                 <Dropdown>

@@ -22,10 +22,6 @@ import {
 } from 'date-fns'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
-import {
-  DEFAULT_CURRENCY_CODE,
-  DEFAULT_CURRENCY_SIGN,
-} from '@/config/constants/main'
 
 import { getCachedExpenseTipsAI } from '@/app/lib/actions'
 import {
@@ -208,12 +204,11 @@ function MonthlyReport({ transactions, currency }: TProps) {
           </div>
           <div className='md:text-lg'>{category.percentage} %</div>
           <div className='md:text-lg'>
-            {getFormattedCurrency(category.spent)}{' '}
-            {currency?.sign || DEFAULT_CURRENCY_SIGN}
+            {getFormattedCurrency(category.spent)} {currency.sign}
           </div>
         </Fragment>
       )),
-    [currency?.sign, monthlyReportData],
+    [currency.sign, monthlyReportData],
   )
 
   if (filteredTransactions.length === 0) {
@@ -261,8 +256,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
               </p>
               <p className='flex items-center gap-1 text-lg font-semibold md:text-2xl'>
                 <PiArrowCircleUpFill className='fill-success' />
-                {getFormattedCurrency(totalIncome)}{' '}
-                {currency?.code || DEFAULT_CURRENCY_CODE}
+                {getFormattedCurrency(totalIncome)} {currency.code}
               </p>
             </div>
             <div>
@@ -271,8 +265,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
               </p>
               <p className='flex items-center gap-1 text-lg font-semibold md:text-2xl'>
                 <PiArrowCircleDownFill className='fill-danger' />
-                {getFormattedCurrency(totalExpense)}{' '}
-                {currency?.code || DEFAULT_CURRENCY_CODE}
+                {getFormattedCurrency(totalExpense)} {currency.code}
               </p>
             </div>
           </div>

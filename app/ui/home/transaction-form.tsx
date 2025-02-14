@@ -29,8 +29,6 @@ import heic2any from 'heic2any'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
   DEFAULT_CATEGORY,
-  DEFAULT_CURRENCY_CODE,
-  DEFAULT_CURRENCY_SIGN,
   DEFAULT_ICON_SIZE,
   IS_PROD,
 } from '@/config/constants/main'
@@ -359,10 +357,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           await Promise.all([
             getCachedCategoryItemAI(categories, userPrompt),
             !hasReceiptAIData
-              ? getCachedAmountAI(
-                  currency?.code || DEFAULT_CURRENCY_CODE,
-                  userPrompt,
-                )
+              ? getCachedAmountAI(currency, userPrompt)
               : Promise.resolve(''),
             getCachedTransactionTypeAI(userPrompt),
           ])
@@ -390,12 +385,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         setIsLoadingAIData(false)
       }
     },
-    [
-      currency?.code,
-      hasReceiptAIData,
-      resetAIRelatedStates,
-      trimmedDescription,
-    ],
+    [currency, hasReceiptAIData, resetAIRelatedStates, trimmedDescription],
   )
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
@@ -715,7 +705,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                               : 'text-default-500',
                           )}
                         >
-                          {currency?.sign || DEFAULT_CURRENCY_SIGN}
+                          {currency.sign}
                         </span>
                       </div>
                     }

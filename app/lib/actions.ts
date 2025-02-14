@@ -11,7 +11,12 @@ import { isObjectIdOrHexString } from 'mongoose'
 import { Resend } from 'resend'
 
 import { FEEDBACK } from '@/config/constants/cookies'
-import { APP_NAME, CURRENCY_CODE } from '@/config/constants/main'
+import {
+  APP_NAME,
+  DEFAULT_CURRENCY_CODE,
+  DEFAULT_CURRENCY_NAME,
+  DEFAULT_CURRENCY_SIGN,
+} from '@/config/constants/main'
 import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
@@ -35,6 +40,7 @@ import type {
   TCategories,
   TCategoryLimits,
   TCookie,
+  TCurrency,
   TGetTransactions,
   TRawTransaction,
   TSession,
@@ -129,7 +135,13 @@ export async function getCurrency(
       { currency: 1, _id: 0 },
     ).lean<{ currency: TTransaction['currency'] }>()
 
-    return transaction?.currency
+    return (
+      transaction?.currency || {
+        name: DEFAULT_CURRENCY_NAME,
+        code: DEFAULT_CURRENCY_CODE,
+        sign: DEFAULT_CURRENCY_SIGN,
+      }
+    )
   } catch (err) {
     throw err
   }
@@ -184,9 +196,6 @@ export async function createTransaction(
   if (!userId) {
     throw new Error('User ID is required to create a transaction.')
   }
-  // if (!currency) {
-  //   throw new Error('Currency is required to create a transaction.')
-  // }
   if (!userCategories || userCategories.length === 0) {
     throw new Error(
       'At least one category is required to create a transaction.',
@@ -761,7 +770,7 @@ export async function getCategoryItemNameAI(
   try {
     const categoriesStr = getCategoryItemNames(categories).join(', ')
 
-    const prompt = `Given the list of categories: ${categoriesStr} — choose the most relevant category for the prompt '${userPrompt}' in one word.`
+    const prompt = `Given the list of categories: ${categoriesStr} - choose the most relevant category for the prompt '${userPrompt}' in one word.`
 
     const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()
@@ -774,7 +783,7 @@ export async function getCategoryItemNameAI(
 export const getCachedCategoryItemAI = cache(getCategoryItemNameAI)
 
 export async function getAmountAI(
-  currency: CURRENCY_CODE | string,
+  currency: TCurrency,
   userPrompt: string,
 ): Promise<string> {
   if (!currency || !userPrompt) {
@@ -782,7 +791,7 @@ export async function getAmountAI(
   }
 
   try {
-    const prompt = `${userPrompt}. Provide a numerical estimate of the cost in ${currency}, disregarding real-time price fluctuations. Omit any decimal points, commas, or other symbols.`
+    const prompt = `${userPrompt}. Provide a numerical estimate of the cost in ${currency.code}, disregarding real-time price fluctuations. Omit any decimal points, commas, or other symbols.`
 
     const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()

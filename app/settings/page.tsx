@@ -107,7 +107,11 @@ export default async function Page() {
           >
             <div className='max-w-xs'>
               <Spacer y={2} />
-              <Currency userId={userId} currency={currency} />
+              <Currency
+                userId={userId}
+                currency={currency}
+                transactionsCount={transactionsCount}
+              />
             </div>
           </SectionItem>
 

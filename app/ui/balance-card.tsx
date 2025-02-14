@@ -7,10 +7,7 @@ import { Card, CardHeader } from '@heroui/react'
 import { motion } from 'framer-motion'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
-import {
-  DEFAULT_CURRENCY_CODE,
-  DEFAULT_TIME_ZONE,
-} from '@/config/constants/main'
+import { DEFAULT_TIME_ZONE } from '@/config/constants/main'
 import { DIV } from '@/config/constants/motion'
 
 import { getAllTransactions } from '../lib/actions'
@@ -123,16 +120,14 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                       Income:
                     </span>{' '}
                     <span className='font-semibold'>
-                      {getFormattedCurrency(total.income)}{' '}
-                      {currency?.code || DEFAULT_CURRENCY_CODE}
+                      {getFormattedCurrency(total.income)} {currency.code}
                     </span>
                   </p>
                   <p>
                     <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
                     <span className='text-sm text-default-500'>Expense:</span>{' '}
                     <span className='font-semibold'>
-                      {getFormattedCurrency(total.expense)}{' '}
-                      {currency?.code || DEFAULT_CURRENCY_CODE}
+                      {getFormattedCurrency(total.expense)} {currency.code}
                     </span>
                   </p>
                 </motion.div>
@@ -163,8 +158,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ ...DIV.TRANSITION_SPRING }}
             >
-              {getFormattedBalance(balance)}{' '}
-              {currency?.code || DEFAULT_CURRENCY_CODE}
+              {getFormattedBalance(balance)} {currency.code}
             </motion.p>
           )}
         </div>

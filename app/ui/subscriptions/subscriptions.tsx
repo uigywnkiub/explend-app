@@ -35,7 +35,6 @@ import {
 
 import {
   DEFAULT_CATEGORY_EMOJI,
-  DEFAULT_CURRENCY_CODE,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
 
@@ -415,7 +414,7 @@ export default function Subscriptions({
                 </div>
                 <div className='flex items-center gap-2'>
                   <p>
-                    {amount} {currency?.code || DEFAULT_CURRENCY_CODE}
+                    {amount} {currency.code}
                   </p>
                   <Dropdown>
                     <Badge
@@ -578,11 +577,9 @@ export default function Subscriptions({
           )
         })}
 
-        {hasSubscriptions && (
-          <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
-            <InfoText text='You can add each subscription to transactions as an expense.' />
-          </div>
-        )}
+        <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
+          <InfoText text='You can add each subscription to transactions as an expense.' />
+        </div>
       </div>
 
       {changedCategoryNames.length > 0 && (

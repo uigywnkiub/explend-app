@@ -2,8 +2,6 @@ import { memo } from 'react'
 
 import { Input } from '@heroui/react'
 
-import { DEFAULT_CURRENCY_SIGN } from '@/config/constants/main'
-
 import { cn } from '@/app/lib/helpers'
 import type { TTransaction } from '@/app/lib/types'
 
@@ -64,7 +62,7 @@ function AmountInput({
                   : 'text-default-500',
               )}
             >
-              {currency?.sign || DEFAULT_CURRENCY_SIGN}
+              {currency.sign}
             </span>
           </div>
         }
