@@ -279,7 +279,8 @@ Time: ${formatTime(createdAt)}`
               </ModalHeader>
               <ModalBody>
                 <p className='overflow-hidden text-ellipsis text-default-500'>
-                  Are you sure you want to delete the{' '}
+                  Are you sure you want to delete the
+                  <br />
                   <span className='text-foreground'>
                     {getEmojiFromCategory(category)} {description}
                   </span>{' '}

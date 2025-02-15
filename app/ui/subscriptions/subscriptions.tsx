@@ -676,8 +676,9 @@ export default function Subscriptions({
                 </div>
               </ModalHeader>
               <ModalBody>
-                <p className='overflow-hidden text-ellipsis text-default-500'>
-                  Are you sure you want to delete the{' '}
+                <p className='text-balances overflow-hidden text-ellipsis text-default-500'>
+                  Are you sure you want to delete the
+                  <br />
                   <span className='text-foreground'>
                     {isChangedCategoryName
                       ? DEFAULT_CATEGORY_EMOJI
