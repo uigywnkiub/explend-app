@@ -676,7 +676,7 @@ export default function Subscriptions({
                 </div>
               </ModalHeader>
               <ModalBody>
-                <p className='text-balances overflow-hidden text-ellipsis text-default-500'>
+                <p className='overflow-hidden text-ellipsis text-default-500'>
                   Are you sure you want to delete the
                   <br />
                   <span className='text-foreground'>

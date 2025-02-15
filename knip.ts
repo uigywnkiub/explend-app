@@ -11,7 +11,8 @@ const config: KnipConfig = {
     // Libs are needed for nextjs 15 running dev mode with turbopack START
     'import-in-the-middle',
     'require-in-the-middle',
-    // Libs are needed for nextjs 15 running dev mode with turbopack END
+    // Libs are needed for nextjs 15 running dev mode with turbopack END,
+    'eslint-config-next',
   ],
 }
 

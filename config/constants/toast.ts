@@ -6,7 +6,7 @@ export const TOAST_POSITION: ToastPosition = 'bottom-center'
 
 export const TOAST_DURATION = 2500 // ms
 
-export const TOAST_FONT_WEIGHT = 600 // semibold
+const TOAST_FONT_WEIGHT = 600 // semibold
 export const TOAST_DARK_STYLE = {
   background: CUSTOM_DARK,
   color: CUSTOM_LIGHT,
