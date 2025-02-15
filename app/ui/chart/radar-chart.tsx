@@ -67,6 +67,9 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
   const transactionsTotals = getTransactionsTotals([...income, ...expense])
   const isPositiveBalance =
     transactionsTotals.income > transactionsTotals.expense
+  const isAmountHidden = getBooleanFromLocalStorage(
+    LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
+  )
 
   return (
     <>
@@ -74,7 +77,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
         <RechartRadarChart cx='50%' cy='50%' outerRadius='75%' data={chartData}>
           <PolarGrid
             className={cn(
-              !getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN)
+              !isAmountHidden
                 ? isPositiveBalance
                   ? 'fill-success-50/20'
                   : 'fill-danger-50/20'

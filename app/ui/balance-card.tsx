@@ -162,10 +162,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ ...DIV.TRANSITION_SPRING }}
             >
-              {getFormattedBalance(balance).slice(
-                isAmountHidden && !hasTransactions ? 1 : 0,
-              )}{' '}
-              {currency.code}
+              {getFormattedBalance(balance)} {currency.code}
             </motion.p>
           )}
         </div>
