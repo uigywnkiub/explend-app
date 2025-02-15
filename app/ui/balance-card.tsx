@@ -14,6 +14,7 @@ import { getAllTransactions } from '../lib/actions'
 import { getTransactionsTotals } from '../lib/data'
 import {
   cn,
+  getBooleanFromLocalStorage,
   getFormattedBalance,
   getFormattedCurrency,
   getGreeting,
@@ -43,6 +44,9 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
   const userId = user?.email
   const isTotalLoaded = Boolean(total.income) || Boolean(total.expense)
   const isPositiveBalance = Number(balance) > 0
+  const isAmountHidden = getBooleanFromLocalStorage(
+    LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
+  )
   const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const greetingMsg = `${getGreeting(currentTimeZone || DEFAULT_TIME_ZONE)}, ${user?.name} 👋🏼`
 
@@ -87,7 +91,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
     <Card
       className={cn(
         'p-2',
-        isShowTotals && isTotalLoaded
+        isShowTotals && isTotalLoaded && !isAmountHidden
           ? isPositiveBalance
             ? 'bg-gradient-radial from-success/10 to-content1'
             : 'bg-gradient-radial from-danger/10 to-content1'
@@ -158,7 +162,10 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ ...DIV.TRANSITION_SPRING }}
             >
-              {getFormattedBalance(balance)} {currency.code}
+              {getFormattedBalance(balance).slice(
+                isAmountHidden && !hasTransactions ? 1 : 0,
+              )}{' '}
+              {currency.code}
             </motion.p>
           )}
         </div>

@@ -74,7 +74,11 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
         <RechartRadarChart cx='50%' cy='50%' outerRadius='75%' data={chartData}>
           <PolarGrid
             className={cn(
-              isPositiveBalance ? 'fill-success-50/20' : 'fill-danger-50/20',
+              !getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN)
+                ? isPositiveBalance
+                  ? 'fill-success-50/20'
+                  : 'fill-danger-50/20'
+                : 'fill-content1/20',
             )}
           />
           <PolarAngleAxis
@@ -148,7 +152,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
           withAsterisk={false}
         />
         <InfoText
-          text={`${toWords.convert(transactions.length)} (${getFormattedCurrency(transactions.length)}) entries.`}
+          text={`${toWords.convert(transactions.length)} (${getFormattedCurrency(transactions.length, false)}) entries.`}
           withAsterisk={false}
         />
       </div>

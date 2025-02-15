@@ -47,6 +47,7 @@ import {
 } from '@/app/lib/actions'
 import {
   capitalizeFirstLetter,
+  convertToNumber,
   createFormData,
   formatAmount,
   getCategoriesMap,
@@ -414,7 +415,8 @@ export default function Subscriptions({
                 </div>
                 <div className='flex items-center gap-2'>
                   <p className='text-center'>
-                    {amount} {currency.code}
+                    {getFormattedCurrency(convertToNumber(amount))}{' '}
+                    {currency.code}
                   </p>
                   <Dropdown>
                     <Badge

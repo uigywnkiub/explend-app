@@ -1,6 +1,7 @@
 // Default base colors from https://nextui.org/docs/customization/colors
 export const DANGER = '#f31260'
 export const SUCCESS = '#17c964'
+export const BASE = '#3f3f46'
 
 // Custom
 export const CUSTOM_DARK = '#080808'

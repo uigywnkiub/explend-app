@@ -151,6 +151,14 @@ export const toNumber = (value: number | string | null) => {
   return value === null ? NaN : Number(value)
 }
 
+export const convertToNumber = (value: string | number): number => {
+  if (typeof value === 'string') {
+    return Number(value.replace(/\s/g, ''))
+  }
+
+  return value
+}
+
 export const isLocalStorageAvailable = (): boolean => {
   return typeof localStorage !== 'undefined'
 }
