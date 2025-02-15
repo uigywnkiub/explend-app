@@ -541,7 +541,7 @@ export async function getCategoryLimits(
   }
 }
 
-export async function addCategoryLimit(
+export async function addLimit(
   userId: TUserId,
   categoryLimits: TTransaction['categoryLimits'],
 ): Promise<void> {
@@ -560,7 +560,7 @@ export async function addCategoryLimit(
   }
 }
 
-export async function deleteCategoryLimit(
+export async function deleteLimit(
   userId: TUserId,
   categoryName: TCategoryLimits['categoryName'],
 ): Promise<void> {
@@ -589,7 +589,7 @@ export async function deleteCategoryLimit(
   }
 }
 
-export async function editCategoryLimit(
+export async function editLimit(
   userId: TUserId,
   categoryName: TCategoryLimits['categoryName'],
   newLimitAmount: TCategoryLimits['limitAmount'],

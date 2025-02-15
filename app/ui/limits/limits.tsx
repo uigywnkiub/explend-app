@@ -41,11 +41,7 @@ import {
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
 
-import {
-  addCategoryLimit,
-  deleteCategoryLimit,
-  editCategoryLimit,
-} from '@/app/lib/actions'
+import { addLimit, deleteLimit, editLimit } from '@/app/lib/actions'
 import {
   calculateTotalsByCategory,
   filterTransactions,
@@ -178,14 +174,14 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     setAmount('')
   }
 
-  const onAddLimitByCategory = async (onClose: () => void) => {
+  const onAddLimit = async (onClose: () => void) => {
     const newLimitData: TCategoryLimits = Object.freeze({
       categoryName,
       limitAmount: amount,
     })
     setIsLoadingAddLimit(true)
     try {
-      await addCategoryLimit(userId, [...userLimitsData, newLimitData])
+      await addLimit(userId, [...userLimitsData, newLimitData])
       toast.success('Limit added.')
       resetStates()
     } catch (err) {
@@ -197,7 +193,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     }
   }
 
-  const onDeleteCategoryLimit = async (
+  const onDeleteLimit = async (
     categoryName: TCategoryLimits['categoryName'] | null,
     onCloseDeleteCallback: () => void,
   ) => {
@@ -208,7 +204,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     }
     setIsLoadingDelete(true)
     try {
-      await deleteCategoryLimit(userId, categoryName)
+      await deleteLimit(userId, categoryName)
       toast.success('Limit deleted.')
     } catch (err) {
       toast.error('Failed to delete limit.')
@@ -219,10 +215,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     }
   }
 
-  const onResetLimits = async (onCloseResetCallback: () => void) => {
+  const onResetAllLimits = async (onCloseResetCallback: () => void) => {
     setIsLoadingReset(true)
     try {
-      await addCategoryLimit(userId, [])
+      await addLimit(userId, [])
       toast.success('All limits reset.')
     } catch (err) {
       toast.error('Failed to reset limits.')
@@ -233,7 +229,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     }
   }
 
-  const onEditCategoryLimit = async (
+  const onEditLimit = async (
     categoryName: TCategoryLimits['categoryName'] | null,
     limitAmount: TCategoryLimits['limitAmount'] | null,
     onCloseEditCallback: () => void,
@@ -255,7 +251,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     }
     setIsLoadingEdit(true)
     try {
-      await editCategoryLimit(userId, categoryName, limitAmount)
+      await editLimit(userId, categoryName, limitAmount)
       toast.success('Limit edited.')
     } catch (err) {
       toast.error('Failed to edit limit.')
@@ -276,7 +272,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   return (
     <div className='rounded-medium bg-content1 p-4 md:p-8'>
       <div className='flex items-center justify-between'>
-        <h2>Limits by Category</h2>
+        <h2>Limits</h2>
         <div className='flex gap-2'>
           <Button
             isDisabled={isNoUserLimitsData}
@@ -312,8 +308,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
               <>
                 <ModalHeader className='flex flex-col gap-1'>
                   <div className='flex items-center gap-2'>
-                    <PiPlusCircleFill size={DEFAULT_ICON_SIZE} /> Add Limit by
-                    Category
+                    <PiPlusCircleFill size={DEFAULT_ICON_SIZE} /> Add limit
                   </div>
                 </ModalHeader>
                 <ModalBody>
@@ -398,7 +393,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   </Button>
                   <Button
                     color='primary'
-                    onPress={() => [onAddLimitByCategory(onClose)]}
+                    onPress={() => [onAddLimit(onClose)]}
                     isLoading={isLoadingAddLimit}
                     isDisabled={isDisabledSubmitBtn}
                   >
@@ -416,38 +411,35 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         <p className='text-center text-default-500'>No Limits Found</p>
       )}
 
-      <ul className='space-y-4'>
-        {calculatedLimitsData.map((data) => {
-          const { categoryName, difference, limitAmount, status, isLimitOver } =
-            data
-          const progressPercentage =
-            limitAmount > 0
-              ? Math.min(
-                  100,
-                  Math.max(0, ((limitAmount - difference) / limitAmount) * 100),
-                )
-              : 0
-          const isChangedCategoryName =
-            changedCategoryNames.includes(categoryName)
+      {calculatedLimitsData.map((data) => {
+        const { categoryName, difference, limitAmount, status, isLimitOver } =
+          data
+        const progressPercentage =
+          limitAmount > 0
+            ? Math.min(
+                100,
+                Math.max(0, ((limitAmount - difference) / limitAmount) * 100),
+              )
+            : 0
+        const isChangedCategoryName =
+          changedCategoryNames.includes(categoryName)
 
-          return (
-            <li
-              key={categoryName}
-              className='flex items-center justify-between py-2'
-            >
-              <div className='flex items-center md:w-1/2'>
-                <p className='mt-2 text-2xl md:text-3xl'>
+        return (
+          <ul key={categoryName} className='space-y-4'>
+            <li className='flex items-center justify-between py-2'>
+              <div className='flex items-center text-balance md:w-1/2'>
+                <p className='-mb-1.5 text-xl md:text-2xl'>
                   {isChangedCategoryName
                     ? DEFAULT_CATEGORY_EMOJI
                     : getEmojiFromCategory(
                         getCategoryWithEmoji(categoryName, userCategories),
                       )}
                 </p>
-                <div className='-mt-4 ml-4 w-full md:-mt-2.5'>
-                  <div className='text-left'>
+                <div className='ml-2 w-full'>
+                  <div className='mb-2 text-left'>
                     <p
                       className={cn(
-                        'truncate text-sm md:text-lg',
+                        '-mt-3 truncate text-balance md:-mt-1.5',
                         isChangedCategoryName &&
                           'text-default-500 line-through',
                       )}
@@ -458,10 +450,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       <p className='text-xs'>No longer exists</p>
                     )}
                   </div>
-                  <div className='absolute mt-1.5 h-[5px] w-[30%] rounded-full bg-content4 md:relative md:mt-2.5 md:w-full'>
+                  <div className='absolute h-[5px] w-[30%] rounded-full bg-default-500 md:relative md:w-full'>
                     <div
                       className={cn(
-                        'absolute h-[5px] rounded-full bg-content4-foreground',
+                        'absolute h-[5px] rounded-full',
                         isLimitOver ? 'bg-danger' : 'bg-success',
                       )}
                       style={{ width: `${progressPercentage}%` }}
@@ -471,10 +463,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
               </div>
               <div className='flex items-center gap-2'>
                 <div className='text-right'>
-                  <p className='text-sm md:text-lg'>
-                    {getFormattedCurrency(limitAmount)} {currency.code}{' '}
+                  <p>
+                    {getFormattedCurrency(limitAmount)} {currency.code}
                   </p>
-                  <p className='text-xs text-default-500 md:text-sm'>
+                  <p className='text-xs text-default-500'>
                     {status} {currency.code}
                   </p>
                 </div>
@@ -484,7 +476,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       variant='light'
                       isIconOnly
                       size='md'
-                      className='md:size-12'
+                      className='md:size-10'
                     >
                       <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
                     </Button>
@@ -519,7 +511,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                             }
                           />
                         }
-                        description='Edit category limit details'
+                        description='Edit limit details'
                         classNames={{
                           description: 'text-default-500',
                         }}
@@ -541,7 +533,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                             }
                           />
                         }
-                        description='Permanently delete category limit'
+                        description='Permanently delete limit'
                         classNames={{
                           description: 'text-default-500',
                         }}
@@ -553,15 +545,15 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 </Dropdown>
               </div>
             </li>
-          )
-        })}
-      </ul>
+          </ul>
+        )
+      })}
       <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
         <InfoText text='The calculation of limits is based on transactions by the current month.' />
         <InfoText text='Your limits will not be deleted automatically in the new month.' />
       </div>
 
-      {/* Reset user category limits modal. */}
+      {/* Reset limits modal. */}
       <Modal
         isOpen={isOpenReset}
         onOpenChange={onOpenChangeReset}
@@ -591,7 +583,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 <Button
                   color='danger'
                   isLoading={isLoadingReset}
-                  onPress={() => [onResetLimits(onCloseReset)]}
+                  onPress={() => [onResetAllLimits(onCloseReset)]}
                 >
                   Reset
                 </Button>
@@ -634,7 +626,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   isLoading={isLoadingEdit}
                   isDisabled={isAmountInvalid}
                   onPress={() => [
-                    onEditCategoryLimit(
+                    onEditLimit(
                       categoryName || tempCategoryName,
                       amount,
                       onCloseEdit,
@@ -649,7 +641,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         </ModalContent>
       </Modal>
 
-      {/* Delete category limits modal. */}
+      {/* Delete limits modal. */}
       <Modal isOpen={isOpenDelete} onOpenChange={onOpenChangeDelete}>
         <ModalContent>
           {(onCloseDelete) => (
@@ -669,7 +661,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                     ) || DEFAULT_CATEGORY_EMOJI}{' '}
                     {tempCategoryName}
                   </span>{' '}
-                  category limit? This action is permanent and cannot be undone.
+                  limit? This action is permanent and cannot be undone.
                 </p>
               </ModalBody>
               <ModalFooter>
@@ -680,7 +672,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   color='danger'
                   isLoading={isLoadingDelete}
                   onPress={() => [
-                    onDeleteCategoryLimit(
+                    onDeleteLimit(
                       categoryName || tempCategoryName,
                       onCloseDelete,
                     ),

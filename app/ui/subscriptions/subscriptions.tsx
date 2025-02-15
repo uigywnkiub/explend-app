@@ -402,7 +402,7 @@ export default function Subscriptions({
           return (
             <ul key={_id} className='space-y-4'>
               <li className='flex items-center justify-between py-2'>
-                <div className='flex items-center gap-2 md:w-1/2'>
+                <div className='flex items-center gap-2 text-balance md:w-1/2'>
                   <p className='-mb-1 text-xl md:text-2xl'>
                     {isChangedCategoryName
                       ? DEFAULT_CATEGORY_EMOJI
@@ -410,10 +410,10 @@ export default function Subscriptions({
                           getCategoryWithEmoji(category, userCategories),
                         )}
                   </p>
-                  <p>{description}</p>
+                  <p className='pr-2'>{description}</p>
                 </div>
                 <div className='flex items-center gap-2'>
-                  <p>
+                  <p className='text-center'>
                     {amount} {currency.code}
                   </p>
                   <Dropdown>
