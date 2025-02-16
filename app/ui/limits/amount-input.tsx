@@ -2,7 +2,7 @@ import { memo } from 'react'
 
 import { Input } from '@heroui/react'
 
-import { cn } from '@/app/lib/helpers'
+import { AMOUNT_LENGTH, cn } from '@/app/lib/helpers'
 import type { TTransaction } from '@/app/lib/types'
 
 type TProps = {
@@ -10,7 +10,6 @@ type TProps = {
   amount: TTransaction['amount']
   setAmount: (value: string) => void
   onChangeAmount: (e: React.ChangeEvent<HTMLInputElement>) => void
-  AMOUNT_LENGTH: number
   currency: TTransaction['currency']
 }
 
@@ -19,7 +18,6 @@ function AmountInput({
   amount,
   setAmount,
   onChangeAmount,
-  AMOUNT_LENGTH,
   currency,
 }: TProps) {
   return (

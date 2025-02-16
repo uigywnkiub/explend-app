@@ -46,12 +46,14 @@ import {
 } from '@/app/lib/actions'
 
 import {
+  AMOUNT_LENGTH,
   capitalizeFirstLetter,
   cn,
   findApproxCategoryByValue,
   formatAmount,
   getBooleanFromLocalStorage,
   getCategoryItemNames,
+  getFormattedAmountState,
   getFormattedCurrency,
   isValidArrayWithKeys,
   pluralize,
@@ -70,7 +72,6 @@ import InfoText from '../info-text'
 import LimitToast from '../limit-toast'
 
 const ACCORDION_ITEM_KEY = 'Form'
-const AMOUNT_LENGTH = 6
 
 type TProps = {
   currency: TTransaction['currency']
@@ -406,12 +407,9 @@ function TransactionForm({ currency, userCategories }: TProps) {
   }, [cancel, isReady])
 
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawAmount = formatAmount(e.target.value)
-    if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
-      setAmount(getFormattedCurrency(rawAmount, false))
-    }
+    getFormattedAmountState(e, setAmount)
   }
-  // console.log(isValidReceiptAIDataLocalStorage)
+
   const onExpandedChange = () => {
     setIsExpanded((prev) => !prev)
   }

@@ -498,3 +498,14 @@ export const createFormData = (data: Record<string, unknown>): FormData => {
 
   return formData
 }
+
+export const AMOUNT_LENGTH = 6
+export const getFormattedAmountState = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  setAmount: (value: React.SetStateAction<string>) => void,
+) => {
+  const rawAmount = formatAmount(e.target.value)
+  if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
+    setAmount(getFormattedCurrency(rawAmount, false))
+  }
+}
