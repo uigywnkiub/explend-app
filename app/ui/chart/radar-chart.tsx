@@ -81,7 +81,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
                 ? isPositiveBalance
                   ? 'fill-success-50/20'
                   : 'fill-danger-50/20'
-                : 'fill-content1/20',
+                : 'fill-default/20',
             )}
           />
           <PolarAngleAxis

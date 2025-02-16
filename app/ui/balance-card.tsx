@@ -91,11 +91,12 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
     <Card
       className={cn(
         'p-2',
-        isShowTotals && isTotalLoaded && !isAmountHidden
+        isShowTotals && isTotalLoaded
           ? isPositiveBalance
             ? 'bg-gradient-radial from-success/10 to-content1'
             : 'bg-gradient-radial from-danger/10 to-content1'
           : 'bg-content1',
+        isShowTotals && isTotalLoaded && isAmountHidden && 'bg-default/50',
       )}
       shadow='none'
     >

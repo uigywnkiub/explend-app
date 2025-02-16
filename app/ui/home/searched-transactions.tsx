@@ -22,18 +22,22 @@ export default function SearchedTransactions({
         <p>
           <PiArrowCircleUpFill className='mr-1 inline fill-success' />
           <span className='text-sm text-default-500'>Income:</span>{' '}
-          {getFormattedCurrency(
-            getTransactionsTotals(searchedTransactionsByQuery).income,
-          )}{' '}
-          {currency.code}
+          <span className='text-lg font-semibold'>
+            {getFormattedCurrency(
+              getTransactionsTotals(searchedTransactionsByQuery).income,
+            )}{' '}
+            {currency.code}
+          </span>
         </p>
         <p>
           <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
           <span className='text-sm text-default-500'>Expense:</span>{' '}
-          {getFormattedCurrency(
-            getTransactionsTotals(searchedTransactionsByQuery).expense,
-          )}{' '}
-          {currency.code}
+          <span className='text-lg font-semibold'>
+            {getFormattedCurrency(
+              getTransactionsTotals(searchedTransactionsByQuery).expense,
+            )}{' '}
+            {currency.code}
+          </span>
         </p>
       </div>
     </div>

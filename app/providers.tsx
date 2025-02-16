@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 
 import { HeroUIProvider } from '@heroui/react'
 
-import { BASE, DANGER, SUCCESS } from '@/config/constants/colors'
+import { DANGER, DEFAULT, OPACITY, SUCCESS } from '@/config/constants/colors'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_THEME } from '@/config/constants/main'
 import {
@@ -58,7 +58,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <Next13ProgressBar
           height='3px'
           color={
-            !isAmountHidden ? (isPositiveBalance ? SUCCESS : DANGER) : BASE
+            !isAmountHidden
+              ? isPositiveBalance
+                ? SUCCESS
+                : DANGER
+              : `${DEFAULT}${OPACITY.O50}`
           }
           options={{ showSpinner: false }}
           showOnShallow={true}
