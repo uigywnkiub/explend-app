@@ -24,11 +24,12 @@ import { DEFAULT_CATEGORY } from '@/config/constants/main'
 import { editTransactionById } from '../lib/actions'
 import { getTransactionsWithChangedCategory } from '../lib/data'
 import {
+  AMOUNT_LENGTH,
   capitalizeFirstLetter,
   cn,
-  formatAmount,
   getCategoryWithEmoji,
   getCategoryWithoutEmoji,
+  getFormattedAmountState,
   getFormattedCurrency,
   removeFromLocalStorage,
   setInLocalStorage,
@@ -37,8 +38,6 @@ import type { TTheme, TTransaction } from '../lib/types'
 import Loading from '../loading'
 import InfoText from './info-text'
 import LimitToast from './limit-toast'
-
-const AMOUNT_LENGTH = 6
 
 type TProps = {
   transaction: TTransaction
@@ -82,10 +81,7 @@ function TransactionFormEdit({ transaction }: TProps) {
   const transactionId = transaction.id
 
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawAmount = formatAmount(e.target.value)
-    if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
-      setAmount(getFormattedCurrency(rawAmount, false))
-    }
+    getFormattedAmountState(e, setAmount)
   }
 
   const hasChanges = (

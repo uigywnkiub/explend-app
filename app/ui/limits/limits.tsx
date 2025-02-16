@@ -53,6 +53,7 @@ import {
   getCategoryItemNames,
   getCategoryWithEmoji,
   getEmojiFromCategory,
+  getFormattedAmountState,
   getFormattedCurrency,
 } from '@/app/lib/helpers'
 import type { TCategoryLimits, TTransaction, TUserId } from '@/app/lib/types'
@@ -66,8 +67,6 @@ const enum DROPDOWN_KEY {
   EDIT = 'edit',
   DELETE = 'delete',
 }
-
-const AMOUNT_LENGTH = 6
 
 type TProps = {
   userId: TUserId
@@ -263,10 +262,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   }
 
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawAmount = formatAmount(e.target.value)
-    if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
-      setAmount(getFormattedCurrency(rawAmount, false))
-    }
+    getFormattedAmountState(e, setAmount)
   }
 
   return (
@@ -382,7 +378,6 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       amount={amount}
                       setAmount={setAmount}
                       onChangeAmount={onChangeAmount}
-                      AMOUNT_LENGTH={AMOUNT_LENGTH}
                       currency={currency}
                     />
                   </div>
@@ -613,7 +608,6 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   amount={amount}
                   setAmount={setAmount}
                   onChangeAmount={onChangeAmount}
-                  AMOUNT_LENGTH={AMOUNT_LENGTH}
                   currency={currency}
                 />
               </ModalBody>

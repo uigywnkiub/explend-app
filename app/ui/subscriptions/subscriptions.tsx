@@ -49,11 +49,11 @@ import {
   capitalizeFirstLetter,
   convertToNumber,
   createFormData,
-  formatAmount,
   getCategoriesMap,
   getCategoryWithEmoji,
   getCategoryWithoutEmoji,
   getEmojiFromCategory,
+  getFormattedAmountState,
   getFormattedCurrency,
   pluralize,
 } from '@/app/lib/helpers'
@@ -70,8 +70,6 @@ const enum DROPDOWN_KEY {
   EDIT = 'edit',
   DELETE = 'delete',
 }
-
-const AMOUNT_LENGTH = 6
 
 type TProps = {
   userId: TUserId
@@ -274,10 +272,7 @@ export default function Subscriptions({
 
   const onChangeAmount = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const rawAmount = formatAmount(e.target.value)
-      if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
-        setAmount(getFormattedCurrency(rawAmount, false))
-      }
+      getFormattedAmountState(e, setAmount)
     },
     [],
   )
@@ -365,7 +360,6 @@ export default function Subscriptions({
                         amount={amount}
                         setAmount={setAmount}
                         onChangeAmount={onChangeAmount}
-                        AMOUNT_LENGTH={AMOUNT_LENGTH}
                         currency={currency}
                       />
                     </div>
@@ -627,7 +621,6 @@ export default function Subscriptions({
                     amount={amount}
                     setAmount={setAmount}
                     onChangeAmount={onChangeAmount}
-                    AMOUNT_LENGTH={AMOUNT_LENGTH}
                     currency={currency}
                   />
                 </div>
