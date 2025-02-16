@@ -106,23 +106,6 @@ export const getSlicedCurrencyCode = (code: CURRENCY_CODE): string => {
   return toLowerCase(code).slice(0, 2)
 }
 
-export const getTransactionsWithChangedCategory = (
-  transactions: TTransaction[],
-): TTransaction[] => {
-  return transactions.filter((t) => {
-    // This will throw an error on previous user transactions without a categories array. Catch and handle this approach achieves by resetCategories function uses before the current function.
-    try {
-      return !t.categories.some((category) => {
-        return category.items.some(
-          (item) => `${item.emoji} ${item.name}` === t.category,
-        )
-      })
-    } catch {
-      // Do not throw any error, it is auto-handle to avoid showing a user error page.
-    }
-  })
-}
-
 export const formatDate = (dateStr: Date, withoutDay: boolean = false) => {
   const date = new Date(dateStr)
   const currYear = new Date().getFullYear()

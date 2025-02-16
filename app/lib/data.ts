@@ -169,6 +169,23 @@ export const getFirstAndLastTransactions = (transactions: TTransaction[]) => {
   return { firstTransaction, lastTransaction }
 }
 
+export const getTransactionsWithChangedCategory = (
+  transactions: TTransaction[],
+): TTransaction[] => {
+  return transactions.filter((t) => {
+    // This will throw an error on previous user transactions without a categories array. Catch and handle this approach achieves by resetCategories function uses before the current function.
+    try {
+      return !t.categories.some((category) => {
+        return category.items.some(
+          (item) => `${item.emoji} ${item.name}` === t.category,
+        )
+      })
+    } catch {
+      // Do not throw any error, it is auto-handle to avoid showing a user error page.
+    }
+  })
+}
+
 export const getUserCategories = (
   transactions: TTransaction[],
 ): TCategories[] => {

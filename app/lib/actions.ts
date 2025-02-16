@@ -313,7 +313,7 @@ export async function getTransactions(
   limit: number = DEFAULT_TRANSACTION_LIMIT,
 ): Promise<TGetTransactions> {
   if (!userId) {
-    throw new Error('User ID is required to fetch transactions.')
+    throw new Error('User ID is required to get transactions.')
   }
   try {
     await dbConnect()
@@ -345,7 +345,7 @@ export async function getAllTransactions(
   userId: TUserId,
 ): Promise<TTransaction[]> {
   if (!userId) {
-    throw new Error('User ID is required to fetch all transactions.')
+    throw new Error('User ID is required to get all transactions.')
   }
   try {
     await dbConnect()

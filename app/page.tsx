@@ -18,11 +18,13 @@ import {
   getCachedTransactions,
   resetCategories,
 } from './lib/actions'
-import { getUserCategories } from './lib/data'
+import {
+  getTransactionsWithChangedCategory,
+  getUserCategories,
+} from './lib/data'
 import {
   formatDate,
   getCategoryWithoutEmoji,
-  getTransactionsWithChangedCategory,
   pluralize,
   toLowerCase,
 } from './lib/helpers'

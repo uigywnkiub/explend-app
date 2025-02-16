@@ -22,6 +22,7 @@ import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_CATEGORY } from '@/config/constants/main'
 
 import { editTransactionById } from '../lib/actions'
+import { getTransactionsWithChangedCategory } from '../lib/data'
 import {
   capitalizeFirstLetter,
   cn,
@@ -29,7 +30,6 @@ import {
   getCategoryWithEmoji,
   getCategoryWithoutEmoji,
   getFormattedCurrency,
-  getTransactionsWithChangedCategory,
   removeFromLocalStorage,
   setInLocalStorage,
 } from '../lib/helpers'
