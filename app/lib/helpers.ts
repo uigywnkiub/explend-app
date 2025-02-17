@@ -499,6 +499,7 @@ export const createFormData = (data: Record<string, unknown>): FormData => {
   return formData
 }
 
+export const AMOUNT_REGEX = '[\d\s,]+'
 export const AMOUNT_LENGTH = 6
 export const getFormattedAmountState = (
   e: React.ChangeEvent<HTMLInputElement>,
