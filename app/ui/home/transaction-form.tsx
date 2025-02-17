@@ -47,7 +47,6 @@ import {
 
 import {
   AMOUNT_LENGTH,
-  AMOUNT_REGEX,
   capitalizeFirstLetter,
   cn,
   findApproxCategoryByValue,
@@ -684,7 +683,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                     required
                     onBlur={() => parseFloat(amount) === 0 && setAmount('')}
                     maxLength={AMOUNT_LENGTH + 1}
-                    pattern={AMOUNT_REGEX}
+                    pattern='[\d\s,]+'
                     inputMode='decimal'
                     placeholder='0'
                     size='lg'

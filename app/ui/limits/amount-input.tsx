@@ -2,7 +2,7 @@ import { memo } from 'react'
 
 import { Input } from '@heroui/react'
 
-import { AMOUNT_LENGTH, AMOUNT_REGEX, cn } from '@/app/lib/helpers'
+import { AMOUNT_LENGTH, cn } from '@/app/lib/helpers'
 import type { TTransaction } from '@/app/lib/types'
 
 type TProps = {
@@ -39,7 +39,7 @@ function AmountInput({
         onBlur={() => parseFloat(amount) === 0 && setAmount('')}
         required
         maxLength={AMOUNT_LENGTH + 1}
-        pattern={AMOUNT_REGEX}
+        pattern='[\d\s,]+'
         inputMode='decimal'
         placeholder='0'
         classNames={{

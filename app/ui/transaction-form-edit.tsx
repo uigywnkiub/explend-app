@@ -25,7 +25,6 @@ import { editTransactionById } from '../lib/actions'
 import { getTransactionsWithChangedCategory } from '../lib/data'
 import {
   AMOUNT_LENGTH,
-  AMOUNT_REGEX,
   capitalizeFirstLetter,
   cn,
   getCategoryWithEmoji,
@@ -184,7 +183,7 @@ function TransactionFormEdit({ transaction }: TProps) {
               onBlur={() => parseFloat(amount) === 0 && setAmount('')}
               required
               maxLength={AMOUNT_LENGTH + 1}
-              pattern={AMOUNT_REGEX}
+              pattern='[\d\s,]+'
               inputMode='decimal'
               placeholder='0'
               size='lg'
