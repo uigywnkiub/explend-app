@@ -188,13 +188,7 @@ export default function Subscriptions({
   ) => {
     const newSubscription = createFormData(subscriptionData)
     await toast.promise(
-      createTransaction(
-        userId,
-        currency,
-        userCategories,
-        newSubscription,
-        false,
-      ),
+      createTransaction(userId, currency, userCategories, newSubscription),
       {
         loading: 'Processing as transactions...',
         success: 'Transaction added.',
