@@ -15,6 +15,8 @@ import {
   PiWarningOctagonFill,
 } from 'react-icons/pi'
 
+import Link from 'next/link'
+
 import {
   Badge,
   Button,
@@ -49,6 +51,7 @@ import {
   capitalizeFirstLetter,
   convertToNumber,
   createFormData,
+  createSearchHrefWithKeyword,
   getCategoriesMap,
   getCategoryWithEmoji,
   getCategoryWithoutEmoji,
@@ -399,7 +402,12 @@ export default function Subscriptions({
                           getCategoryWithEmoji(category, userCategories),
                         )}
                   </p>
-                  <p className='pr-2'>{description}</p>
+                  <Link
+                    href={createSearchHrefWithKeyword(description)}
+                    className='pr-2 hover:opacity-hover'
+                  >
+                    {description}
+                  </Link>
                 </div>
                 <div className='flex items-center gap-2'>
                   <p className='text-center'>

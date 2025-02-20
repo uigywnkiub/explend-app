@@ -15,6 +15,8 @@ import {
   PiWarningOctagonFill,
 } from 'react-icons/pi'
 
+import Link from 'next/link'
+
 import {
   Button,
   Divider,
@@ -49,6 +51,7 @@ import {
 } from '@/app/lib/data'
 import {
   cn,
+  createSearchHrefWithKeyword,
   formatAmount,
   getCategoryItemNames,
   getCategoryWithEmoji,
@@ -432,15 +435,16 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 </p>
                 <div className='ml-2 w-full'>
                   <div className='mb-2 text-left'>
-                    <p
+                    <Link
+                      href={createSearchHrefWithKeyword(categoryName)}
                       className={cn(
-                        '-mt-3 truncate text-balance md:-mt-1.5',
+                        '-mt-3 truncate text-balance hover:opacity-hover md:-mt-1.5',
                         isChangedCategoryName &&
                           'text-default-500 line-through',
                       )}
                     >
                       {categoryName}
-                    </p>
+                    </Link>
                     {isChangedCategoryName && (
                       <p className='text-xs'>No longer exists</p>
                     )}
