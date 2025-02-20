@@ -54,8 +54,9 @@ function MonthPicker({
     <div className='flex justify-between'>
       <div>
         <DateRangePicker
-          // showMonthAndYearPickers
+          showMonthAndYearPickers
           size={isMd ? 'md' : 'sm'}
+          aria-label='Select a date range'
           label='Select a date range'
           labelPlacement='outside'
           value={dateRange}
