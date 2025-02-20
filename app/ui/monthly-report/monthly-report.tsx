@@ -98,16 +98,22 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const startDate = selectedDate.start?.toDate(getLocalTimeZone()) || null
   const endDate = selectedDate.end?.toDate(getLocalTimeZone()) || null
 
+  const isTipsDataExist = tipsDataAI && tipsDataAI?.length > 0
+
   const formattedDateRange = useMemo(() => {
     if (!startDate || !endDate) return ''
 
     return `${formatDate(startDate, true)} - ${formatDate(endDate, true)}`
   }, [startDate, endDate])
 
-  const onDateSelection = useCallback((dateRange: RangeValue<DateValue>) => {
-    setSelectedDate(dateRange)
-    toast.success('Date range updated.')
-  }, [])
+  const onDateSelection = useCallback(
+    (dateRange: RangeValue<DateValue>) => {
+      setSelectedDate(dateRange)
+      if (isTipsDataExist) setTipsDataAI(null)
+      toast.success('Date range updated.')
+    },
+    [isTipsDataExist],
+  )
 
   const filteredTransactions = useMemo(
     () => filterTransactionsByDateRange(transactions, startDate, endDate),
@@ -133,8 +139,6 @@ function MonthlyReport({ transactions, currency }: TProps) {
       ),
     [expenseTipsAIDataLocalStorage, monthlyReportData],
   )
-
-  const isTipsDataExist = tipsDataAI && tipsDataAI?.length > 0
 
   const getExpenseTipsAIData = useCallback(async () => {
     if (monthlyReportData.length === 0) {
@@ -245,7 +249,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
             href={createSearchHrefWithKeyword(format(startDate, 'MMMM'))}
             className='hover:opacity-hover'
           >
-            <span className='mb-2 inline-block text-balance text-xl text-default-500 md:mb-0 md:text-2xl'>
+            <span className='mb-2 inline-block text-balance text-lg text-default-500 md:mb-0 md:text-xl'>
               {formattedDateRange}
             </span>
           </Link>
@@ -254,7 +258,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
               <p className='text-xs text-default-500 md:text-sm'>
                 Total Income
               </p>
-              <p className='flex items-center gap-1 text-lg font-semibold md:text-2xl'>
+              <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
                 <PiArrowCircleUpFill className='fill-success' />
                 {getFormattedCurrency(totalIncome)} {currency.code}
               </p>
@@ -263,7 +267,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
               <p className='text-xs text-default-500 md:text-sm'>
                 Total Expense
               </p>
-              <p className='flex items-center gap-1 text-lg font-semibold md:text-2xl'>
+              <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
                 <PiArrowCircleDownFill className='fill-danger' />
                 {getFormattedCurrency(totalExpense)} {currency.code}
               </p>
@@ -317,7 +321,8 @@ function MonthlyReport({ transactions, currency }: TProps) {
       {isMissMatchLocalStorageAndCurrMonthExpenses && isTipsDataExist && (
         <p className='mt-4 text-center text-sm text-warning'>
           <PiWarningOctagonFill className='inline animate-pulse' /> Tips from
-          memory do not match the current month&apos;s expense tips.
+          memory do not match the tips for the current month or selected date
+          expense.
           <br />
           Press &apos;{REFRESH_TIPS_BTN_TEXT}&apos; to update and sync them.
         </p>

@@ -1,3 +1,5 @@
+'use client'
+
 import { Spinner, SpinnerProps } from '@heroui/react'
 import { ClassValue } from 'clsx'
 
