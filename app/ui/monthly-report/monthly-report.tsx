@@ -298,8 +298,8 @@ function MonthlyReport({ transactions, currency }: TProps) {
             <TipsList tipsDataAI={tipsDataAI} />
           </>
         ) : (
-          <p className='text-center text-sm'>
-            Discover helpful tips on managing expense categories.
+          <p className='text-balance text-center text-sm'>
+            Explore useful tips for managing expenses.
           </p>
         )}
         <Button

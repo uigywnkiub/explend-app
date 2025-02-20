@@ -1,11 +1,11 @@
 import { memo, useEffect, useState } from 'react'
-import { useDebounce, useMedia } from 'react-use'
+import { useDebounce } from 'react-use'
 
 import { DateRangePicker, DateValue, RangeValue } from '@heroui/react'
 import { getDaysInMonth } from 'date-fns'
 
-import { getBreakpointWidth, toCalendarDate } from '@/app/lib/helpers'
-import { TMinMaxTransactionByDate } from '@/app/lib/types'
+import { toCalendarDate } from '@/app/lib/helpers'
+import type { TMinMaxTransactionByDate } from '@/app/lib/types'
 
 type TProps = {
   selectedDate: RangeValue<DateValue>
@@ -20,7 +20,6 @@ function MonthPicker({
   minTransaction,
   maxTransaction,
 }: TProps) {
-  const isMd = useMedia(getBreakpointWidth('md'), true)
   const [dateRange, setDateRange] = useState<RangeValue<DateValue> | null>(
     selectedDate,
   )
@@ -55,7 +54,6 @@ function MonthPicker({
       <div>
         <DateRangePicker
           showMonthAndYearPickers
-          size={isMd ? 'md' : 'sm'}
           aria-label='Select a date range'
           label='Select a date range'
           labelPlacement='outside'
