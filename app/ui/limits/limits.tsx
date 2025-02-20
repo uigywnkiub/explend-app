@@ -356,8 +356,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                                 endContent={
                                   disabledCategories.includes(item.name) ? (
                                     <span className='text-xs'>
-                                      already added by{' '}
-                                      {getLimitAmount(item.name)}{' '}
+                                      added by {getLimitAmount(item.name)}{' '}
                                       {currency.code}
                                     </span>
                                   ) : item.name === DEFAULT_CATEGORY ? (
