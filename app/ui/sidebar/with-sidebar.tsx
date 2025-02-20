@@ -18,7 +18,7 @@ export default function WithSidebar({
       <input type='checkbox' id='sidebar-toggle' className='hidden' />
       <div className='flex h-full'>
         <div className='fixed-no-scroll hidden h-full w-64 flex-none md:flex'>
-          <div className='flex h-screen flex-col items-start justify-between p-4 md:p-8'>
+          <div className='flex h-screen flex-col items-start justify-between p-8'>
             <nav className={linkWrapper}>
               <Navbar linksGroup='top' withLogo />
             </nav>

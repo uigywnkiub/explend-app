@@ -10,5 +10,3 @@ updates:
     schedule:
       interval: 'weekly'
     versioning-strategy: 'auto'
-    ignore:
-      - dependency-name: '@internationalized/date'

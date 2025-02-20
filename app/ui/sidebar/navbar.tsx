@@ -106,7 +106,11 @@ function Navbar({ linksGroup, withLogo }: TProps) {
 
   return (
     <>
-      {withLogo && <Logo size={isMd ? 'sm' : 'xxs'} />}
+      {withLogo && (
+        <div className='-mt-3.5 md:mt-0'>
+          <Logo size={isMd ? 'sm' : 'xxs'} />
+        </div>
+      )}
       {navLinks.map((link, idx) => {
         return (
           <HoverableNavLink
