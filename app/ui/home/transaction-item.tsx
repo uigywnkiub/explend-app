@@ -41,8 +41,8 @@ import {
   getFormattedCurrency,
 } from '../../lib/helpers'
 import type { TTransaction } from '../../lib/types'
+import HighlighterText from '../highlighter-text'
 import { HoverableElement } from '../hoverables'
-import TextHighlighter from '../text-highlighter'
 
 const enum DROPDOWN_KEY {
   COPY = 'copy',
@@ -126,7 +126,7 @@ Time: ${formatTime(createdAt)}`
               {isIncome ? (
                 <p className='text-lg text-success'>
                   +{' '}
-                  <TextHighlighter
+                  <HighlighterText
                     query={[getFormattedCurrency(query)]}
                     text={getFormattedCurrency(amount)}
                   />{' '}
@@ -135,7 +135,7 @@ Time: ${formatTime(createdAt)}`
               ) : (
                 <p className='text-lg'>
                   -{' '}
-                  <TextHighlighter
+                  <HighlighterText
                     query={[getFormattedCurrency(query)]}
                     text={getFormattedCurrency(amount)}
                   />{' '}
@@ -143,7 +143,7 @@ Time: ${formatTime(createdAt)}`
                 </p>
               )}
               <p className='text-balance text-sm font-medium'>
-                <TextHighlighter query={[query]} text={description} />
+                <HighlighterText query={[query]} text={description} />
               </p>
               <p className='text-xs font-medium italic text-default-500'>
                 {formatTime(createdAt)} {isEdited && 'edited'}{' '}

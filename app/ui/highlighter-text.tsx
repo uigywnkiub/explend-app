@@ -5,10 +5,12 @@ type TProps = {
   text: HighlighterProps['textToHighlight']
 }
 
-export default function TextHighlighter({ text, query }: TProps) {
+export default function HighlighterText({ text, query }: TProps) {
+  const searchWords = query.filter((word) => word && word !== '0')
+
   return (
     <Highlighter
-      searchWords={query}
+      searchWords={searchWords}
       textToHighlight={text}
       autoEscape={true}
       highlightClassName='highlight highlight-text'
