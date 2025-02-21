@@ -11,7 +11,7 @@ import {
   PiWarningOctagonFill,
 } from 'react-icons/pi'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import {
   Badge,
@@ -28,10 +28,10 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@heroui/react'
-import { motion } from 'framer-motion'
 
 import { BLINK_DURATION } from '@/config/constants/animation'
 import { APP_NAME, DEFAULT_ICON_SIZE } from '@/config/constants/main'
+import { SEARCH_PARAM } from '@/config/constants/navigation'
 
 import { deleteTransaction } from '../../lib/actions'
 import {
@@ -42,6 +42,7 @@ import {
 } from '../../lib/helpers'
 import type { TTransaction } from '../../lib/types'
 import { HoverableElement } from '../hoverables'
+import TextHighlighter from '../text-highlighter'
 
 const enum DROPDOWN_KEY {
   COPY = 'copy',
@@ -76,6 +77,8 @@ function TransactionItem({
   hasCategoryChanged,
 }: TProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const query = searchParams.get(SEARCH_PARAM.QUERY)?.toString() || ''
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [isBlinkTransaction, setIsBlinkTransaction] = useState(false)
   const transactionDataToCopy = `Transaction data from ${APP_NAME.FULL}
@@ -115,25 +118,33 @@ Time: ${formatTime(createdAt)}`
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
             <div className='rounded-medium bg-content2 px-4 py-2 text-2xl md:px-4 md:py-2 md:text-[28px]'>
-              <motion.div
-                // drag
-                // dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
-                className='select-none pt-1.5 md:pt-2'
-              >
+              <div className='select-none pt-1.5 md:pt-2'>
                 {getEmojiFromCategory(category)}
-              </motion.div>
+              </div>
             </div>
             <div className='font-semibold'>
               {isIncome ? (
                 <p className='text-lg text-success'>
-                  + {getFormattedCurrency(amount)} {currency.sign}
+                  +{' '}
+                  <TextHighlighter
+                    query={[getFormattedCurrency(query)]}
+                    text={getFormattedCurrency(amount)}
+                  />{' '}
+                  {currency.sign}
                 </p>
               ) : (
                 <p className='text-lg'>
-                  - {getFormattedCurrency(amount)} {currency.sign}
+                  -{' '}
+                  <TextHighlighter
+                    query={[getFormattedCurrency(query)]}
+                    text={getFormattedCurrency(amount)}
+                  />{' '}
+                  {currency.sign}
                 </p>
               )}
-              <p className='text-balance text-sm font-medium'>{description}</p>
+              <p className='text-balance text-sm font-medium'>
+                <TextHighlighter query={[query]} text={description} />
+              </p>
               <p className='text-xs font-medium italic text-default-500'>
                 {formatTime(createdAt)} {isEdited && 'edited'}{' '}
                 {isSubscription && (

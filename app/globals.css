@@ -46,6 +46,10 @@ input::-webkit-inner-spin-button {
   transform: rotate(45deg) translate(-2.65px, -2.65px);
 }
 
+.highlight-text {
+  @apply rounded-md p-0.5;
+}
+
 /* Check if View Transitions API browser support. */
 @supports (view-transition-name: figure-caption) {
 }
