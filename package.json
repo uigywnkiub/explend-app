@@ -25,7 +25,7 @@
   "dependencies": {
     "@auth/core": "^0.37.4",
     "@ducanh2912/next-pwa": "^10.2.9",
-    "@google/generative-ai": "^0.21.0",
+    "@google/generative-ai": "^0.22.0",
     "@heroui/react": "2.7.2",
     "@internationalized/date": "3.7.0",
     "@next/third-parties": "15.1.7",
@@ -38,7 +38,7 @@
     "date-fns-tz": "^3.2.0",
     "emoji-picker-react": "^4.12.0",
     "emoji-regex": "^10.4.0",
-    "framer-motion": "^12.4.5",
+    "framer-motion": "^12.4.7",
     "get-user-locale": "^2.3.2",
     "heic2any": "^0.0.4",
     "import-in-the-middle": "^1.13.0",
