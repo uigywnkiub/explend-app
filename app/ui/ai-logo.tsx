@@ -30,7 +30,7 @@ export default function AILogo({
   const aiTitle = (
     <span
       className={twJoin(
-        'bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 bg-clip-text text-transparent',
+        'bg-ai-gradient bg-clip-text text-transparent',
         textSize,
       )}
     >
@@ -47,7 +47,7 @@ export default function AILogo({
           radius='sm'
           showArrow={isMd}
           classNames={{
-            // `before:` is an arrow
+            // `before:` is an arrow.
             base: 'before:bg-gradient-to-b before:from-blue-400 before:via-purple-400 before:to-red-400 bg-clip-text',
             content: twJoin('text-center', textSize),
           }}

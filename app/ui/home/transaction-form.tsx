@@ -159,7 +159,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
       removeFromLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
   }, [categoryName])
 
-  const resumeToastId = 'resumeToastId'
+  const resumeToastId = 'resume'
   const autoProcessingToastId = 'auto-processing'
 
   const resetAllStates = useCallback(() => {
