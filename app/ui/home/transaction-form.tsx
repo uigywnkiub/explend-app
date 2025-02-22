@@ -600,11 +600,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
           >
             <Switch
               isDisabled={pending || isLoadingAIData}
-              isSelected={isSwitchedOn}
               color='success'
               name='isIncome'
-              value='isIncome'
               aria-label='Income switch'
+              value={isSwitchedOn ? 'true' : 'false'}
+              isSelected={isSwitchedOn}
               onValueChange={(isSelected) => setIsSwitchedOn(isSelected)}
             >
               Income

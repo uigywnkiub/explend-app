@@ -220,8 +220,10 @@ export async function createTransaction(
         formData.get('category'),
         userCategories,
       ) as TTransaction['category'],
-      isIncome: Boolean(formData.get('isIncome')),
-      isSubscription: Boolean(formData.get('isSubscription')),
+      isIncome: (formData.get('isIncome') ===
+        'true') as TTransaction['isIncome'],
+      isSubscription: (formData.get('isSubscription') ===
+        'true') as TTransaction['isSubscription'],
       balance: '0' as TTransaction['balance'],
       currency,
       categories: userCategories,
