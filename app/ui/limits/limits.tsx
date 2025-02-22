@@ -8,8 +8,8 @@ import {
   PiDotsThreeOutlineVerticalFill,
   PiNotePencil,
   PiNotePencilFill,
-  PiPlusCircle,
-  PiPlusCircleFill,
+  PiPlus,
+  PiPlusFill,
   PiTrash,
   PiTrashFill,
   PiWarningOctagonFill,
@@ -295,8 +295,8 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
           >
             <HoverableElement
               uKey='add'
-              element={<PiPlusCircle size={DEFAULT_ICON_SIZE} />}
-              hoveredElement={<PiPlusCircleFill size={DEFAULT_ICON_SIZE} />}
+              element={<PiPlus size={DEFAULT_ICON_SIZE} />}
+              hoveredElement={<PiPlusFill size={DEFAULT_ICON_SIZE} />}
               withShift={false}
             />
           </Button>
@@ -307,7 +307,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
               <>
                 <ModalHeader className='flex flex-col gap-1'>
                   <div className='flex items-center gap-2'>
-                    <PiPlusCircleFill size={DEFAULT_ICON_SIZE} /> Add limit
+                    <PiPlusFill size={DEFAULT_ICON_SIZE} /> Add limit
                   </div>
                 </ModalHeader>
                 <ModalBody>
@@ -408,22 +408,25 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         <p className='text-center text-default-500'>No Limits Found</p>
       )}
 
-      {calculatedLimitsData.map((data) => {
-        const { categoryName, difference, limitAmount, status, isLimitOver } =
-          data
-        const progressPercentage =
-          limitAmount > 0
-            ? Math.min(
-                100,
-                Math.max(0, ((limitAmount - difference) / limitAmount) * 100),
-              )
-            : 0
-        const isChangedCategoryName =
-          changedCategoryNames.includes(categoryName)
+      <ul className='space-y-4'>
+        {calculatedLimitsData.map((data) => {
+          const { categoryName, difference, limitAmount, status, isLimitOver } =
+            data
+          const progressPercentage =
+            limitAmount > 0
+              ? Math.min(
+                  100,
+                  Math.max(0, ((limitAmount - difference) / limitAmount) * 100),
+                )
+              : 0
+          const isChangedCategoryName =
+            changedCategoryNames.includes(categoryName)
 
-        return (
-          <ul key={categoryName} className='space-y-4'>
-            <li className='flex items-center justify-between py-2'>
+          return (
+            <li
+              key={categoryName}
+              className='flex items-center justify-between py-2'
+            >
               <div className='flex items-center text-balance md:w-1/2'>
                 <p className='-mb-1.5 text-xl md:text-2xl'>
                   {isChangedCategoryName
@@ -543,9 +546,9 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 </Dropdown>
               </div>
             </li>
-          </ul>
-        )
-      })}
+          )
+        })}
+      </ul>
       <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
         <InfoText text='The calculation of limits is based on transactions by the current month.' />
         <InfoText text='Your limits will not be deleted automatically in the new month.' />

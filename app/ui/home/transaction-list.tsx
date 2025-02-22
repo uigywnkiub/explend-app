@@ -79,16 +79,8 @@ function TransactionList({
                     className='mb-3 flex w-full justify-between text-sm'
                   >
                     <TransactionItem
-                      id={t.id}
-                      category={t.category}
-                      description={t.description}
-                      amount={t.amount}
-                      currency={t.currency}
-                      isIncome={t.isIncome}
-                      isEdited={t.isEdited}
-                      isSubscription={t.isSubscription}
-                      createdAt={t.createdAt}
                       hasCategoryChanged={hasCategoryChanged}
+                      {...t}
                     />
                   </li>
                 )
