@@ -147,8 +147,8 @@ function TransactionFormEdit({ transaction }: TProps) {
           isDisabled={isLoading}
           color='success'
           name='isIncome'
-          value='isIncome'
           aria-label='Income switch'
+          value={isSwitchedOn ? 'true' : 'false'}
           isSelected={isSwitchedOn}
           onValueChange={(isSelected) => setIsSwitchedOn(isSelected)}
         >
