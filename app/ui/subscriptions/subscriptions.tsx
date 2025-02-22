@@ -8,8 +8,8 @@ import {
   PiDotsThreeOutlineVerticalFill,
   PiNotePencil,
   PiNotePencilFill,
-  PiPlusCircle,
-  PiPlusCircleFill,
+  PiPlus,
+  PiPlusFill,
   PiTrash,
   PiTrashFill,
   PiWarningOctagonFill,
@@ -189,16 +189,20 @@ export default function Subscriptions({
       isSubscription: TTransaction['isSubscription']
     },
   ) => {
-    const newSubscription = createFormData(subscriptionData)
-    await toast.promise(
-      createTransaction(userId, currency, userCategories, newSubscription),
-      {
-        loading: 'Processing as transactions...',
-        success: 'Transaction added.',
-        error: 'Failed to add as transaction.',
-      },
-    )
-    resetStates()
+    try {
+      const newSubscription = createFormData(subscriptionData)
+      await toast.promise(
+        createTransaction(userId, currency, userCategories, newSubscription),
+        {
+          loading: 'Processing as transaction...',
+          success: 'Transaction added.',
+          error: 'Failed to add as transaction.',
+        },
+      )
+      resetStates()
+    } catch (err) {
+      throw err
+    }
   }
 
   const onEditSubscription = async (
@@ -321,8 +325,8 @@ export default function Subscriptions({
             >
               <HoverableElement
                 uKey='create'
-                element={<PiPlusCircle size={DEFAULT_ICON_SIZE} />}
-                hoveredElement={<PiPlusCircleFill size={DEFAULT_ICON_SIZE} />}
+                element={<PiPlus size={DEFAULT_ICON_SIZE} />}
+                hoveredElement={<PiPlusFill size={DEFAULT_ICON_SIZE} />}
                 withShift={false}
               />
             </Button>
@@ -335,8 +339,7 @@ export default function Subscriptions({
                 <>
                   <ModalHeader className='flex flex-col gap-1'>
                     <div className='flex items-center gap-2'>
-                      <PiPlusCircleFill size={DEFAULT_ICON_SIZE} /> Add
-                      subscription
+                      <PiPlusFill size={DEFAULT_ICON_SIZE} /> Add subscription
                     </div>
                   </ModalHeader>
                   <ModalBody>
@@ -385,15 +388,15 @@ export default function Subscriptions({
           <p className='text-center text-default-500'>No Subscriptions Found</p>
         )}
 
-        {subscriptionsData.map((s) => {
-          const { _id, category, description, amount } = s
-          const isChangedCategoryName = changedCategoryNames.includes(
-            getCategoryWithoutEmoji(category),
-          )
+        <ul className='space-y-4'>
+          {subscriptionsData.map((s) => {
+            const { _id, category, description, amount } = s
+            const isChangedCategoryName = changedCategoryNames.includes(
+              getCategoryWithoutEmoji(category),
+            )
 
-          return (
-            <ul key={_id} className='space-y-4'>
-              <li className='flex items-center justify-between py-2'>
+            return (
+              <li key={_id} className='flex items-center justify-between py-2'>
                 <div className='flex items-center gap-2 text-balance md:w-1/2'>
                   <p className='-mb-1 text-xl md:text-2xl'>
                     {isChangedCategoryName
@@ -492,11 +495,9 @@ export default function Subscriptions({
                           startContent={
                             <HoverableElement
                               uKey={DROPDOWN_KEY.ADD}
-                              element={
-                                <PiPlusCircle size={DEFAULT_ICON_SIZE} />
-                              }
+                              element={<PiPlus size={DEFAULT_ICON_SIZE} />}
                               hoveredElement={
-                                <PiPlusCircleFill size={DEFAULT_ICON_SIZE} />
+                                <PiPlusFill size={DEFAULT_ICON_SIZE} />
                               }
                             />
                           }
@@ -571,9 +572,9 @@ export default function Subscriptions({
                   </Dropdown>
                 </div>
               </li>
-            </ul>
-          )
-        })}
+            )
+          })}
+        </ul>
 
         <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
           <InfoText text='You can add each subscription to transactions as an expense.' />

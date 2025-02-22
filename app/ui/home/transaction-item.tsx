@@ -6,6 +6,8 @@ import {
   PiDotsThreeOutlineVerticalFill,
   PiNotePencil,
   PiNotePencilFill,
+  PiPlus,
+  PiPlusFill,
   PiTrash,
   PiTrashFill,
   PiWarningOctagonFill,
@@ -33,49 +35,31 @@ import { BLINK_DURATION } from '@/config/constants/animation'
 import { APP_NAME, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { SEARCH_PARAM } from '@/config/constants/navigation'
 
-import { deleteTransaction } from '../../lib/actions'
+import { createTransaction, deleteTransaction } from '../../lib/actions'
 import {
   copyToClipboard,
+  createFormData,
   formatTime,
   getEmojiFromCategory,
   getFormattedCurrency,
+  omit,
 } from '../../lib/helpers'
 import type { TTransaction } from '../../lib/types'
 import HighlighterText from '../highlighter-text'
 import { HoverableElement } from '../hoverables'
 
 const enum DROPDOWN_KEY {
+  REPEAT = 'repeat',
   COPY = 'copy',
   EDIT = 'edit',
   DELETE = 'delete',
 }
 
-type TProps = Omit<
-  TTransaction,
-  | 'userId'
-  | 'balance'
-  | 'updatedAt'
-  | 'transactionLimit'
-  | 'categories'
-  | 'hasCategoryChanged'
-  | 'categoryLimits'
-  | 'subscriptions'
-> & {
+type TProps = TTransaction & {
   hasCategoryChanged: boolean
 }
 
-function TransactionItem({
-  id,
-  category,
-  description,
-  amount,
-  currency,
-  isIncome,
-  isEdited,
-  isSubscription,
-  createdAt,
-  hasCategoryChanged,
-}: TProps) {
+function TransactionItem({ hasCategoryChanged, ...t }: TProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const query = searchParams.get(SEARCH_PARAM.QUERY)?.toString() || ''
@@ -83,11 +67,11 @@ function TransactionItem({
   const [isBlinkTransaction, setIsBlinkTransaction] = useState(false)
   const transactionDataToCopy = `Transaction data from ${APP_NAME.FULL}
 
-${isIncome ? 'Type: Income' : 'Type: Expense'}
-Category: ${category}
-Description: ${description}
-Amount: ${isIncome ? '+' : '-'} ${getFormattedCurrency(amount)} ${currency.sign}
-Time: ${formatTime(createdAt)}`
+${t.isIncome ? 'Type: Income' : 'Type: Expense'}
+Category: ${t.category}
+Description: ${t.description}
+Amount: ${t.isIncome ? '+' : '-'} ${getFormattedCurrency(t.amount)} ${t.currency.sign}
+Time: ${formatTime(t.createdAt)}`
 
   const onBlinkTransaction = async () => {
     try {
@@ -100,12 +84,28 @@ Time: ${formatTime(createdAt)}`
     }
   }
 
-  const onDeleteTransaction = async () => {
+  const onDeleteTransaction = async (id: TTransaction['id']) => {
     try {
       await deleteTransaction(id)
       toast.success('Transaction deleted.')
     } catch (err) {
       toast.error('Failed to delete transaction.')
+      throw err
+    }
+  }
+
+  const onRepeatTransaction = async (transaction: TTransaction) => {
+    try {
+      const { userId, currency, categories, ...restT } = omit(transaction, [])
+      await toast.promise(
+        createTransaction(userId, currency, categories, createFormData(restT)),
+        {
+          loading: 'Processing transaction...',
+          success: 'Transaction repeated.',
+          error: 'Failed to repeat transaction.',
+        },
+      )
+    } catch (err) {
       throw err
     }
   }
@@ -119,35 +119,35 @@ Time: ${formatTime(createdAt)}`
           <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
             <div className='rounded-medium bg-content2 px-4 py-2 text-2xl md:px-4 md:py-2 md:text-[28px]'>
               <div className='select-none pt-1.5 md:pt-2'>
-                {getEmojiFromCategory(category)}
+                {getEmojiFromCategory(t.category)}
               </div>
             </div>
             <div className='font-semibold'>
-              {isIncome ? (
+              {t.isIncome ? (
                 <p className='text-lg text-success'>
                   +{' '}
                   <HighlighterText
                     query={[getFormattedCurrency(query)]}
-                    text={getFormattedCurrency(amount)}
+                    text={getFormattedCurrency(t.amount)}
                   />{' '}
-                  {currency.sign}
+                  {t.currency.sign}
                 </p>
               ) : (
                 <p className='text-lg'>
                   -{' '}
                   <HighlighterText
                     query={[getFormattedCurrency(query)]}
-                    text={getFormattedCurrency(amount)}
+                    text={getFormattedCurrency(t.amount)}
                   />{' '}
-                  {currency.sign}
+                  {t.currency.sign}
                 </p>
               )}
               <p className='text-balance text-sm font-medium'>
-                <HighlighterText query={[query]} text={description} />
+                <HighlighterText query={[query]} text={t.description} />
               </p>
               <p className='text-xs font-medium italic text-default-500'>
-                {formatTime(createdAt)} {isEdited && 'edited'}{' '}
-                {isSubscription && (
+                {formatTime(t.createdAt)} {t.isEdited && 'edited'}{' '}
+                {t.isSubscription && (
                   <span className='text-primary-700'>subscription</span>
                 )}
               </p>
@@ -181,6 +181,9 @@ Time: ${formatTime(createdAt)}`
             <DropdownMenu
               aria-label='Transaction actions'
               onAction={(key) => {
+                if (key === DROPDOWN_KEY.REPEAT) {
+                  onRepeatTransaction(t)
+                }
                 if (key === DROPDOWN_KEY.COPY) {
                   copyToClipboard(
                     'Transaction copied.',
@@ -190,7 +193,7 @@ Time: ${formatTime(createdAt)}`
                   )
                 }
                 if (key === DROPDOWN_KEY.EDIT) {
-                  router.push(`/transaction/${id}/edit`)
+                  router.push(`/transaction/${t.id}/edit`)
                 }
                 if (key === DROPDOWN_KEY.DELETE) {
                   onOpen()
@@ -198,6 +201,22 @@ Time: ${formatTime(createdAt)}`
               }}
             >
               <DropdownSection title='Actions' showDivider>
+                <DropdownItem
+                  key={DROPDOWN_KEY.REPEAT}
+                  startContent={
+                    <HoverableElement
+                      uKey={DROPDOWN_KEY.REPEAT}
+                      element={<PiPlus size={DEFAULT_ICON_SIZE} />}
+                      hoveredElement={<PiPlusFill size={DEFAULT_ICON_SIZE} />}
+                    />
+                  }
+                  description='Repeat transaction'
+                  classNames={{
+                    description: 'text-default-500',
+                  }}
+                >
+                  Repeat
+                </DropdownItem>
                 <DropdownItem
                   key={DROPDOWN_KEY.COPY}
                   startContent={
@@ -262,7 +281,7 @@ Time: ${formatTime(createdAt)}`
                       hoveredElement={<PiTrashFill size={DEFAULT_ICON_SIZE} />}
                     />
                   }
-                  description='Permanently delete the transaction'
+                  description='Permanently delete transaction'
                   classNames={{
                     description: 'text-default-500',
                   }}
@@ -293,7 +312,7 @@ Time: ${formatTime(createdAt)}`
                   Are you sure you want to delete the
                   <br />
                   <span className='text-foreground'>
-                    {getEmojiFromCategory(category)} {description}
+                    {getEmojiFromCategory(t.category)} {t.description}
                   </span>{' '}
                   transaction? This action is permanent and cannot be undone.
                 </p>
@@ -304,7 +323,7 @@ Time: ${formatTime(createdAt)}`
                 </Button>
                 <Button
                   color='danger'
-                  onPress={() => [onDeleteTransaction(), onClose()]}
+                  onPress={() => [onDeleteTransaction(t.id), onClose()]}
                 >
                   Delete
                 </Button>

@@ -98,7 +98,7 @@ function DeleteAccount({ userId }: TProps) {
                   Are you sure you want to delete your account? This action is
                   irreversible and will{' '}
                   <span className='text-foreground'>
-                    permanently remove all your data
+                    permanently delete all your data
                   </span>
                   . Once deleted, you will no longer be able to access any
                   information associated with your account.

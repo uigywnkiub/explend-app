@@ -490,15 +490,6 @@ export const getRandomValue = <T>(
   return array[Math.floor(Math.random() * array.length)]
 }
 
-export const createFormData = (data: Record<string, unknown>): FormData => {
-  const formData = new FormData()
-  Object.entries(data).forEach(([key, value]) => {
-    formData.append(key, String(value)) // Convert non-string values to strings
-  })
-
-  return formData
-}
-
 export const AMOUNT_LENGTH = 6
 export const getFormattedAmountState = (
   e: React.ChangeEvent<HTMLInputElement>,
@@ -508,4 +499,26 @@ export const getFormattedAmountState = (
   if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
     setAmount(getFormattedCurrency(rawAmount, false))
   }
+}
+
+export const createFormData = (data: Record<string, unknown>): FormData => {
+  const formData = new FormData()
+  Object.entries(data).forEach(([key, value]) => {
+    formData.append(key, String(value)) // Convert non-string values to strings.
+  })
+
+  return formData
+}
+
+export const omit = <T extends Record<string, unknown>>(
+  obj: T,
+  keys: (keyof T)[],
+): Omit<T, keyof typeof keys> => {
+  if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+    throw new Error('omit function only accepts plain objects.')
+  }
+
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !keys.includes(key as keyof T)),
+  ) as Omit<T, keyof typeof keys>
 }
