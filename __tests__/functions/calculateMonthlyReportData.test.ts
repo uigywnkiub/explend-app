@@ -1,4 +1,3 @@
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -12,10 +11,10 @@ import type { TExpenseReport, TTransaction } from '../../app/lib/types'
 
 describe('calculateMonthlyReportData', () => {
   const createTransaction = (
-    id: string,
-    category: string,
-    amount: string,
-    isIncome: boolean,
+    id: TTransaction['id'],
+    category: TTransaction['category'],
+    amount: TTransaction['amount'],
+    isIncome: TTransaction['isIncome'],
   ): TTransaction => ({
     id,
     userId: 'user1@test.com',
