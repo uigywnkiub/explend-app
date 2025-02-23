@@ -328,7 +328,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
           </div>
         </div>
 
-        <Divider className='mx-auto mb-3 bg-divider md:mb-6' />
+        <Divider className='mx-auto mb-0 bg-divider md:mb-2' />
 
         <Accordion defaultExpandedKeys={[ACCORDION_KEY.EXPENSE]}>
           <AccordionItem
