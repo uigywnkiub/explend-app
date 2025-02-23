@@ -11,7 +11,14 @@ import { useLocalStorage } from 'react-use'
 
 import Link from 'next/link'
 
-import { Button, DateValue, Divider, RangeValue } from '@heroui/react'
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  DateValue,
+  Divider,
+  RangeValue,
+} from '@heroui/react'
 import { getLocalTimeZone } from '@internationalized/date'
 import {
   endOfMonth,
@@ -35,7 +42,7 @@ import {
   deepCompareArrays,
   formatDate,
   getCategoryWithoutEmoji,
-  getExpenseCategoriesList,
+  getExpenseCategories,
   getFormattedCurrency,
   isValidArrayWithKeys,
   sortArrayByKeyByReferenceArray,
@@ -48,6 +55,10 @@ import AILogo from '../ai-logo'
 import MonthPicker from './month-picker'
 import TipsList from './tips-list'
 
+const ACCORDION_KEY = {
+  EXPENSE: 'expense',
+  INCOME: 'income',
+}
 const REFRESH_TIPS_BTN_TEXT = 'Refresh tips'
 
 type TProps = {
@@ -123,25 +134,26 @@ function MonthlyReport({ transactions, currency }: TProps) {
     () => filterTransactions(filteredTransactions),
     [filteredTransactions],
   )
-  const { totalIncome, totalExpense, monthlyReportData } = useMemo(
-    () => calculateMonthlyReportData(income, expense),
-    [income, expense],
-  )
+  const { totalIncome, totalExpense, expenseReportData, incomeReportData } =
+    useMemo(
+      () => calculateMonthlyReportData(income, expense),
+      [income, expense],
+    )
   const expenseCategories = useMemo(
-    () => getExpenseCategoriesList(monthlyReportData, false),
-    [monthlyReportData],
+    () => getExpenseCategories(expenseReportData, false),
+    [expenseReportData],
   )
   const isMissMatchLocalStorageAndCurrMonthExpenses = useMemo(
     () =>
       !deepCompareArrays(
         expenseTipsAIDataLocalStorage.map((e) => e.category).sort(),
-        monthlyReportData.map((e) => e.category).sort(),
+        expenseReportData.map((e) => e.category).sort(),
       ),
-    [expenseTipsAIDataLocalStorage, monthlyReportData],
+    [expenseTipsAIDataLocalStorage, expenseReportData],
   )
 
   const getExpenseTipsAIData = useCallback(async () => {
-    if (monthlyReportData.length === 0) {
+    if (expenseReportData.length === 0) {
       toast.error('No expenses found.')
 
       return
@@ -150,7 +162,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
       const sortedExpenseTipsAIDataLocalStorage =
         sortArrayByKeyByReferenceArray(
           expenseTipsAIDataLocalStorage,
-          monthlyReportData,
+          expenseReportData,
           'category',
         )
 
@@ -187,32 +199,73 @@ function MonthlyReport({ transactions, currency }: TProps) {
     expenseTipsAIDataLocalStorage,
     isTipsDataExist,
     isValidExpenseTipsAIDataLocalStorage,
-    monthlyReportData,
+    expenseReportData,
     registerAttempt,
     setExpenseTipsAIDataLocalStorage,
   ])
 
-  const memorizedMonthlyReportData = useMemo(
-    () =>
-      monthlyReportData.map((category) => (
-        <Fragment key={category.category}>
-          <div className='truncate md:text-lg'>
-            <Link
-              href={createSearchHrefWithKeyword(
-                getCategoryWithoutEmoji(category.category),
-              )}
-              className='hover:opacity-hover'
-            >
-              {category.category}
-            </Link>
-          </div>
-          <div className='md:text-lg'>{category.percentage} %</div>
-          <div className='md:text-lg'>
-            {getFormattedCurrency(category.spent)} {currency.sign}
-          </div>
-        </Fragment>
-      )),
-    [currency.sign, monthlyReportData],
+  const memorizedMonthlyExpenseReport = useMemo(
+    () => (
+      <>
+        {/* <Divider className='mx-auto mb-3 bg-divider md:mb-6' /> */}
+        <div className='grid grid-cols-3 gap-4'>
+          <div className='text-xs text-default-500 md:text-sm'>Category</div>
+          <div className='text-xs text-default-500 md:text-sm'>Percentage</div>
+          <div className='text-xs text-default-500 md:text-sm'>Spent</div>
+          {expenseReportData.map((category) => (
+            <Fragment key={category.category}>
+              <div className='truncate md:text-lg'>
+                <Link
+                  href={createSearchHrefWithKeyword(
+                    getCategoryWithoutEmoji(category.category),
+                  )}
+                  className='hover:opacity-hover'
+                >
+                  {category.category}
+                </Link>
+              </div>
+              <div className='md:text-lg'>{category.percentage} %</div>
+              <div className='md:text-lg'>
+                {getFormattedCurrency(category.spent)} {currency.sign}
+              </div>
+            </Fragment>
+          ))}
+        </div>
+      </>
+    ),
+    [currency.sign, expenseReportData],
+  )
+
+  const memorizedMonthlyIncomeReport = useMemo(
+    () => (
+      <>
+        {/* <Divider className='mx-auto mb-3 bg-divider md:mb-6' /> */}
+        <div className='grid grid-cols-3 gap-4'>
+          <div className='text-xs text-default-500 md:text-sm'>Category</div>
+          <div className='text-xs text-default-500 md:text-sm'>Percentage</div>
+          <div className='text-xs text-default-500 md:text-sm'>Earned</div>
+          {incomeReportData.map((category) => (
+            <Fragment key={category.category}>
+              <div className='truncate md:text-lg'>
+                <Link
+                  href={createSearchHrefWithKeyword(
+                    getCategoryWithoutEmoji(category.category),
+                  )}
+                  className='hover:opacity-hover'
+                >
+                  {category.category}
+                </Link>
+              </div>
+              <div className='md:text-lg'>{category.percentage} %</div>
+              <div className='md:text-lg'>
+                {getFormattedCurrency(category.earned)} {currency.sign}
+              </div>
+            </Fragment>
+          ))}
+        </div>
+      </>
+    ),
+    [currency.sign, incomeReportData],
   )
 
   if (filteredTransactions.length === 0) {
@@ -227,7 +280,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
           />
         </div>
         <p className='text-balance text-center text-default-500'>
-          No transactions found from {formattedDateRange}
+          No data found from {formattedDateRange}
         </p>
       </div>
     )
@@ -249,20 +302,11 @@ function MonthlyReport({ transactions, currency }: TProps) {
             href={createSearchHrefWithKeyword(format(startDate, 'MMMM'))}
             className='hover:opacity-hover'
           >
-            <span className='mb-2 inline-block text-balance text-lg text-default-500 md:mb-0 md:text-xl'>
+            <span className='mb-3 inline-block text-balance text-lg text-default-500 md:mb-0 md:text-xl'>
               {formattedDateRange}
             </span>
           </Link>
           <div className='flex gap-4 md:gap-8'>
-            <div>
-              <p className='text-xs text-default-500 md:text-sm'>
-                Total Income
-              </p>
-              <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
-                <PiArrowCircleUpFill className='fill-success' />
-                {getFormattedCurrency(totalIncome)} {currency.code}
-              </p>
-            </div>
             <div>
               <p className='text-xs text-default-500 md:text-sm'>
                 Total Expense
@@ -272,29 +316,74 @@ function MonthlyReport({ transactions, currency }: TProps) {
                 {getFormattedCurrency(totalExpense)} {currency.code}
               </p>
             </div>
+            <div>
+              <p className='text-xs text-default-500 md:text-sm'>
+                Total Income
+              </p>
+              <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
+                <PiArrowCircleUpFill className='fill-success' />
+                {getFormattedCurrency(totalIncome)} {currency.code}
+              </p>
+            </div>
           </div>
         </div>
-        {expense.length !== 0 ? (
-          <>
-            <Divider className='mx-auto mb-3 bg-divider md:mb-6' />
-            <div className='grid grid-cols-3 gap-4'>
-              <div className='text-xs text-default-500 md:text-sm'>
-                Category
-              </div>
-              <div className='text-xs text-default-500 md:text-sm'>
-                Percentage
-              </div>
-              <div className='text-xs text-default-500 md:text-sm'>Spent</div>
-              {memorizedMonthlyReportData}
-            </div>
-          </>
-        ) : (
-          <p className='text-default-500'>No expense transactions found.</p>
-        )}
+
+        <Divider className='mx-auto mb-3 bg-divider md:mb-6' />
+
+        <Accordion defaultExpandedKeys={[ACCORDION_KEY.EXPENSE]}>
+          <AccordionItem
+            key={ACCORDION_KEY.EXPENSE}
+            aria-label='Expense'
+            title='Expense'
+            subtitle='Total Spending Overview'
+            startContent={
+              <PiArrowCircleDownFill className='fill-danger text-lg md:text-xl' />
+            }
+            classNames={{
+              subtitle: 'text-default-500 text-xs md:text-sm',
+            }}
+          >
+            {expense.length !== 0 ? (
+              memorizedMonthlyExpenseReport
+            ) : (
+              <p className='text-default-500'>No expense found</p>
+            )}
+          </AccordionItem>
+        </Accordion>
+
+        <Accordion
+          defaultExpandedKeys={
+            expense.length === 0 && income.length > 0
+              ? [ACCORDION_KEY.INCOME]
+              : []
+          }
+        >
+          <AccordionItem
+            key={ACCORDION_KEY.INCOME}
+            aria-label='Income'
+            title='Income'
+            subtitle='Total Earnings Overview'
+            startContent={
+              <PiArrowCircleUpFill className='fill-success text-lg md:text-xl' />
+            }
+            classNames={{
+              subtitle: 'text-default-500 text-xs md:text-sm',
+            }}
+          >
+            {income.length !== 0 ? (
+              memorizedMonthlyIncomeReport
+            ) : (
+              <p className='text-default-500'>No income found</p>
+            )}
+          </AccordionItem>
+        </Accordion>
       </div>
       <div className='mt-4 md:mt-8'>
         {tipsDataAI ? (
           <>
+            {/* <p className='mb-2 text-xs text-default-500 md:text-sm'>
+              Expense Tips
+            </p> */}
             <TipsList tipsDataAI={tipsDataAI} />
           </>
         ) : (

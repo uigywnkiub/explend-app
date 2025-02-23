@@ -91,10 +91,16 @@ export type TTotalsTransaction = Record<
   { income: TTotals['income']; expense: TTotals['expense'] }
 >
 
-export type TCategoryData = {
+export type TExpenseReport = {
   category: TTransaction['category']
   spent: number
   percentage: string
+}
+
+export type TIncomeReport = {
+  category: TExpenseReport['category']
+  earned: TExpenseReport['spent']
+  percentage: TExpenseReport['percentage']
 }
 
 export type TChartData = {

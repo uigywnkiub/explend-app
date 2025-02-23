@@ -13,8 +13,9 @@ import {
 import { getCategoryWithoutEmoji, toCalendarDate } from './helpers'
 import type {
   TCategories,
-  TCategoryData,
   TChartData,
+  TExpenseReport,
+  TIncomeReport,
   TTransaction,
 } from './types'
 
@@ -99,29 +100,40 @@ export const calculateMonthlyReportData = (
 ) => {
   const totalIncome = calculateTotalAmount(income)
   const totalExpense = calculateTotalAmount(expense)
-  const totalsByCategory = calculateTotalsByCategory(expense)
+
+  const totalsByExpenseCategory = calculateTotalsByCategory(expense)
+  const totalsByIncomeCategory = calculateTotalsByCategory(income)
 
   // Do raw sorting data first to improve performance in some cases.
-  const sortedEntries = Object.entries(totalsByCategory).sort(
+  const sortedExpenseEntries = Object.entries(totalsByExpenseCategory).sort(
     ([, spentA], [, spentB]) => spentB - spentA,
   )
+  const sortedIncomeEntries = Object.entries(totalsByIncomeCategory).sort(
+    ([, earnedA], [, earnedB]) => earnedB - earnedA,
+  )
 
-  const monthlyReportData: TCategoryData[] = sortedEntries.map(
+  const expenseReportData: TExpenseReport[] = sortedExpenseEntries.map(
     ([category, spent]) => {
       let percentage = ((spent / totalExpense) * 100).toFixed(2)
       if (percentage.endsWith('.00')) {
         percentage = percentage.slice(0, -3)
       }
 
-      return {
-        category,
-        spent,
-        percentage,
+      return { category, spent, percentage }
+    },
+  )
+  const incomeReportData: TIncomeReport[] = sortedIncomeEntries.map(
+    ([category, earned]) => {
+      let percentage = ((earned / totalIncome) * 100).toFixed(2)
+      if (percentage.endsWith('.00')) {
+        percentage = percentage.slice(0, -3)
       }
+
+      return { category, earned, percentage }
     },
   )
 
-  return { totalIncome, totalExpense, monthlyReportData }
+  return { totalIncome, totalExpense, expenseReportData, incomeReportData }
 }
 
 export const filterTransactionsByDateRange = (
