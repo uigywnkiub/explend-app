@@ -3,7 +3,7 @@
 import { cn } from '../lib/helpers'
 
 type TProps = {
-  size?: 'smallest' | 'xxs' | 'xs' | 'sm' | 'md'
+  size?: 'smallest' | 'xxs' | 'xs' | 'sm' | 'md2' | 'md'
 }
 
 export default function Logo({ size = 'md' }: TProps) {
@@ -26,6 +26,10 @@ export default function Logo({ size = 'md' }: TProps) {
     case 'sm':
       logoSizeClass = 'h-20 w-20'
       textSizeClass = 'text-4xl'
+      break
+    case 'md2':
+      logoSizeClass = 'h-28 w-28'
+      textSizeClass = 'text-5xl'
       break
   }
 

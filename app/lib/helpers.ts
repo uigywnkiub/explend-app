@@ -33,7 +33,7 @@ import { ROUTE } from '@/config/constants/routes'
 import type {
   TApproxCategory,
   TCategoriesItem,
-  TCategoryData,
+  TExpenseReport,
   TGetTransactions,
   THTMLElement,
   TRawTransaction,
@@ -210,6 +210,17 @@ export const formatAmount = (value: string): string => {
   return rawAmount
 }
 
+export const AMOUNT_LENGTH = 6
+export const getFormattedAmountState = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  setAmount: (value: React.SetStateAction<string>) => void,
+) => {
+  const rawAmount = formatAmount(e.target.value)
+  if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
+    setAmount(getFormattedCurrency(rawAmount, false))
+  }
+}
+
 export const calculateEntryRange = (
   page: number | string | null,
   limit: number | string | null,
@@ -349,7 +360,7 @@ export const getCategoryItemNames = (
 
   return categories
     .flatMap((subject) => subject.items.map((item) => item.name))
-    .filter(Boolean) // Remove empty strings
+    .filter(Boolean) // Remove empty strings.
 }
 
 export const findApproxCategoryByValue = (
@@ -390,8 +401,8 @@ export const userLocale = getUserLocale({
   fallbackLocale: DEFAULT_LANG,
 })
 
-export const getExpenseCategoriesList = (
-  categoriesData: TCategoryData[],
+export const getExpenseCategories = (
+  categoriesData: TExpenseReport[],
   isGetTheFirstThree = true,
 ) => {
   return isGetTheFirstThree
@@ -488,17 +499,6 @@ export const getRandomValue = <T>(
   if (array.length === 0) return null // Handle empty iterable
 
   return array[Math.floor(Math.random() * array.length)]
-}
-
-export const AMOUNT_LENGTH = 6
-export const getFormattedAmountState = (
-  e: React.ChangeEvent<HTMLInputElement>,
-  setAmount: (value: React.SetStateAction<string>) => void,
-) => {
-  const rawAmount = formatAmount(e.target.value)
-  if (!isNaN(Number(rawAmount)) && rawAmount.length <= AMOUNT_LENGTH) {
-    setAmount(getFormattedCurrency(rawAmount, false))
-  }
 }
 
 export const createFormData = (data: Record<string, unknown>): FormData => {

@@ -131,6 +131,24 @@ function SignIn() {
     setIsExpanded((prev) => !prev)
   }
 
+  const highlightText = (
+    text: string,
+    highlight: string,
+    className: string,
+  ): (string | React.JSX.Element)[] => {
+    const regex = new RegExp(`(${highlight})`, 'gi') // Case-insensitive matching.
+
+    return text.split(regex).map((part, index) =>
+      part.toLowerCase() === highlight.toLowerCase() ? (
+        <span key={index} className={className}>
+          {part}
+        </span>
+      ) : (
+        part
+      ),
+    )
+  }
+
   const accordionTitle = isExpanded
     ? `Hide ${ACCORDION_ITEM_KEY}`
     : `Show ${ACCORDION_ITEM_KEY}`
@@ -138,16 +156,20 @@ function SignIn() {
   return (
     <>
       <InstallPWA />
-      <div className='flex min-h-screen flex-col justify-between p-4 md:p-8'>
+      <div className='flex min-h-screen flex-col justify-between text-balance p-4 md:p-8'>
         <div className='flex grow flex-col items-center justify-center text-center'>
           <div className='mb-4 flex items-center justify-center'>
-            <Logo />
+            <Logo size='md2' />
           </div>
-          <h1 className='mb-1 text-2xl font-semibold md:text-3xl'>
+          <h1 className='mb-1 text-xl font-semibold md:text-2xl'>
             Welcome to {APP_NAME.FULL}
           </h1>
-          <p className='text-lg text-default-500 md:text-xl'>
-            {APP_DESCRIPTION}
+          <p className='text-default-500'>
+            {highlightText(
+              APP_DESCRIPTION,
+              'AI',
+              'bg-ai-gradient bg-clip-text text-transparent',
+            )}
           </p>
           <Divider className='my-4 w-full bg-divider md:w-1/2' />
           <p className='mb-4'>Start {APP_TITLE}</p>
