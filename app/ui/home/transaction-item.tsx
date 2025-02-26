@@ -86,10 +86,12 @@ Time: ${formatTime(t.createdAt)}`
 
   const onDeleteTransaction = async (id: TTransaction['id']) => {
     try {
-      await deleteTransaction(id)
-      toast.success('Transaction deleted.')
+      await toast.promise(deleteTransaction(id), {
+        loading: 'Deleting transaction...',
+        success: 'Transaction deleted.',
+        error: 'Failed to delete transaction.',
+      })
     } catch (err) {
-      toast.error('Failed to delete transaction.')
       throw err
     }
   }
@@ -100,7 +102,7 @@ Time: ${formatTime(t.createdAt)}`
       await toast.promise(
         createTransaction(userId, currency, categories, createFormData(restT)),
         {
-          loading: 'Processing transaction...',
+          loading: 'Repeating transaction...',
           success: 'Transaction repeated.',
           error: 'Failed to repeat transaction.',
         },
