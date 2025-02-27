@@ -16,6 +16,7 @@ export async function GET(req: Request) {
   const hasTitle = searchParams.has('title')
   const title = hasTitle ? searchParams.get('title')?.slice(0, 100) : APP_TITLE
 
+  const fontFamilyName = 'FracktifSemiBold'
   const fontData = await fetch(
     new URL(
       '../../fonts/FracktifSemiBold/DEMO-fracktif-semibold.otf',
@@ -33,8 +34,7 @@ export async function GET(req: Request) {
           alignItems: 'center',
           justifyContent: 'center',
           letterSpacing: '-.02em',
-          fontWeight: 600,
-          fontFamily: 'FracktifSemiBold',
+          fontFamily: fontFamilyName,
           background: CUSTOM_LIGHT,
           // backgroundImage: `radial-gradient(circle at 25px 25px, ${CUSTOM_DARK}${OPACITY.O30} 2%, transparent 0%), radial-gradient(circle at 75px 75px, ${CUSTOM_DARK}${OPACITY.O30} 2%, transparent 0%)`,
           // backgroundSize: '100px 100px',
@@ -73,6 +73,7 @@ export async function GET(req: Request) {
             justifyContent: 'center',
             padding: '30px 60px',
             margin: '0 42px',
+            textWrap: 'balance',
             fontSize: 44,
             width: 'auto',
             maxWidth: 640,
@@ -87,16 +88,16 @@ export async function GET(req: Request) {
         </div>
       </div>
     ),
-    // ImageResponse options
+    // ImageResponse options.
     {
       width: 1200,
       height: 630,
       fonts: [
         {
-          name: 'FracktifSemiBold',
+          name: fontFamilyName,
           data: fontData,
-          style: 'normal',
           weight: 600,
+          style: 'normal',
         },
       ],
     },
