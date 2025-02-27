@@ -14,9 +14,7 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
 
   const hasTitle = searchParams.has('title')
-  const title = hasTitle
-    ? searchParams.get('title')?.slice(0, 100)
-    : `Start ${APP_TITLE}.`
+  const title = hasTitle ? searchParams.get('title')?.slice(0, 100) : APP_TITLE
 
   const fontData = await fetch(
     new URL(
@@ -65,7 +63,7 @@ export async function GET(req: Request) {
               fontSize: 20,
             }}
           >
-            {APP_NAME.SHORT.toLowerCase()}
+            {APP_NAME.FULL.toLowerCase()}
           </span>
         </div>
         <div

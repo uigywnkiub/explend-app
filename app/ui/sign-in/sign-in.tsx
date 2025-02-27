@@ -170,7 +170,7 @@ function SignIn() {
             )}
           </p>
           <Divider className='my-4 w-full bg-divider md:w-1/2' />
-          <p className='mb-4'>Start {APP_TITLE}</p>
+          <p className='mb-4'>{APP_TITLE}</p>
           <div className='flex flex-col items-center space-y-2'>
             {signInButtons
               .slice(0, 2)
