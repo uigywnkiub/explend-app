@@ -784,15 +784,15 @@ export async function getCategoryItemNameAI(
 export const getCachedCategoryItemAI = cache(getCategoryItemNameAI)
 
 export async function getAmountAI(
-  currency: TCurrency,
+  currencyCode: TCurrency['code'],
   userPrompt: string,
 ): Promise<string> {
-  if (!currency || !userPrompt) {
+  if (!currencyCode || !userPrompt) {
     throw new Error('Currency or user prompt is required.')
   }
 
   try {
-    const prompt = `${userPrompt}. Provide a numerical estimate of the cost in ${currency.code}, disregarding real-time price fluctuations. Omit any decimal points, commas, or other symbols.`
+    const prompt = `${userPrompt}. Provide a numerical estimate of the cost in ${currencyCode}, disregarding real-time price fluctuations. Omit any decimal points, commas, or other symbols.`
 
     const content = await CompletionAIModel.generateContent(prompt)
     const text = content.response.text().trim()

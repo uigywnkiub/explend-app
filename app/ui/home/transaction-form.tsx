@@ -358,7 +358,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           await Promise.all([
             getCachedCategoryItemAI(categories, userPrompt),
             !hasReceiptAIData
-              ? getCachedAmountAI(currency, userPrompt)
+              ? getCachedAmountAI(currency.code, userPrompt)
               : Promise.resolve(''),
             getCachedTransactionTypeAI(userPrompt),
           ])
