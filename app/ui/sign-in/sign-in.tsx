@@ -39,7 +39,7 @@ import InfoText from '../info-text'
 import InstallPWA from '../install-pwa-button'
 import Logo from '../logo'
 
-const ACCORDION_ITEM_KEY = 'More'
+const ACCORDION_ITEM_KEY = 'See more'
 
 function SignIn() {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -149,9 +149,7 @@ function SignIn() {
     )
   }
 
-  const accordionTitle = isExpanded
-    ? `Hide ${ACCORDION_ITEM_KEY}`
-    : `Show ${ACCORDION_ITEM_KEY}`
+  const accordionTitle = isExpanded ? 'Show less' : ACCORDION_ITEM_KEY
 
   return (
     <>
@@ -210,10 +208,11 @@ function SignIn() {
                 aria-label={accordionTitle}
                 title={accordionTitle}
                 classNames={{
-                  title: 'text-center hover:opacity-hover ',
+                  title:
+                    'text-center hover:opacity-hover text-default-500 text-sm',
                 }}
               >
-                <div className='mt-2 flex flex-col items-center space-y-2'>
+                <div className='flex flex-col items-center space-y-2'>
                   {signInButtons
                     .slice(2)
                     .map(({ provider, title, isLoading, icon, hoverIcon }) => {
