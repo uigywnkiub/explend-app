@@ -13,6 +13,8 @@ export const DEFAULT_DIR: MetadataRoute.Manifest['dir'] = 'ltr'
 export const DEFAULT_THEME: TTheme = 'dark'
 export const DEFAULT_LOADING_TEXT: string = 'Just a second...'
 
+export const HIDDEN_AMOUNT_SIGN = '✱'
+
 export const enum CURRENCY_NAME {
   UAH = 'Ukrainian Hryvnia',
   USD = 'United States Dollar',

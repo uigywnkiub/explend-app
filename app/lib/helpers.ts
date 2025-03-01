@@ -23,6 +23,7 @@ import {
   DEFAULT_CATEGORY,
   DEFAULT_LANG,
   DEFAULT_TIME_ZONE,
+  HIDDEN_AMOUNT_SIGN,
 } from '@/config/constants/main'
 import {
   DEFAULT_PAGE_NUMBER,
@@ -186,7 +187,8 @@ export const getFormattedCurrency = (
 ) => {
   const numericValue = toNumber(value)
   if (isNaN(numericValue)) return ''
-  if (isAmountHidden) return '✱'.repeat(numericValue.toString().length)
+  if (isAmountHidden)
+    return HIDDEN_AMOUNT_SIGN.repeat(numericValue.toString().length)
 
   const formattedNumber = new Intl.NumberFormat('de-DE').format(numericValue)
 
