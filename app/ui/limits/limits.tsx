@@ -63,7 +63,6 @@ import type { TCategoryLimits, TTransaction, TUserId } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
-import NoTransactionsPlug from '../no-transactions-plug'
 import AmountInput from './amount-input'
 
 const enum DROPDOWN_KEY {
@@ -109,21 +108,14 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     () => getTransactionsByCurrMonth(transactions),
     [transactions],
   )
-  if (transactionsByCurrMonth.length === 0) {
-    return (
-      <>
-        <NoTransactionsPlug />
-        <div className='mt-2'>
-          <InfoText text='At the current month.' />
-        </div>
-      </>
-    )
-  }
+  const expense = useMemo(() => {
+    return filterTransactions(transactionsByCurrMonth).expense
+  }, [transactionsByCurrMonth])
+  const totalsByCategory = useMemo(() => {
+    return calculateTotalsByCategory(expense, true)
+  }, [expense])
 
-  const { expense } = filterTransactions(transactionsByCurrMonth)
-  const totalsByCategory = calculateTotalsByCategory(expense, true)
-
-  const [_userLimitsData] = transactionsByCurrMonth
+  const [_userLimitsData] = transactions
     .map((e) => e.categoryLimits)
     .filter(Boolean)
   const userLimitsData = _userLimitsData || []
@@ -153,7 +145,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
 
   const disabledCategories = [
     ...new Set(
-      transactionsByCurrMonth
+      transactions
         .map((t) => t.categoryLimits)
         .filter(Boolean)
         .flatMap((c) => c!.map((k) => k.categoryName)),
@@ -551,7 +543,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       </ul>
       <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
         <InfoText text='The calculation of limits is based on transactions by the current month.' />
-        <InfoText text='Your limits will not be deleted automatically in the new month.' />
+        {/* <InfoText text='Your limits will be reset automatically in the new month.' /> */}
       </div>
 
       {/* Reset limits modal. */}
