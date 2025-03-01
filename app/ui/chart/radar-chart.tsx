@@ -35,11 +35,18 @@ import {
   getCategoryWithoutEmoji,
   getFormattedCurrency,
 } from '@/app/lib/helpers'
-import { TTransaction } from '@/app/lib/types'
+import type { TTransaction } from '@/app/lib/types'
 
 import InfoText from '../info-text'
+import NoTransactionsPlug from '../no-transactions-plug'
 import CustomLegend from './custom-legend'
 import CustomTooltip from './custom-tooltip'
+
+const DATA_KEY = {
+  CATEGORY: 'category',
+  INCOME: 'income',
+  EXPENSE: 'expense',
+}
 
 type TProps = {
   transactionsRaw: TTransaction[]
@@ -59,8 +66,16 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
   const { firstTransaction, lastTransaction } =
     getFirstAndLastTransactions(transactions)
 
-  const firstTransactionDate = formatDate(firstTransaction.createdAt)
-  const lastTransactionDate = formatDate(lastTransaction.createdAt)
+  if (isChartByCurrMonth && !firstTransaction && !lastTransaction) {
+    return (
+      <div className='mt-4 md:mt-8'>
+        <NoTransactionsPlug text='No Transactions This Month' />
+      </div>
+    )
+  }
+
+  const firstTransactionDate = formatDate(firstTransaction!.createdAt)
+  const lastTransactionDate = formatDate(lastTransaction!.createdAt)
 
   const { income, expense } = filterTransactions(transactions)
   const chartData = calculateChartData(income, expense)
@@ -85,7 +100,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
             )}
           />
           <PolarAngleAxis
-            dataKey='category'
+            dataKey={DATA_KEY.CATEGORY}
             tick={(props) => {
               const category = props.payload.value
 
@@ -108,13 +123,13 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
             }}
           />
           <Radar
-            dataKey='income'
+            dataKey={DATA_KEY.INCOME}
             stroke={SUCCESS}
             fill={SUCCESS}
             fillOpacity={0.6}
           />
           <Radar
-            dataKey='expense'
+            dataKey={DATA_KEY.EXPENSE}
             stroke={DANGER}
             fill={DANGER}
             fillOpacity={0.6}

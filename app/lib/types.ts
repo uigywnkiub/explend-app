@@ -192,8 +192,8 @@ export type TApproxCategory = {
 }
 
 export type TMinMaxTransactionByDate = {
-  minTransaction: TTransaction | null
-  maxTransaction: TTransaction | null
+  minTransaction: TTransaction | undefined
+  maxTransaction: TTransaction | undefined
 }
 
 export type TExpenseAdvice = {

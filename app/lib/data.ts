@@ -162,8 +162,8 @@ export const getTransactionsByCurrMonth = (transactions: TTransaction[]) => {
 
 export const getFirstAndLastTransactions = (transactions: TTransaction[]) => {
   // Use for method O(n) complexity instead of sort method O(n log n).
-  let firstTransaction = transactions[0]
-  let lastTransaction = transactions[0]
+  let firstTransaction: TTransaction | undefined = transactions[0]
+  let lastTransaction: TTransaction | undefined = transactions[0]
 
   for (let i = 1; i < transactions.length; i++) {
     const currentTransaction = transactions[i]
@@ -177,6 +177,9 @@ export const getFirstAndLastTransactions = (transactions: TTransaction[]) => {
       lastTransaction = currentTransaction
     }
   }
+
+  if (typeof firstTransaction === 'undefined') firstTransaction = undefined
+  if (typeof lastTransaction === 'undefined') lastTransaction = undefined
 
   return { firstTransaction, lastTransaction }
 }

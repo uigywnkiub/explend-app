@@ -1,17 +1,13 @@
-import { cn } from '../lib/helpers'
-
 type TProps = {
-  withBackground?: boolean
+  text?: string
 }
 
-export default function NoTransactionsPlug({ withBackground = true }: TProps) {
+export default function NoTransactionsPlug({
+  text = 'No Transactions Found',
+}: TProps) {
   return (
-    <p
-      className={cn(
-        `rounded-medium p-2 text-center text-default-500 ${withBackground && 'bg-content1'}`,
-      )}
-    >
-      No Transactions Found
+    <p className='rounded-medium bg-content1 p-2 text-center text-default-500'>
+      {text}
     </p>
   )
 }
