@@ -60,10 +60,12 @@ function DescriptionInput({
           <Kbd
             keys={['tab']}
             classNames={{
-              base:
+              base: cn(
+                'hidden md:block',
                 !isDescriptionInvalid &&
-                // Internal classes.
-                'opacity-disabled transition-transform-colors-opacity cursor-default',
+                  // Internal classes.
+                  'opacity-disabled transition-transform-colors-opacity cursor-default',
+              ),
             }}
           >
             Tab
