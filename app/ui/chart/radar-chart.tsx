@@ -24,7 +24,6 @@ import {
   filterTransactions,
   getFirstAndLastTransactions,
   getTransactionsByCurrMonth,
-  getTransactionsTotals,
 } from '@/app/lib/data'
 import {
   capitalizeFirstLetter,
@@ -79,9 +78,9 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
 
   const { income, expense } = filterTransactions(transactions)
   const chartData = calculateChartData(income, expense)
-  const transactionsTotals = getTransactionsTotals([...income, ...expense])
-  const isPositiveBalance =
-    transactionsTotals.income > transactionsTotals.expense
+  const isPositiveBalance = getBooleanFromLocalStorage(
+    LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE,
+  )
   const isAmountHidden = getBooleanFromLocalStorage(
     LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
   )
@@ -154,7 +153,9 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
           <PolarRadiusAxis
             angle={30}
             orientation='middle'
-            tickFormatter={(value) => getFormattedCurrency(value)}
+            tickFormatter={(value) =>
+              `${getFormattedCurrency(value)} ${currency.sign}`
+            }
             className='text-sm md:text-medium'
           />
         </RechartRadarChart>
