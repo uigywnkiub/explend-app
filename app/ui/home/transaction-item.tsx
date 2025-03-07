@@ -152,6 +152,7 @@ Time: ${formatTime(t.createdAt)}`
                 {t.isSubscription && (
                   <span className='text-primary-700'>subscription</span>
                 )}
+                {t.isTest && <span className='text-danger-700'>test</span>}
               </p>
             </div>
           </div>

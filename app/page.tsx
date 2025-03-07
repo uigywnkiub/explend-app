@@ -35,6 +35,8 @@ import type {
 } from './lib/types'
 import BalanceCard from './ui/balance-card'
 import ClientRouterRefresh from './ui/client-router-refresh'
+import CreateTestTransactions from './ui/home/create-test-transactions'
+import DeleteTestTransactions from './ui/home/delete-test-transactions'
 import Search from './ui/home/search'
 import SearchedTransactions from './ui/home/searched-transactions'
 import TransactionForm from './ui/home/transaction-form'
@@ -88,6 +90,8 @@ export default async function Page(props: {
   )
   const countTransactionsWithChangedCategory =
     transactionsWithChangedCategory.length
+
+  const hasTestTransactions = transactions.some((t) => t.isTest)
 
   const searchedTransactionsByQuery = transactions.filter((t) => {
     const queryLower = toLowerCase(query)
@@ -193,6 +197,15 @@ export default async function Page(props: {
           )}
         </div>
       </div>
+      {transactions.length === 0 && (
+        <div className='mt-6'>
+          <CreateTestTransactions
+            userId={userId}
+            currency={currency}
+            userCategories={userCategories}
+          />
+        </div>
+      )}
       <TransactionList
         groupedTransactionsByDate={groupedTransactionsByDate}
         totalsTransactionsByDate={totalsTransactionsByDate}
@@ -201,11 +214,18 @@ export default async function Page(props: {
       />
       <div className='mx-auto mt-4 max-w-3xl'>
         {!query ? (
-          <PaginationList
-            totalPages={totalPages}
-            totalEntries={totalEntries}
-            limit={limit}
-          />
+          <>
+            <PaginationList
+              totalPages={totalPages}
+              totalEntries={totalEntries}
+              limit={limit}
+            />
+            {hasTestTransactions && (
+              <div className='mt-6'>
+                <DeleteTestTransactions userId={userId} />
+              </div>
+            )}
+          </>
         ) : (
           hasSearchedTransactionsByQuery && (
             <SearchedTransactions
