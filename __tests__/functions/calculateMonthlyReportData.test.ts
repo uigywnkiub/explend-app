@@ -36,6 +36,7 @@ describe('calculateMonthlyReportData', () => {
     transactionLimit: undefined,
     isEdited: false,
     isSubscription: false,
+    isTest: false,
   })
 
   it('calculates total income and total expense correctly', () => {

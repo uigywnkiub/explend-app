@@ -306,7 +306,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
               {formattedDateRange}
             </span>
           </Link>
-          <div className='flex gap-4 md:gap-8'>
+          <div className='flex flex-row-reverse gap-4 md:gap-8'>
             <div>
               <p className='text-xs text-default-500 md:text-sm'>
                 Total Expense

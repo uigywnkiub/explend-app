@@ -48,6 +48,7 @@ export type TTransaction = {
   transactionLimit: number | null | undefined
   isEdited: boolean
   isSubscription: boolean
+  isTest: boolean
   createdAt: Date
   updatedAt: Date
 }

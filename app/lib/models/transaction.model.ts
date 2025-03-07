@@ -118,6 +118,10 @@ const transactionSchema = new Schema<TTransaction>(
       type: Boolean,
       default: false,
     },
+    isTest: {
+      type: Boolean,
+      default: false,
+    },
     categories: {
       type: [categoriesSchema],
       default: DEFAULT_CATEGORIES,

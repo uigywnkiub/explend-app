@@ -224,6 +224,7 @@ export async function createTransaction(
         'true') as TTransaction['isIncome'],
       isSubscription: (formData.get('isSubscription') ===
         'true') as TTransaction['isSubscription'],
+      isTest: (formData.get('isTest') === 'true') as TTransaction['isTest'],
       balance: '0' as TTransaction['balance'],
       currency,
       categories: userCategories,
@@ -475,6 +476,19 @@ export async function deleteTransaction(id: TTransaction['id']): Promise<void> {
   try {
     await dbConnect()
     await TransactionModel.deleteOne({ id })
+    revalidatePath(ROUTE.HOME)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function deleteTestTransactions(userId: TUserId): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to delete test transactions.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.deleteMany({ userId, isTest: true })
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err

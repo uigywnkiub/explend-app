@@ -492,7 +492,6 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   <InfoText
                     text='Burning permanently deletes the receipt.'
                     withAsterisk={true}
-                    withDoubleAsterisk={true}
                   />
                 </>
               )}
