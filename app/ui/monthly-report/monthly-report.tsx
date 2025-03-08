@@ -306,16 +306,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
               {formattedDateRange}
             </span>
           </Link>
-          <div className='flex flex-row-reverse gap-4 md:gap-8'>
-            <div>
-              <p className='text-xs text-default-500 md:text-sm'>
-                Total Expense
-              </p>
-              <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
-                <PiArrowCircleDownFill className='fill-danger' />
-                {getFormattedCurrency(totalExpense)} {currency.code}
-              </p>
-            </div>
+          <div className='flex gap-4 md:gap-8'>
             <div>
               <p className='text-xs text-default-500 md:text-sm'>
                 Total Income
@@ -323,6 +314,15 @@ function MonthlyReport({ transactions, currency }: TProps) {
               <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
                 <PiArrowCircleUpFill className='fill-success' />
                 {getFormattedCurrency(totalIncome)} {currency.code}
+              </p>
+            </div>
+            <div>
+              <p className='text-xs text-default-500 md:text-sm'>
+                Total Expense
+              </p>
+              <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
+                <PiArrowCircleDownFill className='fill-danger' />
+                {getFormattedCurrency(totalExpense)} {currency.code}
               </p>
             </div>
           </div>

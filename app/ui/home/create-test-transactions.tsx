@@ -145,7 +145,6 @@ export default function CreateTestTransactions({
         onPress={onCreateTestTransactions}
         isDisabled={isLoading}
         isLoading={isLoading}
-        color='primary'
       >
         {isLoading ? (
           <span className='flex gap-1'>
