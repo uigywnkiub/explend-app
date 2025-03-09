@@ -427,7 +427,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         getCategoryWithEmoji(categoryName, userCategories),
                       )}
                 </p>
-                <div className='ml-2 w-full'>
+                <div className='mb-2 ml-2 w-full'>
                   <div className='mb-2 text-left'>
                     <Link
                       href={createSearchHrefWithKeyword(categoryName)}
@@ -443,7 +443,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       <p className='text-xs'>No longer exists</p>
                     )}
                   </div>
-                  <div className='absolute h-[5px] w-[30%] rounded-full bg-default-500 md:relative md:w-full'>
+                  <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default-500 md:relative md:w-full'>
                     <div
                       className={cn(
                         'absolute h-[5px] rounded-full',
