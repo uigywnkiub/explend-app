@@ -443,7 +443,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       <p className='text-xs'>No longer exists</p>
                     )}
                   </div>
-                  <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default-500 md:relative md:w-full'>
+                  <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default md:relative md:w-full'>
                     <div
                       className={cn(
                         'absolute h-[5px] rounded-full',
@@ -459,7 +459,12 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   <p>
                     {getFormattedCurrency(limitAmount)} {currency.code}
                   </p>
-                  <p className='text-xs text-default-500'>
+                  <p
+                    className={cn(
+                      'text-xs',
+                      isLimitOver ? 'text-danger' : 'text-success',
+                    )}
+                  >
                     {status} {currency.code}
                   </p>
                 </div>
@@ -544,6 +549,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
         <InfoText text='The calculation of limits is based on transactions by the current month.' />
         {/* <InfoText text='Your limits will be reset automatically in the new month.' /> */}
+        <InfoText text='If your limit is over, you will be notified when trying to add a new transaction.' />
       </div>
 
       {/* Reset limits modal. */}
