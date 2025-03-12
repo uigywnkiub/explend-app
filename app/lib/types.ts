@@ -17,6 +17,8 @@ export type TDefaultSession = DefaultSession
 export type TUser = User
 export type TUserId = TUser['email']
 
+export type TTransactionType = 'expense' | 'income'
+
 export type TCategoriesItem = {
   emoji: string
   name: string

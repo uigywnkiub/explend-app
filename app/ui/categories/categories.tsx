@@ -85,7 +85,7 @@ function Categories({
       if (oldTargetName === _newTargetName) {
         setEditingIndex(null)
         setNewTargetName('')
-        toast.error('No changes detected.')
+        // toast.error('No changes detected.')
 
         return
       }
@@ -147,7 +147,7 @@ function Categories({
       if (oldItemName === _newItemName && !isNewEmojiPick) {
         setEditingItemIndex(null)
         setNewItemName('')
-        toast.error('No changes detected.')
+        // toast.error('No changes detected.')
 
         return
       }

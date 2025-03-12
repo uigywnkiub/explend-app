@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import {
   PiArrowCircleDownFill,
@@ -41,7 +41,6 @@ import {
   createSearchHrefWithKeyword,
   deepCompareArrays,
   formatDate,
-  getCategoryWithoutEmoji,
   getExpenseCategories,
   getFormattedCurrency,
   isValidArrayWithKeys,
@@ -54,6 +53,7 @@ import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
 import AILogo from '../ai-logo'
 import Magnetic from '../magnetic'
 import MonthPicker from './month-picker'
+import MonthlyReportData from './monthly-report-data'
 import TipsList from './tips-list'
 
 const ACCORDION_KEY = {
@@ -205,70 +205,6 @@ function MonthlyReport({ transactions, currency }: TProps) {
     setExpenseTipsAIDataLocalStorage,
   ])
 
-  const memorizedMonthlyExpenseReport = useMemo(
-    () => (
-      <>
-        {/* <Divider className='mx-auto mb-3 bg-divider md:mb-6' /> */}
-        <div className='grid grid-cols-[2fr_1fr_1.5fr] gap-4'>
-          <div className='text-xs text-default-500 md:text-sm'>Category</div>
-          <div className='text-xs text-default-500 md:text-sm'>Percentage</div>
-          <div className='text-xs text-default-500 md:text-sm'>Spent</div>
-          {expenseReportData.map((category) => (
-            <Fragment key={category.category}>
-              <div className='truncate md:text-lg'>
-                <Link
-                  href={createSearchHrefWithKeyword(
-                    getCategoryWithoutEmoji(category.category),
-                  )}
-                  className='hover:opacity-hover'
-                >
-                  {category.category}
-                </Link>
-              </div>
-              <div className='md:text-lg'>{category.percentage} %</div>
-              <div className='md:text-lg'>
-                {getFormattedCurrency(category.spent)} {currency.sign}
-              </div>
-            </Fragment>
-          ))}
-        </div>
-      </>
-    ),
-    [currency.sign, expenseReportData],
-  )
-
-  const memorizedMonthlyIncomeReport = useMemo(
-    () => (
-      <>
-        {/* <Divider className='mx-auto mb-3 bg-divider md:mb-6' /> */}
-        <div className='grid grid-cols-[2fr_1fr_1.5fr] gap-4'>
-          <div className='text-xs text-default-500 md:text-sm'>Category</div>
-          <div className='text-xs text-default-500 md:text-sm'>Percentage</div>
-          <div className='text-xs text-default-500 md:text-sm'>Earned</div>
-          {incomeReportData.map((category) => (
-            <Fragment key={category.category}>
-              <div className='truncate md:text-lg'>
-                <Link
-                  href={createSearchHrefWithKeyword(
-                    getCategoryWithoutEmoji(category.category),
-                  )}
-                  className='hover:opacity-hover'
-                >
-                  {category.category}
-                </Link>
-              </div>
-              <div className='md:text-lg'>{category.percentage} %</div>
-              <div className='md:text-lg'>
-                {getFormattedCurrency(category.earned)} {currency.sign}
-              </div>
-            </Fragment>
-          ))}
-        </div>
-      </>
-    ),
-    [currency.sign, incomeReportData],
-  )
-
   if (filteredTransactions.length === 0) {
     return (
       <div className='rounded-medium bg-content1 p-4 md:p-8'>
@@ -345,7 +281,11 @@ function MonthlyReport({ transactions, currency }: TProps) {
             }}
           >
             {expense.length !== 0 ? (
-              memorizedMonthlyExpenseReport
+              <MonthlyReportData
+                type='expense'
+                data={expenseReportData}
+                currency={currency}
+              />
             ) : (
               <p className='text-default-500'>No expense found</p>
             )}
@@ -372,7 +312,11 @@ function MonthlyReport({ transactions, currency }: TProps) {
             }}
           >
             {income.length !== 0 ? (
-              memorizedMonthlyIncomeReport
+              <MonthlyReportData
+                type='income'
+                data={incomeReportData}
+                currency={currency}
+              />
             ) : (
               <p className='text-default-500'>No income found</p>
             )}
@@ -380,7 +324,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
         </Accordion>
       </div>
       <div className='mt-4 md:mt-8'>
-        {tipsDataAI ? (
+        {isTipsDataExist ? (
           <>
             {/* <p className='mb-2 text-xs text-default-500 md:text-sm'>
               Expense Tips

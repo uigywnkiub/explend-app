@@ -47,7 +47,6 @@ import {
 import type { TTransaction } from '../../lib/types'
 import HighlighterText from '../highlighter-text'
 import { HoverableElement } from '../hoverables'
-import Magnetic from '../magnetic'
 
 const enum DROPDOWN_KEY {
   REPEAT = 'repeat',
@@ -171,18 +170,16 @@ Time: ${formatTime(t.createdAt)}`
               }}
               isInvisible={!hasCategoryChanged}
             >
-              <Magnetic>
-                <DropdownTrigger>
-                  <Button
-                    variant='light'
-                    isIconOnly
-                    size='md'
-                    className='md:size-12'
-                  >
-                    <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
-                  </Button>
-                </DropdownTrigger>
-              </Magnetic>
+              <DropdownTrigger>
+                <Button
+                  variant='light'
+                  isIconOnly
+                  size='md'
+                  className='md:size-12'
+                >
+                  <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
+                </Button>
+              </DropdownTrigger>
             </Badge>
             <DropdownMenu
               aria-label='Transaction actions'
