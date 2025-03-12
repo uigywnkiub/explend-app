@@ -33,6 +33,7 @@ import type {
 
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
+import WarningText from '../warning-text'
 import Category from './category'
 
 const RESET_CATEGORIES_BTN_TEXT = 'Reset categories'
@@ -225,6 +226,14 @@ function Categories({
           />
         )
       })}
+      {areCategoriesLengthMismatch && (
+        <div className='mb-4'>
+          <WarningText
+            text='We detected a mismatch between your current categories and the default ones.'
+            actionText={`Press "${RESET_CATEGORIES_BTN_TEXT}" button to restore the default and overwrite your current categories.`}
+          />
+        </div>
+      )}
       <div className='mx-auto max-w-md'>
         <Button
           isDisabled={haveCategoriesChanged}
@@ -242,15 +251,6 @@ function Categories({
           {RESET_CATEGORIES_BTN_TEXT}
         </Button>
       </div>
-      {areCategoriesLengthMismatch && (
-        <p className='mt-4 text-center text-sm text-warning'>
-          <PiWarningOctagonFill className='inline animate-pulse' /> We detected
-          a mismatch between your current categories and the default ones.
-          <br />
-          Press &quot;{RESET_CATEGORIES_BTN_TEXT}&quot; to restore the default
-          and overwrite your current categories.
-        </p>
-      )}
       <div className='mt-4 flex flex-col gap-2 md:mt-8'>
         <InfoText
           withDoubleAsterisk

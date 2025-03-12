@@ -524,3 +524,13 @@ export const omit = <T extends Record<string, unknown>>(
     Object.entries(obj).filter(([key]) => !keys.includes(key as keyof T)),
   ) as Omit<T, keyof typeof keys>
 }
+
+export const formatPercentage = (value: number): string => {
+  let formattedValue = value.toFixed(2).toString()
+
+  if (formattedValue.endsWith('.00')) {
+    formattedValue = formattedValue.slice(0, -3)
+  }
+
+  return formattedValue
+}

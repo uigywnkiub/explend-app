@@ -17,6 +17,7 @@ import {
 
 import {
   cn,
+  formatPercentage,
   getFormattedBalance,
   getFormattedCurrency,
   toNumber,
@@ -31,6 +32,7 @@ type TProps = {
   value: number | string
   isFormatted?: boolean
   isFormattedBalance?: boolean
+  isPercentage?: boolean
   className?: string
   springOptions?: SpringOptions
   as?: React.ElementType
@@ -40,6 +42,7 @@ export default function AnimatedNumber({
   value,
   isFormatted = true,
   isFormattedBalance = false,
+  isPercentage = false,
   className,
   springOptions = SPRING_CONFIG,
   as = 'span',
@@ -54,6 +57,8 @@ export default function AnimatedNumber({
 
   const spring = useSpring(numericValue, springOptions)
   const display = useTransform(spring, (current) => {
+    if (isPercentage) return formatPercentage(current)
+
     const roundedCurrent = Math.round(current)
 
     return isFormattedBalance
@@ -94,6 +99,7 @@ export default function AnimatedNumber({
         // color,
         filter,
       }}
+      // className={cn('slashed-zero tabular-nums', className)}
       className={cn(className)}
     >
       {display}

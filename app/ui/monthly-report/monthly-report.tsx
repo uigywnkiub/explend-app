@@ -2,11 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
-import {
-  PiArrowCircleDownFill,
-  PiArrowCircleUpFill,
-  PiWarningOctagonFill,
-} from 'react-icons/pi'
+import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 import { useLocalStorage } from 'react-use'
 
 import Link from 'next/link'
@@ -42,7 +38,6 @@ import {
   deepCompareArrays,
   formatDate,
   getExpenseCategories,
-  getFormattedCurrency,
   isValidArrayWithKeys,
   sortArrayByKeyByReferenceArray,
   toCalendarDate,
@@ -51,7 +46,9 @@ import useAttemptTracker from '@/app/lib/hooks'
 import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
 
 import AILogo from '../ai-logo'
+import AnimatedNumber from '../animated-number'
 import Magnetic from '../magnetic'
+import WarningText from '../warning-text'
 import MonthPicker from './month-picker'
 import MonthlyReportData from './monthly-report-data'
 import TipsList from './tips-list'
@@ -250,7 +247,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
               </p>
               <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
                 <PiArrowCircleUpFill className='fill-success' />
-                {getFormattedCurrency(totalIncome)} {currency.code}
+                <AnimatedNumber value={totalIncome} /> {currency.code}
               </p>
             </div>
             <div>
@@ -259,7 +256,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
               </p>
               <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
                 <PiArrowCircleDownFill className='fill-danger' />
-                {getFormattedCurrency(totalExpense)} {currency.code}
+                <AnimatedNumber value={totalExpense} /> {currency.code}
               </p>
             </div>
           </div>
@@ -333,8 +330,16 @@ function MonthlyReport({ transactions, currency }: TProps) {
           </>
         ) : (
           <p className='text-balance text-center text-sm'>
-            Explore useful tips for managing expenses.
+            Get useful tips for managing expenses.
           </p>
+        )}
+        {isMissMatchLocalStorageAndCurrMonthExpenses && isTipsDataExist && (
+          <div className='mb-4'>
+            <WarningText
+              text='Tips from memory do not match the tips for the current month or selected date expense.'
+              actionText={`Press "${REFRESH_TIPS_BTN_TEXT}" button to update and sync them.`}
+            />
+          </div>
         )}
         <Magnetic>
           <Button
@@ -354,15 +359,6 @@ function MonthlyReport({ transactions, currency }: TProps) {
           </Button>
         </Magnetic>
       </div>
-      {isMissMatchLocalStorageAndCurrMonthExpenses && isTipsDataExist && (
-        <p className='mt-4 text-center text-sm text-warning'>
-          <PiWarningOctagonFill className='inline animate-pulse' /> Tips from
-          memory do not match the tips for the current month or selected date
-          expense.
-          <br />
-          Press &apos;{REFRESH_TIPS_BTN_TEXT}&apos; to update and sync them.
-        </p>
-      )}
     </>
   )
 }

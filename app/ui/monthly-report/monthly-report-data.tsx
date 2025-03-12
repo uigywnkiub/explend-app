@@ -5,7 +5,6 @@ import Link from 'next/link'
 import {
   createSearchHrefWithKeyword,
   getCategoryWithoutEmoji,
-  getFormattedCurrency,
 } from '@/app/lib/helpers'
 import type {
   TCurrency,
@@ -13,6 +12,8 @@ import type {
   TIncomeReport,
   TTransactionType,
 } from '@/app/lib/types'
+
+import AnimatedNumber from '../animated-number'
 
 type TProps = {
   type: TTransactionType
@@ -41,13 +42,17 @@ function MonthlyReportData({ type, data, currency }: TProps) {
                 {category.category}
               </Link>
             </div>
-            <div className='md:text-lg'>{category.percentage} %</div>
             <div className='md:text-lg'>
-              {getFormattedCurrency(
-                type === 'expense'
-                  ? (category as TExpenseReport).spent
-                  : (category as TIncomeReport).earned,
-              )}{' '}
+              <AnimatedNumber value={category.percentage} isPercentage /> %
+            </div>
+            <div className='md:text-lg'>
+              <AnimatedNumber
+                value={
+                  type === 'expense'
+                    ? (category as TExpenseReport).spent
+                    : (category as TIncomeReport).earned
+                }
+              />{' '}
               {currency.sign}
             </div>
           </Fragment>

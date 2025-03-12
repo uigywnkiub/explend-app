@@ -10,7 +10,11 @@ import {
   startOfToday,
 } from 'date-fns'
 
-import { getCategoryWithoutEmoji, toCalendarDate } from './helpers'
+import {
+  formatPercentage,
+  getCategoryWithoutEmoji,
+  toCalendarDate,
+} from './helpers'
 import type {
   TCategories,
   TChartData,
@@ -114,20 +118,14 @@ export const calculateMonthlyReportData = (
 
   const expenseReportData: TExpenseReport[] = sortedExpenseEntries.map(
     ([category, spent]) => {
-      let percentage = ((spent / totalExpense) * 100).toFixed(2)
-      if (percentage.endsWith('.00')) {
-        percentage = percentage.slice(0, -3)
-      }
+      const percentage = formatPercentage((spent / totalExpense) * 100)
 
       return { category, spent, percentage }
     },
   )
   const incomeReportData: TIncomeReport[] = sortedIncomeEntries.map(
     ([category, earned]) => {
-      let percentage = ((earned / totalIncome) * 100).toFixed(2)
-      if (percentage.endsWith('.00')) {
-        percentage = percentage.slice(0, -3)
-      }
+      const percentage = formatPercentage((earned / totalIncome) * 100)
 
       return { category, earned, percentage }
     },

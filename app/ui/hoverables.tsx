@@ -17,6 +17,7 @@ type THoverableElement = {
   hoveredElement?: TSelect['hoverIcon']
   withScale?: boolean
   withShift?: boolean
+  text?: string
 }
 export const HoverableElement = ({
   uKey,
@@ -24,6 +25,7 @@ export const HoverableElement = ({
   hoveredElement,
   withScale = false,
   withShift = true,
+  text,
 }: THoverableElement) => {
   const isMd = useMedia(getBreakpointWidth('md'), typeof window !== 'undefined')
 
@@ -40,6 +42,7 @@ export const HoverableElement = ({
             ? hoveredElement
             : element
           : hoveredElement || element}
+        {text && <span className='ml-1'>{text}</span>}
       </motion.div>
     )
   })

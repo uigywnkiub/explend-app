@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 @layer base {
-  /* * {
-    @apply scroll-smooth slashed-zero tabular-nums;
-  } */
+  * {
+    @apply scroll-smooth;
+    /* slashed-zero tabular-nums */
+  }
 }
 
 @layer utilities {
