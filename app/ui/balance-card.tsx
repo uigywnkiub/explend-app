@@ -15,13 +15,13 @@ import { getTransactionsTotals } from '../lib/data'
 import {
   cn,
   getBooleanFromLocalStorage,
-  getFormattedBalance,
   getFormattedCurrency,
   getGreeting,
   setInLocalStorage,
 } from '../lib/helpers'
 import type { TTransaction, TUser } from '../lib/types'
 import Loading from '../loading'
+import AnimatedNumber from './animated-number'
 
 type TProps = {
   user: TUser | undefined
@@ -163,7 +163,8 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ ...DIV.TRANSITION_SPRING }}
             >
-              {getFormattedBalance(balance)} {currency.code}
+              <AnimatedNumber value={balance} isFormattedBalance />{' '}
+              {currency.code}
             </motion.p>
           )}
         </div>

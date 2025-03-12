@@ -24,7 +24,7 @@ import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { resetCategories, updateCategories } from '@/app/lib/actions'
 import { capitalizeFirstLetter, deepCompareArrays } from '@/app/lib/helpers'
-import {
+import type {
   TCategoriesLoading,
   TEditingItemIndex,
   TTransaction,

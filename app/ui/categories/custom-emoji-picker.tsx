@@ -9,7 +9,7 @@ import EmojiPicker, {
   Theme,
 } from 'emoji-picker-react'
 
-import { TTheme } from '@/app/lib/types'
+import type { TTheme } from '@/app/lib/types'
 
 type TProps = {
   showEmojiPicker: boolean
@@ -21,15 +21,17 @@ function CustomEmojiPicker({ showEmojiPicker, onEmojiClick }: TProps) {
   const emojiPicker = useMemo(
     () => (
       <EmojiPicker
-        lazyLoadEmojis
         onEmojiClick={onEmojiClick}
+        lazyLoadEmojis
+        autoFocusSearch={false}
+        // searchDisabled
         searchPlaceHolder='Search emoji...'
         // width={300}
-        // height={400}
+        height={400}
         theme={(theme as TTheme) === 'system' ? Theme.AUTO : (theme as Theme)}
         suggestedEmojisMode={SuggestionMode.RECENT}
         skinTonePickerLocation={SkinTonePickerLocation.PREVIEW}
-        className='my-2 !w-full'
+        className='!w-full'
       />
     ),
     [onEmojiClick, theme],

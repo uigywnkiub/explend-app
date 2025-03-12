@@ -52,6 +52,7 @@ import useAttemptTracker from '@/app/lib/hooks'
 import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
 
 import AILogo from '../ai-logo'
+import Magnetic from '../magnetic'
 import MonthPicker from './month-picker'
 import TipsList from './tips-list'
 
@@ -208,7 +209,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
     () => (
       <>
         {/* <Divider className='mx-auto mb-3 bg-divider md:mb-6' /> */}
-        <div className='grid grid-cols-3 gap-4'>
+        <div className='grid grid-cols-[2fr_1fr_1.5fr] gap-4'>
           <div className='text-xs text-default-500 md:text-sm'>Category</div>
           <div className='text-xs text-default-500 md:text-sm'>Percentage</div>
           <div className='text-xs text-default-500 md:text-sm'>Spent</div>
@@ -240,7 +241,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
     () => (
       <>
         {/* <Divider className='mx-auto mb-3 bg-divider md:mb-6' /> */}
-        <div className='grid grid-cols-3 gap-4'>
+        <div className='grid grid-cols-[2fr_1fr_1.5fr] gap-4'>
           <div className='text-xs text-default-500 md:text-sm'>Category</div>
           <div className='text-xs text-default-500 md:text-sm'>Percentage</div>
           <div className='text-xs text-default-500 md:text-sm'>Earned</div>
@@ -391,21 +392,23 @@ function MonthlyReport({ transactions, currency }: TProps) {
             Explore useful tips for managing expenses.
           </p>
         )}
-        <Button
-          isLoading={isLoadingTips}
-          variant='flat'
-          onPress={getExpenseTipsAIData}
-          className='mx-auto mt-2 flex'
-        >
-          {!isLoadingTips && <AILogo asIcon iconSize='sm' />}{' '}
-          {isLoadingTips
-            ? isTipsDataExist
-              ? 'Refreshing...'
-              : 'Getting...'
-            : isTipsDataExist
-              ? REFRESH_TIPS_BTN_TEXT
-              : 'Get tips'}
-        </Button>
+        <Magnetic>
+          <Button
+            isLoading={isLoadingTips}
+            variant='flat'
+            onPress={getExpenseTipsAIData}
+            className='mx-auto mt-2 flex'
+          >
+            {!isLoadingTips && <AILogo asIcon iconSize='sm' />}{' '}
+            {isLoadingTips
+              ? isTipsDataExist
+                ? 'Refreshing...'
+                : 'Getting...'
+              : isTipsDataExist
+                ? REFRESH_TIPS_BTN_TEXT
+                : 'Get tips'}
+          </Button>
+        </Magnetic>
       </div>
       {isMissMatchLocalStorageAndCurrMonthExpenses && isTipsDataExist && (
         <p className='mt-4 text-center text-sm text-warning'>

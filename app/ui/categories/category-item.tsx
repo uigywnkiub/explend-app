@@ -11,6 +11,7 @@ import { EmojiClickData } from 'emoji-picker-react'
 import { motion } from 'framer-motion'
 
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
+import { MOTION_LIST } from '@/config/constants/motion'
 
 import type {
   TCategoriesLoading,
@@ -56,23 +57,18 @@ function CategoryItem({
   onEmojiClick,
 }: TProps) {
   return (
-    <li className='mb-2 flex items-center'>
+    <motion.li className='mb-3 flex items-center' {...MOTION_LIST(itemIndex)}>
       {editingItemIndex &&
       editingItemIndex.categoryIndex === categoryIndex &&
       editingItemIndex.itemIndex === itemIndex ? (
         <div className='w-full'>
-          <div className='flex h-auto w-full items-center justify-between gap-2 rounded-medium bg-content1 px-3 py-2 text-left md:text-lg'>
-            <div className='flex h-[52px] items-center'>
+          <div className='flex h-20 w-full items-center justify-between gap-2 rounded-medium bg-content1 p-2 text-left md:p-4 md:text-lg'>
+            <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
               <div
-                className='z-10 mr-2 cursor-pointer rounded-medium bg-success-50 px-3 py-2 text-xl hover:bg-success-100 md:text-2xl'
+                className='cursor-pointer rounded-medium bg-content2 px-3 py-1 text-xl hover:bg-default-200 md:text-2xl'
                 onClick={toggleEmojiPicker}
               >
-                <motion.div
-                  drag
-                  dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
-                >
-                  {item.emoji}
-                </motion.div>
+                <div className='select-none pt-1.5'>{item.emoji}</div>
               </div>
               <Input
                 isRequired
@@ -83,19 +79,18 @@ function CategoryItem({
                 value={newItemName}
                 isInvalid={newItemName.length < 1}
                 onChange={(e) => setNewItemName(e.target.value)}
+                placeholder={item.name}
                 size='lg'
-                color='success'
                 classNames={{
-                  input:
-                    'border-none focus:ring-0 placeholder:text-default-500 md:text-lg',
+                  input: '!placeholder:text-default-500 !text-foreground',
                 }}
               />
             </div>
             <Button
               onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
               isLoading={isLoading.item}
-              color='success'
-              className='px-0 font-medium text-background'
+              isDisabled={newItemName.length < 1 || isLoading.item}
+              className='bg-foreground px-0 font-medium text-default-50'
             >
               {!isLoading.item && (
                 <HoverableElement
@@ -108,21 +103,18 @@ function CategoryItem({
               Save
             </Button>
           </div>
-          <CustomEmojiPicker
-            showEmojiPicker={showEmojiPicker}
-            onEmojiClick={onEmojiClick}
-          />
+          <div className='-mt-4'>
+            <CustomEmojiPicker
+              showEmojiPicker={showEmojiPicker}
+              onEmojiClick={onEmojiClick}
+            />
+          </div>
         </div>
       ) : (
-        <div className='flex h-auto w-full items-center justify-between gap-2 break-all rounded-medium bg-content1 px-3 py-2 text-left md:text-lg'>
-          <div className='flex h-[52px] items-center'>
-            <div className='z-10 mr-2 rounded-medium bg-content2 px-3 py-2 text-xl md:text-2xl'>
-              <motion.div
-                drag
-                dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
-              >
-                {item.emoji}
-              </motion.div>
+        <div className='flex h-20 w-full items-center justify-between gap-2 break-all rounded-medium bg-content1 p-2 text-left md:p-4'>
+          <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
+            <div className='rounded-medium bg-content2 px-3 py-1 text-2xl'>
+              <div className='select-none pt-1.5'>{item.emoji}</div>
             </div>
             <div>
               {item.name}
@@ -134,7 +126,7 @@ function CategoryItem({
           <Button
             onPress={() => onEditItemClick(categoryIndex, itemIndex, item.name)}
             isDisabled={item.name === DEFAULT_CATEGORY}
-            className='bg-foreground px-0 font-medium text-default-50'
+            className='px-0 font-medium'
           >
             <HoverableElement
               uKey={item.name}
@@ -146,7 +138,7 @@ function CategoryItem({
           </Button>
         </div>
       )}
-    </li>
+    </motion.li>
   )
 }
 

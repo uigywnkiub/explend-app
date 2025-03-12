@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react'
 
-import { Button } from '@heroui/react'
 import { motion } from 'framer-motion'
 
 import { DIV } from '@/config/constants/motion'
+
+import ClientButton from './client-button'
 
 export default function InstallPWA() {
   const [deferredPrompt, setDeferredPrompt] =
@@ -67,9 +68,7 @@ export default function InstallPWA() {
       animate={{ opacity: 1, ...DIV.ANIMATE(false, true, 1) }}
       transition={{ ...DIV.TRANSITION }}
     >
-      <Button variant='light' onPress={onInstall}>
-        Install
-      </Button>
+      <ClientButton title='Install' variant='light' onPress={onInstall} />
     </motion.div>
   )
 }

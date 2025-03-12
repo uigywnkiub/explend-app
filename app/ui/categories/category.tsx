@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 
 import { Button, Input } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
+import { AnimatePresence } from 'framer-motion'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
@@ -68,7 +69,7 @@ function Category({
   return (
     <div className='mb-4 md:mb-8'>
       {editingIndex === index ? (
-        <div className='mb-2 flex h-[40px] items-center justify-between gap-2 pr-3'>
+        <div className='mb-3 flex h-[40px] items-center justify-between px-2 md:px-4'>
           <Input
             isRequired
             isDisabled={isLoading.subject}
@@ -79,18 +80,16 @@ function Category({
             isInvalid={newTargetName.length < 1}
             onChange={(e) => setNewTargetName(e.target.value)}
             size='lg'
-            color='success'
             classNames={{
-              input:
-                'border-none focus:ring-0 placeholder:text-default-500 font-semibold text-lg md:text-xl',
+              input: '!placeholder:text-default-500 !text-foreground',
               base: 'w-fit',
             }}
           />
           <Button
             onPress={() => onSaveTargetClick(index)}
             isLoading={isLoading.subject}
-            color='success'
-            className='px-0 font-medium text-background'
+            isDisabled={newTargetName.length < 1}
+            className='bg-foreground px-0 font-medium text-default-50'
           >
             {!isLoading.subject && (
               <HoverableElement
@@ -104,18 +103,18 @@ function Category({
           </Button>
         </div>
       ) : (
-        <div className='mb-2 flex items-center justify-between gap-2 px-3 font-semibold'>
-          <h2 className='text-lg md:text-xl'>
+        <div className='mb-3 flex h-[40px] items-center justify-between rounded-medium bg-background px-2 md:px-4'>
+          <h2 className='text-lg font-semibold md:text-xl'>
             {category.subject}
             <button className='ml-1 h-0' onClick={() => router.push('#hint-1')}>
-              <sup className='cursor-pointer p-1 text-xs text-default-500 underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
+              <sup className='cursor-pointer p-1 text-xs text-default-500 md:hover:text-foreground md:hover:opacity-hover'>
                 1
               </sup>
             </button>
           </h2>
           <Button
             onPress={() => onEditTargetClick(index, category.subject)}
-            className='bg-foreground px-0 font-medium text-default-50'
+            className='px-0 font-medium'
           >
             <HoverableElement
               uKey={category.subject}
@@ -128,25 +127,27 @@ function Category({
         </div>
       )}
       <ul className='list-inside list-disc'>
-        {category.items?.map((item, itemIndex) => {
-          return (
-            <CategoryItem
-              key={item.name}
-              item={item}
-              categoryIndex={index}
-              itemIndex={itemIndex}
-              onEditItemClick={onEditItemClick}
-              editingItemIndex={editingItemIndex}
-              newItemName={newItemName}
-              setNewItemName={setNewItemName}
-              onSaveItemClick={onSaveItemClick}
-              showEmojiPicker={showEmojiPicker}
-              toggleEmojiPicker={toggleEmojiPicker}
-              isLoading={isLoading}
-              onEmojiClick={onEmojiClick}
-            />
-          )
-        })}
+        <AnimatePresence>
+          {category.items?.map((item, itemIndex) => {
+            return (
+              <CategoryItem
+                key={item.name}
+                item={item}
+                categoryIndex={index}
+                itemIndex={itemIndex}
+                onEditItemClick={onEditItemClick}
+                editingItemIndex={editingItemIndex}
+                newItemName={newItemName}
+                setNewItemName={setNewItemName}
+                onSaveItemClick={onSaveItemClick}
+                showEmojiPicker={showEmojiPicker}
+                toggleEmojiPicker={toggleEmojiPicker}
+                isLoading={isLoading}
+                onEmojiClick={onEmojiClick}
+              />
+            )
+          })}
+        </AnimatePresence>
       </ul>
     </div>
   )

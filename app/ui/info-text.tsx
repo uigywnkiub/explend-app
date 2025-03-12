@@ -2,7 +2,7 @@ import { cn } from '../lib/helpers'
 
 type TProps = {
   id?: string
-  text: string
+  text: string | React.ReactNode
   withAsterisk?: boolean
   withDoubleAsterisk?: boolean
   withHover?: boolean
