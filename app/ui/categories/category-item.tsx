@@ -13,6 +13,7 @@ import { motion } from 'framer-motion'
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { MOTION_LIST } from '@/config/constants/motion'
 
+import { cn } from '@/app/lib/helpers'
 import type {
   TCategoriesLoading,
   TEditingItemIndex,
@@ -103,7 +104,7 @@ function CategoryItem({
               Save
             </Button>
           </div>
-          <div className='-mt-4'>
+          <div className={cn(showEmojiPicker && '-mt-4')}>
             <CustomEmojiPicker
               showEmojiPicker={showEmojiPicker}
               onEmojiClick={onEmojiClick}

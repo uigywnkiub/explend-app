@@ -167,16 +167,16 @@ export const setInLocalStorage = (key: string, value: string) => {
   localStorage.setItem(key, value)
 }
 
-export const removeFromLocalStorage = (key: string) => {
-  if (!isLocalStorageAvailable()) return
-
-  localStorage.removeItem(key)
-}
-
 export const getFromLocalStorage = (key: string): string | null => {
   if (!isLocalStorageAvailable()) return null
 
   return localStorage.getItem(key)
+}
+
+export const removeFromLocalStorage = (key: string) => {
+  if (!isLocalStorageAvailable()) return
+
+  localStorage.removeItem(key)
 }
 
 export const getFormattedCurrency = (

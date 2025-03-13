@@ -1,5 +1,6 @@
 export const enum LOCAL_STORAGE_KEY {
   THEME = 'theme',
+  EPR_SUGGESTED = 'epr_suggested',
   IS_AMOUNT_HIDDEN = 'isAmountHidden',
   IS_POSITIVE_BALANCE = 'isPositiveBalance',
   IS_AUTO_SUBMIT = 'isAutoSubmit',
