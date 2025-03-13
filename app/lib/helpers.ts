@@ -137,6 +137,7 @@ export const toNumber = (value: number | string | null) => {
 
 export const convertToNumber = (value: string | number): number => {
   if (typeof value === 'string') {
+    // Remove any whitespace characters from the string and convert to number.
     return Number(value.replace(/\s/g, ''))
   }
 
@@ -167,16 +168,16 @@ export const setInLocalStorage = (key: string, value: string) => {
   localStorage.setItem(key, value)
 }
 
-export const removeFromLocalStorage = (key: string) => {
-  if (!isLocalStorageAvailable()) return
-
-  localStorage.removeItem(key)
-}
-
 export const getFromLocalStorage = (key: string): string | null => {
   if (!isLocalStorageAvailable()) return null
 
   return localStorage.getItem(key)
+}
+
+export const removeFromLocalStorage = (key: string) => {
+  if (!isLocalStorageAvailable()) return
+
+  localStorage.removeItem(key)
 }
 
 export const getFormattedCurrency = (
@@ -523,4 +524,14 @@ export const omit = <T extends Record<string, unknown>>(
   return Object.fromEntries(
     Object.entries(obj).filter(([key]) => !keys.includes(key as keyof T)),
   ) as Omit<T, keyof typeof keys>
+}
+
+export const formatPercentage = (value: number): string => {
+  let formattedValue = value.toFixed(2).toString()
+
+  if (formattedValue.endsWith('.00')) {
+    formattedValue = formattedValue.slice(0, -3)
+  }
+
+  return formattedValue
 }

@@ -2,7 +2,7 @@ import { cn } from '../lib/helpers'
 
 type TProps = {
   id?: string
-  text: string
+  text: string | React.ReactNode
   withAsterisk?: boolean
   withDoubleAsterisk?: boolean
   withHover?: boolean
@@ -22,7 +22,7 @@ export default function InfoText({
       id={id}
       className={cn(
         'text-default-500',
-        isSm ? 'text-xs md:text-sm' : 'text-xs',
+        isSm ? 'text-sm' : 'text-xs',
         withHover && 'hover:cursor-none hover:text-foreground',
       )}
     >

@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, ButtonProps } from '@heroui/react'
+import { Button, type ButtonProps } from '@heroui/react'
 
 type TProps = {
   title: string

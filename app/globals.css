@@ -2,20 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  * {
+    @apply scroll-smooth;
+    /* slashed-zero tabular-nums */
+  }
+}
+
 @layer utilities {
+  /* Inside this, we can't use @apply directive because it creates a circular dependency. */
   .text-balance {
     text-wrap: balance;
   }
 }
 
-* {
-  scroll-behavior: smooth;
-}
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  @apply m-0;
+  @apply m-0 appearance-none;
 }
 
 #sidebar-toggle:checked ~ .flex > .fixed-no-scroll {
@@ -50,6 +53,63 @@ input::-webkit-inner-spin-button {
   @apply rounded-md p-0.5;
 }
 
-/* Check if View Transitions API browser support. */
-@supports (view-transition-name: figure-caption) {
+/* Emoji Picker START */
+.epr-main {
+  @apply !rounded-medium !rounded-tl-none !rounded-tr-none !border-0 !bg-content1;
+  * {
+    @apply !font-fracktif !text-default-500;
+  }
 }
+
+.epr-search-container {
+  @apply -mx-0.5 md:mx-1.5;
+}
+
+.epr-icn-search {
+  @apply hidden;
+}
+
+.epr-search-container button {
+  @apply hidden;
+}
+
+.epr-search-container input {
+  @apply rounded-medium border-transparent bg-content2 px-3 text-foreground;
+}
+
+.epr-search-container input::placeholder {
+  @apply text-default-500;
+}
+
+.epr-search-container input:hover {
+  @apply bg-default-200;
+}
+
+.epr-search-container input:focus {
+  @apply border-transparent;
+}
+
+.epr-category-nav {
+  @apply !-mt-4;
+}
+
+.epr-category-nav button {
+  @apply !brightness-[120%];
+}
+
+.epr-emoji-category-label {
+  @apply !px-2 md:!px-4;
+}
+
+.epr-body + div {
+  @apply px-2 md:px-3;
+}
+
+.epr-skin-tones {
+  @apply !border-none;
+}
+/* Emoji Picker END */
+
+/* Check if View Transitions API browser support. */
+/* @supports (view-transition-name: figure-caption) {
+} */

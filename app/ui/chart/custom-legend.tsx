@@ -5,13 +5,14 @@ import type { LegendProps } from 'recharts'
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { capitalizeFirstLetter, cn } from '@/app/lib/helpers'
+import type { TTransactionType } from '@/app/lib/types'
 
 function CustomLegend({ payload }: LegendProps) {
   return (
     <ul className='mb-4 flex list-none justify-center gap-2 text-sm md:text-medium'>
       {payload?.map((entry) => {
         const Icon =
-          entry.dataKey === 'income'
+          (entry.dataKey as TTransactionType) === 'income'
             ? PiArrowCircleUpFill
             : PiArrowCircleDownFill
 

@@ -3,8 +3,9 @@
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
 import { getTransactionsTotals } from '@/app/lib/data'
-import { getFormattedCurrency } from '@/app/lib/helpers'
 import type { TTransaction } from '@/app/lib/types'
+
+import AnimatedNumber from '../animated-number'
 
 type TProps = {
   currency: TTransaction['currency']
@@ -23,9 +24,9 @@ export default function SearchedTransactions({
           <PiArrowCircleUpFill className='mr-1 inline fill-success' />
           <span className='text-sm text-default-500'>Income:</span>{' '}
           <span className='text-lg font-semibold'>
-            {getFormattedCurrency(
-              getTransactionsTotals(searchedTransactionsByQuery).income,
-            )}{' '}
+            <AnimatedNumber
+              value={getTransactionsTotals(searchedTransactionsByQuery).income}
+            />{' '}
             {currency.code}
           </span>
         </p>
@@ -33,9 +34,9 @@ export default function SearchedTransactions({
           <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
           <span className='text-sm text-default-500'>Expense:</span>{' '}
           <span className='text-lg font-semibold'>
-            {getFormattedCurrency(
-              getTransactionsTotals(searchedTransactionsByQuery).expense,
-            )}{' '}
+            <AnimatedNumber
+              value={getTransactionsTotals(searchedTransactionsByQuery).expense}
+            />{' '}
             {currency.code}
           </span>
         </p>

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useRef } from 'react'
 import {
   PiFloppyDisk,
   PiFloppyDiskFill,
@@ -6,12 +6,14 @@ import {
   PiNotePencilFill,
 } from 'react-icons/pi'
 
-import { Button, Input } from '@heroui/react'
+import { Button, Input, Kbd } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 import { motion } from 'framer-motion'
 
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
+import { MOTION_LIST } from '@/config/constants/motion'
 
+import { cn } from '@/app/lib/helpers'
 import type {
   TCategoriesLoading,
   TEditingItemIndex,
@@ -55,47 +57,68 @@ function CategoryItem({
   isLoading,
   onEmojiClick,
 }: TProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const isNewItemNameInvalid = newItemName.length < 1
+
+  const onTabPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Tab' && isNewItemNameInvalid) {
+      e.preventDefault()
+      setNewItemName(item.name)
+
+      inputRef.current?.blur()
+    }
+  }
+
   return (
-    <li className='mb-2 flex items-center'>
+    <motion.li className='mb-3 flex items-center' {...MOTION_LIST(itemIndex)}>
       {editingItemIndex &&
       editingItemIndex.categoryIndex === categoryIndex &&
       editingItemIndex.itemIndex === itemIndex ? (
         <div className='w-full'>
-          <div className='flex h-auto w-full items-center justify-between gap-2 rounded-medium bg-content1 px-3 py-2 text-left md:text-lg'>
-            <div className='flex h-[52px] items-center'>
+          <div className='flex h-20 w-full items-center justify-between gap-2 rounded-medium bg-content1 p-2 text-left md:p-4 md:text-lg'>
+            <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
               <div
-                className='z-10 mr-2 cursor-pointer rounded-medium bg-success-50 px-3 py-2 text-xl hover:bg-success-100 md:text-2xl'
+                className='cursor-pointer rounded-medium bg-content2 px-3 py-1 text-xl hover:bg-default-200 md:text-2xl'
                 onClick={toggleEmojiPicker}
               >
-                <motion.div
-                  drag
-                  dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
-                >
-                  {item.emoji}
-                </motion.div>
+                <div className='select-none pt-1.5'>{item.emoji}</div>
               </div>
               <Input
-                isRequired
+                ref={inputRef}
                 isDisabled={isLoading.item}
-                required
                 type='text'
                 aria-label={newItemName}
                 value={newItemName}
-                isInvalid={newItemName.length < 1}
                 onChange={(e) => setNewItemName(e.target.value)}
+                onKeyDown={onTabPress}
+                placeholder={item.name}
                 size='lg'
-                color='success'
                 classNames={{
-                  input:
-                    'border-none focus:ring-0 placeholder:text-default-500 md:text-lg',
+                  input: '!placeholder:text-default-500 !text-foreground',
                 }}
+                endContent={
+                  <Kbd
+                    keys={['tab']}
+                    classNames={{
+                      base: cn(
+                        'hidden md:block',
+                        !isNewItemNameInvalid &&
+                          // Internal classes.
+                          'opacity-disabled transition-transform-colors-opacity cursor-default',
+                      ),
+                    }}
+                  >
+                    Tab
+                  </Kbd>
+                }
               />
             </div>
             <Button
               onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
               isLoading={isLoading.item}
-              color='success'
-              className='px-0 font-medium text-background'
+              isDisabled={newItemName.length < 1 || isLoading.item}
+              className='bg-foreground px-0 font-medium text-default-50'
             >
               {!isLoading.item && (
                 <HoverableElement
@@ -108,23 +131,20 @@ function CategoryItem({
               Save
             </Button>
           </div>
-          <CustomEmojiPicker
-            showEmojiPicker={showEmojiPicker}
-            onEmojiClick={onEmojiClick}
-          />
+          <div className={cn(showEmojiPicker && '-mt-4')}>
+            <CustomEmojiPicker
+              showEmojiPicker={showEmojiPicker}
+              onEmojiClick={onEmojiClick}
+            />
+          </div>
         </div>
       ) : (
-        <div className='flex h-auto w-full items-center justify-between gap-2 break-all rounded-medium bg-content1 px-3 py-2 text-left md:text-lg'>
-          <div className='flex h-[52px] items-center'>
-            <div className='z-10 mr-2 rounded-medium bg-content2 px-3 py-2 text-xl md:text-2xl'>
-              <motion.div
-                drag
-                dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
-              >
-                {item.emoji}
-              </motion.div>
+        <div className='flex h-20 w-full items-center justify-between gap-2 break-all rounded-medium bg-content1 p-2 text-left md:p-4'>
+          <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
+            <div className='rounded-medium bg-content2 px-3 py-1 text-2xl'>
+              <div className='select-none pt-1.5'>{item.emoji}</div>
             </div>
-            <div>
+            <div className='truncate'>
               {item.name}
               {item.name === DEFAULT_CATEGORY && (
                 <InfoText text='Default category' withAsterisk={false} />
@@ -134,7 +154,7 @@ function CategoryItem({
           <Button
             onPress={() => onEditItemClick(categoryIndex, itemIndex, item.name)}
             isDisabled={item.name === DEFAULT_CATEGORY}
-            className='bg-foreground px-0 font-medium text-default-50'
+            className='px-0 font-medium'
           >
             <HoverableElement
               uKey={item.name}
@@ -146,7 +166,7 @@ function CategoryItem({
           </Button>
         </div>
       )}
-    </li>
+    </motion.li>
   )
 }
 
