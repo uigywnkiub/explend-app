@@ -19,4 +19,4 @@ export const enum SEARCH_PARAM {
   PAGE = 'page',
 }
 
-export const DEFAULT_PAGE_NUMBER: string = '1'
+export const DEFAULT_PAGINATION_PAGE_NUMBER: string = '1'

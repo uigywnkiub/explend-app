@@ -9,7 +9,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Accordion, AccordionItem, Input } from '@heroui/react'
 
 import {
-  DEFAULT_PAGE_NUMBER,
+  DEFAULT_PAGINATION_PAGE_NUMBER,
   SEARCH_PARAM,
 } from '@/config/constants/navigation'
 
@@ -34,7 +34,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
 
   const onSearchChange = (term: string) => {
     const params = new URLSearchParams(searchParams)
-    params.set(SEARCH_PARAM.PAGE, DEFAULT_PAGE_NUMBER)
+    params.set(SEARCH_PARAM.PAGE, DEFAULT_PAGINATION_PAGE_NUMBER)
     if (term) {
       params.set(SEARCH_PARAM.QUERY, term)
     } else {

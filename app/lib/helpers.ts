@@ -26,7 +26,7 @@ import {
   HIDDEN_AMOUNT_SIGN,
 } from '@/config/constants/main'
 import {
-  DEFAULT_PAGE_NUMBER,
+  DEFAULT_PAGINATION_PAGE_NUMBER,
   SEARCH_PARAM,
 } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
@@ -131,10 +131,6 @@ export const formatTime = (dateStr: Date): string => {
   return formatInTimeZone(date, userTimeZone || DEFAULT_TIME_ZONE, formatStr)
 }
 
-export const toNumber = (value: number | string | null) => {
-  return value === null ? NaN : Number(value)
-}
-
 export const convertToNumber = (value: string | number): number => {
   if (typeof value === 'string') {
     // Remove any whitespace characters from the string and convert to number.
@@ -181,13 +177,12 @@ export const removeFromLocalStorage = (key: string) => {
 }
 
 export const getFormattedCurrency = (
-  value: number | string | null,
+  value: number | string,
   isAmountHidden: boolean = getBooleanFromLocalStorage(
     LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
   ) || false,
 ) => {
-  const numericValue = toNumber(value)
-  if (isNaN(numericValue)) return ''
+  const numericValue = convertToNumber(value)
   if (isAmountHidden)
     return HIDDEN_AMOUNT_SIGN.repeat(numericValue.toString().length)
 
@@ -225,13 +220,13 @@ export const getFormattedAmountState = (
 }
 
 export const calculateEntryRange = (
-  page: number | string | null,
-  limit: number | string | null,
-  totalEntries: TGetTransactions['totalEntries'] | string | null,
+  page: number | string,
+  limit: number | string,
+  totalEntries: TGetTransactions['totalEntries'],
 ) => {
-  const parsedPage = toNumber(page)
-  const parsedLimit = toNumber(limit)
-  const parsedTotalEntries = toNumber(totalEntries)
+  const parsedPage = convertToNumber(page)
+  const parsedLimit = convertToNumber(limit)
+  const parsedTotalEntries = convertToNumber(totalEntries)
   const startEntry = (parsedPage - 1) * parsedLimit + 1
   const endEntry = Math.min(parsedPage * parsedLimit, parsedTotalEntries)
 
@@ -414,7 +409,7 @@ export const getExpenseCategories = (
 }
 
 export const createSearchHrefWithKeyword = (keyword: string): string => {
-  return `${ROUTE.HOME}?${SEARCH_PARAM.PAGE}=${DEFAULT_PAGE_NUMBER}&${SEARCH_PARAM.QUERY}=${encodeURIComponent(keyword)}`
+  return `${ROUTE.HOME}?${SEARCH_PARAM.PAGE}=${DEFAULT_PAGINATION_PAGE_NUMBER}&${SEARCH_PARAM.QUERY}=${encodeURIComponent(keyword)}`
 }
 
 export const isValidArrayWithKeys = (
