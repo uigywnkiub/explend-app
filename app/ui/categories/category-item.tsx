@@ -79,7 +79,7 @@ function CategoryItem({
           <div className='flex h-20 w-full items-center justify-between gap-2 rounded-medium bg-content1 p-2 text-left md:p-4 md:text-lg'>
             <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
               <div
-                className='cursor-pointer rounded-medium bg-content2 px-3 py-1 text-xl hover:bg-default-200 md:text-2xl'
+                className='cursor-pointer rounded-medium bg-content2 px-3 py-1 text-2xl hover:bg-default-200'
                 onClick={toggleEmojiPicker}
               >
                 <div className='select-none pt-1.5'>{item.emoji}</div>

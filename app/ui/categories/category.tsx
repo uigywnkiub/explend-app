@@ -82,7 +82,7 @@ function Category({
   return (
     <div className='mb-4 md:mb-8'>
       {editingIndex === index ? (
-        <div className='mb-3 flex h-[40px] items-center justify-between px-2 md:px-4'>
+        <div className='mb-3 flex h-[40px] items-center justify-between gap-2 px-2 md:gap-4 md:px-4'>
           <Input
             ref={inputRef}
             isDisabled={isLoading.subject}
@@ -131,7 +131,7 @@ function Category({
           </Button>
         </div>
       ) : (
-        <div className='mb-3 flex h-[40px] items-center justify-between rounded-medium bg-background px-2 md:px-4'>
+        <div className='mb-3 flex h-[40px] items-center justify-between gap-2 rounded-medium bg-background px-2 md:gap-4 md:px-4'>
           <h2 className='text-lg font-semibold md:text-xl'>
             {category.subject}
             <button className='ml-1 h-0' onClick={() => router.push('#hint-1')}>
