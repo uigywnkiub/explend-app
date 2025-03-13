@@ -17,10 +17,10 @@ import {
 
 import {
   cn,
+  convertToNumber,
   formatPercentage,
   getFormattedBalance,
   getFormattedCurrency,
-  toNumber,
 } from '../lib/helpers'
 
 const SPRING_CONFIG: SpringOptions = {
@@ -48,7 +48,7 @@ export default function AnimatedNumber({
   as = 'span',
 }: TProps) {
   const MotionComponent = motion.create(as as keyof JSX.IntrinsicElements)
-  const numericValue = typeof value === 'string' ? toNumber(value) : value
+  const numericValue = convertToNumber(value)
 
   // const color = useMotionValue('inherit')
   const blur = useMotionValue(0)

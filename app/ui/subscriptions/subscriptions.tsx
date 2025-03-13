@@ -51,7 +51,6 @@ import {
 } from '@/app/lib/actions'
 import {
   capitalizeFirstLetter,
-  convertToNumber,
   createFormData,
   createSearchHrefWithKeyword,
   getCategoriesMap,
@@ -59,11 +58,11 @@ import {
   getCategoryWithoutEmoji,
   getEmojiFromCategory,
   getFormattedAmountState,
-  getFormattedCurrency,
   pluralize,
 } from '@/app/lib/helpers'
 import type { TSubscriptions, TTransaction, TUserId } from '@/app/lib/types'
 
+import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import AmountInput from '../limits/amount-input'
@@ -421,8 +420,7 @@ export default function Subscriptions({
                   </div>
                   <div className='flex items-center gap-2'>
                     <p className='text-center'>
-                      {getFormattedCurrency(convertToNumber(amount))}{' '}
-                      {currency.code}
+                      <AnimatedNumber value={amount} /> {currency.code}
                     </p>
                     <Dropdown>
                       <Badge

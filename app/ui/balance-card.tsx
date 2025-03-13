@@ -15,7 +15,6 @@ import { getTransactionsTotals } from '../lib/data'
 import {
   cn,
   getBooleanFromLocalStorage,
-  getFormattedCurrency,
   getGreeting,
   setInLocalStorage,
 } from '../lib/helpers'
@@ -125,14 +124,14 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                       Income:
                     </span>{' '}
                     <span className='font-semibold'>
-                      {getFormattedCurrency(total.income)} {currency.code}
+                      <AnimatedNumber value={total.income} /> {currency.code}
                     </span>
                   </p>
                   <p>
                     <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
                     <span className='text-sm text-default-500'>Expense:</span>{' '}
                     <span className='font-semibold'>
-                      {getFormattedCurrency(total.expense)} {currency.code}
+                      <AnimatedNumber value={total.expense} /> {currency.code}
                     </span>
                   </p>
                 </motion.div>

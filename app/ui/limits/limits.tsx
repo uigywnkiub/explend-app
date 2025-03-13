@@ -59,10 +59,10 @@ import {
   getCategoryWithEmoji,
   getEmojiFromCategory,
   getFormattedAmountState,
-  getFormattedCurrency,
 } from '@/app/lib/helpers'
 import type { TCategoryLimits, TTransaction, TUserId } from '@/app/lib/types'
 
+import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import AmountInput from './amount-input'
@@ -132,15 +132,11 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     const limitAmount = parseFloat(formatAmount(limitValue))
     const difference = limitAmount - currentAmount
     const isLimitOver = difference < 0
-    const status = isLimitOver
-      ? `over by ${getFormattedCurrency(Math.abs(difference))}`
-      : `left ${getFormattedCurrency(difference)}`
 
     return {
       categoryName,
       limitAmount,
       difference,
-      status,
       isLimitOver,
     }
   })
@@ -405,13 +401,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       <ul className='space-y-4'>
         <AnimatePresence>
           {calculatedLimitsData.map((data, idx) => {
-            const {
-              categoryName,
-              difference,
-              limitAmount,
-              status,
-              isLimitOver,
-            } = data
+            const { categoryName, difference, limitAmount, isLimitOver } = data
             const progressPercentage =
               limitAmount > 0
                 ? Math.min(
@@ -469,7 +459,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 <div className='flex items-center gap-2'>
                   <div className='text-right'>
                     <p>
-                      {getFormattedCurrency(limitAmount)} {currency.code}
+                      <AnimatedNumber value={limitAmount} /> {currency.code}
                     </p>
                     <p
                       className={cn(
@@ -477,7 +467,18 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         isLimitOver ? 'text-danger' : 'text-success',
                       )}
                     >
-                      {status} {currency.code}
+                      {isLimitOver ? (
+                        <>
+                          over by{' '}
+                          <AnimatedNumber value={Math.abs(difference)} />{' '}
+                          {currency.code}
+                        </>
+                      ) : (
+                        <>
+                          left <AnimatedNumber value={difference} />{' '}
+                          {currency.code}
+                        </>
+                      )}
                     </p>
                   </div>
                   <Dropdown>

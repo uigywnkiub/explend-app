@@ -137,6 +137,7 @@ export const toNumber = (value: number | string | null) => {
 
 export const convertToNumber = (value: string | number): number => {
   if (typeof value === 'string') {
+    // Remove any whitespace characters from the string and convert to number.
     return Number(value.replace(/\s/g, ''))
   }
 
