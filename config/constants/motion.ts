@@ -49,7 +49,7 @@ export const MOTION_LIST = (idx: number) => {
   } satisfies MotionProps
 }
 
-// Comment the custom view transition function until all modern browsers support it.
+// Comment the custom View Transition API function until all modern browsers support it.
 // export const slideInOut = () => {
 //   const duration = DIV.TRANSITION.duration * 1000
 //   const easing = 'ease'

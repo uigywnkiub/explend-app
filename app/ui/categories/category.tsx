@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useRef } from 'react'
 import {
   PiFloppyDisk,
   PiFloppyDiskFill,
@@ -8,12 +8,13 @@ import {
 
 import { useRouter } from 'next/navigation'
 
-import { Button, Input } from '@heroui/react'
+import { Button, Input, Kbd } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 import { AnimatePresence } from 'framer-motion'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
+import { cn } from '@/app/lib/helpers'
 import {
   TCategoriesLoading,
   TEditingItemIndex,
@@ -65,25 +66,52 @@ function Category({
   onEmojiClick,
 }: TProps) {
   const router = useRouter()
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const isNewTargetNameInvalid = newTargetName.length < 1
+
+  const onTabPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Tab' && isNewTargetNameInvalid) {
+      e.preventDefault()
+      setNewTargetName(category.subject)
+
+      inputRef.current?.blur()
+    }
+  }
 
   return (
     <div className='mb-4 md:mb-8'>
       {editingIndex === index ? (
         <div className='mb-3 flex h-[40px] items-center justify-between px-2 md:px-4'>
           <Input
-            isRequired
+            ref={inputRef}
             isDisabled={isLoading.subject}
-            required
             type='text'
             aria-label={newTargetName}
             value={newTargetName}
-            isInvalid={newTargetName.length < 1}
             onChange={(e) => setNewTargetName(e.target.value)}
+            onKeyDown={onTabPress}
+            placeholder={category.subject}
             size='lg'
             classNames={{
               input: '!placeholder:text-default-500 !text-foreground',
               base: 'w-fit',
             }}
+            endContent={
+              <Kbd
+                keys={['tab']}
+                classNames={{
+                  base: cn(
+                    'hidden md:block',
+                    !isNewTargetNameInvalid &&
+                      // Internal classes.
+                      'opacity-disabled transition-transform-colors-opacity cursor-default',
+                  ),
+                }}
+              >
+                Tab
+              </Kbd>
+            }
           />
           <Button
             onPress={() => onSaveTargetClick(index)}

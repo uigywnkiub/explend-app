@@ -18,12 +18,12 @@ export default function TipsList({ tipsDataAI }: TProps) {
             <ul className='text-sm'>
               <AnimatePresence>
                 <motion.div className='mb-4 ml-8 md:mb-6' {...MOTION_LIST(idx)}>
-                  <motion.li className='mb-1'>
+                  <li className='mb-1'>
                     <p>
                       <span className='text-default-500'>Tip: </span>
                       <span>{tip.tip}</span>
                     </p>
-                  </motion.li>
+                  </li>
                   <li>
                     <p>
                       <span className='text-default-500'>Savings: </span>

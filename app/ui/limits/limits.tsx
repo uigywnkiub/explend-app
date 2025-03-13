@@ -36,12 +36,14 @@ import {
   SelectSection,
   useDisclosure,
 } from '@heroui/react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import {
   DEFAULT_CATEGORY,
   DEFAULT_CATEGORY_EMOJI,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
+import { MOTION_LIST } from '@/config/constants/motion'
 
 import { addLimit, deleteLimit, editLimit } from '@/app/lib/actions'
 import {
@@ -401,150 +403,163 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       )}
 
       <ul className='space-y-4'>
-        {calculatedLimitsData.map((data) => {
-          const { categoryName, difference, limitAmount, status, isLimitOver } =
-            data
-          const progressPercentage =
-            limitAmount > 0
-              ? Math.min(
-                  100,
-                  Math.max(0, ((limitAmount - difference) / limitAmount) * 100),
-                )
-              : 0
-          const isChangedCategoryName =
-            changedCategoryNames.includes(categoryName)
+        <AnimatePresence>
+          {calculatedLimitsData.map((data, idx) => {
+            const {
+              categoryName,
+              difference,
+              limitAmount,
+              status,
+              isLimitOver,
+            } = data
+            const progressPercentage =
+              limitAmount > 0
+                ? Math.min(
+                    100,
+                    Math.max(
+                      0,
+                      ((limitAmount - difference) / limitAmount) * 100,
+                    ),
+                  )
+                : 0
+            const isChangedCategoryName =
+              changedCategoryNames.includes(categoryName)
 
-          return (
-            <li
-              key={categoryName}
-              className='flex items-center justify-between py-2'
-            >
-              <div className='flex items-center text-balance md:w-1/2'>
-                <p className='-mb-1.5 text-xl md:text-2xl'>
-                  {isChangedCategoryName
-                    ? DEFAULT_CATEGORY_EMOJI
-                    : getEmojiFromCategory(
-                        getCategoryWithEmoji(categoryName, userCategories),
+            return (
+              <motion.li
+                key={categoryName}
+                className='flex items-center justify-between py-2'
+                {...MOTION_LIST(idx)}
+              >
+                <div className='flex items-center text-balance md:w-1/2'>
+                  <p className='-mb-1.5 text-xl md:text-2xl'>
+                    {isChangedCategoryName
+                      ? DEFAULT_CATEGORY_EMOJI
+                      : getEmojiFromCategory(
+                          getCategoryWithEmoji(categoryName, userCategories),
+                        )}
+                  </p>
+                  <div className='mb-2 ml-2 w-full'>
+                    <div className='mb-2 text-left'>
+                      <Link
+                        href={createSearchHrefWithKeyword(categoryName)}
+                        className={cn(
+                          '-mt-3 truncate text-balance hover:opacity-hover md:-mt-1.5',
+                          isChangedCategoryName &&
+                            'text-default-500 line-through',
+                        )}
+                      >
+                        {categoryName}
+                      </Link>
+                      {isChangedCategoryName && (
+                        <p className='text-xs'>No longer exists</p>
                       )}
-                </p>
-                <div className='mb-2 ml-2 w-full'>
-                  <div className='mb-2 text-left'>
-                    <Link
-                      href={createSearchHrefWithKeyword(categoryName)}
-                      className={cn(
-                        '-mt-3 truncate text-balance hover:opacity-hover md:-mt-1.5',
-                        isChangedCategoryName &&
-                          'text-default-500 line-through',
-                      )}
-                    >
-                      {categoryName}
-                    </Link>
-                    {isChangedCategoryName && (
-                      <p className='text-xs'>No longer exists</p>
-                    )}
-                  </div>
-                  <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default md:relative md:w-full'>
-                    <div
-                      className={cn(
-                        'absolute h-[5px] rounded-full',
-                        isLimitOver ? 'bg-danger' : 'bg-success',
-                      )}
-                      style={{ width: `${progressPercentage}%` }}
-                    />
+                    </div>
+                    <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default md:relative md:w-full'>
+                      <div
+                        className={cn(
+                          'absolute h-[5px] rounded-full',
+                          isLimitOver ? 'bg-danger' : 'bg-success',
+                        )}
+                        style={{ width: `${progressPercentage}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className='flex items-center gap-2'>
-                <div className='text-right'>
-                  <p>
-                    {getFormattedCurrency(limitAmount)} {currency.code}
-                  </p>
-                  <p
-                    className={cn(
-                      'text-xs',
-                      isLimitOver ? 'text-danger' : 'text-success',
-                    )}
-                  >
-                    {status} {currency.code}
-                  </p>
-                </div>
-                <Dropdown>
-                  <DropdownTrigger>
-                    <Button
-                      variant='light'
-                      isIconOnly
-                      size='md'
-                      className='md:size-10'
+                <div className='flex items-center gap-2'>
+                  <div className='text-right'>
+                    <p>
+                      {getFormattedCurrency(limitAmount)} {currency.code}
+                    </p>
+                    <p
+                      className={cn(
+                        'text-xs',
+                        isLimitOver ? 'text-danger' : 'text-success',
+                      )}
                     >
-                      <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
-                    </Button>
-                  </DropdownTrigger>
-                  <DropdownMenu
-                    aria-label='Limit actions'
-                    onAction={(key) => {
-                      if (key === DROPDOWN_KEY.EDIT) {
-                        const prevLimitAmount = getLimitAmount(categoryName)
-                        if (prevLimitAmount) {
-                          setAmount(prevLimitAmount)
-                          setTempLimitAmount(prevLimitAmount)
-                        }
-                        setTempCategoryName(categoryName)
-                        onOpenEdit()
-                      }
-                      if (key === DROPDOWN_KEY.DELETE) {
-                        setTempCategoryName(categoryName)
-                        onOpenDelete()
-                      }
-                    }}
-                  >
-                    <DropdownSection title='Actions' showDivider>
-                      <DropdownItem
-                        key={DROPDOWN_KEY.EDIT}
-                        startContent={
-                          <HoverableElement
-                            uKey={DROPDOWN_KEY.EDIT}
-                            element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
-                            hoveredElement={
-                              <PiNotePencilFill size={DEFAULT_ICON_SIZE} />
-                            }
-                          />
-                        }
-                        description='Edit limit details'
-                        classNames={{
-                          description: 'text-default-500',
-                        }}
+                      {status} {currency.code}
+                    </p>
+                  </div>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button
+                        variant='light'
+                        isIconOnly
+                        size='md'
+                        className='md:size-10'
                       >
-                        Edit
-                      </DropdownItem>
-                    </DropdownSection>
-                    <DropdownSection title='Danger zone'>
-                      <DropdownItem
-                        key={DROPDOWN_KEY.DELETE}
-                        className='text-danger'
-                        color='danger'
-                        startContent={
-                          <HoverableElement
-                            uKey={DROPDOWN_KEY.DELETE}
-                            element={<PiTrash size={DEFAULT_ICON_SIZE} />}
-                            hoveredElement={
-                              <PiTrashFill size={DEFAULT_ICON_SIZE} />
-                            }
-                          />
+                        <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      aria-label='Limit actions'
+                      onAction={(key) => {
+                        if (key === DROPDOWN_KEY.EDIT) {
+                          const prevLimitAmount = getLimitAmount(categoryName)
+                          if (prevLimitAmount) {
+                            setAmount(prevLimitAmount)
+                            setTempLimitAmount(prevLimitAmount)
+                          }
+                          setTempCategoryName(categoryName)
+                          onOpenEdit()
                         }
-                        description='Permanently delete limit'
-                        classNames={{
-                          description: 'text-default-500',
-                        }}
-                      >
-                        Delete
-                      </DropdownItem>
-                    </DropdownSection>
-                  </DropdownMenu>
-                </Dropdown>
-              </div>
-            </li>
-          )
-        })}
+                        if (key === DROPDOWN_KEY.DELETE) {
+                          setTempCategoryName(categoryName)
+                          onOpenDelete()
+                        }
+                      }}
+                    >
+                      <DropdownSection title='Actions' showDivider>
+                        <DropdownItem
+                          key={DROPDOWN_KEY.EDIT}
+                          startContent={
+                            <HoverableElement
+                              uKey={DROPDOWN_KEY.EDIT}
+                              element={
+                                <PiNotePencil size={DEFAULT_ICON_SIZE} />
+                              }
+                              hoveredElement={
+                                <PiNotePencilFill size={DEFAULT_ICON_SIZE} />
+                              }
+                            />
+                          }
+                          description='Edit limit details'
+                          classNames={{
+                            description: 'text-default-500',
+                          }}
+                        >
+                          Edit
+                        </DropdownItem>
+                      </DropdownSection>
+                      <DropdownSection title='Danger zone'>
+                        <DropdownItem
+                          key={DROPDOWN_KEY.DELETE}
+                          className='text-danger'
+                          color='danger'
+                          startContent={
+                            <HoverableElement
+                              uKey={DROPDOWN_KEY.DELETE}
+                              element={<PiTrash size={DEFAULT_ICON_SIZE} />}
+                              hoveredElement={
+                                <PiTrashFill size={DEFAULT_ICON_SIZE} />
+                              }
+                            />
+                          }
+                          description='Permanently delete limit'
+                          classNames={{
+                            description: 'text-default-500',
+                          }}
+                        >
+                          Delete
+                        </DropdownItem>
+                      </DropdownSection>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+              </motion.li>
+            )
+          })}
+        </AnimatePresence>
       </ul>
       <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
         <InfoText text='The calculation of limits is based on transactions by the current month.' />

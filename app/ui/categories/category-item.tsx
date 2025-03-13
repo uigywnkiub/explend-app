@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useRef } from 'react'
 import {
   PiFloppyDisk,
   PiFloppyDiskFill,
@@ -6,7 +6,7 @@ import {
   PiNotePencilFill,
 } from 'react-icons/pi'
 
-import { Button, Input } from '@heroui/react'
+import { Button, Input, Kbd } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 import { motion } from 'framer-motion'
 
@@ -57,6 +57,19 @@ function CategoryItem({
   isLoading,
   onEmojiClick,
 }: TProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const isNewItemNameInvalid = newItemName.length < 1
+
+  const onTabPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Tab' && isNewItemNameInvalid) {
+      e.preventDefault()
+      setNewItemName(item.name)
+
+      inputRef.current?.blur()
+    }
+  }
+
   return (
     <motion.li className='mb-3 flex items-center' {...MOTION_LIST(itemIndex)}>
       {editingItemIndex &&
@@ -72,19 +85,33 @@ function CategoryItem({
                 <div className='select-none pt-1.5'>{item.emoji}</div>
               </div>
               <Input
-                isRequired
+                ref={inputRef}
                 isDisabled={isLoading.item}
-                required
                 type='text'
                 aria-label={newItemName}
                 value={newItemName}
-                isInvalid={newItemName.length < 1}
                 onChange={(e) => setNewItemName(e.target.value)}
+                onKeyDown={onTabPress}
                 placeholder={item.name}
                 size='lg'
                 classNames={{
                   input: '!placeholder:text-default-500 !text-foreground',
                 }}
+                endContent={
+                  <Kbd
+                    keys={['tab']}
+                    classNames={{
+                      base: cn(
+                        'hidden md:block',
+                        !isNewItemNameInvalid &&
+                          // Internal classes.
+                          'opacity-disabled transition-transform-colors-opacity cursor-default',
+                      ),
+                    }}
+                  >
+                    Tab
+                  </Kbd>
+                }
               />
             </div>
             <Button
@@ -117,7 +144,7 @@ function CategoryItem({
             <div className='rounded-medium bg-content2 px-3 py-1 text-2xl'>
               <div className='select-none pt-1.5'>{item.emoji}</div>
             </div>
-            <div>
+            <div className='truncate'>
               {item.name}
               {item.name === DEFAULT_CATEGORY && (
                 <InfoText text='Default category' withAsterisk={false} />
