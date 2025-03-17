@@ -1,4 +1,4 @@
-import { TGetTransactions } from '@/app/lib/types'
+import type { TGetTransactions } from '@/app/lib/types'
 
 import InfoText from '../info-text'
 

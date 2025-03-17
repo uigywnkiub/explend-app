@@ -148,7 +148,7 @@ export default async function Page(props: {
           user={session?.user}
           balance={balance}
           currency={currency}
-          hasTransactions={transactions.length > 0}
+          hasTransactions={totalEntries > 0}
         />
         <form action={createTransactionWithUserId} className='mt-4'>
           <TransactionForm
@@ -157,7 +157,7 @@ export default async function Page(props: {
           />
         </form>
         <div className='text-center text-default-500'>
-          {transactions.length === 0 ? (
+          {totalEntries === 0 ? (
             <div className='mt-4'>
               <NoTransactionsPlug />
             </div>
@@ -197,7 +197,7 @@ export default async function Page(props: {
           )}
         </div>
       </div>
-      {transactions.length === 0 && (
+      {totalEntries === 0 && (
         <div className='mt-6'>
           <CreateTestTransactions
             userId={userId}

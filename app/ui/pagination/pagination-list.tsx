@@ -4,6 +4,7 @@ import { useCallback, useEffect } from 'react'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
+import Loading from '@/app/loading'
 import { Pagination } from '@heroui/react'
 
 import {
@@ -57,6 +58,16 @@ function PaginationList({ totalPages, totalEntries, limit }: TProps) {
   }, [isPageExceedingTotal, router, pathname, createQueryString, totalPages])
 
   if (!totalPages || !totalEntries) return null
+
+  if (isPageExceedingTotal)
+    return (
+      <Loading
+        isInline
+        size='md'
+        text='Redirecting...'
+        wrapperClassName='flex justify-center'
+      />
+    )
 
   return (
     <>

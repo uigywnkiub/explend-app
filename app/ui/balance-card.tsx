@@ -144,10 +144,10 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                 >
                   <Loading
                     size='sm'
-                    inline
+                    isInline
                     wrapperClassName='flex flex-col items-center mb-1'
+                    withoutText
                   />
-                  <p className='text-sm'>Loading totals...</p>
                 </motion.div>
               )}
             </>

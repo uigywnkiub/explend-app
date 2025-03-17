@@ -9,21 +9,23 @@ import { cn } from './lib/helpers'
 
 type TProps = {
   size?: SpinnerProps['size']
-  inline?: boolean
+  isInline?: boolean
   wrapperClassName?: ClassValue
   text?: string
+  withoutText?: boolean
 }
 
 export default function Loading({
   size = 'lg',
-  inline = false,
+  isInline = false,
   wrapperClassName,
   text = DEFAULT_LOADING_TEXT,
+  withoutText = false,
 }: TProps) {
   return (
     <div
       className={cn(
-        !inline && 'flex h-screen flex-col items-center justify-center gap-4',
+        !isInline && 'flex h-screen flex-col items-center justify-center gap-4',
         wrapperClassName,
       )}
     >
@@ -34,7 +36,7 @@ export default function Loading({
           circle1: 'border-b-success',
           circle2: 'border-b-danger',
         }}
-        label={!inline ? text : undefined}
+        label={withoutText ? undefined : text}
       />
     </div>
   )
