@@ -140,6 +140,18 @@ export const convertToNumber = (value: string | number): number => {
   return value
 }
 
+export const safeConvertToNumber = (
+  value: string | number,
+  defaultValue = DEFAULT_PAGINATION_PAGE_NUMBER,
+) => {
+  const num = convertToNumber(value)
+  if (Number.isNaN(num) || num <= 0) {
+    return defaultValue
+  }
+
+  return num
+}
+
 export const isLocalStorageAvailable = (): boolean => {
   return typeof localStorage !== 'undefined'
 }

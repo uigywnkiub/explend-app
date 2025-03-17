@@ -11,7 +11,7 @@ import {
   SEARCH_PARAM,
 } from '@/config/constants/navigation'
 
-import { calculateEntryRange, convertToNumber } from '@/app/lib/helpers'
+import { calculateEntryRange, safeConvertToNumber } from '@/app/lib/helpers'
 import type { TGetTransactions } from '@/app/lib/types'
 
 import PaginationInfo from './pagination-info'
@@ -26,12 +26,13 @@ function PaginationList({ totalPages, totalEntries, limit }: TProps) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const page =
-    searchParams.get(SEARCH_PARAM.PAGE) || DEFAULT_PAGINATION_PAGE_NUMBER
-  const isPageExceedingTotal =
-    convertToNumber(page || DEFAULT_PAGINATION_PAGE_NUMBER) > totalPages
+  const pageParam = searchParams.get(SEARCH_PARAM.PAGE)
+  const currentPage = Number(
+    safeConvertToNumber(pageParam || DEFAULT_PAGINATION_PAGE_NUMBER),
+  )
+  const isPageExceedingTotal = currentPage > totalPages
   const { startEntry, endEntry } = calculateEntryRange(
-    page,
+    currentPage,
     limit,
     totalEntries,
   )
@@ -46,13 +47,16 @@ function PaginationList({ totalPages, totalEntries, limit }: TProps) {
     [searchParams],
   )
 
+  // Redirect to the last page if the pageParam is invalid or exceeds the total pages.
   useEffect(() => {
     if (isPageExceedingTotal) {
-      router.back()
+      router.push(
+        `${pathname}?${createQueryString(SEARCH_PARAM.PAGE, totalPages.toString())}`,
+      )
     }
-  }, [isPageExceedingTotal, router])
+  }, [isPageExceedingTotal, router, pathname, createQueryString, totalPages])
 
-  if (isPageExceedingTotal || totalPages === 0) return null
+  if (!totalPages || !totalEntries) return null
 
   return (
     <>
@@ -67,9 +71,9 @@ function PaginationList({ totalPages, totalEntries, limit }: TProps) {
       <Pagination
         color='primary'
         total={totalPages}
-        page={convertToNumber(page)}
+        page={currentPage}
         onChange={(page: number) => {
-          return router.push(
+          router.push(
             `${pathname}?${createQueryString(SEARCH_PARAM.PAGE, page.toString())}`,
           )
         }}

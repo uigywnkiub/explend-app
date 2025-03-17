@@ -215,11 +215,13 @@ export default async function Page(props: {
       <div className='mx-auto mt-4 max-w-3xl'>
         {!query ? (
           <>
-            <PaginationList
-              totalPages={totalPages}
-              totalEntries={totalEntries}
-              limit={limit}
-            />
+            {totalEntries > 0 && (
+              <PaginationList
+                totalPages={totalPages}
+                totalEntries={totalEntries}
+                limit={limit}
+              />
+            )}
             {hasTestTransactions && (
               <div className='mt-6'>
                 <DeleteTestTransactions userId={userId} />
