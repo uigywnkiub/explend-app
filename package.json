@@ -152,7 +152,7 @@
     "node": ">=22",
     "pnpm": ">=10"
   },
-  "packageManager": "pnpm@10.6.5",
+  "packageManager": "pnpm@10.7.1",
   "overrides": {
     "react-is": "19.0.0"
   },
