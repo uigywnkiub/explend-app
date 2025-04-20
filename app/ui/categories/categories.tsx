@@ -251,7 +251,7 @@ function Categories({
           {RESET_CATEGORIES_BTN_TEXT}
         </Button>
       </div>
-      <div className='mt-4 flex flex-col gap-2 md:mt-8'>
+      <div className='mt-4 flex flex-col gap-1 md:mt-8'>
         <InfoText
           withDoubleAsterisk
           text='If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.'

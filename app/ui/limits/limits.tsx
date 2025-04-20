@@ -562,7 +562,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
           })}
         </AnimatePresence>
       </ul>
-      <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
+      <div className='mt-4 flex flex-col gap-1 text-left md:mt-8'>
         <InfoText text='The calculation of limits is based on transactions by the current month.' />
         {/* <InfoText text='Your limits will be reset automatically in the new month.' /> */}
         <InfoText text='If your limit is over, you will be notified when trying to add a new transaction.' />

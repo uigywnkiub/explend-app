@@ -582,7 +582,7 @@ export default function Subscriptions({
           </AnimatePresence>
         </ul>
 
-        <div className='mt-4 flex flex-col gap-2 text-left md:mt-8'>
+        <div className='mt-4 flex flex-col gap-1 text-left md:mt-8'>
           <InfoText text='You can add each subscription to transactions as an expense.' />
         </div>
       </div>

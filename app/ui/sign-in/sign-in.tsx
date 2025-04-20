@@ -242,7 +242,7 @@ function SignIn() {
             </Accordion>
           </div>
         </div>
-        <div className='mt-4 flex flex-col gap-2 text-center'>
+        <div className='mt-4 flex flex-col gap-1 text-center'>
           <InfoText text='Signing in does not create an account.' />
           <InfoText text='AES encryption protects your sensitive data.' />
           <InfoText text='Your name and email will be visible on the site and serve as your primary identifiers.' />
