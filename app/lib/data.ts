@@ -208,3 +208,12 @@ export const getUserCategories = (
     )?.categories ?? DEFAULT_CATEGORIES
   )
 }
+
+export const deepCloneCategories = (
+  categories: TCategories[],
+): TCategories[] => {
+  return categories.map((category) => ({
+    ...category,
+    items: category.items.map((item) => ({ ...item })),
+  }))
+}

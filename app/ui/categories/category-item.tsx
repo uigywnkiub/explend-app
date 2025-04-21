@@ -1,14 +1,16 @@
 import { memo, useRef } from 'react'
 import {
+  PiArrowClockwise,
+  PiArrowClockwiseFill,
   PiFloppyDisk,
   PiFloppyDiskFill,
   PiNotePencil,
   PiNotePencilFill,
 } from 'react-icons/pi'
 
-import { Button, Input, Kbd } from '@heroui/react'
+import { Button, Input } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { MOTION_LIST } from '@/config/constants/motion'
@@ -41,6 +43,8 @@ type TProps = {
   toggleEmojiPicker: () => void
   isLoading: TCategoriesLoading
   onEmojiClick: (emojiData: EmojiClickData) => void
+  onResetEmojiClick: (categoryIndex: number, itemIndex: number) => void
+  isNewEmojiPick: boolean
 }
 
 function CategoryItem({
@@ -56,19 +60,21 @@ function CategoryItem({
   toggleEmojiPicker,
   isLoading,
   onEmojiClick,
+  onResetEmojiClick,
+  isNewEmojiPick,
 }: TProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const isNewItemNameInvalid = newItemName.length < 1
+  // const isNewItemNameInvalid = newItemName.length < 1
 
-  const onTabPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Tab' && isNewItemNameInvalid) {
-      e.preventDefault()
-      setNewItemName(item.name)
+  // const onTabPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === 'Tab' && isNewItemNameInvalid) {
+  //     e.preventDefault()
+  //     setNewItemName(item.name)
 
-      inputRef.current?.blur()
-    }
-  }
+  //     inputRef.current?.blur()
+  //   }
+  // }
 
   return (
     <motion.li className='mb-3 flex items-center' {...MOTION_LIST(itemIndex)}>
@@ -91,45 +97,83 @@ function CategoryItem({
                 aria-label={newItemName}
                 value={newItemName}
                 onChange={(e) => setNewItemName(e.target.value)}
-                onKeyDown={onTabPress}
+                // onKeyDown={onTabPress}
                 placeholder={item.name}
                 size='lg'
                 classNames={{
                   input: '!placeholder:text-default-500 !text-foreground',
                 }}
-                endContent={
-                  <Kbd
-                    keys={['tab']}
-                    classNames={{
-                      base: cn(
-                        'hidden md:block',
-                        !isNewItemNameInvalid &&
-                          // Internal classes.
-                          'opacity-disabled transition-transform-colors-opacity cursor-default',
-                      ),
-                    }}
-                  >
-                    Tab
-                  </Kbd>
-                }
+                // endContent={
+                //   <Kbd
+                //     keys={['tab']}
+                //     classNames={{
+                //       base: cn(
+                //         'hidden md:block',
+                //         !isNewItemNameInvalid &&
+                //           // Internal classes.
+                //           'opacity-disabled transition-transform-colors-opacity cursor-default',
+                //       ),
+                //     }}
+                //   >
+                //     Tab
+                //   </Kbd>
+                // }
               />
             </div>
-            <Button
-              onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
-              isLoading={isLoading.item}
-              isDisabled={newItemName.length < 1 || isLoading.item}
-              className='bg-foreground px-0 font-medium text-default-50'
-            >
-              {!isLoading.item && (
-                <HoverableElement
-                  uKey={item.name}
-                  element={<PiFloppyDisk size={DEFAULT_ICON_SIZE} />}
-                  hoveredElement={<PiFloppyDiskFill size={DEFAULT_ICON_SIZE} />}
-                  withShift={false}
-                />
-              )}{' '}
-              Save
-            </Button>
+            <div className='flex gap-2'>
+              <AnimatePresence>
+                {!(
+                  isLoading.item ||
+                  (newItemName.trim() === item.name && !isNewEmojiPick)
+                ) && (
+                  <motion.div
+                    key='reset-button'
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Button
+                      onPress={() => {
+                        setNewItemName(item.name)
+                        onResetEmojiClick(categoryIndex, itemIndex)
+                      }}
+                      color='danger'
+                      className='min-w-4 px-4 font-medium text-default-50 md:min-w-20 md:px-0'
+                    >
+                      <HoverableElement
+                        uKey={item.name}
+                        element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
+                        hoveredElement={
+                          <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
+                        }
+                        withShift={false}
+                      />
+                      <span className='hidden md:block'>Reset</span>
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <Button
+                onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
+                isLoading={isLoading.item}
+                isDisabled={newItemName.length < 1 || isLoading.item}
+                className='bg-foreground px-0 font-medium text-default-50'
+              >
+                {!isLoading.item && (
+                  <HoverableElement
+                    uKey={item.name}
+                    element={<PiFloppyDisk size={DEFAULT_ICON_SIZE} />}
+                    hoveredElement={
+                      <PiFloppyDiskFill size={DEFAULT_ICON_SIZE} />
+                    }
+                    withShift={false}
+                  />
+                )}
+                Save
+              </Button>
+            </div>
           </div>
           <div className={cn(showEmojiPicker && '-mt-4')}>
             <CustomEmojiPicker

@@ -23,6 +23,7 @@ import { EmojiClickData } from 'emoji-picker-react'
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { resetCategories, updateCategories } from '@/app/lib/actions'
+import { deepCloneCategories } from '@/app/lib/data'
 import { capitalizeFirstLetter, deepCompareArrays } from '@/app/lib/helpers'
 import type {
   TCategoriesLoading,
@@ -63,6 +64,11 @@ function Categories({
     reset: false,
   })
   const [isNewEmojiPick, setIsNewEmojiPick] = useState(false)
+
+  const originalUserCategories = useMemo(
+    () => deepCloneCategories(userCategories),
+    [userCategories],
+  )
 
   const onEditTargetClick = useCallback(
     (index: number, currentTarget: string) => {
@@ -133,10 +139,23 @@ function Categories({
 
         setIsNewEmojiPick(true)
         setCategories(updatedCategories)
-        setShowEmojiPicker(false)
+        // setShowEmojiPicker(false)
       }
     },
     [categories, editingItemIndex],
+  )
+
+  const onResetEmojiClick = useCallback(
+    (categoryIndex: number, itemIndex: number) => {
+      const originalEmoji =
+        originalUserCategories[categoryIndex].items[itemIndex].emoji
+      const updatedCategories = [...categories]
+      updatedCategories[categoryIndex].items[itemIndex].emoji = originalEmoji
+
+      setCategories(updatedCategories)
+      setIsNewEmojiPick(false)
+    },
+    [categories, originalUserCategories],
   )
 
   const onSaveItemClick = useCallback(
@@ -223,6 +242,8 @@ function Categories({
             toggleEmojiPicker={toggleEmojiPicker}
             isLoading={isLoading}
             onEmojiClick={onEmojiClick}
+            onResetEmojiClick={onResetEmojiClick}
+            isNewEmojiPick={isNewEmojiPick}
           />
         )
       })}

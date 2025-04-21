@@ -1,5 +1,7 @@
 import { memo, useRef } from 'react'
 import {
+  PiArrowClockwise,
+  PiArrowClockwiseFill,
   PiFloppyDisk,
   PiFloppyDiskFill,
   PiNotePencil,
@@ -8,13 +10,12 @@ import {
 
 import { useRouter } from 'next/navigation'
 
-import { Button, Input, Kbd } from '@heroui/react'
+import { Button, Input } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
-import { cn } from '@/app/lib/helpers'
 import {
   TCategoriesLoading,
   TEditingItemIndex,
@@ -45,6 +46,8 @@ type TProps = {
   toggleEmojiPicker: () => void
   isLoading: TCategoriesLoading
   onEmojiClick: (emojiData: EmojiClickData) => void
+  onResetEmojiClick: (categoryIndex: number, itemIndex: number) => void
+  isNewEmojiPick: boolean
 }
 
 function Category({
@@ -64,20 +67,22 @@ function Category({
   toggleEmojiPicker,
   isLoading,
   onEmojiClick,
+  onResetEmojiClick,
+  isNewEmojiPick,
 }: TProps) {
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const isNewTargetNameInvalid = newTargetName.length < 1
+  // const isNewTargetNameInvalid = newTargetName.length < 1
 
-  const onTabPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Tab' && isNewTargetNameInvalid) {
-      e.preventDefault()
-      setNewTargetName(category.subject)
+  // const onTabPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === 'Tab' && isNewTargetNameInvalid) {
+  //     e.preventDefault()
+  //     setNewTargetName(category.subject)
 
-      inputRef.current?.blur()
-    }
-  }
+  //     inputRef.current?.blur()
+  //   }
+  // }
 
   return (
     <div className='mb-4 md:mb-8'>
@@ -90,45 +95,79 @@ function Category({
             aria-label={newTargetName}
             value={newTargetName}
             onChange={(e) => setNewTargetName(e.target.value)}
-            onKeyDown={onTabPress}
+            // onKeyDown={onTabPress}
             placeholder={category.subject}
             size='lg'
             classNames={{
               input: '!placeholder:text-default-500 !text-foreground',
               base: 'w-fit',
             }}
-            endContent={
-              <Kbd
-                keys={['tab']}
-                classNames={{
-                  base: cn(
-                    'hidden md:block',
-                    !isNewTargetNameInvalid &&
-                      // Internal classes.
-                      'opacity-disabled transition-transform-colors-opacity cursor-default',
-                  ),
-                }}
-              >
-                Tab
-              </Kbd>
-            }
+            // endContent={
+            //   <Kbd
+            //     keys={['tab']}
+            //     classNames={{
+            //       base: cn(
+            //         'hidden md:block',
+            //         !isNewTargetNameInvalid &&
+            //           // Internal classes.
+            //           'opacity-disabled transition-transform-colors-opacity cursor-default',
+            //       ),
+            //     }}
+            //   >
+            //     Tab
+            //   </Kbd>
+            // }
           />
-          <Button
-            onPress={() => onSaveTargetClick(index)}
-            isLoading={isLoading.subject}
-            isDisabled={newTargetName.length < 1}
-            className='bg-foreground px-0 font-medium text-default-50'
-          >
-            {!isLoading.subject && (
-              <HoverableElement
-                uKey={category.subject}
-                element={<PiFloppyDisk size={DEFAULT_ICON_SIZE} />}
-                hoveredElement={<PiFloppyDiskFill size={DEFAULT_ICON_SIZE} />}
-                withShift={false}
-              />
-            )}{' '}
-            Save
-          </Button>
+          <div className='flex gap-2'>
+            <AnimatePresence>
+              {!(
+                isLoading.subject || newTargetName.trim() === category.subject
+              ) && (
+                <motion.div
+                  key='reset-button'
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Button
+                    onPress={() => {
+                      setNewTargetName(category.subject)
+                    }}
+                    color='danger'
+                    className='min-w-4 px-4 font-medium text-default-50 md:min-w-20 md:px-0'
+                  >
+                    <HoverableElement
+                      uKey={category.subject}
+                      element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
+                      hoveredElement={
+                        <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
+                      }
+                      withShift={false}
+                    />
+                    <span className='hidden md:block'>Reset</span>
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <Button
+              onPress={() => onSaveTargetClick(index)}
+              isLoading={isLoading.subject}
+              isDisabled={newTargetName.length < 1}
+              className='bg-foreground px-0 font-medium text-default-50'
+            >
+              {!isLoading.subject && (
+                <HoverableElement
+                  uKey={category.subject}
+                  element={<PiFloppyDisk size={DEFAULT_ICON_SIZE} />}
+                  hoveredElement={<PiFloppyDiskFill size={DEFAULT_ICON_SIZE} />}
+                  withShift={false}
+                />
+              )}{' '}
+              Save
+            </Button>
+          </div>
         </div>
       ) : (
         <div className='mb-3 flex h-[40px] items-center justify-between gap-2 rounded-medium bg-background px-2 md:gap-4 md:px-4'>
@@ -172,6 +211,8 @@ function Category({
                 toggleEmojiPicker={toggleEmojiPicker}
                 isLoading={isLoading}
                 onEmojiClick={onEmojiClick}
+                onResetEmojiClick={onResetEmojiClick}
+                isNewEmojiPick={isNewEmojiPick}
               />
             )
           })}
