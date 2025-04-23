@@ -107,7 +107,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const startDate = selectedDate.start?.toDate(getLocalTimeZone()) || null
   const endDate = selectedDate.end?.toDate(getLocalTimeZone()) || null
 
-  const isTipsDataExist = tipsDataAI && tipsDataAI?.length > 0
+  const isTipsDataExist = Array.isArray(tipsDataAI) && tipsDataAI.length > 0
 
   const formattedDateRange = useMemo(() => {
     if (!startDate || !endDate) return ''
@@ -333,6 +333,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
             Get useful tips for managing expenses.
           </p>
         )}
+
         {isMissMatchLocalStorageAndCurrMonthExpenses && isTipsDataExist && (
           <div className='mb-4'>
             <WarningText
@@ -341,6 +342,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
             />
           </div>
         )}
+
         <Magnetic>
           <Button
             isLoading={isLoadingTips}
