@@ -502,7 +502,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 <div className='flex items-center text-balance md:w-1/2'>
                   <div
                     onPointerDown={(e) => controls.start(e)}
-                    className='mr-2 cursor-grab'
+                    className='mr-2 cursor-grab touch-none'
                   >
                     <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
                     {/* <HoverableElement
