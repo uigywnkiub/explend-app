@@ -125,9 +125,9 @@ function Category({
               ) && (
                 <motion.div
                   key='reset-button'
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, x: 40, scale: 0.95 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: 40, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
                   <Button
@@ -135,7 +135,8 @@ function Category({
                       setNewTargetName(category.subject)
                     }}
                     color='danger'
-                    className='min-w-4 px-4 font-medium text-default-50 md:min-w-20 md:px-0'
+                    variant='flat'
+                    className='min-w-4 px-4 font-medium md:min-w-20 md:px-0'
                   >
                     <HoverableElement
                       uKey={category.subject}

@@ -1,10 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import {
   PiArrowClockwise,
   PiArrowClockwiseFill,
+  PiDotsSixVerticalBold,
   PiDotsThreeOutlineVerticalFill,
   PiNotePencil,
   PiNotePencilFill,
@@ -14,6 +15,7 @@ import {
   PiTrashFill,
   PiWarningOctagonFill,
 } from 'react-icons/pi'
+import { useDebounce } from 'react-use'
 
 import Link from 'next/link'
 
@@ -36,7 +38,7 @@ import {
   SelectSection,
   useDisclosure,
 } from '@heroui/react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, Reorder, useDragControls } from 'framer-motion'
 
 import {
   DEFAULT_CATEGORY,
@@ -59,8 +61,14 @@ import {
   getCategoryWithEmoji,
   getEmojiFromCategory,
   getFormattedAmountState,
+  getFormattedCurrency,
 } from '@/app/lib/helpers'
-import type { TCategoryLimits, TTransaction, TUserId } from '@/app/lib/types'
+import type {
+  TCalculatedLimits,
+  TCategoryLimits,
+  TTransaction,
+  TUserId,
+} from '@/app/lib/types'
 
 import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
@@ -104,6 +112,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   const [isLoadingEdit, setIsLoadingEdit] = useState(false)
   const [isLoadingReset, setIsLoadingReset] = useState(false)
   const [isLoadingAddLimit, setIsLoadingAddLimit] = useState(false)
+  const [isReorderLimitSave, setIsReorderLimitSave] = useState(false)
+
+  const reorderContainer = useRef(null)
+  const controls = useDragControls()
 
   // useMemo hooks
   const transactionsByCurrMonth = useMemo(
@@ -116,30 +128,39 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   const totalsByCategory = useMemo(() => {
     return calculateTotalsByCategory(expense, true)
   }, [expense])
+  const userLimitsData = useMemo(() => {
+    const [_userLimitsData] = transactions
+      .map((t) => t.categoryLimits)
+      .filter(Boolean)
 
-  const [_userLimitsData] = transactions
-    .map((e) => e.categoryLimits)
-    .filter(Boolean)
-  const userLimitsData = _userLimitsData || []
+    return _userLimitsData || []
+  }, [transactions])
 
   const changedCategoryNames = userLimitsData
     .map((e) => e.categoryName)
     .filter((name) => !getCategoryItemNames(userCategories).includes(name))
 
-  const calculatedLimitsData = userLimitsData.map((data) => {
-    const { categoryName, limitAmount: limitValue } = data
-    const currentAmount = totalsByCategory[categoryName] || 0
-    const limitAmount = parseFloat(formatAmount(limitValue))
-    const difference = limitAmount - currentAmount
-    const isLimitOver = difference < 0
+  const calculatedLimitsData: TCalculatedLimits[] = useMemo(() => {
+    return userLimitsData.map((data) => {
+      const { categoryName, limitAmount: limitValue } = data
+      const currentAmount = totalsByCategory[categoryName] || 0
+      const limitAmount = parseFloat(formatAmount(limitValue))
+      const difference = limitAmount - currentAmount
+      const isLimitOver = difference < 0
 
-    return {
-      categoryName,
-      limitAmount,
-      difference,
-      isLimitOver,
-    }
-  })
+      return {
+        categoryName,
+        limitAmount,
+        difference,
+        isLimitOver,
+      }
+    })
+  }, [userLimitsData, totalsByCategory])
+  const [calculatedLimitsDataState, setCalculatedLimitsDataState] =
+    useState<TCalculatedLimits[]>(calculatedLimitsData)
+  useEffect(() => {
+    setCalculatedLimitsDataState(calculatedLimitsData)
+  }, [calculatedLimitsData])
 
   const disabledCategories = [
     ...new Set(
@@ -184,6 +205,52 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       onClose()
     }
   }
+
+  const onAddReorderLimit = useCallback(
+    async (reorderedData: TCalculatedLimits[]) => {
+      const strippedLimitsOrder: TCategoryLimits[] = reorderedData.map(
+        ({ categoryName, limitAmount }) => ({
+          categoryName,
+          limitAmount: getFormattedCurrency(limitAmount),
+        }),
+      )
+      try {
+        await addLimit(userId, strippedLimitsOrder)
+        setIsReorderLimitSave(false)
+        toast.success('Reordered.')
+      } catch (err) {
+        toast.error('Failed to reorder.')
+        throw err
+      }
+    },
+    [userId],
+  )
+
+  const onReorderLimit = (
+    newCategoryNames: TCategoryLimits['categoryName'][],
+  ) => {
+    const reorderedLimits = newCategoryNames
+      .map((name) =>
+        calculatedLimitsDataState.find((item) => item.categoryName === name),
+      )
+      .filter((item): item is TCalculatedLimits => item !== undefined)
+
+    if (reorderedLimits.length === 0) return
+
+    setCalculatedLimitsDataState(reorderedLimits)
+    setIsReorderLimitSave(true)
+    // setTimeout(() => onAddReorderLimit(reorderedLimits), 1000)
+  }
+
+  // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
+  const [isReady, cancel] = useDebounce(
+    () => isReorderLimitSave && onAddReorderLimit(calculatedLimitsDataState),
+    1000,
+    [isReorderLimitSave],
+  )
+  useEffect(() => {
+    if (!isReady()) cancel()
+  }, [cancel, isReady])
 
   const onDeleteLimit = async (
     categoryName: TCategoryLimits['categoryName'] | null,
@@ -268,7 +335,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
             onPress={onOpenReset}
             color='danger'
             variant='flat'
-            className='min-w-4'
+            className='min-w-4 font-medium'
           >
             <HoverableElement
               uKey='reset'
@@ -281,7 +348,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
             onPress={onOpen}
             color='primary'
             variant='flat'
-            className='min-w-4'
+            className='min-w-4 font-medium'
           >
             <HoverableElement
               uKey='add'
@@ -398,9 +465,15 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         <p className='text-center text-default-500'>No Limits Found</p>
       )}
 
-      <ul className='space-y-4'>
+      <Reorder.Group
+        axis='y'
+        values={calculatedLimitsDataState.map((l) => l.categoryName)}
+        onReorder={onReorderLimit}
+        ref={reorderContainer}
+        className='select-none space-y-4'
+      >
         <AnimatePresence>
-          {calculatedLimitsData.map((data, idx) => {
+          {calculatedLimitsDataState.map((data, idx) => {
             const { categoryName, difference, limitAmount, isLimitOver } = data
             const progressPercentage =
               limitAmount > 0
@@ -416,12 +489,30 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
               changedCategoryNames.includes(categoryName)
 
             return (
-              <motion.li
+              <Reorder.Item
                 key={categoryName}
-                className='flex items-center justify-between py-2'
+                value={categoryName}
+                dragListener={false}
+                dragControls={controls}
+                dragConstraints={reorderContainer}
+                dragElastic={0.1}
                 {...MOTION_LIST(idx)}
+                className='relative flex items-center justify-between rounded-medium bg-content1'
               >
                 <div className='flex items-center text-balance md:w-1/2'>
+                  <div
+                    onPointerDown={(e) => controls.start(e)}
+                    className='mr-2 cursor-grab'
+                  >
+                    <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
+                    {/* <HoverableElement
+                      uKey='drag-button'
+                      element={<PiDotsSixVertical size={DEFAULT_ICON_SIZE} />}
+                      hoveredElement={
+                        <PiDotsSixVerticalFill size={DEFAULT_ICON_SIZE} />
+                      }
+                    /> */}
+                  </div>
                   <p className='-mb-1.5 text-xl md:text-2xl'>
                     {isChangedCategoryName
                       ? DEFAULT_CATEGORY_EMOJI
@@ -487,7 +578,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         variant='light'
                         isIconOnly
                         size='md'
-                        className='md:size-10'
+                        className='z-0 md:size-10'
                       >
                         <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
                       </Button>
@@ -525,9 +616,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                             />
                           }
                           description='Edit limit details'
-                          classNames={{
-                            description: 'text-default-500',
-                          }}
+                          classNames={{ description: 'text-default-500' }}
                         >
                           Edit
                         </DropdownItem>
@@ -547,9 +636,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                             />
                           }
                           description='Permanently delete limit'
-                          classNames={{
-                            description: 'text-default-500',
-                          }}
+                          classNames={{ description: 'text-default-500' }}
                         >
                           Delete
                         </DropdownItem>
@@ -557,11 +644,12 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                     </DropdownMenu>
                   </Dropdown>
                 </div>
-              </motion.li>
+              </Reorder.Item>
             )
           })}
         </AnimatePresence>
-      </ul>
+      </Reorder.Group>
+
       <div className='mt-4 flex flex-col gap-1 text-left md:mt-8'>
         <InfoText text='The calculation of limits is based on transactions by the current month.' />
         {/* <InfoText text='Your limits will be reset automatically in the new month.' /> */}

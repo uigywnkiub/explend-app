@@ -214,3 +214,10 @@ export type TReceiptState = {
   description: TTransaction['description']
   amount: TTransaction['amount']
 }
+
+export type TCalculatedLimits = {
+  categoryName: TCategoryLimits['categoryName']
+  limitAmount: number
+  difference: number
+  isLimitOver: boolean
+}
