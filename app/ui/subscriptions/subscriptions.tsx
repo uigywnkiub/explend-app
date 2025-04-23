@@ -492,6 +492,11 @@ export default function Subscriptions({
                         </DropdownTrigger>
                       </Badge>
                       <DropdownMenu
+                        disabledKeys={
+                          isAddedSubscriptionInThisMonth
+                            ? [DROPDOWN_KEY.ADD]
+                            : []
+                        }
                         aria-label='Subscription actions'
                         onAction={(key) => {
                           const currSubscription = getCurrSubscription(_id)
@@ -555,7 +560,9 @@ export default function Subscriptions({
                               description: 'text-default-500',
                             }}
                           >
-                            Add
+                            Add{' '}
+                            {isAddedSubscriptionInThisMonth &&
+                              '(added this month)'}
                           </DropdownItem>
                           <DropdownItem
                             key={DROPDOWN_KEY.EDIT}
