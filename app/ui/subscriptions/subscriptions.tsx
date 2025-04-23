@@ -5,6 +5,8 @@ import toast from 'react-hot-toast'
 import {
   PiArrowClockwise,
   PiArrowClockwiseFill,
+  PiCheckCircle,
+  PiCheckCircleFill,
   PiDotsThreeOutlineVerticalFill,
   PiNotePencil,
   PiNotePencilFill,
@@ -49,16 +51,19 @@ import {
   editSubscription,
   resetAllSubscriptions,
 } from '@/app/lib/actions'
+import { getTransactionsByCurrMonth } from '@/app/lib/data'
 import {
   capitalizeFirstLetter,
   createFormData,
   createSearchHrefWithKeyword,
+  formatAmount,
   getCategoriesMap,
   getCategoryWithEmoji,
   getCategoryWithoutEmoji,
   getEmojiFromCategory,
   getFormattedAmountState,
   pluralize,
+  toLowerCase,
 } from '@/app/lib/helpers'
 import type { TSubscriptions, TTransaction, TUserId } from '@/app/lib/types'
 
@@ -80,6 +85,7 @@ type TProps = {
   currency: TTransaction['currency']
   subscriptionsData: TTransaction['subscriptions']
   userCategories: TTransaction['categories']
+  transactions: TTransaction[]
 }
 
 export default function Subscriptions({
@@ -87,6 +93,7 @@ export default function Subscriptions({
   currency,
   subscriptionsData,
   userCategories,
+  transactions,
 }: TProps) {
   const {
     isOpen: isOpenCreate,
@@ -131,6 +138,12 @@ export default function Subscriptions({
   const isDisabledAddBtn =
     isCategoryNameInvalid || isAmountInvalid || isDescriptionInvalid
   const hasSubscriptions = subscriptionsData.length > 0
+
+  const subscriptionTransactionsByCurrMonth = useMemo(
+    () =>
+      getTransactionsByCurrMonth(transactions).filter((t) => t.isSubscription),
+    [transactions],
+  )
 
   const userCategoriesMap = useMemo(
     () => getCategoriesMap(userCategories),
@@ -393,9 +406,22 @@ export default function Subscriptions({
           <AnimatePresence>
             {subscriptionsData.map((s, idx) => {
               const { _id, category, description, amount } = s
+
               const isChangedCategoryName = changedCategoryNames.includes(
                 getCategoryWithoutEmoji(category),
               )
+
+              const isAddedSubscriptionInThisMonth =
+                subscriptionTransactionsByCurrMonth.some(
+                  (t) =>
+                    toLowerCase(t.description) === toLowerCase(description) &&
+                    t.category === category &&
+                    formatAmount(t.amount) === formatAmount(amount),
+                )
+
+              const checkIconClassName = isAddedSubscriptionInThisMonth
+                ? 'fill-success'
+                : ''
 
               return (
                 <motion.li
@@ -413,10 +439,28 @@ export default function Subscriptions({
                     </p>
                     <Link
                       href={createSearchHrefWithKeyword(description)}
-                      className='pr-2 hover:opacity-hover'
+                      className='hover:opacity-hover'
                     >
                       {description}
                     </Link>
+
+                    <div className='pr-2'>
+                      <HoverableElement
+                        uKey='check-subscription-icon'
+                        element={
+                          <PiCheckCircle
+                            size={DEFAULT_ICON_SIZE}
+                            className={checkIconClassName}
+                          />
+                        }
+                        hoveredElement={
+                          <PiCheckCircleFill
+                            size={DEFAULT_ICON_SIZE}
+                            className={checkIconClassName}
+                          />
+                        }
+                      />
+                    </div>
                   </div>
                   <div className='flex items-center gap-2'>
                     <p className='text-center'>
@@ -584,6 +628,7 @@ export default function Subscriptions({
 
         <div className='mt-4 flex flex-col gap-1 text-left md:mt-8'>
           <InfoText text='You can add each subscription to transactions as an expense.' />
+          <InfoText text='The green check icon indicates a subscription has been added this month.' />
         </div>
       </div>
 

@@ -41,6 +41,7 @@ export default async function Page() {
             currency={currency}
             subscriptionsData={userSubscriptions}
             userCategories={userCategories}
+            transactions={transactions}
           />
         )}
       </div>
