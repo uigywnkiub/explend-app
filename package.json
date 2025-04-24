@@ -38,7 +38,7 @@
     "date-fns-tz": "^3.2.0",
     "emoji-picker-react": "^4.12.2",
     "emoji-regex": "^10.4.0",
-    "framer-motion": "^12.8.2",
+    "framer-motion": "^12.9.0",
     "get-user-locale": "^3.0.0",
     "heic2any": "^0.0.4",
     "import-in-the-middle": "^1.13.1",
@@ -57,7 +57,7 @@
     "react-use": "^17.6.0",
     "recharts": "^2.15.3",
     "require-in-the-middle": "^7.5.2",
-    "resend": "^4.4.0",
+    "resend": "^4.4.1",
     "tailwind-merge": "^2.6.0",
     "to-words": "^4.5.0"
   },

@@ -187,7 +187,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     try {
       const res = await toast.promise(getAnalyzedReceiptAI(compressedFile), {
         loading: 'Analyzing receipt...',
-        success: 'Receipt successfully analyzed.',
+        success: 'Receipt analyzed.',
         error: 'Failed to analyze receipt.',
       })
       const parsedRes: TReceipt[] = JSON.parse(res)
@@ -230,7 +230,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           }),
           {
             loading: 'Converting receipt...',
-            success: 'Receipt converted successfully.',
+            success: 'Receipt converted.',
             error: 'Failed to convert receipt.',
           },
         )
