@@ -497,7 +497,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 dragConstraints={reorderContainer}
                 dragElastic={0.1}
                 {...MOTION_LIST(idx)}
-                className='relative flex items-center justify-between rounded-medium bg-content1'
+                className='relative flex items-center justify-between rounded-medium bg-content1 py-3'
               >
                 <div className='flex items-center text-balance md:w-1/2'>
                   <div
