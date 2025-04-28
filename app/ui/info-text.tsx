@@ -1,12 +1,16 @@
+import { type HighlighterProps } from 'react-highlight-words'
+
 import { cn } from '../lib/helpers'
+import HighlighterText from './highlighter-text'
 
 type TProps = {
   id?: string
-  text: string | React.ReactNode
+  text: string
   withAsterisk?: boolean
   withDoubleAsterisk?: boolean
   withHover?: boolean
   isSm?: boolean
+  query?: HighlighterProps['searchWords']
 }
 
 export default function InfoText({
@@ -16,7 +20,16 @@ export default function InfoText({
   withDoubleAsterisk = false,
   withHover = true,
   isSm = false,
+  query,
 }: TProps) {
+  const renderTextContent = () => {
+    if (query && query.length > 0) {
+      return <HighlighterText query={query} text={text} />
+    }
+
+    return text
+  }
+
   return (
     <p
       id={id}
@@ -28,7 +41,7 @@ export default function InfoText({
     >
       {withDoubleAsterisk && ' ** '}
       {!withDoubleAsterisk && withAsterisk && ' * '}
-      {text}
+      {renderTextContent()}
     </p>
   )
 }

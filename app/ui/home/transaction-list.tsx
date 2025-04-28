@@ -2,9 +2,12 @@
 
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
+import { useSearchParams } from 'next/navigation'
+
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { MOTION_LIST } from '@/config/constants/motion'
+import { SEARCH_PARAM } from '@/config/constants/navigation'
 
 import TransactionItem from '@/app/ui/home/transaction-item'
 
@@ -30,6 +33,9 @@ function TransactionList({
   transactionsWithChangedCategory,
   currency,
 }: TProps) {
+  const searchParams = useSearchParams()
+  const query = searchParams.get(SEARCH_PARAM.QUERY)?.toString() || ''
+
   const changedCategoryIds = new Set(
     transactionsWithChangedCategory.map((t) => t.id),
   )
@@ -51,7 +57,12 @@ function TransactionList({
               {...MOTION_LIST(idx)}
             >
               <div className='flex items-center justify-between py-2'>
-                <InfoText text={date} withAsterisk={false} isSm />
+                <InfoText
+                  text={date}
+                  withAsterisk={false}
+                  isSm
+                  query={[query]}
+                />
                 <div className='flex gap-2 text-sm hover:cursor-none'>
                   <FlowValue
                     value={income}
