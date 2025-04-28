@@ -5,7 +5,7 @@ import HighlighterText from './highlighter-text'
 
 type TProps = {
   id?: string
-  text: string
+  text: string | React.ReactNode
   withAsterisk?: boolean
   withDoubleAsterisk?: boolean
   withHover?: boolean
@@ -23,7 +23,7 @@ export default function InfoText({
   query,
 }: TProps) {
   const renderTextContent = () => {
-    if (query && query.length > 0) {
+    if (query && query.length > 0 && typeof text === 'string') {
       return <HighlighterText query={query} text={text} />
     }
 
