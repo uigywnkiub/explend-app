@@ -124,13 +124,13 @@ function MonthlyReport({ transactions, currency }: TProps) {
     [isTipsDataExist],
   )
 
-  const filteredTransactions = useMemo(
+  const filteredTransactionsByDateRange = useMemo(
     () => filterTransactionsByDateRange(transactions, startDate, endDate),
     [transactions, startDate, endDate],
   )
   const { income, expense } = useMemo(
-    () => filterTransactions(filteredTransactions),
-    [filteredTransactions],
+    () => filterTransactions(filteredTransactionsByDateRange),
+    [filteredTransactionsByDateRange],
   )
   const { totalIncome, totalExpense, expenseReportData, incomeReportData } =
     useMemo(
@@ -202,7 +202,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
     setExpenseTipsAIDataLocalStorage,
   ])
 
-  if (filteredTransactions.length === 0) {
+  if (filteredTransactionsByDateRange.length === 0) {
     return (
       <div className='rounded-medium bg-content1 p-4 md:p-8'>
         <div className='mb-6'>
