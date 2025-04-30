@@ -94,7 +94,22 @@ export default async function Page(props: {
   const hasTestTransactions = transactions.some((t) => t.isTest)
 
   const searchedTransactionsByQuery = transactions.filter((t) => {
-    const queryLower = toLowerCase(query)
+    const queryTrimmed = query.trim()
+    const queryLower = toLowerCase(queryTrimmed)
+
+    // Detect pattern: optional whitespace, '>' or '<', optional whitespace, then number (int or float).
+    const comparisonMatch = queryTrimmed.match(/^([<>])\s*(\d+(\.\d+)?)/)
+
+    if (comparisonMatch) {
+      const operator = comparisonMatch[1]
+      const amount = parseFloat(comparisonMatch[2])
+
+      if (operator === '>') {
+        return Number(t.amount) >= amount
+      } else if (operator === '<') {
+        return Number(t.amount) <= amount
+      }
+    }
 
     return (
       toLowerCase(t.description).includes(queryLower) ||
@@ -103,6 +118,7 @@ export default async function Page(props: {
       toLowerCase(formatDate(t.createdAt)).includes(queryLower)
     )
   })
+
   const hasSearchedTransactionsByQuery = searchedTransactionsByQuery.length > 0
   const countSearchedTransactionsByQuery = searchedTransactionsByQuery.length
 

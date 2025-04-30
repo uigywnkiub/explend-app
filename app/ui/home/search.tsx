@@ -110,7 +110,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
             placeholder='Type to search...'
             description={
               <InfoText
-                text='You can do searches by date, description, category, and amount.'
+                text='You can search by date, description, category, or amount, including amount using < or > operators at the start.'
                 withAsterisk={false}
               />
             }
