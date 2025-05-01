@@ -214,7 +214,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
           />
         </div>
         <p className='text-balance text-center text-default-500'>
-          No data found from {formattedDateRange}
+          No transactions found from {formattedDateRange}
         </p>
       </div>
     )

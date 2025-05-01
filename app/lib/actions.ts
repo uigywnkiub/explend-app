@@ -433,19 +433,29 @@ export async function updateCategories(
   if (!updatedCategories) {
     throw new Error('Updated categories are required.')
   }
+
   try {
     await dbConnect()
-    const newCategories: Partial<TCategories> = {}
-    if (updatedCategories.subject) {
-      newCategories.subject = updatedCategories.subject
+    // If the category's items are empty, delete the category.
+    if (updatedCategories.items && updatedCategories.items.length === 0) {
+      await TransactionModel.updateMany(
+        { userId },
+        { $pull: { categories: { subject: subjectName } } },
+      )
+    } else {
+      // Otherwise, update the subject and/or items
+      const newCategories: Partial<TCategories> = {}
+      if (updatedCategories.subject) {
+        newCategories.subject = updatedCategories.subject
+      }
+      if (updatedCategories.items) {
+        newCategories.items = updatedCategories.items
+      }
+      await TransactionModel.updateMany(
+        { userId, 'categories.subject': subjectName },
+        { $set: { 'categories.$': newCategories } },
+      )
     }
-    if (updatedCategories.items) {
-      newCategories.items = updatedCategories.items
-    }
-    await TransactionModel.updateMany(
-      { userId, 'categories.subject': subjectName },
-      { $set: { 'categories.$': newCategories } },
-    )
     revalidatePath(ROUTE.CATEGORIES)
   } catch (err) {
     throw err

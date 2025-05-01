@@ -202,6 +202,53 @@ function Categories({
     [categories, isNewEmojiPick, newItemName, userId],
   )
 
+  const onDeleteItemClick = useCallback(
+    async (categoryIndex: number, itemIndex: number) => {
+      const updatedCategories = [...categories]
+      const category = updatedCategories[categoryIndex]
+      const itemToDelete = category.items[itemIndex]
+
+      if (!itemToDelete) {
+        toast.error('Item not found.')
+
+        return
+      }
+
+      category.items.splice(itemIndex, 1)
+
+      const isNoCategoryItems = category.items.length === 0
+
+      if (isNoCategoryItems) {
+        updatedCategories.splice(categoryIndex, 1)
+      }
+
+      setCategories(updatedCategories)
+      setShowEmojiPicker(false)
+      setEditingItemIndex(null)
+
+      try {
+        await updateCategories(userId, category.subject, {
+          subject: category.subject,
+          items: category.items,
+        })
+
+        if (isNoCategoryItems) {
+          toast.success('Item and subject deleted.')
+        } else {
+          toast.success('Item deleted.')
+        }
+      } catch (err) {
+        if (isNoCategoryItems) {
+          toast.error('Failed to delete item and subject.')
+        } else {
+          toast.error('Failed to delete item.')
+        }
+        throw err
+      }
+    },
+    [categories, userId],
+  )
+
   const haveCategoriesChanged = useMemo(
     () => deepCompareArrays(categories, DEFAULT_CATEGORIES),
     [categories],
@@ -244,6 +291,7 @@ function Categories({
             onEmojiClick={onEmojiClick}
             onResetEmojiClick={onResetEmojiClick}
             isNewEmojiPick={isNewEmojiPick}
+            onDeleteItemClick={onDeleteItemClick}
           />
         )
       })}

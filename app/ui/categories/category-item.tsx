@@ -6,6 +6,8 @@ import {
   PiFloppyDiskFill,
   PiNotePencil,
   PiNotePencilFill,
+  PiTrash,
+  PiTrashFill,
 } from 'react-icons/pi'
 
 import { Button, Input } from '@heroui/react'
@@ -45,6 +47,7 @@ type TProps = {
   onEmojiClick: (emojiData: EmojiClickData) => void
   onResetEmojiClick: (categoryIndex: number, itemIndex: number) => void
   isNewEmojiPick: boolean
+  onDeleteItemClick: (categoryIndex: number, itemIndex: number) => void
 }
 
 function CategoryItem({
@@ -62,6 +65,7 @@ function CategoryItem({
   onEmojiClick,
   onResetEmojiClick,
   isNewEmojiPick,
+  onDeleteItemClick,
 }: TProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -157,10 +161,23 @@ function CategoryItem({
               </AnimatePresence>
 
               <Button
+                onPress={() => onDeleteItemClick(categoryIndex, itemIndex)}
+                color='danger'
+                className='min-w-4 px-4 font-medium'
+              >
+                <HoverableElement
+                  uKey={item.name}
+                  element={<PiTrash size={DEFAULT_ICON_SIZE} />}
+                  hoveredElement={<PiTrashFill size={DEFAULT_ICON_SIZE} />}
+                  withShift={false}
+                />
+              </Button>
+
+              <Button
                 onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
                 isLoading={isLoading.item}
                 isDisabled={newItemName.length < 1 || isLoading.item}
-                className='bg-foreground px-0 font-medium text-default-50'
+                className='min-w-4 bg-foreground px-4 font-medium text-default-50 md:min-w-20 md:px-0'
               >
                 {!isLoading.item && (
                   <HoverableElement
@@ -172,7 +189,7 @@ function CategoryItem({
                     withShift={false}
                   />
                 )}
-                Save
+                <span className='hidden md:block'>Save</span>
               </Button>
             </div>
           </div>

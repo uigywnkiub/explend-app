@@ -48,6 +48,7 @@ type TProps = {
   onEmojiClick: (emojiData: EmojiClickData) => void
   onResetEmojiClick: (categoryIndex: number, itemIndex: number) => void
   isNewEmojiPick: boolean
+  onDeleteItemClick: (categoryIndex: number, itemIndex: number) => void
 }
 
 function Category({
@@ -69,6 +70,7 @@ function Category({
   onEmojiClick,
   onResetEmojiClick,
   isNewEmojiPick,
+  onDeleteItemClick,
 }: TProps) {
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -214,6 +216,7 @@ function Category({
                 onEmojiClick={onEmojiClick}
                 onResetEmojiClick={onResetEmojiClick}
                 isNewEmojiPick={isNewEmojiPick}
+                onDeleteItemClick={onDeleteItemClick}
               />
             )
           })}
