@@ -22,13 +22,13 @@ import { HoverableElement } from '../hoverables'
 
 const socialLinks: TSocialLink[] = [
   {
-    name: 'GitHub',
+    title: 'GitHub',
     url: 'https://github.com/uigywnkiub/explend-app',
     icon: <PiGithubLogo />,
     hoverIcon: <PiGithubLogoFill />,
   },
   {
-    name: 'Buy Me a Coffee',
+    title: 'Buy Me a Coffee',
     url: 'https://buymeacoffee.com/eubywnkuee',
     icon: <PiCoffee />,
     hoverIcon: <PiCoffeeFill />,
@@ -56,7 +56,7 @@ function Footer() {
             return (
               <Tooltip
                 key={link.url}
-                content={link.name}
+                content={link.title}
                 placement='top'
                 size='sm'
               >
