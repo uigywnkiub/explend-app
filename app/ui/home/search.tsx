@@ -88,7 +88,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
     <>
       <Accordion
         isCompact
-        hideIndicator
+        // hideIndicator
         onExpandedChange={onExpandedChange}
         defaultExpandedKeys={
           isInitialExpanded.current ? [ACCORDION_ITEM_KEY] : []
@@ -101,7 +101,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
           aria-label={accordionTitle}
           title={accordionTitle}
           classNames={{
-            title: 'text-center hover:opacity-hover',
+            title: 'text-center hover:opacity-hover ml-6',
           }}
         >
           <Input

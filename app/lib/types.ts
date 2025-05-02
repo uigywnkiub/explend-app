@@ -112,13 +112,6 @@ export type TChartData = {
   expense: TTotals['expense']
 }
 
-export type TAuthProvider =
-  | 'github'
-  | 'google'
-  | 'spotify'
-  | 'dribbble'
-  | 'notion'
-
 export type TNavLink = {
   title: NAV_TITLE
   url: ROUTE
@@ -135,6 +128,13 @@ export type TSelect = {
 
 export type TIcon = TNavLink['icon']
 
+export type TAuthProvider =
+  | 'github'
+  | 'google'
+  | 'spotify'
+  | 'dribbble'
+  | 'notion'
+
 export type TSignInButton = {
   provider: TAuthProvider
   title: string
@@ -144,6 +144,7 @@ export type TSignInButton = {
 }
 
 export type TSocialLink = {
+  title: TSignInButton['title']
   url: string
   icon: TNavLink['icon']
   hoverIcon: TNavLink['hoverIcon']

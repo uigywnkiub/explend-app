@@ -273,7 +273,7 @@ function TransactionFormEdit({ transaction }: TProps) {
             </div>
           </div>
           <div className='flex items-center'>
-            <p className='text-sm text-default-500'>
+            <p>
               <span className='hidden md:inline'>Press </span>
               <span className='inline md:hidden'>Tap </span>
               <Button

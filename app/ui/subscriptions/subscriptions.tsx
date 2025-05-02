@@ -34,6 +34,7 @@ import {
   ModalFooter,
   ModalHeader,
   Selection,
+  Tooltip,
   useDisclosure,
 } from '@heroui/react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -305,45 +306,49 @@ export default function Subscriptions({
         <div className='flex items-center justify-between'>
           <h2>Subscriptions</h2>
           <div className='flex gap-2'>
-            <Button
-              isDisabled={!hasSubscriptions}
-              onPress={onOpenReset}
-              color='danger'
-              variant='flat'
-              className='min-w-4'
-            >
-              <HoverableElement
-                uKey='reset'
-                element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
-                hoveredElement={
-                  <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
-                }
-                withShift={false}
-              />
-            </Button>
-            <Button
-              onPress={() => {
-                const predefinedCategory = 'Subscription'
-                if (userCategoriesMap.has(predefinedCategory)) {
-                  const categoryName =
-                    userCategoriesMap.get(predefinedCategory)?.name
-                  if (categoryName) {
-                    setCategory(new Set([categoryName]))
+            <Tooltip content='Reset all subscriptions' placement='bottom'>
+              <Button
+                isDisabled={!hasSubscriptions}
+                onPress={onOpenReset}
+                color='danger'
+                variant='flat'
+                className='min-w-4'
+              >
+                <HoverableElement
+                  uKey='reset'
+                  element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
+                  hoveredElement={
+                    <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
                   }
-                }
-                onOpenCreate()
-              }}
-              color='primary'
-              variant='flat'
-              className='min-w-4'
-            >
-              <HoverableElement
-                uKey='create'
-                element={<PiPlus size={DEFAULT_ICON_SIZE} />}
-                hoveredElement={<PiPlusFill size={DEFAULT_ICON_SIZE} />}
-                withShift={false}
-              />
-            </Button>
+                  withShift={false}
+                />
+              </Button>
+            </Tooltip>
+            <Tooltip content='Add subscription' placement='bottom'>
+              <Button
+                onPress={() => {
+                  const predefinedCategory = 'Subscription'
+                  if (userCategoriesMap.has(predefinedCategory)) {
+                    const categoryName =
+                      userCategoriesMap.get(predefinedCategory)?.name
+                    if (categoryName) {
+                      setCategory(new Set([categoryName]))
+                    }
+                  }
+                  onOpenCreate()
+                }}
+                color='primary'
+                variant='flat'
+                className='min-w-4'
+              >
+                <HoverableElement
+                  uKey='create'
+                  element={<PiPlus size={DEFAULT_ICON_SIZE} />}
+                  hoveredElement={<PiPlusFill size={DEFAULT_ICON_SIZE} />}
+                  withShift={false}
+                />
+              </Button>
+            </Tooltip>
           </div>
 
           {/* Create subscription modal. */}
@@ -406,11 +411,14 @@ export default function Subscriptions({
           <AnimatePresence>
             {subscriptionsData.map((s, idx) => {
               const { _id, category, description, amount } = s
-
               const isChangedCategoryName = changedCategoryNames.includes(
                 getCategoryWithoutEmoji(category),
               )
-
+              const categoryEmoji = isChangedCategoryName
+                ? DEFAULT_CATEGORY_EMOJI
+                : getEmojiFromCategory(
+                    getCategoryWithEmoji(category, userCategories),
+                  )
               const isAddedSubscriptionInThisMonth =
                 subscriptionTransactionsByCurrMonth.some(
                   (t) =>
@@ -418,10 +426,10 @@ export default function Subscriptions({
                     t.category === category &&
                     formatAmount(t.amount) === formatAmount(amount),
                 )
-
               const checkIconClassName = isAddedSubscriptionInThisMonth
                 ? 'fill-success'
                 : ''
+              const addedSubscriptionStr = 'added this month'
 
               return (
                 <motion.li
@@ -430,37 +438,48 @@ export default function Subscriptions({
                   {...MOTION_LIST(idx)}
                 >
                   <div className='flex items-center gap-2 text-balance md:w-1/2'>
-                    <p className='-mb-1 text-xl md:text-2xl'>
-                      {isChangedCategoryName
-                        ? DEFAULT_CATEGORY_EMOJI
-                        : getEmojiFromCategory(
-                            getCategoryWithEmoji(category, userCategories),
-                          )}
-                    </p>
-                    <Link
-                      href={createSearchHrefWithKeyword(description)}
-                      className='hover:opacity-hover'
+                    <Tooltip
+                      content={getCategoryWithoutEmoji(category)}
+                      placement='bottom'
                     >
-                      {description}
-                    </Link>
-
-                    <div className='pr-2'>
-                      <HoverableElement
-                        uKey='check-subscription-icon'
-                        element={
-                          <PiCheckCircle
-                            size={DEFAULT_ICON_SIZE}
-                            className={checkIconClassName}
-                          />
-                        }
-                        hoveredElement={
-                          <PiCheckCircleFill
-                            size={DEFAULT_ICON_SIZE}
-                            className={checkIconClassName}
-                          />
-                        }
-                      />
-                    </div>
+                      <p className='-mb-1 cursor-default text-xl md:text-2xl'>
+                        {categoryEmoji}
+                      </p>
+                    </Tooltip>
+                    <Tooltip content='Search by description' placement='bottom'>
+                      <Link
+                        href={createSearchHrefWithKeyword(description)}
+                        className='hover:opacity-hover'
+                      >
+                        {description}
+                      </Link>
+                    </Tooltip>
+                    <Tooltip
+                      content={
+                        isAddedSubscriptionInThisMonth
+                          ? capitalizeFirstLetter(addedSubscriptionStr)
+                          : 'Ready to add'
+                      }
+                      placement='bottom'
+                    >
+                      <div className='pr-2'>
+                        <HoverableElement
+                          uKey='check-subscription-icon'
+                          element={
+                            <PiCheckCircle
+                              size={DEFAULT_ICON_SIZE}
+                              className={checkIconClassName}
+                            />
+                          }
+                          hoveredElement={
+                            <PiCheckCircleFill
+                              size={DEFAULT_ICON_SIZE}
+                              className={checkIconClassName}
+                            />
+                          }
+                        />
+                      </div>
+                    </Tooltip>
                   </div>
                   <div className='flex items-center gap-2'>
                     <p className='text-center'>
@@ -562,7 +581,7 @@ export default function Subscriptions({
                           >
                             Add{' '}
                             {isAddedSubscriptionInThisMonth &&
-                              '(added this month)'}
+                              `(${addedSubscriptionStr})`}
                           </DropdownItem>
                           <DropdownItem
                             key={DROPDOWN_KEY.EDIT}

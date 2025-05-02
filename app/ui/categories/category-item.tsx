@@ -10,7 +10,7 @@ import {
   PiTrashFill,
 } from 'react-icons/pi'
 
-import { Button, Input } from '@heroui/react'
+import { Button, Input, Tooltip } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
@@ -88,12 +88,19 @@ function CategoryItem({
         <div className='w-full'>
           <div className='flex h-20 w-full items-center justify-between gap-2 rounded-medium bg-content1 p-2 text-left md:p-4 md:text-lg'>
             <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
-              <div
-                className='cursor-pointer rounded-medium bg-content2 px-3 py-1 text-2xl hover:bg-default-200'
-                onClick={toggleEmojiPicker}
+              <Tooltip
+                content={
+                  showEmojiPicker ? 'Close emoji picker' : 'Open emoji picker'
+                }
+                placement='bottom'
               >
-                <div className='select-none pt-1.5'>{item.emoji}</div>
-              </div>
+                <div
+                  className='cursor-pointer rounded-medium bg-content2 px-3 py-1 text-2xl hover:bg-default-200'
+                  onClick={toggleEmojiPicker}
+                >
+                  <div className='select-none pt-1.5'>{item.emoji}</div>
+                </div>
+              </Tooltip>
               <Input
                 ref={inputRef}
                 isDisabled={isLoading.item}
@@ -137,41 +144,52 @@ function CategoryItem({
                     exit={{ opacity: 0, x: 40, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Button
-                      onPress={() => {
-                        setNewItemName(item.name)
-                        onResetEmojiClick(categoryIndex, itemIndex)
-                      }}
-                      color='danger'
-                      variant='flat'
-                      className='min-w-4 px-4 font-medium md:min-w-20 md:px-0'
+                    <Tooltip
+                      content='Reset category by your data'
+                      placement='bottom'
                     >
-                      <HoverableElement
-                        uKey={item.name}
-                        element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
-                        hoveredElement={
-                          <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
-                        }
-                        withShift={false}
-                      />
-                      <span className='hidden md:block'>Reset</span>
-                    </Button>
+                      <Button
+                        onPress={() => {
+                          setNewItemName(item.name)
+                          onResetEmojiClick(categoryIndex, itemIndex)
+                        }}
+                        color='danger'
+                        variant='flat'
+                        className='min-w-4 px-4 font-medium md:min-w-20 md:px-0'
+                      >
+                        <HoverableElement
+                          uKey={item.name}
+                          element={
+                            <PiArrowClockwise size={DEFAULT_ICON_SIZE} />
+                          }
+                          hoveredElement={
+                            <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
+                          }
+                          withShift={false}
+                        />
+                        <span className='hidden md:block'>Reset</span>
+                      </Button>
+                    </Tooltip>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <Button
-                onPress={() => onDeleteItemClick(categoryIndex, itemIndex)}
-                color='danger'
-                className='min-w-4 px-4 font-medium'
-              >
-                <HoverableElement
-                  uKey={item.name}
-                  element={<PiTrash size={DEFAULT_ICON_SIZE} />}
-                  hoveredElement={<PiTrashFill size={DEFAULT_ICON_SIZE} />}
-                  withShift={false}
-                />
-              </Button>
+              {!isLoading.item && (
+                <Tooltip content='Delete category' placement='bottom'>
+                  <Button
+                    onPress={() => onDeleteItemClick(categoryIndex, itemIndex)}
+                    color='danger'
+                    className='min-w-4 px-4 font-medium'
+                  >
+                    <HoverableElement
+                      uKey={item.name}
+                      element={<PiTrash size={DEFAULT_ICON_SIZE} />}
+                      hoveredElement={<PiTrashFill size={DEFAULT_ICON_SIZE} />}
+                      withShift={false}
+                    />
+                  </Button>
+                </Tooltip>
+              )}
 
               <Button
                 onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
@@ -213,19 +231,23 @@ function CategoryItem({
               )}
             </div>
           </div>
-          <Button
-            onPress={() => onEditItemClick(categoryIndex, itemIndex, item.name)}
-            isDisabled={item.name === DEFAULT_CATEGORY}
-            className='px-0 font-medium'
-          >
-            <HoverableElement
-              uKey={item.name}
-              element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
-              hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
-              withShift={false}
-            />{' '}
-            Edit
-          </Button>
+          <Tooltip content='Edit category' placement='bottom'>
+            <Button
+              onPress={() =>
+                onEditItemClick(categoryIndex, itemIndex, item.name)
+              }
+              isDisabled={item.name === DEFAULT_CATEGORY}
+              className='px-0 font-medium'
+            >
+              <HoverableElement
+                uKey={item.name}
+                element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
+                hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
+                withShift={false}
+              />{' '}
+              Edit
+            </Button>
+          </Tooltip>
         </div>
       )}
     </motion.li>
