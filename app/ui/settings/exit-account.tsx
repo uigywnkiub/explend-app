@@ -7,7 +7,7 @@ import { Button } from '@heroui/react'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
-import { TIcon } from '@/app/lib/types'
+import type { TIcon } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
 

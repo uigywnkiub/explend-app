@@ -21,7 +21,7 @@ import {
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { deleteAllTransactionsAndSignOut } from '@/app/lib/actions'
-import { TIcon, TUserId } from '@/app/lib/types'
+import type { TIcon, TUserId } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
 
