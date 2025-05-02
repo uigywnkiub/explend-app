@@ -28,6 +28,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Tooltip,
   useDisclosure,
 } from '@heroui/react'
 
@@ -40,6 +41,7 @@ import {
   copyToClipboard,
   createFormData,
   formatTime,
+  getCategoryWithoutEmoji,
   getEmojiFromCategory,
   getFormattedCurrency,
   omit,
@@ -120,9 +122,14 @@ Time: ${formatTime(t.createdAt)}`
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
             <div className='rounded-medium bg-content2 px-4 py-2 text-2xl md:px-4 md:py-2 md:text-[28px]'>
-              <div className='select-none pt-1.5 md:pt-2'>
-                {getEmojiFromCategory(t.category)}
-              </div>
+              <Tooltip
+                content={getCategoryWithoutEmoji(t.category)}
+                placement='bottom'
+              >
+                <div className='select-none pt-1.5 md:pt-2'>
+                  {getEmojiFromCategory(t.category)}
+                </div>
+              </Tooltip>
             </div>
             <div className='font-semibold'>
               {t.isIncome ? (

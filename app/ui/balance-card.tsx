@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
-import { Card, CardHeader } from '@heroui/react'
+import { Card, CardHeader, Tooltip } from '@heroui/react'
 import { motion } from 'framer-motion'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
@@ -101,72 +101,75 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
     >
       <div className='pointer-events-none absolute -inset-px opacity-0 transition duration-300' />
       <CardHeader className='flex flex-col items-center justify-between gap-4 px-2 md:px-4'>
-        <div
-          className={cn(
-            'text-center text-xl',
-            hasTransactions && 'cursor-pointer',
-          )}
-          onClick={onChangeInfo}
+        <Tooltip
+          content={isShowTotals ? 'Totals' : 'Balance'}
+          placement='bottom'
         >
-          <p className='mb-4 text-xs'>{greetingMsg}</p>
-          {isShowTotals ? (
-            <>
-              {!isLoading && isTotalLoaded ? (
-                <motion.div
-                  className='flex select-none flex-wrap justify-center gap-0 text-lg md:gap-2'
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ ...DIV.TRANSITION_SPRING }}
-                >
-                  <p>
-                    <PiArrowCircleUpFill className='mr-1 inline fill-success' />
-                    <span className='text-sm text-default-500'>
-                      Income:
-                    </span>{' '}
-                    <span className='font-semibold'>
-                      <AnimatedNumber value={total.income} /> {currency.code}
-                    </span>
-                  </p>
-                  <p>
-                    <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
-                    <span className='text-sm text-default-500'>Expense:</span>{' '}
-                    <span className='font-semibold'>
-                      <AnimatedNumber value={total.expense} /> {currency.code}
-                    </span>
-                  </p>
-                </motion.div>
-              ) : (
-                <motion.div
-                  className='flex h-7 items-center justify-center gap-2'
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ ...DIV.TRANSITION_SPRING }}
-                >
-                  <Loading
-                    size='sm'
-                    isInline
-                    wrapperClassName='flex flex-col items-center mb-1'
-                    withoutText
-                  />
-                </motion.div>
-              )}
-            </>
-          ) : (
-            <motion.p
-              className='select-none font-semibold'
-              initial={
-                isTotalLoaded
-                  ? { opacity: 0, scale: 0 }
-                  : { opacity: 1, scale: 1 }
-              }
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ ...DIV.TRANSITION_SPRING }}
-            >
-              <AnimatedNumber value={balance} isFormattedBalance />{' '}
-              {currency.code}
-            </motion.p>
-          )}
-        </div>
+          <div
+            className={cn(
+              'text-center text-xl',
+              hasTransactions && 'cursor-pointer',
+            )}
+            onClick={onChangeInfo}
+          >
+            <p className='mb-4 text-xs'>{greetingMsg}</p>
+            {isShowTotals ? (
+              <>
+                {!isLoading && isTotalLoaded ? (
+                  <motion.div
+                    className='flex select-none flex-wrap justify-center gap-0 text-lg md:gap-2'
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ ...DIV.TRANSITION_SPRING }}
+                  >
+                    <p>
+                      <PiArrowCircleUpFill className='mr-1 inline fill-success' />
+                      <span className='text-sm text-default-500'>Income:</span>{' '}
+                      <span className='font-semibold'>
+                        <AnimatedNumber value={total.income} /> {currency.code}
+                      </span>
+                    </p>
+                    <p>
+                      <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
+                      <span className='text-sm text-default-500'>Expense:</span>{' '}
+                      <span className='font-semibold'>
+                        <AnimatedNumber value={total.expense} /> {currency.code}
+                      </span>
+                    </p>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    className='flex h-7 items-center justify-center gap-2'
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ ...DIV.TRANSITION_SPRING }}
+                  >
+                    <Loading
+                      size='sm'
+                      isInline
+                      wrapperClassName='flex flex-col items-center mb-1'
+                      withoutText
+                    />
+                  </motion.div>
+                )}
+              </>
+            ) : (
+              <motion.p
+                className='select-none font-semibold'
+                initial={
+                  isTotalLoaded
+                    ? { opacity: 0, scale: 0 }
+                    : { opacity: 1, scale: 1 }
+                }
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ ...DIV.TRANSITION_SPRING }}
+              >
+                <AnimatedNumber value={balance} isFormattedBalance />{' '}
+                {currency.code}
+              </motion.p>
+            )}
+          </div>
+        </Tooltip>
       </CardHeader>
     </Card>
   )

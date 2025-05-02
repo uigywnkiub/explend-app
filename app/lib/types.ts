@@ -144,6 +144,7 @@ export type TSignInButton = {
 }
 
 export type TSocialLink = {
+  name: string
   url: string
   icon: TNavLink['icon']
   hoverIcon: TNavLink['hoverIcon']

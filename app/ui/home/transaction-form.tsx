@@ -575,7 +575,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
       <LimitToast triggerBy={categoryName} />
       <Accordion
         isCompact
-        hideIndicator
+        // hideIndicator
         onExpandedChange={onExpandedChange}
         defaultExpandedKeys={isInitialExpanded}
         className='p-0'
@@ -586,7 +586,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           aria-label={accordionTitle}
           title={accordionTitle}
           classNames={{
-            title: 'text-center hover:opacity-hover',
+            title: 'text-center hover:opacity-hover ml-6',
           }}
         >
           <Badge
@@ -766,7 +766,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
               </div>
             </div>
             <div className='flex items-center'>
-              <p className='text-sm text-default-500'>
+              <p>
                 <span className='hidden md:inline'>Press </span>
                 <span className='inline md:hidden'>Tap </span>
                 <Button

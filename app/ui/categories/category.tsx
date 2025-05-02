@@ -10,7 +10,7 @@ import {
 
 import { useRouter } from 'next/navigation'
 
-import { Button, Input } from '@heroui/react'
+import { Button, Input, Tooltip } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
@@ -132,24 +132,29 @@ function Category({
                   exit={{ opacity: 0, x: 40, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Button
-                    onPress={() => {
-                      setNewTargetName(category.subject)
-                    }}
-                    color='danger'
-                    variant='flat'
-                    className='min-w-4 px-4 font-medium md:min-w-20 md:px-0'
+                  <Tooltip
+                    content='Reset category subject by your data'
+                    placement='bottom'
                   >
-                    <HoverableElement
-                      uKey={category.subject}
-                      element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
-                      hoveredElement={
-                        <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
-                      }
-                      withShift={false}
-                    />
-                    <span className='hidden md:block'>Reset</span>
-                  </Button>
+                    <Button
+                      onPress={() => {
+                        setNewTargetName(category.subject)
+                      }}
+                      color='danger'
+                      variant='flat'
+                      className='min-w-4 px-4 font-medium md:min-w-20 md:px-0'
+                    >
+                      <HoverableElement
+                        uKey={category.subject}
+                        element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
+                        hoveredElement={
+                          <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
+                        }
+                        withShift={false}
+                      />
+                      <span className='hidden md:block'>Reset</span>
+                    </Button>
+                  </Tooltip>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -182,18 +187,20 @@ function Category({
               </sup>
             </button>
           </h2>
-          <Button
-            onPress={() => onEditTargetClick(index, category.subject)}
-            className='px-0 font-medium'
-          >
-            <HoverableElement
-              uKey={category.subject}
-              element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
-              hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
-              withShift={false}
-            />{' '}
-            Edit
-          </Button>
+          <Tooltip content='Edit category subject' placement='bottom'>
+            <Button
+              onPress={() => onEditTargetClick(index, category.subject)}
+              className='px-0 font-medium'
+            >
+              <HoverableElement
+                uKey={category.subject}
+                element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
+                hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
+                withShift={false}
+              />{' '}
+              Edit
+            </Button>
+          </Tooltip>
         </div>
       )}
       <ul className='list-inside list-disc'>

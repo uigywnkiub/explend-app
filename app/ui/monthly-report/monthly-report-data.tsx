@@ -2,6 +2,8 @@ import { Fragment, memo, useMemo } from 'react'
 
 import Link from 'next/link'
 
+import { Tooltip } from '@heroui/react'
+
 import {
   createSearchHrefWithKeyword,
   getCategoryWithoutEmoji,
@@ -33,14 +35,16 @@ function MonthlyReportData({ type, data, currency }: TProps) {
         {data.map((category) => (
           <Fragment key={category.category}>
             <div className='truncate md:text-lg'>
-              <Link
-                href={createSearchHrefWithKeyword(
-                  getCategoryWithoutEmoji(category.category),
-                )}
-                className='hover:opacity-hover'
-              >
-                {category.category}
-              </Link>
+              <Tooltip content='Search by category' placement='left'>
+                <Link
+                  href={createSearchHrefWithKeyword(
+                    getCategoryWithoutEmoji(category.category),
+                  )}
+                  className='hover:opacity-hover'
+                >
+                  {category.category}
+                </Link>
+              </Tooltip>
             </div>
             <div className='md:text-lg'>
               <AnimatedNumber value={category.percentage} isPercentage /> %

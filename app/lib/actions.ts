@@ -276,6 +276,9 @@ export async function sendFeedback(formData: FormData) {
   const email = process.env.RESEND_EMAIL
   const isResendEnable = process.env.IS_RESEND_ENABLE
   const feedback = formData.get('feedback') as string
+  if (!feedback) {
+    throw new Error('Feedback is required.')
+  }
   try {
     if (email && isResendEnable === 'true') {
       await Promise.all([

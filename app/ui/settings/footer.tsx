@@ -10,6 +10,7 @@ import { useMedia } from 'react-use'
 
 import Link from 'next/link'
 
+import { Tooltip } from '@heroui/react'
 import { getYear } from 'date-fns'
 
 import { APP_NAME, AUTHOR } from '@/config/constants/main'
@@ -21,11 +22,13 @@ import { HoverableElement } from '../hoverables'
 
 const socialLinks: TSocialLink[] = [
   {
+    name: 'GitHub',
     url: 'https://github.com/uigywnkiub/explend-app',
     icon: <PiGithubLogo />,
     hoverIcon: <PiGithubLogoFill />,
   },
   {
+    name: 'Buy Me a Coffee',
     url: 'https://buymeacoffee.com/eubywnkuee',
     icon: <PiCoffee />,
     hoverIcon: <PiCoffeeFill />,
@@ -51,19 +54,25 @@ function Footer() {
         <div className='flex justify-center gap-2'>
           {socialLinks.map((link) => {
             return (
-              <Link
+              <Tooltip
                 key={link.url}
-                href={link.url}
-                target='_blank'
-                className='cursor-pointer hover:text-foreground md:hover:opacity-hover'
+                content={link.name}
+                placement='top'
+                size='sm'
               >
-                <HoverableElement
-                  uKey={link.url}
-                  element={link.icon}
-                  hoveredElement={isMd ? link.hoverIcon : undefined}
-                  withShift={false}
-                />
-              </Link>
+                <Link
+                  href={link.url}
+                  target='_blank'
+                  className='cursor-pointer hover:text-foreground md:hover:opacity-hover'
+                >
+                  <HoverableElement
+                    uKey={link.url}
+                    element={link.icon}
+                    hoveredElement={isMd ? link.hoverIcon : undefined}
+                    withShift={false}
+                  />
+                </Link>
+              </Tooltip>
             )
           })}
         </div>

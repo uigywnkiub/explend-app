@@ -36,6 +36,7 @@ import {
   Selection,
   SelectItem,
   SelectSection,
+  Tooltip,
   useDisclosure,
 } from '@heroui/react'
 import { AnimatePresence, Reorder, useDragControls } from 'framer-motion'
@@ -330,33 +331,39 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       <div className='flex items-center justify-between'>
         <h2>Limits</h2>
         <div className='flex gap-2'>
-          <Button
-            isDisabled={isNoUserLimitsData}
-            onPress={onOpenReset}
-            color='danger'
-            variant='flat'
-            className='min-w-4 font-medium'
-          >
-            <HoverableElement
-              uKey='reset'
-              element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
-              hoveredElement={<PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />}
-              withShift={false}
-            />
-          </Button>
-          <Button
-            onPress={onOpen}
-            color='primary'
-            variant='flat'
-            className='min-w-4 font-medium'
-          >
-            <HoverableElement
-              uKey='add'
-              element={<PiPlus size={DEFAULT_ICON_SIZE} />}
-              hoveredElement={<PiPlusFill size={DEFAULT_ICON_SIZE} />}
-              withShift={false}
-            />
-          </Button>
+          <Tooltip content='Reset all limits' placement='bottom'>
+            <Button
+              isDisabled={isNoUserLimitsData}
+              onPress={onOpenReset}
+              color='danger'
+              variant='flat'
+              className='min-w-4 font-medium'
+            >
+              <HoverableElement
+                uKey='reset'
+                element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
+                hoveredElement={
+                  <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
+                }
+                withShift={false}
+              />
+            </Button>
+          </Tooltip>
+          <Tooltip content='Add limit' placement='bottom'>
+            <Button
+              onPress={onOpen}
+              color='primary'
+              variant='flat'
+              className='min-w-4 font-medium'
+            >
+              <HoverableElement
+                uKey='add'
+                element={<PiPlus size={DEFAULT_ICON_SIZE} />}
+                hoveredElement={<PiPlusFill size={DEFAULT_ICON_SIZE} />}
+                withShift={false}
+              />
+            </Button>
+          </Tooltip>
         </div>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
           <ModalContent>
@@ -500,19 +507,14 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 className='relative flex items-center justify-between rounded-medium bg-content1 py-3'
               >
                 <div className='flex items-center text-balance md:w-1/2'>
-                  <div
-                    onPointerDown={(e) => controls.start(e)}
-                    className='mr-2 cursor-grab touch-none'
-                  >
-                    <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
-                    {/* <HoverableElement
-                      uKey='drag-button'
-                      element={<PiDotsSixVertical size={DEFAULT_ICON_SIZE} />}
-                      hoveredElement={
-                        <PiDotsSixVerticalFill size={DEFAULT_ICON_SIZE} />
-                      }
-                    /> */}
-                  </div>
+                  <Tooltip content='Drag to reorder' placement='left'>
+                    <div
+                      onPointerDown={(e) => controls.start(e)}
+                      className='mr-2 cursor-grab touch-none'
+                    >
+                      <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
+                    </div>
+                  </Tooltip>
                   <p className='-mb-1.5 text-xl md:text-2xl'>
                     {isChangedCategoryName
                       ? DEFAULT_CATEGORY_EMOJI
@@ -522,29 +524,36 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   </p>
                   <div className='mb-2 ml-2 w-full'>
                     <div className='mb-2 text-left'>
-                      <Link
-                        href={createSearchHrefWithKeyword(categoryName)}
-                        className={cn(
-                          '-mt-3 truncate text-balance hover:opacity-hover md:-mt-1.5',
-                          isChangedCategoryName &&
-                            'text-default-500 line-through',
-                        )}
-                      >
-                        {categoryName}
-                      </Link>
+                      <Tooltip content='Search by category' placement='top'>
+                        <Link
+                          href={createSearchHrefWithKeyword(categoryName)}
+                          className={cn(
+                            '-mt-3 truncate text-balance hover:opacity-hover md:-mt-1.5',
+                            isChangedCategoryName &&
+                              'text-default-500 line-through',
+                          )}
+                        >
+                          {categoryName}
+                        </Link>
+                      </Tooltip>
                       {isChangedCategoryName && (
                         <p className='text-xs'>No longer exists</p>
                       )}
                     </div>
-                    <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default md:relative md:w-full'>
-                      <div
-                        className={cn(
-                          'absolute h-[5px] rounded-full',
-                          isLimitOver ? 'bg-danger' : 'bg-success',
-                        )}
-                        style={{ width: `${progressPercentage}%` }}
-                      />
-                    </div>
+                    <Tooltip
+                      content={`${progressPercentage}%`}
+                      placement='bottom'
+                    >
+                      <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default md:relative md:w-full'>
+                        <div
+                          className={cn(
+                            'absolute h-[5px] rounded-full',
+                            isLimitOver ? 'bg-danger' : 'bg-success',
+                          )}
+                          style={{ width: `${progressPercentage}%` }}
+                        />
+                      </div>
+                    </Tooltip>
                   </div>
                 </div>
                 <div className='flex items-center gap-2'>
