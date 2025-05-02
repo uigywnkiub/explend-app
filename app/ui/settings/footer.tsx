@@ -40,43 +40,41 @@ function Footer() {
 
   return (
     <>
-      <footer className='mt-32 flex flex-col-reverse items-center justify-center gap-2 text-center text-default-500'>
-        <div className='text-xs md:text-sm'>
-          {/* {<Logo size='smallest' />} */}
-          &copy; {getYear(new Date())}{' '}
-          <span className='text-foreground'>{APP_NAME.SHORT}</span> · Built by{' '}
-          <Link href={AUTHOR.URL} target='_blank'>
-            <span className='cursor-pointer underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
-              {AUTHOR.NAME}
-            </span>
-          </Link>
-        </div>
-        <div className='flex justify-center gap-2'>
-          {socialLinks.map((link) => {
-            return (
-              <Tooltip
-                key={link.url}
-                content={link.title}
-                placement='top'
-                size='sm'
+      <div className='text-xs md:text-sm'>
+        {/* {<Logo size='smallest' />} */}
+        &copy; {getYear(new Date())}{' '}
+        <span className='text-foreground'>{APP_NAME.SHORT}</span> · Built by{' '}
+        <Link href={AUTHOR.URL} target='_blank'>
+          <span className='cursor-pointer underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
+            {AUTHOR.NAME}
+          </span>
+        </Link>
+      </div>
+      <div className='flex justify-center gap-2'>
+        {socialLinks.map((link) => {
+          return (
+            <Tooltip
+              key={link.url}
+              content={link.title}
+              placement='top'
+              size='sm'
+            >
+              <Link
+                href={link.url}
+                target='_blank'
+                className='cursor-pointer hover:text-foreground md:hover:opacity-hover'
               >
-                <Link
-                  href={link.url}
-                  target='_blank'
-                  className='cursor-pointer hover:text-foreground md:hover:opacity-hover'
-                >
-                  <HoverableElement
-                    uKey={link.url}
-                    element={link.icon}
-                    hoveredElement={isMd ? link.hoverIcon : undefined}
-                    withShift={false}
-                  />
-                </Link>
-              </Tooltip>
-            )
-          })}
-        </div>
-      </footer>
+                <HoverableElement
+                  uKey={link.url}
+                  element={link.icon}
+                  hoveredElement={isMd ? link.hoverIcon : undefined}
+                  withShift={false}
+                />
+              </Link>
+            </Tooltip>
+          )
+        })}
+      </div>
     </>
   )
 }

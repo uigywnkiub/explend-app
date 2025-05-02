@@ -16,23 +16,42 @@ export default function WithSidebar({
   return (
     <div className='h-screen overflow-hidden'>
       <input type='checkbox' id='sidebar-toggle' className='hidden' />
+
       <div className='flex h-full'>
-        <div className='fixed-no-scroll hidden h-full w-64 flex-none md:flex'>
+        <aside
+          className='fixed-no-scroll hidden h-full w-64 flex-none md:flex'
+          role='complementary'
+        >
           <div className='flex h-screen flex-col items-start justify-between p-8'>
-            <nav className={linkWrapper}>
+            <nav
+              className={linkWrapper}
+              role='navigation'
+              aria-label='Top menu'
+            >
               <Navbar linksGroup='top' withLogo />
             </nav>
-            <nav className={linkWrapper}>
+            <nav
+              className={linkWrapper}
+              role='navigation'
+              aria-label='Bottom menu'
+            >
               <Navbar linksGroup='bottom' />
               <User />
             </nav>
           </div>
-        </div>
-        <main className={contentWrapper}>
+        </aside>
+
+        <main className={contentWrapper} role='main'>
           {contentNearby}
-          <Footer />
+          <footer
+            className='mt-32 flex flex-col-reverse items-center justify-center gap-2 text-center text-default-500'
+            role='contentinfo'
+          >
+            <Footer />
+          </footer>
         </main>
       </div>
+
       <Hamburger />
       <MaskAmountInfo />
     </div>

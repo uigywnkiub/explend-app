@@ -111,17 +111,19 @@ function Navbar({ linksGroup, withLogo }: TProps) {
           <Logo size={isMd ? 'sm' : 'xxs'} />
         </div>
       )}
-      {navLinks.map((link, idx) => {
-        return (
-          <HoverableNavLink
-            key={link.title}
-            idx={idx}
-            link={link}
-            isActiveLink={pathname === link.url}
-            withScale
-          />
-        )
-      })}
+      <ul className='space-y-4' role='list'>
+        {navLinks.map((link, idx) => {
+          return (
+            <HoverableNavLink
+              key={link.title}
+              idx={idx}
+              link={link}
+              isActiveLink={pathname === link.url}
+              withScale
+            />
+          )
+        })}
+      </ul>
     </>
   )
 }

@@ -61,24 +61,25 @@ export const HoverableNavLink = ({
   withScale = false,
 }: THoverableNavLink) => {
   return useHover((hovered: boolean) => (
-    <Link
-      key={link.title}
-      href={link.url}
-      className={cn(
-        'flex w-full items-center gap-4 rounded-medium py-1 text-2xl md:py-2 md:text-base',
-        !isActiveLink && 'text-default-500 hover:text-foreground',
-        idx === 0 && 'mt-8 md:mt-4',
-      )}
-    >
-      <motion.div
-        className='hidden md:block'
-        initial={{ ...DIV.INITIAL }}
-        animate={{ ...DIV.ANIMATE(isActiveLink || hovered, withScale) }}
-        transition={{ ...DIV.TRANSITION }}
+    <li key={link.title} role='listitem'>
+      <Link
+        href={link.url}
+        className={cn(
+          'flex w-full items-center gap-4 rounded-medium py-1 text-2xl md:py-2 md:text-base',
+          !isActiveLink && 'text-default-500 hover:text-foreground',
+          idx === 0 && 'mt-8 md:mt-4',
+        )}
       >
-        {isActiveLink || hovered ? link.hoverIcon : link.icon}
-      </motion.div>
-      {link.title}
-    </Link>
+        <motion.div
+          className='hidden md:block'
+          initial={{ ...DIV.INITIAL }}
+          animate={{ ...DIV.ANIMATE(isActiveLink || hovered, withScale) }}
+          transition={{ ...DIV.TRANSITION }}
+        >
+          {isActiveLink || hovered ? link.hoverIcon : link.icon}
+        </motion.div>
+        {link.title}
+      </Link>
+    </li>
   ))
 }

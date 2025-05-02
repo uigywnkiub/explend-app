@@ -511,11 +511,6 @@ export default function Subscriptions({
                         </DropdownTrigger>
                       </Badge>
                       <DropdownMenu
-                        disabledKeys={
-                          isAddedSubscriptionInThisMonth
-                            ? [DROPDOWN_KEY.ADD]
-                            : []
-                        }
                         aria-label='Subscription actions'
                         onAction={(key) => {
                           const currSubscription = getCurrSubscription(_id)
