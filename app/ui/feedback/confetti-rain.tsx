@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
 
-import { CONFETTI } from '@/config/constants/cookies'
+import { COOKIE_CONFETTI } from '@/config/constants/cookies'
 
 import { setCookie } from '@/app/lib/actions'
 
@@ -22,7 +22,11 @@ export default function ConfettiRain() {
       onConfettiComplete={async (confetti) => {
         setParty(false)
         confetti?.reset()
-        await setCookie(CONFETTI.NAME, CONFETTI.VALUE, CONFETTI.MAX_AGE)
+        await setCookie(
+          COOKIE_CONFETTI.NAME,
+          COOKIE_CONFETTI.VALUE,
+          COOKIE_CONFETTI.MAX_AGE,
+        )
       }}
     />
   )

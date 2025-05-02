@@ -10,7 +10,7 @@ import { SignOutError } from '@auth/core/errors'
 import { isObjectIdOrHexString } from 'mongoose'
 import { Resend } from 'resend'
 
-import { FEEDBACK } from '@/config/constants/cookies'
+import { COOKIE_FEEDBACK } from '@/config/constants/cookies'
 import {
   APP_NAME,
   DEFAULT_CURRENCY_CODE,
@@ -288,7 +288,11 @@ export async function sendFeedback(formData: FormData) {
           subject: 'Feedback',
           html: `<h3>${feedback}</h3>`,
         }),
-        setCookie(FEEDBACK.NAME, FEEDBACK.VALUE, FEEDBACK.MAX_AGE),
+        setCookie(
+          COOKIE_FEEDBACK.NAME,
+          COOKIE_FEEDBACK.VALUE,
+          COOKIE_FEEDBACK.MAX_AGE,
+        ),
       ])
     }
   } catch (err) {

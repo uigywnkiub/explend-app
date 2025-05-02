@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 
-import { CONFETTI, FEEDBACK } from '@/config/constants/cookies'
+import { COOKIE_CONFETTI, COOKIE_FEEDBACK } from '@/config/constants/cookies'
 import { APP_NAME } from '@/config/constants/main'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
@@ -16,10 +16,10 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const cookieStore = await cookies()
-  const feedbackCookie = cookieStore.get(FEEDBACK.NAME)
-  const confettiCookie = cookieStore.get(CONFETTI.NAME)
-  const isSentFeedback = feedbackCookie?.value === FEEDBACK.VALUE
-  const isConfettiFired = confettiCookie?.value === CONFETTI.VALUE
+  const feedbackCookie = cookieStore.get(COOKIE_FEEDBACK.NAME)
+  const confettiCookie = cookieStore.get(COOKIE_CONFETTI.NAME)
+  const isSentFeedback = feedbackCookie?.value === COOKIE_FEEDBACK.VALUE
+  const isConfettiFired = confettiCookie?.value === COOKIE_CONFETTI.VALUE
 
   const content = (
     <>
