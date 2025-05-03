@@ -19,7 +19,7 @@ import { updateCurrency } from '@/app/lib/actions'
 import { getSlicedCurrencyCode } from '@/app/lib/helpers'
 import type {
   TGetTransactions,
-  TSelect,
+  TIcon,
   TTransaction,
   TUserId,
 } from '@/app/lib/types'
@@ -32,7 +32,7 @@ const AVATAR_SIZE = `h-[${DEFAULT_ICON_SIZE}px] w-[${DEFAULT_ICON_SIZE}px]`
 const currencies: {
   name: CURRENCY_NAME
   code: CURRENCY_CODE
-  icon: TSelect['icon']
+  icon: TIcon
 }[] = [
   {
     name: CURRENCY_NAME.UAH,
@@ -41,11 +41,7 @@ const currencies: {
       <Avatar
         // ImgComponent={Image}
         ImgComponent={'img'}
-        imgProps={{
-          // quality: 100,
-          width: DEFAULT_ICON_SIZE,
-          height: DEFAULT_ICON_SIZE,
-        }}
+        imgProps={{ width: DEFAULT_ICON_SIZE, height: DEFAULT_ICON_SIZE }}
         alt={CURRENCY_NAME.UAH}
         className={AVATAR_SIZE}
         src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.UAH)}.svg`}
@@ -74,6 +70,105 @@ const currencies: {
       />
     ),
   },
+  {
+    name: CURRENCY_NAME.GBP,
+    code: CURRENCY_CODE.GBP,
+    icon: (
+      <Avatar
+        alt={CURRENCY_NAME.GBP}
+        className={AVATAR_SIZE}
+        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.GBP)}.svg`}
+      />
+    ),
+  },
+  {
+    name: CURRENCY_NAME.CAD,
+    code: CURRENCY_CODE.CAD,
+    icon: (
+      <Avatar
+        alt={CURRENCY_NAME.CAD}
+        className={AVATAR_SIZE}
+        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.CAD)}.svg`}
+      />
+    ),
+  },
+  {
+    name: CURRENCY_NAME.INR,
+    code: CURRENCY_CODE.INR,
+    icon: (
+      <Avatar
+        alt={CURRENCY_NAME.INR}
+        className={AVATAR_SIZE}
+        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.INR)}.svg`}
+      />
+    ),
+  },
+  {
+    name: CURRENCY_NAME.IDR,
+    code: CURRENCY_CODE.IDR,
+    icon: (
+      <Avatar
+        alt={CURRENCY_NAME.IDR}
+        className={AVATAR_SIZE}
+        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.IDR)}.svg`}
+      />
+    ),
+  },
+  {
+    name: CURRENCY_NAME.BRL,
+    code: CURRENCY_CODE.BRL,
+    icon: (
+      <Avatar
+        alt={CURRENCY_NAME.BRL}
+        className={AVATAR_SIZE}
+        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.BRL)}.svg`}
+      />
+    ),
+  },
+  {
+    name: CURRENCY_NAME.HKD,
+    code: CURRENCY_CODE.HKD,
+    icon: (
+      <Avatar
+        alt={CURRENCY_NAME.HKD}
+        className={AVATAR_SIZE}
+        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.HKD)}.svg`}
+      />
+    ),
+  },
+  {
+    name: CURRENCY_NAME.CNY,
+    code: CURRENCY_CODE.CNY,
+    icon: (
+      <Avatar
+        alt={CURRENCY_NAME.CNY}
+        className={AVATAR_SIZE}
+        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.CNY)}.svg`}
+      />
+    ),
+  },
+  {
+    name: CURRENCY_NAME.HUF,
+    code: CURRENCY_CODE.HUF,
+    icon: (
+      <Avatar
+        alt={CURRENCY_NAME.HUF}
+        className={AVATAR_SIZE}
+        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.HUF)}.svg`}
+      />
+    ),
+  },
+  {
+    name: CURRENCY_NAME.PLN,
+    code: CURRENCY_CODE.PLN,
+    icon: (
+      <Avatar
+        alt={CURRENCY_NAME.PLN}
+        className={AVATAR_SIZE}
+        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.PLN)}.svg`}
+      />
+    ),
+  },
 ]
 
 const getCurrencyData = (code: CURRENCY_NAME): TTransaction['currency'] => {
@@ -95,6 +190,60 @@ const getCurrencyData = (code: CURRENCY_NAME): TTransaction['currency'] => {
         name: CURRENCY_NAME.EUR,
         code: CURRENCY_CODE.EUR,
         sign: CURRENCY_SIGN.EUR,
+      }
+    case CURRENCY_NAME.GBP:
+      return {
+        name: CURRENCY_NAME.GBP,
+        code: CURRENCY_CODE.GBP,
+        sign: CURRENCY_SIGN.GBP,
+      }
+    case CURRENCY_NAME.CAD:
+      return {
+        name: CURRENCY_NAME.CAD,
+        code: CURRENCY_CODE.CAD,
+        sign: CURRENCY_SIGN.CAD,
+      }
+    case CURRENCY_NAME.INR:
+      return {
+        name: CURRENCY_NAME.INR,
+        code: CURRENCY_CODE.INR,
+        sign: CURRENCY_SIGN.INR,
+      }
+    case CURRENCY_NAME.IDR:
+      return {
+        name: CURRENCY_NAME.IDR,
+        code: CURRENCY_CODE.IDR,
+        sign: CURRENCY_SIGN.IDR,
+      }
+    case CURRENCY_NAME.BRL:
+      return {
+        name: CURRENCY_NAME.BRL,
+        code: CURRENCY_CODE.BRL,
+        sign: CURRENCY_SIGN.BRL,
+      }
+    case CURRENCY_NAME.HKD:
+      return {
+        name: CURRENCY_NAME.HKD,
+        code: CURRENCY_CODE.HKD,
+        sign: CURRENCY_SIGN.HKD,
+      }
+    case CURRENCY_NAME.CNY:
+      return {
+        name: CURRENCY_NAME.CNY,
+        code: CURRENCY_CODE.CNY,
+        sign: CURRENCY_SIGN.CNY,
+      }
+    case CURRENCY_NAME.HUF:
+      return {
+        name: CURRENCY_NAME.HUF,
+        code: CURRENCY_CODE.HUF,
+        sign: CURRENCY_SIGN.HUF,
+      }
+    case CURRENCY_NAME.PLN:
+      return {
+        name: CURRENCY_NAME.PLN,
+        code: CURRENCY_CODE.PLN,
+        sign: CURRENCY_SIGN.PLN,
       }
     default:
       return {
