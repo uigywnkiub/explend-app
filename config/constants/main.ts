@@ -19,16 +19,43 @@ export const enum CURRENCY_NAME {
   UAH = 'Ukrainian Hryvnia',
   USD = 'United States Dollar',
   EUR = 'Euro',
+  GBP = 'British Pound',
+  CAD = 'Canadian Dollar',
+  INR = 'Indian Rupee',
+  IDR = 'Indonesian Rupiah',
+  BRL = 'Brazilian Real',
+  HKD = 'Hong Kong Dollar',
+  CNY = 'Chinese Yuan',
+  HUF = 'Hungarian Forint',
+  PLN = 'Polish Zloty',
 }
 export const enum CURRENCY_CODE {
   UAH = 'UAH',
   USD = 'USD',
   EUR = 'EUR',
+  GBP = 'GBP',
+  CAD = 'CAD',
+  INR = 'INR',
+  IDR = 'IDR',
+  BRL = 'BRL',
+  HKD = 'HKD',
+  CNY = 'CNY',
+  HUF = 'HUF',
+  PLN = 'PLN',
 }
 export const enum CURRENCY_SIGN {
   UAH = '₴',
   USD = '$',
   EUR = '€',
+  GBP = '£',
+  CAD = 'C$',
+  INR = '₹',
+  IDR = 'Rp',
+  BRL = 'R$',
+  HKD = 'HK$',
+  CNY = '¥',
+  HUF = 'Ft',
+  PLN = 'zł',
 }
 export const DEFAULT_CURRENCY_NAME = CURRENCY_NAME.USD
 export const DEFAULT_CURRENCY_CODE = CURRENCY_CODE.USD
