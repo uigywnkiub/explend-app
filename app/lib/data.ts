@@ -14,6 +14,7 @@ import {
   formatPercentage,
   getCategoryWithoutEmoji,
   toCalendarDate,
+  toLowerCase,
 } from './helpers'
 import type {
   TCategories,
@@ -216,4 +217,21 @@ export const deepCloneCategories = (
     ...category,
     items: category.items.map((item) => ({ ...item })),
   }))
+}
+
+export const getTransactionCountByCategory = (
+  transactions: TTransaction[],
+  category: TTransaction['category'],
+): number => {
+  const normalizedCategory = toLowerCase(getCategoryWithoutEmoji(category))
+
+  return transactions.reduce((count, t) => {
+    const normalizedTransactionCategory = toLowerCase(
+      getCategoryWithoutEmoji(t.category),
+    )
+
+    return normalizedTransactionCategory === normalizedCategory
+      ? count + 1
+      : count
+  }, 0)
 }

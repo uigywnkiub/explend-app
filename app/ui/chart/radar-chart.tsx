@@ -34,6 +34,7 @@ import {
   getBooleanFromLocalStorage,
   getCategoryWithoutEmoji,
   getFormattedCurrency,
+  pluralize,
 } from '@/app/lib/helpers'
 import type { TTransaction } from '@/app/lib/types'
 
@@ -144,6 +145,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
                 payload={[]}
                 label={''}
                 currency={currency}
+                transactions={transactions}
               />
             }
             wrapperClassName='rounded-medium bg-background'
@@ -165,12 +167,20 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
 
       <div className='-mt-2 flex flex-col gap-1 text-center text-xs md:text-sm'>
         <p>
-          {`Visualization of ${isChartByCurrMonth ? 'current month' : 'all-time'} transactions.`}
+          {`Visualization of ${isChartByCurrMonth ? 'current month' : 'all-time'} ${pluralize(
+            transactions.length,
+            'transaction',
+            'transactions',
+          )}`}
         </p>
-        <p>{`From ${firstTransactionDate} to ${lastTransactionDate}.`}</p>
+        <p>{`From ${firstTransactionDate} to ${lastTransactionDate}`}</p>
         <p>
           {/* {`${toWords.convert(transactions.length)} (${getFormattedCurrency(transactions.length, false)}) entries.`} */}
-          {`${getFormattedCurrency(transactions.length, false)} entries.`}
+          {`${getFormattedCurrency(transactions.length, false)} ${pluralize(
+            transactions.length,
+            'entry',
+            'entries',
+          )}`}
         </p>
       </div>
     </>
