@@ -15,7 +15,7 @@ const SPRING_CONFIG: SpringOptions = {
   mass: 0.2,
 }
 
-export type TProps = {
+type TProps = {
   children: React.ReactNode
   intensity?: number
   range?: number
