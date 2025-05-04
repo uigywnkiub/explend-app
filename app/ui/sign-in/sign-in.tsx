@@ -38,6 +38,7 @@ import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import InstallPWA from '../install-pwa-button'
 import Logo from '../logo'
+import Spotlight from '../spotlight'
 
 const ACCORDION_ITEM_KEY = 'See more'
 
@@ -136,6 +137,10 @@ function SignIn() {
   return (
     <>
       <InstallPWA />
+      <Spotlight
+        className='from-primary-500 via-primary-300 to-primary-100 blur-2xl dark:from-primary-600 dark:via-primary-400 dark:to-primary-200'
+        size={40}
+      />
       <div className='flex min-h-screen flex-col justify-between text-balance p-4 md:p-8'>
         <div className='flex grow flex-col items-center justify-center text-center'>
           <div className='mb-4 flex items-center justify-center'>
