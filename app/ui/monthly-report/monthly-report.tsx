@@ -24,6 +24,7 @@ import {
   startOfToday,
 } from 'date-fns'
 
+import { DANGER, SUCCESS } from '@/config/constants/colors'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
 import { getCachedExpenseTipsAI } from '@/app/lib/actions'
@@ -37,6 +38,7 @@ import {
   createSearchHrefWithKeyword,
   deepCompareArrays,
   formatDate,
+  getBooleanFromLocalStorage,
   getExpenseCategories,
   isValidArrayWithKeys,
   sortArrayByKeyByReferenceArray,
@@ -47,6 +49,7 @@ import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
 
 import AILogo from '../ai-logo'
 import AnimatedNumber from '../animated-number'
+import GlowEffect from '../glow-effect'
 import Magnetic from '../magnetic'
 import WarningText from '../warning-text'
 import MonthPicker from './month-picker'
@@ -73,6 +76,9 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const isValidExpenseTipsAIDataLocalStorage = isValidArrayWithKeys(
     expenseTipsAIDataLocalStorageRaw,
     ['category', 'tip', 'savings'] satisfies readonly (keyof TExpenseAdvice)[],
+  )
+  const isPositiveBalance = getBooleanFromLocalStorage(
+    LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE,
   )
   const expenseTipsAIDataLocalStorage = useMemo(() => {
     return isValidExpenseTipsAIDataLocalStorage
@@ -222,7 +228,14 @@ function MonthlyReport({ transactions, currency }: TProps) {
 
   return (
     <>
-      <div className='rounded-medium bg-content1 p-4 md:p-8'>
+      <div className='relative rounded-medium bg-content1 p-4 md:p-8'>
+        <GlowEffect
+          colors={[isPositiveBalance ? SUCCESS : DANGER]}
+          mode='breathe'
+          blur='medium'
+          scale={0.95}
+          className='-z-10 opacity-50'
+        />
         <div className='mb-6'>
           <MonthPicker
             selectedDate={selectedDate}
