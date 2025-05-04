@@ -1,12 +1,14 @@
 'use client'
 
 import { cn } from '../lib/helpers'
+import TextEffect from './text-effect'
 
 type TProps = {
   size?: 'smallest' | 'xxs' | 'xs' | 'sm' | 'md2' | 'md'
+  isSignInPage?: boolean
 }
 
-export default function Logo({ size = 'md' }: TProps) {
+export default function Logo({ size = 'md', isSignInPage = false }: TProps) {
   let logoSizeClass = 'h-32 w-32'
   let textSizeClass = 'text-6xl'
 
@@ -33,6 +35,13 @@ export default function Logo({ size = 'md' }: TProps) {
       break
   }
 
+  const textClassName = `${cn(
+    '-skew-x-6 transform-gpu cursor-default select-none font-inter font-bold text-light drop-shadow-md',
+    textSizeClass,
+  )}`
+  const textTag = 'span'
+  const TextWrapper = isSignInPage ? TextEffect : textTag
+
   return (
     <div className='flex items-center justify-center'>
       <div
@@ -43,14 +52,16 @@ export default function Logo({ size = 'md' }: TProps) {
           (size === 'xxs' || size === 'smallest') && 'rounded-md',
         )}
       >
-        <span
-          className={cn(
-            '-skew-x-6 transform-gpu cursor-default select-none font-inter font-bold text-light drop-shadow-md',
-            textSizeClass,
-          )}
+        <TextWrapper
+          {...(isSignInPage && {
+            per: 'line',
+            preset: 'fade-in-blur',
+            as: textTag,
+          })}
+          className={textClassName}
         >
           Ex
-        </span>
+        </TextWrapper>
       </div>
     </div>
   )

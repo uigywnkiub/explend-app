@@ -131,24 +131,6 @@ function SignIn() {
     setIsExpanded((prev) => !prev)
   }
 
-  const highlightText = (
-    text: string,
-    highlight: string,
-    className: string,
-  ): (string | React.JSX.Element)[] => {
-    const regex = new RegExp(`(${highlight})`, 'gi') // Case-insensitive matching.
-
-    return text.split(regex).map((part, index) =>
-      part.toLowerCase() === highlight.toLowerCase() ? (
-        <span key={index} className={className}>
-          {part}
-        </span>
-      ) : (
-        part
-      ),
-    )
-  }
-
   const accordionTitle = isExpanded ? 'Show less' : ACCORDION_ITEM_KEY
 
   return (
@@ -157,18 +139,12 @@ function SignIn() {
       <div className='flex min-h-screen flex-col justify-between text-balance p-4 md:p-8'>
         <div className='flex grow flex-col items-center justify-center text-center'>
           <div className='mb-4 flex items-center justify-center'>
-            <Logo size='md2' />
+            <Logo size='md2' isSignInPage />
           </div>
           <h1 className='mb-1 text-xl font-semibold md:text-2xl'>
             Welcome to {APP_NAME.FULL}
           </h1>
-          <p className='text-default-500'>
-            {highlightText(
-              APP_DESCRIPTION,
-              'AI',
-              'bg-ai-gradient bg-clip-text text-transparent',
-            )}
-          </p>
+          <p className='text-default-500'>{APP_DESCRIPTION}</p>
           <Divider className='my-4 w-full bg-divider md:w-1/2' />
           <p className='mb-4'>{APP_TITLE}</p>
           <div className='flex flex-col items-center space-y-2'>
