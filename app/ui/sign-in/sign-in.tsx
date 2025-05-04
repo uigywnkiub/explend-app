@@ -26,7 +26,7 @@ import {
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
 
-import {
+import type {
   TAuthProvider,
   TAuthProvidersLoading,
   TIcon,
@@ -36,9 +36,7 @@ import {
 import ClientButton from '../client-button'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
-import InstallPWA from '../install-pwa-button'
 import Logo from '../logo'
-import Spotlight from '../spotlight'
 
 const ACCORDION_ITEM_KEY = 'See more'
 
@@ -135,101 +133,94 @@ function SignIn() {
   const accordionTitle = isExpanded ? 'Show less' : ACCORDION_ITEM_KEY
 
   return (
-    <>
-      <InstallPWA />
-      <Spotlight
-        className='from-primary-500 via-primary-300 to-primary-100 blur-2xl dark:from-primary-600 dark:via-primary-400 dark:to-primary-200'
-        size={40}
-      />
-      <div className='flex min-h-screen flex-col justify-between text-balance p-4 md:p-8'>
-        <div className='flex grow flex-col items-center justify-center text-center'>
-          <div className='mb-4 flex items-center justify-center'>
-            <Logo size='md2' isSignInPage />
-          </div>
-          <h1 className='mb-1 text-xl font-semibold md:text-2xl'>
-            Welcome to {APP_NAME.FULL}
-          </h1>
-          <p className='text-default-500'>{APP_DESCRIPTION}</p>
-          <Divider className='my-4 w-full bg-divider md:w-1/2' />
-          <p className='mb-4'>{APP_TITLE}</p>
-          <div className='flex flex-col items-center space-y-2'>
-            {signInButtons
-              .slice(0, 2)
-              .map(({ provider, title, isLoading, icon, hoverIcon }) => {
-                const buttonWithIcon = (icon: TIcon) => (
-                  <ClientButton
-                    title={title}
-                    isDisabled={isAnyLoading}
-                    className='min-w-[220px] bg-foreground font-medium text-default-50'
-                    isLoading={isLoading}
-                    onPress={(e) => onSignIn(e, provider)}
-                    startContent={!isLoading && icon}
-                  />
-                )
-
-                return (
-                  <HoverableElement
-                    key={provider}
-                    uKey={provider}
-                    element={buttonWithIcon(icon)}
-                    hoveredElement={buttonWithIcon(hoverIcon)}
-                    withShift={false}
-                  />
-                )
-              })}
-            <Accordion
-              isCompact
-              hideIndicator
-              onExpandedChange={onExpandedChange}
-            >
-              <AccordionItem
-                key={ACCORDION_ITEM_KEY}
-                isCompact
-                isDisabled={isAnyLoading}
-                aria-label={accordionTitle}
-                title={accordionTitle}
-                classNames={{
-                  title:
-                    'text-center hover:opacity-hover text-default-500 text-sm',
-                }}
-              >
-                <div className='flex flex-col items-center space-y-2'>
-                  {signInButtons
-                    .slice(2)
-                    .map(({ provider, title, isLoading, icon, hoverIcon }) => {
-                      const buttonWithIcon = (icon: TIcon) => (
-                        <ClientButton
-                          title={title}
-                          isDisabled={isAnyLoading}
-                          className='min-w-[220px] bg-foreground font-medium text-default-50'
-                          isLoading={isLoading}
-                          onPress={(e) => onSignIn(e, provider)}
-                          startContent={!isLoading && icon}
-                        />
-                      )
-
-                      return (
-                        <HoverableElement
-                          key={provider}
-                          uKey={provider}
-                          element={buttonWithIcon(icon)}
-                          hoveredElement={buttonWithIcon(hoverIcon)}
-                          withShift={false}
-                        />
-                      )
-                    })}
-                </div>
-              </AccordionItem>
-            </Accordion>
-          </div>
+    <div className='flex min-h-screen flex-col justify-between text-balance p-4 md:p-8'>
+      <div className='flex grow flex-col items-center justify-center text-center'>
+        <div className='mb-4 flex items-center justify-center'>
+          <Logo size='md2' isSignInPage />
         </div>
-        <div className='mt-4 flex flex-col gap-1 text-center'>
-          <InfoText text='Signing in does not create an account.' />
-          <InfoText text='AES encryption protects your sensitive data.' />
-          <InfoText text='Your name and email will be visible on the site and serve as your primary identifiers.' />
+        <h1 className='mb-1 text-xl font-semibold md:text-2xl'>
+          Welcome to {APP_NAME.FULL}
+        </h1>
+        <p className='text-default-500'>{APP_DESCRIPTION}</p>
+        <Divider className='my-4 w-full bg-divider md:w-1/2' />
+        <p className='mb-4'>{APP_TITLE}</p>
+        <div className='flex flex-col items-center space-y-2'>
+          {signInButtons
+            .slice(0, 2)
+            .map(({ provider, title, isLoading, icon, hoverIcon }) => {
+              const buttonWithIcon = (icon: TIcon) => (
+                <ClientButton
+                  title={title}
+                  isDisabled={isAnyLoading}
+                  className='min-w-[220px] bg-foreground font-medium text-default-50'
+                  isLoading={isLoading}
+                  onPress={(e) => onSignIn(e, provider)}
+                  startContent={!isLoading && icon}
+                />
+              )
+
+              return (
+                <HoverableElement
+                  key={provider}
+                  uKey={provider}
+                  element={buttonWithIcon(icon)}
+                  hoveredElement={buttonWithIcon(hoverIcon)}
+                  withShift={false}
+                />
+              )
+            })}
+          <Accordion
+            isCompact
+            hideIndicator
+            onExpandedChange={onExpandedChange}
+          >
+            <AccordionItem
+              key={ACCORDION_ITEM_KEY}
+              isCompact
+              isDisabled={isAnyLoading}
+              aria-label={accordionTitle}
+              title={accordionTitle}
+              classNames={{
+                title:
+                  'text-center hover:opacity-hover text-default-500 text-sm',
+              }}
+            >
+              <div className='flex flex-col items-center space-y-2'>
+                {signInButtons
+                  .slice(2)
+                  .map(({ provider, title, isLoading, icon, hoverIcon }) => {
+                    const buttonWithIcon = (icon: TIcon) => (
+                      <ClientButton
+                        title={title}
+                        isDisabled={isAnyLoading}
+                        className='min-w-[220px] bg-foreground font-medium text-default-50'
+                        isLoading={isLoading}
+                        onPress={(e) => onSignIn(e, provider)}
+                        startContent={!isLoading && icon}
+                      />
+                    )
+
+                    return (
+                      <HoverableElement
+                        key={provider}
+                        uKey={provider}
+                        element={buttonWithIcon(icon)}
+                        hoveredElement={buttonWithIcon(hoverIcon)}
+                        withShift={false}
+                      />
+                    )
+                  })}
+              </div>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
-    </>
+      <div className='mt-4 flex flex-col gap-1 text-center'>
+        <InfoText text='Signing in does not create an account.' />
+        <InfoText text='AES encryption protects your sensitive data.' />
+        <InfoText text='Your name and email will be visible on the site and serve as your primary identifiers.' />
+      </div>
+    </div>
   )
 }
 

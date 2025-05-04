@@ -1,5 +1,5 @@
+import CustomSpotlight from '../custom-spotlight'
 import Footer from '../settings/footer'
-import Spotlight from '../spotlight'
 import Hamburger from './hamburger'
 import MaskAmountInfo from './mask-amount-info'
 import Navbar from './navbar'
@@ -16,10 +16,6 @@ export default function WithSidebar({
 
   return (
     <div className='h-screen overflow-hidden'>
-      <Spotlight
-        className='from-primary-500 via-primary-300 to-primary-100 blur-2xl dark:from-primary-600 dark:via-primary-400 dark:to-primary-200'
-        size={40}
-      />
       <input type='checkbox' id='sidebar-toggle' className='hidden' />
 
       <div className='flex h-full'>
@@ -58,6 +54,7 @@ export default function WithSidebar({
 
       <Hamburger />
       <MaskAmountInfo />
+      <CustomSpotlight />
     </div>
   )
 }
