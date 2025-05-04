@@ -175,7 +175,6 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
         </p>
         <p>{`From ${firstTransactionDate} to ${lastTransactionDate}`}</p>
         <p>
-          {/* {`${toWords.convert(transactions.length)} (${getFormattedCurrency(transactions.length, false)}) entries.`} */}
           {`${getFormattedCurrency(transactions.length, false)} ${pluralize(
             transactions.length,
             'entry',
