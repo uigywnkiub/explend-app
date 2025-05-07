@@ -58,6 +58,7 @@ import {
   cn,
   createSearchHrefWithKeyword,
   formatAmount,
+  formatPercentage,
   getCategoryItemNames,
   getCategoryWithEmoji,
   getEmojiFromCategory,
@@ -541,7 +542,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       )}
                     </div>
                     <Tooltip
-                      content={`${progressPercentage}%`}
+                      content={`${formatPercentage(progressPercentage)} %`}
                       placement='bottom'
                     >
                       <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default md:relative md:w-full'>
