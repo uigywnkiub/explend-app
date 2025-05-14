@@ -93,6 +93,17 @@ const currencies: {
     ),
   },
   {
+    name: CURRENCY_NAME.AED,
+    code: CURRENCY_CODE.AED,
+    icon: (
+      <Avatar
+        alt={CURRENCY_NAME.AED}
+        className={AVATAR_SIZE}
+        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.AED)}.svg`}
+      />
+    ),
+  },
+  {
     name: CURRENCY_NAME.INR,
     code: CURRENCY_CODE.INR,
     icon: (
@@ -202,6 +213,12 @@ const getCurrencyData = (code: CURRENCY_NAME): TTransaction['currency'] => {
         name: CURRENCY_NAME.CAD,
         code: CURRENCY_CODE.CAD,
         sign: CURRENCY_SIGN.CAD,
+      }
+    case CURRENCY_NAME.AED:
+      return {
+        name: CURRENCY_NAME.AED,
+        code: CURRENCY_CODE.AED,
+        sign: CURRENCY_SIGN.AED,
       }
     case CURRENCY_NAME.INR:
       return {
