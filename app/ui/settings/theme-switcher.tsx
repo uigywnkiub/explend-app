@@ -24,16 +24,16 @@ import { HoverableElement } from '../hoverables'
 
 const themes: TSelect[] = [
   {
-    key: 'system',
-    value: 'System',
-    icon: <PiMonitor size={DEFAULT_ICON_SIZE} />,
-    hoverIcon: <PiMonitorFill size={DEFAULT_ICON_SIZE} />,
-  },
-  {
     key: 'dark',
     value: 'Dark',
     icon: <PiMoon size={DEFAULT_ICON_SIZE} />,
     hoverIcon: <PiMoonFill size={DEFAULT_ICON_SIZE} />,
+  },
+  {
+    key: 'system',
+    value: 'System',
+    icon: <PiMonitor size={DEFAULT_ICON_SIZE} />,
+    hoverIcon: <PiMonitorFill size={DEFAULT_ICON_SIZE} />,
   },
   {
     key: 'light',
