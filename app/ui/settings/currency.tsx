@@ -6,9 +6,12 @@ import toast from 'react-hot-toast'
 import { Avatar, Select, SelectItem } from '@heroui/react'
 
 import {
+  CURRENCIES_LIST,
   CURRENCY_CODE,
   CURRENCY_NAME,
   CURRENCY_SIGN,
+} from '@/config/constants/currencies'
+import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_NAME,
   DEFAULT_CURRENCY_SIGN,
@@ -33,154 +36,17 @@ const currencies: {
   name: CURRENCY_NAME
   code: CURRENCY_CODE
   icon: TIcon
-}[] = [
-  {
-    name: CURRENCY_NAME.UAH,
-    code: CURRENCY_CODE.UAH,
-    icon: (
-      <Avatar
-        // ImgComponent={Image}
-        ImgComponent={'img'}
-        imgProps={{ width: DEFAULT_ICON_SIZE, height: DEFAULT_ICON_SIZE }}
-        alt={CURRENCY_NAME.UAH}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.UAH)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.USD,
-    code: CURRENCY_CODE.USD,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.USD}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.USD)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.EUR,
-    code: CURRENCY_CODE.EUR,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.EUR}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.EUR)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.GBP,
-    code: CURRENCY_CODE.GBP,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.GBP}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.GBP)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.CAD,
-    code: CURRENCY_CODE.CAD,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.CAD}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.CAD)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.AED,
-    code: CURRENCY_CODE.AED,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.AED}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.AED)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.INR,
-    code: CURRENCY_CODE.INR,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.INR}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.INR)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.IDR,
-    code: CURRENCY_CODE.IDR,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.IDR}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.IDR)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.BRL,
-    code: CURRENCY_CODE.BRL,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.BRL}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.BRL)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.HKD,
-    code: CURRENCY_CODE.HKD,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.HKD}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.HKD)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.CNY,
-    code: CURRENCY_CODE.CNY,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.CNY}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.CNY)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.HUF,
-    code: CURRENCY_CODE.HUF,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.HUF}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.HUF)}.svg`}
-      />
-    ),
-  },
-  {
-    name: CURRENCY_NAME.PLN,
-    code: CURRENCY_CODE.PLN,
-    icon: (
-      <Avatar
-        alt={CURRENCY_NAME.PLN}
-        className={AVATAR_SIZE}
-        src={`https://flagcdn.com/${getSlicedCurrencyCode(CURRENCY_CODE.PLN)}.svg`}
-      />
-    ),
-  },
-]
+}[] = CURRENCIES_LIST.map(({ name, code }) => ({
+  name,
+  code,
+  icon: (
+    <Avatar
+      alt={name}
+      className={AVATAR_SIZE}
+      src={`https://flagcdn.com/${getSlicedCurrencyCode(code)}.svg`}
+    />
+  ),
+}))
 
 const getCurrencyData = (code: CURRENCY_NAME): TTransaction['currency'] => {
   switch (code) {

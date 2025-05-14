@@ -17,9 +17,9 @@ import getUserLocale from 'get-user-locale'
 import { extendTailwindMerge } from 'tailwind-merge'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
+import { CURRENCY_CODE } from '@/config/constants/currencies'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
-  CURRENCY_CODE,
   DEFAULT_CATEGORY,
   DEFAULT_LANG,
   DEFAULT_TIME_ZONE,

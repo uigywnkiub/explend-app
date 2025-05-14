@@ -4,7 +4,7 @@ import {
   CURRENCY_CODE,
   CURRENCY_NAME,
   CURRENCY_SIGN,
-} from '@/config/constants/main'
+} from '@/config/constants/currencies'
 
 import { calculateMonthlyReportData } from '../../app/lib/data'
 import type { TExpenseReport, TTransaction } from '../../app/lib/types'

@@ -1,6 +1,8 @@
-import { MetadataRoute } from 'next/types'
+import { type MetadataRoute } from 'next/types'
 
 import type { TTheme } from '@/app/lib/types'
+
+import { CURRENCY_CODE, CURRENCY_NAME, CURRENCY_SIGN } from './currencies'
 
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
@@ -15,51 +17,6 @@ export const DEFAULT_LOADING_TEXT: string = 'Just a second...'
 
 export const HIDDEN_AMOUNT_SIGN = '✱'
 
-export const enum CURRENCY_NAME {
-  UAH = 'Ukrainian Hryvnia',
-  USD = 'United States Dollar',
-  EUR = 'Euro',
-  GBP = 'British Pound',
-  CAD = 'Canadian Dollar',
-  AED = 'United Arab Emirates',
-  INR = 'Indian Rupee',
-  IDR = 'Indonesian Rupiah',
-  BRL = 'Brazilian Real',
-  HKD = 'Hong Kong Dollar',
-  CNY = 'Chinese Yuan',
-  HUF = 'Hungarian Forint',
-  PLN = 'Polish Zloty',
-}
-export const enum CURRENCY_CODE {
-  UAH = 'UAH',
-  USD = 'USD',
-  EUR = 'EUR',
-  GBP = 'GBP',
-  CAD = 'CAD',
-  AED = 'AED',
-  INR = 'INR',
-  IDR = 'IDR',
-  BRL = 'BRL',
-  HKD = 'HKD',
-  CNY = 'CNY',
-  HUF = 'HUF',
-  PLN = 'PLN',
-}
-export const enum CURRENCY_SIGN {
-  UAH = '₴',
-  USD = '$',
-  EUR = '€',
-  GBP = '£',
-  CAD = 'C$',
-  AED = 'د.إ',
-  INR = '₹',
-  IDR = 'Rp',
-  BRL = 'R$',
-  HKD = 'HK$',
-  CNY = '¥',
-  HUF = 'Ft',
-  PLN = 'zł',
-}
 export const DEFAULT_CURRENCY_NAME = CURRENCY_NAME.USD
 export const DEFAULT_CURRENCY_CODE = CURRENCY_CODE.USD
 export const DEFAULT_CURRENCY_SIGN = CURRENCY_SIGN.USD

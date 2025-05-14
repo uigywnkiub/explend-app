@@ -8,7 +8,7 @@ import {
   CURRENCY_CODE,
   CURRENCY_NAME,
   CURRENCY_SIGN,
-} from '@/config/constants/main'
+} from '@/config/constants/currencies'
 import { NAV_TITLE } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
