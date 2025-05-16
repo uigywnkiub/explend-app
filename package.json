@@ -149,9 +149,9 @@
   ],
   "engines": {
     "node": ">=22",
-    "pnpm": ">=10"
+    "pnpm": ">=9 <10"
   },
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@9.15.9",
   "overrides": {
     "react-is": "19.0.0"
   },
