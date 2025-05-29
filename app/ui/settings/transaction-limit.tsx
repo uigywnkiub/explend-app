@@ -7,7 +7,7 @@ import {
   PiListMagnifyingGlassFill,
 } from 'react-icons/pi'
 
-import { Select, SelectItem } from '@heroui/react'
+import { Select, SelectItem, SelectSection } from '@heroui/react'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
@@ -95,20 +95,22 @@ function TransactionLimit({
       defaultSelectedKeys={[disableState]}
       onChange={(key) => onChangeLimit(key.target.value)}
     >
-      {limits.map((limit) => (
-        <SelectItem
-          key={limit.key}
-          startContent={
-            <HoverableElement
-              uKey={limit.key + limit.value}
-              element={limit.icon}
-              hoveredElement={limit.hoverIcon}
-            />
-          }
-        >
-          {limit.value}
-        </SelectItem>
-      ))}
+      <SelectSection title='Quantity per page'>
+        {limits.map((limit) => (
+          <SelectItem
+            key={limit.key}
+            startContent={
+              <HoverableElement
+                uKey={limit.key + limit.value}
+                element={limit.icon}
+                hoveredElement={limit.hoverIcon}
+              />
+            }
+          >
+            {limit.value}
+          </SelectItem>
+        ))}
+      </SelectSection>
     </Select>
   )
 }

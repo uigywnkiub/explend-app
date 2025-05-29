@@ -1,62 +1,92 @@
-export const enum CURRENCY_NAME {
-  UAH = 'Ukrainian Hryvnia',
-  USD = 'United States Dollar',
+import type { TCurrency } from '@/app/lib/types'
+
+import {
+  DEFAULT_CURRENCY_CODE,
+  DEFAULT_CURRENCY_NAME,
+  DEFAULT_CURRENCY_SIGN,
+} from './main'
+
+export enum CURRENCY_NAME {
+  AED = 'United Arab Emirates Dirham',
+  BRL = 'Brazilian Real',
+  CAD = 'Canadian Dollar',
+  CNY = 'Chinese Yuan',
   EUR = 'Euro',
   GBP = 'British Pound',
-  CAD = 'Canadian Dollar',
-  AED = 'United Arab Emirates Dirham',
-  INR = 'Indian Rupee',
-  IDR = 'Indonesian Rupiah',
-  BRL = 'Brazilian Real',
   HKD = 'Hong Kong Dollar',
-  CNY = 'Chinese Yuan',
   HUF = 'Hungarian Forint',
+  IDR = 'Indonesian Rupiah',
+  INR = 'Indian Rupee',
+  JPY = 'Japanese Yen',
   PLN = 'Polish Zloty',
+  UAH = 'Ukrainian Hryvnia',
+  USD = 'United States Dollar',
 }
-export const enum CURRENCY_CODE {
-  UAH = 'UAH',
-  USD = 'USD',
+
+export enum CURRENCY_CODE {
+  AED = 'AED',
+  BRL = 'BRL',
+  CAD = 'CAD',
+  CNY = 'CNY',
   EUR = 'EUR',
   GBP = 'GBP',
-  CAD = 'CAD',
-  AED = 'AED',
-  INR = 'INR',
-  IDR = 'IDR',
-  BRL = 'BRL',
   HKD = 'HKD',
-  CNY = 'CNY',
   HUF = 'HUF',
+  IDR = 'IDR',
+  INR = 'INR',
+  JPY = 'JPY',
   PLN = 'PLN',
+  UAH = 'UAH',
+  USD = 'USD',
 }
-export const enum CURRENCY_SIGN {
-  UAH = '₴',
-  USD = '$',
+
+export enum CURRENCY_SIGN {
+  AED = 'د.إ',
+  BRL = 'R$',
+  CAD = 'C$',
+  CNY = '¥',
   EUR = '€',
   GBP = '£',
-  CAD = 'C$',
-  AED = 'د.إ',
-  INR = '₹',
-  IDR = 'Rp',
-  BRL = 'R$',
   HKD = 'HK$',
-  CNY = '¥',
   HUF = 'Ft',
+  IDR = 'Rp',
+  INR = '₹',
+  JPY = '¥',
   PLN = 'zł',
+  UAH = '₴',
+  USD = '$',
 }
 
 // Alphabetically sorted.
-export const CURRENCIES_LIST: { name: CURRENCY_NAME; code: CURRENCY_CODE }[] = [
-  { name: CURRENCY_NAME.UAH, code: CURRENCY_CODE.UAH },
-  { name: CURRENCY_NAME.USD, code: CURRENCY_CODE.USD },
-  { name: CURRENCY_NAME.EUR, code: CURRENCY_CODE.EUR },
-  { name: CURRENCY_NAME.GBP, code: CURRENCY_CODE.GBP },
-  { name: CURRENCY_NAME.CAD, code: CURRENCY_CODE.CAD },
-  { name: CURRENCY_NAME.AED, code: CURRENCY_CODE.AED },
-  { name: CURRENCY_NAME.INR, code: CURRENCY_CODE.INR },
-  { name: CURRENCY_NAME.IDR, code: CURRENCY_CODE.IDR },
-  { name: CURRENCY_NAME.BRL, code: CURRENCY_CODE.BRL },
-  { name: CURRENCY_NAME.HKD, code: CURRENCY_CODE.HKD },
-  { name: CURRENCY_NAME.CNY, code: CURRENCY_CODE.CNY },
-  { name: CURRENCY_NAME.HUF, code: CURRENCY_CODE.HUF },
-  { name: CURRENCY_NAME.PLN, code: CURRENCY_CODE.PLN },
-].toSorted((a, b) => a.name.localeCompare(b.name))
+export const CURRENCIES_LIST: TCurrency[] = Object.keys(CURRENCY_CODE)
+  .map((key) => ({
+    name: CURRENCY_NAME[key as keyof typeof CURRENCY_NAME],
+    code: CURRENCY_CODE[key as keyof typeof CURRENCY_CODE],
+    sign: CURRENCY_SIGN[key as keyof typeof CURRENCY_SIGN],
+  }))
+  .toSorted((a, b) => a.name.localeCompare(b.name))
+
+export const CURRENCIES_MAP: Record<CURRENCY_NAME, TCurrency> = Object.keys(
+  CURRENCY_NAME,
+).reduce(
+  (acc, key) => {
+    const name = CURRENCY_NAME[key as keyof typeof CURRENCY_NAME]
+    const code = CURRENCY_CODE[key as keyof typeof CURRENCY_CODE]
+    const sign = CURRENCY_SIGN[key as keyof typeof CURRENCY_SIGN]
+
+    acc[name] = { name, code, sign }
+
+    return acc
+  },
+  {} as Record<CURRENCY_NAME, TCurrency>,
+)
+
+export const getCurrencyData = (code: CURRENCY_NAME): TCurrency => {
+  return (
+    CURRENCIES_MAP[code] ?? {
+      name: DEFAULT_CURRENCY_NAME,
+      code: DEFAULT_CURRENCY_CODE,
+      sign: DEFAULT_CURRENCY_SIGN,
+    }
+  )
+}
