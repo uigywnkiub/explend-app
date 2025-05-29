@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
 import {
-  CURRENCY_CODE,
-  CURRENCY_NAME,
-  CURRENCY_SIGN,
-} from '@/config/constants/currencies'
+  DEFAULT_CURRENCY_CODE,
+  DEFAULT_CURRENCY_NAME,
+  DEFAULT_CURRENCY_SIGN,
+} from '@/config/constants/main'
 
 import { calculateMonthlyReportData } from '../../app/lib/data'
 import type { TExpenseReport, TTransaction } from '../../app/lib/types'
@@ -22,9 +22,9 @@ describe('calculateMonthlyReportData', () => {
     amount,
     isIncome,
     currency: {
-      name: CURRENCY_NAME.UAH,
-      code: CURRENCY_CODE.UAH,
-      sign: CURRENCY_SIGN.UAH,
+      name: DEFAULT_CURRENCY_NAME,
+      code: DEFAULT_CURRENCY_CODE,
+      sign: DEFAULT_CURRENCY_SIGN,
     },
     createdAt: new Date(),
     updatedAt: new Date(),
