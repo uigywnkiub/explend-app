@@ -44,11 +44,13 @@ function Footer() {
         {/* {<Logo size='smallest' />} */}
         &copy; {getYear(new Date())}{' '}
         <span className='text-foreground'>{APP_NAME.SHORT}</span> · Built by{' '}
-        <Link href={AUTHOR.URL} target='_blank'>
-          <span className='cursor-pointer underline md:hover:text-foreground md:hover:no-underline md:hover:opacity-hover'>
-            {AUTHOR.NAME}
-          </span>
-        </Link>
+        <Tooltip content='About' placement='top' size='sm'>
+          <Link href={AUTHOR.URL} target='_blank'>
+            <span className='relative inline-block no-underline before:absolute before:bottom-0 before:left-0 before:h-[2px] before:w-full before:origin-left before:scale-x-0 before:rounded-full before:bg-foreground before:transition-transform before:duration-200 hover:text-foreground hover:before:scale-x-100'>
+              {AUTHOR.NAME}
+            </span>
+          </Link>
+        </Tooltip>
       </div>
       <div className='flex justify-center gap-2'>
         {socialLinks.map((link) => {
@@ -62,7 +64,7 @@ function Footer() {
               <Link
                 href={link.url}
                 target='_blank'
-                className='cursor-pointer hover:text-foreground md:hover:opacity-hover'
+                className='hover:text-foreground'
               >
                 <HoverableElement
                   uKey={link.url}
