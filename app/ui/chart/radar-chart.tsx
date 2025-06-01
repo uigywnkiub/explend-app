@@ -68,7 +68,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
 
   if (isChartByCurrMonth && !firstTransaction && !lastTransaction) {
     return (
-      <div className='mt-4 md:mt-8'>
+      <div className='mx-auto mt-4 max-w-3xl md:mt-8'>
         <NoTransactionsPlug text='This month no transactions found' />
       </div>
     )
