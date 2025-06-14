@@ -14,4 +14,4 @@ updates:
     ignore:
       - dependency-name: 'tailwind-merge'
         update-types:
-          - 'version-update:semver-major'
+          - 'version-update:semver-patch'
