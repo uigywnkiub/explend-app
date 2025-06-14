@@ -2,7 +2,6 @@ import mongoose, { Mongoose } from 'mongoose'
 
 import { IS_PROD } from '@/config/constants/main'
 
-/* eslint-disable no-var */
 declare global {
   // This must be a `var` and not a `let or const`.
   var mongoose: {
