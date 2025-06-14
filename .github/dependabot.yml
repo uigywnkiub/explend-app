@@ -10,3 +10,8 @@ updates:
     schedule:
       interval: 'weekly'
     versioning-strategy: 'auto'
+    # Ignore major version updates for specific dependencies; add more entries as needed.
+    ignore:
+      - dependency-name: 'tailwind-merge'
+        update-types:
+          - 'version-update:semver-major'
