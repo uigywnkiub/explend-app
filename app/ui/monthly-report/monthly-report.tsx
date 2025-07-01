@@ -95,7 +95,8 @@ function MonthlyReport({ transactions, currency }: TProps) {
   const isMinTransactionAfterStartOfMonth =
     minTransactionCalendarDate &&
     minTransactionCalendarDate.day > 1 &&
-    minTransactionCalendarDate.month === startOfMonthCalendarDate.month
+    minTransactionCalendarDate.month === startOfMonthCalendarDate.month &&
+    minTransactionCalendarDate.year === startOfMonthCalendarDate.year
 
   const [selectedDate, setSelectedDate] = useState<RangeValue<DateValue>>({
     start: isMinTransactionAfterStartOfMonth
