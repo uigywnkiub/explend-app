@@ -172,13 +172,13 @@ function MonthlyReport({ transactions, currency }: TProps) {
       return
     }
     if (!canAttempt()) {
-      toast.error('Try again later.')
+      toast.error('Limit reached. Try later.')
 
       return
     }
     setIsLoadingTips(true)
     try {
-      const res = await getCachedExpenseTipsAI(expenseCategories)
+      const res = await getCachedExpenseTipsAI(expenseCategories, currency)
       const parsedRes = JSON.parse(res)
       setTipsDataAI(parsedRes)
       setExpenseTipsAIDataLocalStorage(parsedRes)
@@ -193,14 +193,15 @@ function MonthlyReport({ transactions, currency }: TProps) {
       setIsLoadingTips(false)
     }
   }, [
-    canAttempt,
-    expenseCategories,
-    expenseTipsAIDataLocalStorage,
-    isTipsDataExist,
-    isValidExpenseTipsAIDataLocalStorage,
     expenseReportData,
-    registerAttempt,
+    isValidExpenseTipsAIDataLocalStorage,
+    isTipsDataExist,
+    canAttempt,
+    expenseTipsAIDataLocalStorage,
     setExpenseTipsAIDataLocalStorage,
+    expenseCategories,
+    currency,
+    registerAttempt,
   ])
 
   if (filteredTransactionsByDateRange.length === 0) {
@@ -335,14 +336,16 @@ function MonthlyReport({ transactions, currency }: TProps) {
           </p>
         )}
 
-        {isMissMatchLocalStorageAndCurrMonthExpenses && isTipsDataExist && (
-          <div className='mb-4'>
-            <WarningText
-              text='Tips from memory do not match the tips for the current month or selected date expense.'
-              actionText={`Press "${REFRESH_TIPS_BTN_TEXT}" button to update and sync them.`}
-            />
-          </div>
-        )}
+        {isMissMatchLocalStorageAndCurrMonthExpenses &&
+          isTipsDataExist &&
+          !isLoadingTips && (
+            <div className='mb-4'>
+              <WarningText
+                text='Tips from memory do not match the tips for the current month or selected date expense.'
+                actionText={`Press "${REFRESH_TIPS_BTN_TEXT}" button to update and sync them.`}
+              />
+            </div>
+          )}
 
         <Magnetic>
           <Button

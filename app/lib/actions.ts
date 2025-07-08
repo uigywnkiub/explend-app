@@ -855,15 +855,31 @@ export async function getTransactionTypeAI(
 }
 export const getCachedTransactionTypeAI = cache(getTransactionTypeAI)
 
-export async function getExpenseTipsAI(categories: string[]): Promise<string> {
+export async function getExpenseTipsAI(
+  categories: string[],
+  currency: TTransaction['currency'],
+): Promise<string> {
   if (!categories) {
     throw new Error('Categories are required.')
+  }
+  if (!currency) {
+    throw new Error('Currency is required.')
   }
 
   try {
     const categoriesStr = categories.join(', ')
 
-    const prompt = `Provide actionable tips on decreasing expenses for the following categories: ${categoriesStr}. Include practical strategies, potential savings opportunities, and any recommendations that could help manage and reduce costs within these categories. The output category field must be with an emoji. Advice must be one per category.`
+    const prompt = `
+You are a personal finance assistant.
+
+For each of the following categories: ${categoriesStr}, generate one practical and realistic tip for reducing expenses.
+
+Requirements:
+- Use each category name exactly as listed: ${categoriesStr}
+- Begin each category with a relevant emoji
+- Provide a realistic savings estimate using the format like: "Up to X ${currency.code} per month."
+- Output exactly one tip per category
+`
 
     const content = await ExpenseTipsAIModel.generateContent(prompt)
     const text = content.response.text().trim()
