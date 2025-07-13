@@ -12,6 +12,7 @@ import {
   getTransactionLimit,
   signOutAccount,
 } from '../lib/actions'
+import { toLowerCase } from '../lib/helpers'
 import InfoText from '../ui/info-text'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
@@ -48,8 +49,8 @@ export default async function Page() {
         <>
           <div className='flex justify-between gap-2'>
             <SectionItem
-              title='Chart by current month'
-              subtitle='Show the chart for the current month rather than for all time.'
+              title={`${NAV_TITLE.CHART} by Current Month`}
+              subtitle={`Show the ${toLowerCase(NAV_TITLE.CHART)} for the current month rather than for all time.`}
             />
             <LocalStorageSwitch
               localStorageKey={LOCAL_STORAGE_KEY.IS_CHART_BY_CURR_MONTH}
@@ -60,7 +61,19 @@ export default async function Page() {
 
           <div className='flex justify-between gap-2'>
             <SectionItem
-              title='Automated submission'
+              title={`${NAV_TITLE.CHART} for Expenses Only`}
+              subtitle={`Show the ${toLowerCase(NAV_TITLE.CHART)} of expense transactions, excluding income.`}
+            />
+            <LocalStorageSwitch
+              localStorageKey={LOCAL_STORAGE_KEY.IS_CHART_FOR_EXPENSES_ONLY}
+            />
+          </div>
+
+          <Divider className='my-4' />
+
+          <div className='flex justify-between gap-2'>
+            <SectionItem
+              title='Automated Submission'
               subtitle='Automatically submit receipt transactions for seamless processing.'
             />
             <LocalStorageSwitch
@@ -72,7 +85,7 @@ export default async function Page() {
 
           <div className='flex justify-between gap-2'>
             <SectionItem
-              title='Mask amounts'
+              title='Mask Amounts'
               subtitle='Mask your amounts with asterisks to keep them private.'
             />
             <LocalStorageSwitch
@@ -83,7 +96,7 @@ export default async function Page() {
           <Divider className='my-4' />
 
           <SectionItem
-            title='Theme switcher'
+            title='Theme Switcher'
             subtitle='Select your favorite theme to give the app a new look that matches your style.'
           >
             <>
@@ -118,7 +131,7 @@ export default async function Page() {
           <Divider className='my-4' />
 
           <SectionItem
-            title='Transactions limit'
+            title='Transactions Limit'
             subtitle='Select how many transactions you would like to see per page. This setting helps you manage the amount of data displayed and can improve loading times.'
           >
             <div className='max-w-xs'>
@@ -134,7 +147,7 @@ export default async function Page() {
           <Divider className='my-4' />
 
           <SectionItem
-            title='Exit account'
+            title='Exit Account'
             subtitle='Signing out of your account will end your current session. You will need to sign in again or switch accounts.'
           >
             <div className='max-w-md'>
@@ -150,13 +163,13 @@ export default async function Page() {
       </Section>
 
       <Section
-        title='Danger zone'
+        title='Danger Zone'
         subtitle='This section contains actions that may have severe consequences for your account or data.'
         withDivider={false}
         titleClassName='text-danger'
       >
         <SectionItem
-          title='Delete account'
+          title='Delete Account'
           subtitle='Removing your account will delete all your data.'
         >
           <div className='max-w-md'>

@@ -22,6 +22,7 @@ import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
 import {
   calculateChartData,
+  calculateTotalAmount,
   filterTransactions,
   getFirstAndLastTransactions,
   getTransactionsByCurrMonth,
@@ -36,7 +37,7 @@ import {
   getFormattedCurrency,
   pluralize,
 } from '@/app/lib/helpers'
-import type { TTransaction } from '@/app/lib/types'
+import type { TTransaction, TTransactionType } from '@/app/lib/types'
 
 import NoTransactionsPlug from '../no-transactions-plug'
 import CustomLegend from './custom-legend'
@@ -56,6 +57,15 @@ type TProps = {
 function RadarChart({ transactionsRaw, currency }: TProps) {
   const router = useRouter()
 
+  const isPositiveBalance = getBooleanFromLocalStorage(
+    LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE,
+  )
+  const isAmountHidden = getBooleanFromLocalStorage(
+    LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
+  )
+  const isChartForExpensesOnly = getBooleanFromLocalStorage(
+    LOCAL_STORAGE_KEY.IS_CHART_FOR_EXPENSES_ONLY,
+  )
   const isChartByCurrMonth = getBooleanFromLocalStorage(
     LOCAL_STORAGE_KEY.IS_CHART_BY_CURR_MONTH,
   )
@@ -78,13 +88,16 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
   const lastTransactionDate = formatDate(lastTransaction!.createdAt)
 
   const { income, expense } = filterTransactions(transactions)
-  const chartData = calculateChartData(income, expense)
-  const isPositiveBalance = getBooleanFromLocalStorage(
-    LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE,
+  const chartData = calculateChartData(
+    isChartForExpensesOnly ? [] : income,
+    expense,
   )
-  const isAmountHidden = getBooleanFromLocalStorage(
-    LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
-  )
+  const getTransactionTypeTotal = (transactionType: TTransactionType) =>
+    calculateTotalAmount(
+      chartData.map((data): { amount: TTransaction['amount'] } => ({
+        amount: data[transactionType].toString(),
+      })) as unknown as TTransaction[],
+    )
 
   return (
     <>
@@ -136,7 +149,16 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
             fill={DANGER}
             fillOpacity={0.6}
           />
-          <Legend content={<CustomLegend />} />
+          <Legend
+            content={
+              <CustomLegend
+                expenseTotal={getTransactionTypeTotal('expense')}
+                incomeTotal={getTransactionTypeTotal('income')}
+                currency={currency}
+                isChartForExpensesOnly={isChartForExpensesOnly}
+              />
+            }
+          />
           <Tooltip
             contentStyle={{ backgroundColor: 'none' }}
             content={
