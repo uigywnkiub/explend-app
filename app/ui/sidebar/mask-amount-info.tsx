@@ -2,6 +2,8 @@
 
 import { PiLock, PiLockFill } from 'react-icons/pi'
 
+import { Tooltip } from '@heroui/react'
+
 import { DEFAULT } from '@/config/constants/colors'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
@@ -15,16 +17,15 @@ export default function MaskAmountInfo() {
   }
 
   return (
-    <div
-      title='Masked amounts'
-      className='fixed bottom-8 right-6 md:bottom-8 md:right-11'
-    >
-      <HoverableElement
-        uKey='mask-amount-info'
-        element={<PiLock fill={DEFAULT} />}
-        hoveredElement={<PiLockFill fill={DEFAULT} />}
-        withShift={false}
-      />
-    </div>
+    <Tooltip content='Masked amounts' size='sm' placement='left'>
+      <div className='fixed bottom-8 right-6 md:bottom-8 md:right-11'>
+        <HoverableElement
+          uKey='mask-amount-info'
+          element={<PiLock fill={DEFAULT} />}
+          hoveredElement={<PiLockFill fill={DEFAULT} />}
+          withShift={false}
+        />
+      </div>
+    </Tooltip>
   )
 }
