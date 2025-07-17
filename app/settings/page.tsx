@@ -152,7 +152,7 @@ export default async function Page() {
           >
             <div className='max-w-md'>
               <Spacer y={2} />
-              <User />
+              <User withoutPopover />
               <Spacer y={2} />
               <form action={signOutAccount}>
                 <ExitAccount />

@@ -9,9 +9,36 @@ import ExitAccount from '../settings/exit-account'
 
 type TProps = {
   user: TDefaultSession['user']
+  withoutPopover?: boolean
 }
 
-function UserProfileInfo({ user }: TProps) {
+function UserProfileInfo({ user, withoutPopover }: TProps) {
+  const renderUser = () => {
+    return (
+      <User
+        name={user?.name}
+        description={user?.email}
+        avatarProps={{
+          // ImgComponent: Image,
+          ImgComponent: 'img',
+          imgProps: {
+            // priority: true,
+            // quality: 100,
+            width: 40,
+            height: 40,
+          },
+          src: user?.image || '',
+        }}
+        classNames={{
+          name: 'text-md md:text-sm',
+          description: 'text-sm md:text-tiny',
+        }}
+      />
+    )
+  }
+
+  if (withoutPopover) return renderUser()
+
   return (
     <Popover>
       <PopoverTrigger>
