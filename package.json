@@ -36,7 +36,7 @@
     "compressorjs": "^1.2.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
-    "emoji-picker-react": "^4.12.3",
+    "emoji-picker-react": "^4.13.2",
     "emoji-regex": "^10.4.0",
     "framer-motion": "^12.23.3",
     "get-user-locale": "^3.0.0",
