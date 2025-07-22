@@ -13,5 +13,6 @@ updates:
     # Ignore major version updates for specific dependencies; add more entries as needed.
     ignore:
       - dependency-name: 'tailwind-merge'
+      - dependency-name: 'recharts'
         update-types:
           - 'version-update:semver-major'
