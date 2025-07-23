@@ -70,6 +70,7 @@ const nextConfig: NextConfig = {
       'react-hot-toast',
     ],
   },
+  // browserDebugInfoInTerminal: true,
 }
 
 const withPWA = withPWAInit({
