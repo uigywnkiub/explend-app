@@ -65,6 +65,7 @@ export type TSubscriptions = {
   category: TTransaction['category']
   description: TTransaction['description']
   amount: TTransaction['amount']
+  note: string
 }
 
 export type TRawTransaction = TTransaction & {

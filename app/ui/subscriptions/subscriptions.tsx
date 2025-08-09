@@ -73,6 +73,7 @@ import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import AmountInput from '../limits/amount-input'
 import DescriptionInput from './description-input'
+import NoteInput from './note-input'
 import SelectInput from './select-input'
 
 const enum DROPDOWN_KEY {
@@ -121,10 +122,12 @@ export default function Subscriptions({
   const [category, setCategory] = useState<Selection>(new Set([]))
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
+  const [note, setNote] = useState('')
 
   const [tempCategoryName, setTempCategoryName] = useState('')
   const [tempDescription, setTempDescription] = useState('')
   const [tempAmount, setTempAmount] = useState('')
+  const [tempNote, setTempNote] = useState('')
 
   const [isLoadingCreate, setIsLoadingCreate] = useState(false)
   const [isLoadingEdit, setIsLoadingEdit] = useState(false)
@@ -133,6 +136,7 @@ export default function Subscriptions({
 
   const categoryName = Array.from(category)[0]?.toString()
   const trimmedDescription = capitalizeFirstLetter(description.trim())
+  const trimmedNote = capitalizeFirstLetter(note?.trim())
   const isCategoryNameInvalid = !Boolean(categoryName)
   const isDescriptionInvalid = !Boolean(description)
   const isAmountInvalid = !amount || amount === '0'
@@ -173,6 +177,7 @@ export default function Subscriptions({
     setCategory(new Set([]))
     setDescription('')
     setAmount('')
+    setNote('')
   }
 
   const getCurrSubscription = (_id: TTransaction['id']) => {
@@ -184,6 +189,7 @@ export default function Subscriptions({
       category: getCategoryWithEmoji(categoryName, userCategories),
       description: trimmedDescription,
       amount,
+      note: trimmedNote,
     })
     setIsLoadingCreate(true)
     try {
@@ -225,12 +231,14 @@ export default function Subscriptions({
     category: TSubscriptions['category'],
     description: TSubscriptions['description'],
     amount: TSubscriptions['amount'],
+    note: TSubscriptions['note'],
     onCloseEditCallback: () => void,
   ) => {
     const hasChanges =
       categoryName === tempCategoryName &&
       description === tempDescription &&
-      amount === tempAmount
+      amount === tempAmount &&
+      note === tempNote
     if (hasChanges) {
       toast.error('No changes detected.')
 
@@ -244,6 +252,7 @@ export default function Subscriptions({
         getCategoryWithEmoji(category, userCategories),
         description,
         amount,
+        note,
       )
       toast.success('Subscription edited.')
     } catch (err) {
@@ -299,6 +308,10 @@ export default function Subscriptions({
     },
     [],
   )
+
+  const onChangeNote = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setNote(e.target.value)
+  }, [])
 
   return (
     <>
@@ -381,6 +394,7 @@ export default function Subscriptions({
                         onChangeAmount={onChangeAmount}
                         currency={currency}
                       />
+                      <NoteInput note={note} onChangeNote={onChangeNote} />
                     </div>
                   </ModalBody>
                   <ModalFooter>
@@ -410,7 +424,7 @@ export default function Subscriptions({
         <ul className='space-y-4'>
           <AnimatePresence>
             {subscriptionsData.map((s, idx) => {
-              const { _id, category, description, amount } = s
+              const { _id, category, description, amount, note } = s
               const isChangedCategoryName = changedCategoryNames.includes(
                 getCategoryWithoutEmoji(category),
               )
@@ -434,213 +448,230 @@ export default function Subscriptions({
               return (
                 <motion.li
                   key={_id}
-                  className='flex items-center justify-between py-2'
+                  className='flex flex-col items-center justify-between py-2'
                   {...MOTION_LIST(idx)}
                 >
-                  <div className='flex items-center gap-2 text-balance md:w-1/2'>
-                    <Tooltip
-                      content={getCategoryWithoutEmoji(category)}
-                      placement='bottom'
-                    >
-                      <p className='-mb-1 cursor-default text-xl md:text-2xl'>
-                        {categoryEmoji}
+                  <div className='flex w-full items-center justify-between'>
+                    <div className='flex items-center gap-2 text-balance md:w-1/2'>
+                      <Tooltip
+                        content={getCategoryWithoutEmoji(category)}
+                        placement='bottom'
+                      >
+                        <p className='-mb-1 cursor-default text-xl md:text-2xl'>
+                          {categoryEmoji}
+                        </p>
+                      </Tooltip>
+                      <Tooltip
+                        content='Search by description'
+                        placement='bottom'
+                      >
+                        <Link
+                          href={createSearchHrefWithKeyword(description)}
+                          className='hover:opacity-hover'
+                        >
+                          {description}
+                        </Link>
+                      </Tooltip>
+                      <Tooltip
+                        content={
+                          isAddedSubscriptionInThisMonth
+                            ? capitalizeFirstLetter(addedSubscriptionStr)
+                            : 'Ready to add'
+                        }
+                        placement='bottom'
+                      >
+                        <div className='pr-2'>
+                          <HoverableElement
+                            uKey='check-subscription-icon'
+                            element={
+                              <PiCheckCircle
+                                size={DEFAULT_ICON_SIZE}
+                                className={checkIconClassName}
+                              />
+                            }
+                            hoveredElement={
+                              <PiCheckCircleFill
+                                size={DEFAULT_ICON_SIZE}
+                                className={checkIconClassName}
+                              />
+                            }
+                          />
+                        </div>
+                      </Tooltip>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <p className='text-center'>
+                        <AnimatedNumber value={amount} /> {currency.code}
                       </p>
-                    </Tooltip>
-                    <Tooltip content='Search by description' placement='bottom'>
-                      <Link
-                        href={createSearchHrefWithKeyword(description)}
-                        className='hover:opacity-hover'
-                      >
-                        {description}
-                      </Link>
-                    </Tooltip>
-                    <Tooltip
-                      content={
-                        isAddedSubscriptionInThisMonth
-                          ? capitalizeFirstLetter(addedSubscriptionStr)
-                          : 'Ready to add'
-                      }
-                      placement='bottom'
-                    >
-                      <div className='pr-2'>
-                        <HoverableElement
-                          uKey='check-subscription-icon'
-                          element={
-                            <PiCheckCircle
-                              size={DEFAULT_ICON_SIZE}
-                              className={checkIconClassName}
-                            />
-                          }
-                          hoveredElement={
-                            <PiCheckCircleFill
-                              size={DEFAULT_ICON_SIZE}
-                              className={checkIconClassName}
-                            />
-                          }
-                        />
-                      </div>
-                    </Tooltip>
-                  </div>
-                  <div className='flex items-center gap-2'>
-                    <p className='text-center'>
-                      <AnimatedNumber value={amount} /> {currency.code}
-                    </p>
-                    <Dropdown>
-                      <Badge
-                        content=''
-                        shape='rectangle'
-                        color='warning'
-                        variant='solid'
-                        size='sm'
-                        isDot
-                        placement='top-right'
-                        classNames={{
-                          badge: 'right-1',
-                        }}
-                        isInvisible={!isChangedCategoryName}
-                      >
-                        <DropdownTrigger className='-mt-1'>
-                          <Button
-                            variant='light'
-                            isIconOnly
-                            size='md'
-                            className='md:size-10'
-                          >
-                            <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
-                          </Button>
-                        </DropdownTrigger>
-                      </Badge>
-                      <DropdownMenu
-                        aria-label='Subscription actions'
-                        onAction={(key) => {
-                          const currSubscription = getCurrSubscription(_id)
-                          if (!currSubscription) {
-                            throw new Error('Cannot find current subscription')
-                          }
-
-                          const currCategoryWithoutEmoji =
-                            getCategoryWithoutEmoji(currSubscription.category)
-
-                          setCategory(
-                            new Set(
-                              changedCategoryNames.includes(
-                                currCategoryWithoutEmoji,
+                      <Dropdown>
+                        <Badge
+                          content=''
+                          shape='rectangle'
+                          color='warning'
+                          variant='solid'
+                          size='sm'
+                          isDot
+                          placement='top-right'
+                          classNames={{
+                            badge: 'right-1',
+                          }}
+                          isInvisible={!isChangedCategoryName}
+                        >
+                          <DropdownTrigger className='-mt-1'>
+                            <Button
+                              variant='light'
+                              isIconOnly
+                              size='md'
+                              className='md:size-10'
+                            >
+                              <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
+                            </Button>
+                          </DropdownTrigger>
+                        </Badge>
+                        <DropdownMenu
+                          aria-label='Subscription actions'
+                          onAction={(key) => {
+                            const currSubscription = getCurrSubscription(_id)
+                            if (!currSubscription) {
+                              throw new Error(
+                                'Cannot find current subscription',
                               )
-                                ? []
-                                : [currCategoryWithoutEmoji],
-                            ),
-                          )
-                          setDescription(currSubscription.description)
-                          setAmount(currSubscription.amount)
-                          setSubscriptionId(currSubscription._id)
+                            }
 
-                          setTempCategoryName(currCategoryWithoutEmoji)
-                          setTempDescription(currSubscription.description)
-                          setTempAmount(currSubscription.amount)
+                            const currCategoryWithoutEmoji =
+                              getCategoryWithoutEmoji(currSubscription.category)
 
-                          if (key === DROPDOWN_KEY.ADD) {
-                            onAddAsTransaction({
-                              category: getCategoryWithEmoji(
-                                category,
-                                userCategories,
+                            setCategory(
+                              new Set(
+                                changedCategoryNames.includes(
+                                  currCategoryWithoutEmoji,
+                                )
+                                  ? []
+                                  : [currCategoryWithoutEmoji],
                               ),
-                              description,
-                              amount,
-                              isSubscription: true,
-                            })
-                          }
-                          if (key === DROPDOWN_KEY.EDIT) {
-                            onOpenEdit()
-                          }
-                          if (key === DROPDOWN_KEY.DELETE) {
-                            onOpenDelete()
-                          }
-                        }}
-                      >
-                        <DropdownSection title='Actions' showDivider>
-                          <DropdownItem
-                            key={DROPDOWN_KEY.ADD}
-                            startContent={
-                              <HoverableElement
-                                uKey={DROPDOWN_KEY.ADD}
-                                element={<PiPlus size={DEFAULT_ICON_SIZE} />}
-                                hoveredElement={
-                                  <PiPlusFill size={DEFAULT_ICON_SIZE} />
-                                }
-                              />
+                            )
+                            setDescription(currSubscription.description)
+                            setAmount(currSubscription.amount)
+                            setSubscriptionId(currSubscription._id)
+                            setNote(currSubscription.note)
+
+                            setTempCategoryName(currCategoryWithoutEmoji)
+                            setTempDescription(currSubscription.description)
+                            setTempAmount(currSubscription.amount)
+                            setTempNote(currSubscription.note)
+
+                            if (key === DROPDOWN_KEY.ADD) {
+                              onAddAsTransaction({
+                                category: getCategoryWithEmoji(
+                                  category,
+                                  userCategories,
+                                ),
+                                description,
+                                amount,
+                                isSubscription: true,
+                                note,
+                              })
                             }
-                            description='Add subscription as transaction'
-                            classNames={{
-                              description: 'text-default-500',
-                            }}
-                          >
-                            Add{' '}
-                            {isAddedSubscriptionInThisMonth &&
-                              `(${addedSubscriptionStr})`}
-                          </DropdownItem>
-                          <DropdownItem
-                            key={DROPDOWN_KEY.EDIT}
-                            startContent={
-                              <HoverableElement
-                                uKey={DROPDOWN_KEY.EDIT}
-                                element={
-                                  <PiNotePencil size={DEFAULT_ICON_SIZE} />
-                                }
-                                hoveredElement={
-                                  <PiNotePencilFill size={DEFAULT_ICON_SIZE} />
-                                }
-                              />
+                            if (key === DROPDOWN_KEY.EDIT) {
+                              onOpenEdit()
                             }
-                            description={
-                              <Badge
-                                content=''
-                                shape='rectangle'
-                                color='warning'
-                                variant='solid'
-                                size='sm'
-                                isDot
-                                placement='top-right'
-                                classNames={{
-                                  base: 'w-full',
-                                  badge: 'right-1',
-                                }}
-                                isInvisible={!isChangedCategoryName}
-                              >
-                                Edit subscription details
-                              </Badge>
+                            if (key === DROPDOWN_KEY.DELETE) {
+                              onOpenDelete()
                             }
-                            classNames={{
-                              description: 'text-default-500',
-                            }}
-                          >
-                            Edit
-                          </DropdownItem>
-                        </DropdownSection>
-                        <DropdownSection title='Danger zone'>
-                          <DropdownItem
-                            key={DROPDOWN_KEY.DELETE}
-                            className='text-danger'
-                            color='danger'
-                            startContent={
-                              <HoverableElement
-                                uKey={DROPDOWN_KEY.DELETE}
-                                element={<PiTrash size={DEFAULT_ICON_SIZE} />}
-                                hoveredElement={
-                                  <PiTrashFill size={DEFAULT_ICON_SIZE} />
-                                }
-                              />
-                            }
-                            description='Permanently delete subscription'
-                            classNames={{
-                              description: 'text-default-500',
-                            }}
-                          >
-                            Delete
-                          </DropdownItem>
-                        </DropdownSection>
-                      </DropdownMenu>
-                    </Dropdown>
+                          }}
+                        >
+                          <DropdownSection title='Actions' showDivider>
+                            <DropdownItem
+                              key={DROPDOWN_KEY.ADD}
+                              startContent={
+                                <HoverableElement
+                                  uKey={DROPDOWN_KEY.ADD}
+                                  element={<PiPlus size={DEFAULT_ICON_SIZE} />}
+                                  hoveredElement={
+                                    <PiPlusFill size={DEFAULT_ICON_SIZE} />
+                                  }
+                                />
+                              }
+                              description='Add subscription as transaction'
+                              classNames={{
+                                description: 'text-default-500',
+                              }}
+                            >
+                              Add{' '}
+                              {isAddedSubscriptionInThisMonth &&
+                                `(${addedSubscriptionStr})`}
+                            </DropdownItem>
+                            <DropdownItem
+                              key={DROPDOWN_KEY.EDIT}
+                              startContent={
+                                <HoverableElement
+                                  uKey={DROPDOWN_KEY.EDIT}
+                                  element={
+                                    <PiNotePencil size={DEFAULT_ICON_SIZE} />
+                                  }
+                                  hoveredElement={
+                                    <PiNotePencilFill
+                                      size={DEFAULT_ICON_SIZE}
+                                    />
+                                  }
+                                />
+                              }
+                              description={
+                                <Badge
+                                  content=''
+                                  shape='rectangle'
+                                  color='warning'
+                                  variant='solid'
+                                  size='sm'
+                                  isDot
+                                  placement='top-right'
+                                  classNames={{
+                                    base: 'w-full',
+                                    badge: 'right-1',
+                                  }}
+                                  isInvisible={!isChangedCategoryName}
+                                >
+                                  Edit subscription details
+                                </Badge>
+                              }
+                              classNames={{
+                                description: 'text-default-500',
+                              }}
+                            >
+                              Edit
+                            </DropdownItem>
+                          </DropdownSection>
+                          <DropdownSection title='Danger zone'>
+                            <DropdownItem
+                              key={DROPDOWN_KEY.DELETE}
+                              className='text-danger'
+                              color='danger'
+                              startContent={
+                                <HoverableElement
+                                  uKey={DROPDOWN_KEY.DELETE}
+                                  element={<PiTrash size={DEFAULT_ICON_SIZE} />}
+                                  hoveredElement={
+                                    <PiTrashFill size={DEFAULT_ICON_SIZE} />
+                                  }
+                                />
+                              }
+                              description='Permanently delete subscription'
+                              classNames={{
+                                description: 'text-default-500',
+                              }}
+                            >
+                              Delete
+                            </DropdownItem>
+                          </DropdownSection>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </div>
                   </div>
+                  {Boolean(note) && (
+                    <div className='mt-1 w-full text-left text-sm text-default-500'>
+                      <p>{note}</p>
+                    </div>
+                  )}
                 </motion.li>
               )
             })}
@@ -698,6 +729,7 @@ export default function Subscriptions({
                     onChangeAmount={onChangeAmount}
                     currency={currency}
                   />
+                  <NoteInput note={note} onChangeNote={onChangeNote} />
                 </div>
               </ModalBody>
               <ModalFooter>
@@ -718,6 +750,7 @@ export default function Subscriptions({
                       categoryName,
                       trimmedDescription,
                       amount,
+                      trimmedNote,
                       onCloseEdit,
                     )
                   }

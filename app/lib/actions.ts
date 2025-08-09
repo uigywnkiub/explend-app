@@ -719,6 +719,7 @@ export async function editSubscription(
   category: TSubscriptions['category'],
   description: TSubscriptions['description'],
   amount: TSubscriptions['amount'],
+  note: TSubscriptions['note'],
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to edit subscriptions.')
@@ -744,6 +745,7 @@ export async function editSubscription(
           'subscriptions.$.category': category,
           'subscriptions.$.description': description,
           'subscriptions.$.amount': amount,
+          'subscriptions.$.note': note,
         },
       },
     )
