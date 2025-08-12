@@ -880,6 +880,7 @@ Requirements:
 - Use each category name exactly as listed: ${categoriesStr}
 - Begin each category with a relevant emoji
 - Provide a realistic savings estimate using the format like: "Up to X ${currency.code} per month."
+- The X should use spaces as thousand separators (e.g., 2 000, 20 000, 200 000, 2 000 000).
 - Output exactly one tip per category
 `
 
