@@ -151,7 +151,7 @@
     "node": ">=20",
     "pnpm": ">=10"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.15.0",
   "overrides": {
     "react-is": "19.0.0"
   },
@@ -161,6 +161,7 @@
       "@sentry/cli",
       "@vercel/speed-insights",
       "esbuild",
+      "oxc-resolver",
       "sharp",
       "unrs-resolver"
     ]
