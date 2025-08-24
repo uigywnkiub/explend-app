@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useAudio, useDebounce } from 'react-use'
 
@@ -24,11 +24,16 @@ import {
   getFromLocalStorage,
 } from '@/app/lib/helpers'
 
+import type { TCategoryLimits } from '../lib/types'
+
 type TProps = {
   readonly triggerBy: unknown
 }
 
 export default function LimitToast({ triggerBy }: TProps) {
+  const [toastItems, setToastItems] = useState<
+    TCategoryLimits['categoryName'][]
+  >([])
   const [audio, , audioControls] = useAudio({
     src: '/sounds/error-limit-over.mp3',
   })
@@ -78,14 +83,30 @@ export default function LimitToast({ triggerBy }: TProps) {
       )
 
       if (typeof foundCategoryLimit === 'object') {
-        toast.error(`${foundCategoryLimit.categoryName} limit is over!`, {
+        const limitToastCategoryName = foundCategoryLimit.categoryName
+
+        setToastItems((prev) => [...prev, limitToastCategoryName])
+
+        const limitCountByCategoryName =
+          toastItems.filter((t) => t === limitToastCategoryName).length + 1
+
+        const toastMsg = (
+          <div className='flex items-center gap-2'>
+            <span>{limitToastCategoryName} limit is over!</span>
+            {limitCountByCategoryName > 1 && (
+              <span className='rounded-full bg-warning px-1 text-xs font-semibold'>
+                ×{limitCountByCategoryName}
+              </span>
+            )}
+          </div>
+        )
+
+        toast.error(toastMsg, {
           icon: getEmojiFromCategory(
-            getCategoryWithEmoji(
-              foundCategoryLimit.categoryName,
-              userCategories,
-            ),
+            getCategoryWithEmoji(limitToastCategoryName, userCategories),
           ),
           duration: TOAST_DURATION * 1.5,
+          id: limitToastCategoryName,
         })
         audioControls.play()
       }
