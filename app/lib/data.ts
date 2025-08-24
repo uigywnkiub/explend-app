@@ -8,6 +8,7 @@ import {
   isWithinInterval,
   startOfMonth,
   startOfToday,
+  subMonths,
 } from 'date-fns'
 
 import {
@@ -153,6 +154,17 @@ export const filterTransactionsByDateRange = (
 export const getTransactionsByCurrMonth = (transactions: TTransaction[]) => {
   const startOfMonthCalendarDate = toCalendarDate(startOfMonth(startOfToday()))
   const endOfMonthCalendarDate = toCalendarDate(endOfMonth(endOfToday()))
+  const startDate = startOfMonthCalendarDate.toDate(getLocalTimeZone())
+  const endDate = endOfMonthCalendarDate.toDate(getLocalTimeZone())
+
+  return filterTransactionsByDateRange(transactions, startDate, endDate)
+}
+
+export const getTransactionsByPrevMonth = (transactions: TTransaction[]) => {
+  const prevMonthStart = startOfMonth(subMonths(startOfToday(), 1))
+  const prevMonthEnd = endOfMonth(subMonths(endOfToday(), 1))
+  const startOfMonthCalendarDate = toCalendarDate(prevMonthStart)
+  const endOfMonthCalendarDate = toCalendarDate(prevMonthEnd)
   const startDate = startOfMonthCalendarDate.toDate(getLocalTimeZone())
   const endDate = endOfMonthCalendarDate.toDate(getLocalTimeZone())
 

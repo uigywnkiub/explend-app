@@ -53,6 +53,7 @@ import {
   calculateTotalsByCategory,
   filterTransactions,
   getTransactionsByCurrMonth,
+  getTransactionsByPrevMonth,
 } from '@/app/lib/data'
 import {
   cn,
@@ -120,16 +121,27 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   const controls = useDragControls()
 
   // useMemo hooks
+  const transactionsByPrevMonth = useMemo(
+    () => getTransactionsByPrevMonth(transactions),
+    [transactions],
+  )
+  const prevMonthExpense = useMemo(() => {
+    return filterTransactions(transactionsByPrevMonth).expense
+  }, [transactionsByPrevMonth])
+  const totalsByCategoryPrevMonth = useMemo(() => {
+    return calculateTotalsByCategory(prevMonthExpense, true)
+  }, [prevMonthExpense])
+
   const transactionsByCurrMonth = useMemo(
     () => getTransactionsByCurrMonth(transactions),
     [transactions],
   )
-  const expense = useMemo(() => {
+  const currMonthExpense = useMemo(() => {
     return filterTransactions(transactionsByCurrMonth).expense
   }, [transactionsByCurrMonth])
-  const totalsByCategory = useMemo(() => {
-    return calculateTotalsByCategory(expense, true)
-  }, [expense])
+  const totalsByCategoryCurrMonth = useMemo(() => {
+    return calculateTotalsByCategory(currMonthExpense, true)
+  }, [currMonthExpense])
   const userLimitsData = useMemo(() => {
     const [_userLimitsData] = transactions
       .map((t) => t.categoryLimits)
@@ -145,19 +157,35 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   const calculatedLimitsData: TCalculatedLimits[] = useMemo(() => {
     return userLimitsData.map((data) => {
       const { categoryName, limitAmount: limitValue } = data
-      const currentAmount = totalsByCategory[categoryName] || 0
+
+      const currMonthAmount = totalsByCategoryCurrMonth[categoryName] || 0
       const limitAmount = parseFloat(formatAmount(limitValue))
-      const difference = limitAmount - currentAmount
+      const difference = limitAmount - currMonthAmount
       const isLimitOver = difference < 0
+      const currMonthPercentage =
+        limitAmount > 0
+          ? Math.min(100, Math.max(0, (currMonthAmount / limitAmount) * 100))
+          : 0
+
+      const prevMonthAmount = totalsByCategoryPrevMonth[categoryName] || 0
+      const prevMonthPercentage =
+        limitAmount > 0
+          ? Math.min(100, Math.max(0, (prevMonthAmount / limitAmount) * 100))
+          : 0
 
       return {
         categoryName,
         limitAmount,
         difference,
         isLimitOver,
+        currMonthAmount,
+        prevMonthAmount,
+        currMonthPercentage,
+        prevMonthPercentage,
       }
     })
-  }, [userLimitsData, totalsByCategory])
+  }, [userLimitsData, totalsByCategoryCurrMonth, totalsByCategoryPrevMonth])
+
   const [calculatedLimitsDataState, setCalculatedLimitsDataState] =
     useState<TCalculatedLimits[]>(calculatedLimitsData)
   useEffect(() => {
@@ -173,7 +201,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     ),
   ]
 
-  const getLimitAmount = (categoryName: string) => {
+  const getLimitAmount = (categoryName: TCategoryLimits['categoryName']) => {
     const limit = userLimitsData.find((l) => l.categoryName === categoryName)
 
     return limit ? limit.limitAmount : null
@@ -482,19 +510,29 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       >
         <AnimatePresence>
           {calculatedLimitsDataState.map((data, idx) => {
-            const { categoryName, difference, limitAmount, isLimitOver } = data
-            const progressPercentage =
-              limitAmount > 0
-                ? Math.min(
-                    100,
-                    Math.max(
-                      0,
-                      ((limitAmount - difference) / limitAmount) * 100,
-                    ),
-                  )
-                : 0
+            const {
+              categoryName,
+              difference,
+              limitAmount,
+              isLimitOver,
+              currMonthAmount,
+              prevMonthAmount,
+              currMonthPercentage,
+              prevMonthPercentage,
+            } = data
+
             const isChangedCategoryName =
               changedCategoryNames.includes(categoryName)
+
+            const growthRate =
+              prevMonthAmount > 0
+                ? ((currMonthAmount - prevMonthAmount) / prevMonthAmount) * 100
+                : 0
+
+            const isIncreasedAmountByCurrMonth =
+              currMonthAmount > 0 &&
+              currMonthAmount >= prevMonthAmount &&
+              currMonthPercentage
 
             return (
               <Reorder.Item
@@ -542,16 +580,71 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       )}
                     </div>
                     <Tooltip
-                      content={`${formatPercentage(progressPercentage)} %`}
+                      content={
+                        <div
+                          className={cn(
+                            'flex justify-center gap-3 bg-gradient-to-r from-secondary to-success bg-clip-text p-2 text-xs text-transparent',
+                            !isIncreasedAmountByCurrMonth &&
+                              prevMonthAmount !== 0 &&
+                              currMonthAmount !== 0 &&
+                              'flex-row-reverse bg-gradient-to-l',
+                            isLimitOver && 'to-danger',
+                          )}
+                        >
+                          <div className={cn('flex flex-col items-center')}>
+                            <span className='pb-2 text-default-500'>
+                              Previous
+                            </span>
+                            <span>{`${formatPercentage(prevMonthPercentage)} %`}</span>
+                            <span>
+                              {getFormattedCurrency(prevMonthAmount)}{' '}
+                              {currency.sign}
+                            </span>
+                          </div>
+                          <div className='w-px bg-default' />
+                          <div className='flex flex-col items-center'>
+                            <span className='pb-2 text-default-500'>Trend</span>
+                            <div className='flex flex-col items-center'>
+                              <span>
+                                {isIncreasedAmountByCurrMonth ? '↑' : '↓'}
+                              </span>
+                              <span>
+                                {prevMonthAmount > 0
+                                  ? `${formatPercentage(growthRate, true)} %`
+                                  : '—'}
+                              </span>
+                            </div>
+                          </div>
+                          <div className='w-px bg-default' />
+                          <div className={cn('flex flex-col items-center')}>
+                            <span className='pb-2 text-default-500'>
+                              Current
+                            </span>
+                            <span>{`${formatPercentage(currMonthPercentage)} %`}</span>
+                            <span>
+                              {getFormattedCurrency(currMonthAmount)}{' '}
+                              {currency.sign}
+                            </span>
+                          </div>
+                        </div>
+                      }
                       placement='bottom'
                     >
                       <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default md:relative md:w-full'>
                         <div
                           className={cn(
+                            'absolute h-[5px] rounded-full bg-secondary',
+                            isIncreasedAmountByCurrMonth && 'z-10',
+                          )}
+                          style={{ width: `${prevMonthPercentage}%` }}
+                        />
+
+                        <div
+                          className={cn(
                             'absolute h-[5px] rounded-full',
                             isLimitOver ? 'bg-danger' : 'bg-success',
                           )}
-                          style={{ width: `${progressPercentage}%` }}
+                          style={{ width: `${currMonthPercentage}%` }}
                         />
                       </div>
                     </Tooltip>
@@ -662,6 +755,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
 
       <div className='mt-4 flex flex-col gap-1 text-left md:mt-8'>
         <InfoText text='The calculation of limits is based on transactions by the current month.' />
+        <InfoText text='The purple color indicates data from the previous month.' />
         {/* <InfoText text='Your limits will be reset automatically in the new month.' /> */}
         <InfoText text='If your limit is over, you will be notified when trying to add a new transaction.' />
       </div>

@@ -222,4 +222,8 @@ export type TCalculatedLimits = {
   limitAmount: number
   difference: number
   isLimitOver: boolean
+  currMonthAmount: number
+  prevMonthAmount: number
+  currMonthPercentage: number
+  prevMonthPercentage: number
 }

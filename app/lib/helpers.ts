@@ -533,11 +533,18 @@ export const omit = <T extends Record<string, unknown>>(
   ) as Omit<T, keyof typeof keys>
 }
 
-export const formatPercentage = (value: number): string => {
+export const formatPercentage = (
+  value: number,
+  negativeWithSpace: boolean = false,
+): string => {
   let formattedValue = value.toFixed(2).toString()
 
   if (formattedValue.endsWith('.00')) {
     formattedValue = formattedValue.slice(0, -3)
+  }
+
+  if (negativeWithSpace && value < 0) {
+    formattedValue = `- ${formattedValue.slice(1)}`
   }
 
   return formattedValue
