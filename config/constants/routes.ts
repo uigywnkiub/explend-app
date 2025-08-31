@@ -10,4 +10,7 @@ export const enum ROUTE {
   FEEDBACK = '/feedback',
   ISSUE = '/issue',
   SITEMAP = '/sitemap.xml',
+  DISABLED_ROUTE = '/disabled-route',
 }
+
+export const DISABLED_ROUTES: ROUTE[] = []

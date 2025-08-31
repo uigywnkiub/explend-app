@@ -25,7 +25,7 @@ import { useMedia } from 'react-use'
 import { usePathname } from 'next/navigation'
 
 import { NAV_ICON_SIZE, NAV_TITLE } from '@/config/constants/navigation'
-import { ROUTE } from '@/config/constants/routes'
+import { DISABLED_ROUTES, ROUTE } from '@/config/constants/routes'
 
 import { getBreakpointWidth } from '@/app/lib/helpers'
 
@@ -101,8 +101,9 @@ type TProps = {
 function Navbar({ linksGroup, withLogo }: TProps) {
   const isMd = useMedia(getBreakpointWidth('md'), true)
   const pathname = usePathname()
-  const navLinks: TNavLink[] =
+  const navLinks: TNavLink[] = (
     linksGroup === 'top' ? topNavLinks : bottomNavLinks
+  ).filter(({ url }) => !DISABLED_ROUTES.includes(url))
 
   return (
     <>
