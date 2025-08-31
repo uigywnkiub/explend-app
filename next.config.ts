@@ -71,6 +71,7 @@ const nextConfig: NextConfig = {
     ],
   },
   // browserDebugInfoInTerminal: true,
+  typedRoutes: false,
 }
 
 const withPWA = withPWAInit({

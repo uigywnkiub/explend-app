@@ -19,7 +19,15 @@ const compat = new FlatCompat({
 })
 
 const config = [
-  // ...ts.configs.recommended,
+  {
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'out/**',
+      'build/**',
+      'next-env.d.ts',
+    ],
+  }, // ...ts.configs.recommended,
   ...tailwind.configs['flat/recommended'],
   ...compat.extends('next', 'next/core-web-vitals', 'prettier'),
   {
