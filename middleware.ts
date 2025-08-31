@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 
 import type { TSession } from './app/lib/types'
-import { ROUTE } from './config/constants/routes'
+import { DISABLED_ROUTES, ROUTE } from './config/constants/routes'
 
 export default auth((req: NextRequest & { auth: TSession }) => {
   const url = req.nextUrl.clone()
@@ -14,8 +14,18 @@ export default auth((req: NextRequest & { auth: TSession }) => {
     return NextResponse.rewrite(url)
   }
 
-  if (req.nextUrl.pathname === ROUTE.SIGNIN) {
+  if (
+    req.nextUrl.pathname === ROUTE.SIGNIN ||
+    (req.nextUrl.pathname === ROUTE.DISABLED_ROUTE &&
+      DISABLED_ROUTES.length === 0)
+  ) {
     url.pathname = ROUTE.HOME
+
+    return NextResponse.redirect(url)
+  }
+
+  if (DISABLED_ROUTES.includes(url.pathname as ROUTE)) {
+    url.pathname = ROUTE.DISABLED_ROUTE
 
     return NextResponse.redirect(url)
   }
