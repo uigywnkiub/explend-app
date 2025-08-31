@@ -1,30 +1,50 @@
-# Explend App
+# Explend
 
-**Explend** is an application for tracking personal income and expenses. It provides a comprehensive view of your financial activities, allowing you to manage your finances effectively.
+**Explend** is a personal finance tracking application designed to help you manage income and expenses with ease. It offers a clear overview of your financial activities, empowering smarter spending decisions.
 
-## Features
+## ✨ Features
 
-- **AI-powered Completion**: Leverage Explend Intelligence to automatically complete transaction fields, including category, amount, and whether it is income or expense, based on your input description, making it faster and easier to log your transactions.
-- **Monthly Reports**: View detailed monthly reports by selecting any month or customizing your own date range. Get AI-driven tips on expense categories.
-- **Dynamic Radar Chart**: The app features a radar chart that updates each time you add a new transaction category, providing a visual representation of your spending habits.
-- **Category Limits**: Add category limits by the current month and modify them any you want.
-- **Subscriptions**: Add subscriptions and mark them as expense transactions.
-- **Receipt Upload**: Supports uploading receipt files. The system automatically extracts details to populate your transactions effortlessly.
-- **Customizable Categories**: Change default categories to suit your needs.
-- **Transaction Management**: Delete transactions, edit, set spending limits, and more.
-- **Search Transactions**: Quickly find specific transactions using the search functionality.
-- **Security**: Your transaction data are secured with AES encryption, ensuring your financial information remains private. Encrypted data looks something like this: "5c007dc6c2db3395a8…”.
-- **PWA Mobile Version**: Access Explend on the go with its Progressive Web App mobile version, offering a seamless experience across different devices. (Add to Home Screen)
-- **Theme Customization**: Customize the appearance of the app with support for light, dark, and system themes.
+* **AI-Powered Smart Entry**
+  Automatically complete transaction details (category, amount, type: income/expense) using Explend Intelligence based on your description.
 
-## Review
+* **Detailed Reports**
+  Generate monthly or custom-range reports with AI-driven insights into your spending habits.
 
-[Link to project video review](https://www.youtube.com/watch?v=v_tLuYTPoSI)
+* **Dynamic Radar Chart**
+  Visualize expenses with a radar chart that updates as you add new categories.
 
-## Contributing
+* **Category Limits**
+  Set and adjust monthly spending limits for specific categories.
 
-We welcome contributions to improve this application. Feel free to submit issues or pull requests.
+* **Subscription Tracking**
+  Manage subscriptions and log them as recurring expense transactions.
 
-## License
+* **Receipt Scanning**
+  Upload receipts—Explend extracts key details and fills in your transactions automatically.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+* **Custom Categories**
+  Edit or add categories to suit your personal needs.
+
+* **Transaction Management**
+  Search, edit, delete, or manage spending limits on your transactions with ease.
+
+* **Data Security**
+  All transaction data is encrypted with AES, ensuring your financial information remains private. (e.g., `"5c007dc6c2db3395a8…"`)
+
+* **Cross-Device Access**
+  Use Explend as a Progressive Web App (PWA) for a smooth mobile and desktop experience.
+
+* **Theme Personalization**
+  Switch between light, dark, or system themes to match your preferences.
+
+## 🎥 Review
+
+▶ [Watch the project demo video](https://www.youtube.com/watch?v=v_tLuYTPoSI)
+
+## 🤝 Contributing
+
+We welcome contributions! Feel free to open an issue or submit a pull request to help improve Explend.
+
+## 📄 License
+
+This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
