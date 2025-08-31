@@ -33,6 +33,7 @@ import { ROUTE } from '@/config/constants/routes'
 
 import type {
   TApproxCategory,
+  TBrowserName,
   TCategoriesItem,
   TExpenseReport,
   TGetTransactions,
@@ -345,23 +346,23 @@ export const pluralize = (
     : plural
 }
 
-// export const getBrowserName = (userAgent: string | null): TBrowserName => {
-//   if (!userAgent) return 'Unknown'
+export const getBrowserName = (userAgent: string | null): TBrowserName => {
+  if (!userAgent) return 'Unknown'
 
-//   if (/Edg/.test(userAgent)) {
-//     return 'Edge' // Edge
-//   } else if (/OPR/.test(userAgent) || /Opera/.test(userAgent)) {
-//     return 'Opera' // Opera
-//   } else if (/Firefox/.test(userAgent)) {
-//     return 'Firefox' // Firefox
-//   } else if (/Chrome/.test(userAgent) && !/Edg/.test(userAgent)) {
-//     return 'Chrome' // Chrome
-//   } else if (/Safari/.test(userAgent) && !/Chrome/.test(userAgent)) {
-//     return 'Safari' // Safari
-//   } else {
-//     return 'Unknown' // Unknown or unrecognized browser
-//   }
-// }
+  if (/Edg/.test(userAgent)) {
+    return 'Edge'
+  } else if (/OPR/.test(userAgent) || /Opera/.test(userAgent)) {
+    return 'Opera'
+  } else if (/Firefox/.test(userAgent)) {
+    return 'Firefox'
+  } else if (/Chrome/.test(userAgent) && !/Edg/.test(userAgent)) {
+    return 'Chrome'
+  } else if (/Safari/.test(userAgent) && !/Chrome/.test(userAgent)) {
+    return 'Safari'
+  } else {
+    return 'Unknown'
+  }
+}
 
 export const getCategoryItemNames = (
   categories: TTransaction['categories'],
