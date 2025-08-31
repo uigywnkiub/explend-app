@@ -4,37 +4,37 @@
 
 ## ✨ Features
 
-* **AI-Powered Smart Entry**
+- **AI-Powered Smart Entry**
   Automatically complete transaction details (category, amount, type: income/expense) using Explend Intelligence based on your description.
 
-* **Detailed Reports**
+- **Detailed Reports**
   Generate monthly or custom-range reports with AI-driven insights into your spending habits.
 
-* **Dynamic Radar Chart**
+- **Dynamic Radar Chart**
   Visualize expenses with a radar chart that updates as you add new categories.
 
-* **Category Limits**
+- **Category Limits**
   Set and adjust monthly spending limits for specific categories.
 
-* **Subscription Tracking**
+- **Subscription Tracking**
   Manage subscriptions and log them as recurring expense transactions.
 
-* **Receipt Scanning**
+- **Receipt Scanning**
   Upload receipts—Explend extracts key details and fills in your transactions automatically.
 
-* **Custom Categories**
+- **Custom Categories**
   Edit or add categories to suit your personal needs.
 
-* **Transaction Management**
+- **Transaction Management**
   Search, edit, delete, or manage spending limits on your transactions with ease.
 
-* **Data Security**
+- **Data Security**
   All transaction data is encrypted with AES, ensuring your financial information remains private. (e.g., `"5c007dc6c2db3395a8…"`)
 
-* **Cross-Device Access**
+- **Cross-Device Access**
   Use Explend as a Progressive Web App (PWA) for a smooth mobile and desktop experience.
 
-* **Theme Personalization**
+- **Theme Personalization**
   Switch between light, dark, or system themes to match your preferences.
 
 ## 🎥 Review
