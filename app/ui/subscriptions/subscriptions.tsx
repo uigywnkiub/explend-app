@@ -398,7 +398,7 @@ export default function Subscriptions({
                     </div>
                   </ModalBody>
                   <ModalFooter>
-                    <Button color='danger' variant='light' onPress={onClose}>
+                    <Button variant='light' onPress={onClose}>
                       Close
                     </Button>
                     <Button
@@ -737,7 +737,7 @@ export default function Subscriptions({
                   Close
                 </Button>
                 <Button
-                  color='danger'
+                  color='primary'
                   isLoading={isLoadingEdit}
                   isDisabled={
                     isAmountInvalid ||
