@@ -9,6 +9,7 @@
     "dev:tur": "next dev --turbopack",
     "dev:tur:https": "next dev --experimental-https --turbo",
     "build": "next build",
+    "build:tur": "next build --turbopack",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
