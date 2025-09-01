@@ -149,8 +149,7 @@
     "Wealth Management"
   ],
   "engines": {
-    "node": ">=20",
-    "pnpm": ">=10"
+    "node": ">=20"
   },
   "overrides": {
     "react-is": "19.1.1"
