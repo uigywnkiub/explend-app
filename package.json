@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:all": "pnpm prettier && pnpm lint && pnpm typecheck && pnpm test",
-    "typecheck": "tsc",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:dev": "vitest",
     "test:cov": "vitest --coverage",
