@@ -77,7 +77,7 @@ export async function getBalance(
   userId: TUserId,
 ): Promise<TTransaction['balance']> {
   if (!userId) {
-    throw new Error('User IDd is required to fetch balance.')
+    throw new Error('User ID is required to fetch balance.')
   }
   try {
     await dbConnect()
