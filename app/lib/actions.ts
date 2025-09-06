@@ -16,6 +16,7 @@ import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_NAME,
   DEFAULT_CURRENCY_SIGN,
+  IS_RESEND_ENABLE,
   RESEND_API_KEY,
   RESEND_EMAIL,
 } from '@/config/constants/main'
@@ -77,7 +78,7 @@ export async function getBalance(
   userId: TUserId,
 ): Promise<TTransaction['balance']> {
   if (!userId) {
-    throw new Error('User IDd is required to fetch balance.')
+    throw new Error('User IDdD is required to fetch balance.')
   }
   try {
     await dbConnect()

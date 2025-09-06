@@ -1,5 +1,5 @@
 const config = {
-  '*.{js,jsx,mjs,ts,tsx}': ['eslint --fix'],
+  '**/*': ['eslint --fix'],
   '**/*': ['prettier --write'],
 }
 
