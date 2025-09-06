@@ -53,6 +53,8 @@ import type {
 } from './types'
 
 export const getAuthSession = async (): Promise<TSession> => {
+  let a = 1
+  a += 2
   try {
     const session = await auth()
 
