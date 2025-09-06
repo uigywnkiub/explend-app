@@ -7,6 +7,8 @@ import Spotify from 'next-auth/providers/spotify'
 
 import { APP_LOCALHOST_URL, APP_URL, IS_PROD } from './config/constants/main'
 
+const a: string = 22
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GitHub,

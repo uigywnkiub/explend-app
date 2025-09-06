@@ -5,8 +5,6 @@
 //     .map((f) => relative(process.cwd(), f))
 //     .join(' --file ')}`
 
-// const a:string = 22
-
 // const config = {
 //   // '*.{js,jsx,ts,tsx}': [buildEslintCommand],
 //   // '**/*': [buildEslintCommand],
@@ -40,6 +38,7 @@ const config = {
   // '*.{js,jsx,ts,tsx,json,css,md}': [buildPrettierCommand],
   // '**/*': [buildEslintCommand],
   // '**/*': [buildPrettierCommand],
+  '**/*': ['eslint --fix'],
   '**/*': ['prettier --write'],
 }
 
