@@ -37,7 +37,7 @@ const config = {
   // '*.{js,jsx,ts,tsx,json,css,md}': [buildPrettierCommand],
   // '**/*': [buildEslintCommand],
   // '**/*': [buildPrettierCommand],
-  '**/*': ['tsc --noEmit'],
+  // '**/*': ['tsc --noEmit'],
   '**/*': ['eslint --fix'],
   '**/*': ['prettier --write'],
 }
