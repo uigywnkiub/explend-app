@@ -50,3 +50,7 @@ export const enum AI_NAME {
   FULL = `${APP_NAME.SHORT} ${AI_SUFFIX_NAME}`,
   SUFFIX = AI_SUFFIX_NAME,
 }
+
+export const RESEND_API_KEY = process.env.RESEND_API_KEY
+export const RESEND_EMAIL = process.env.RESEND_EMAIL
+export const IS_RESEND_ENABLE = process.env.IS_RESEND_ENABLE === 'true'

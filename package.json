@@ -58,7 +58,7 @@
     "react-use": "^17.6.0",
     "recharts": "^2.15.4",
     "require-in-the-middle": "^7.5.2",
-    "resend": "^4.8.0",
+    "resend": "^6.0.2",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
