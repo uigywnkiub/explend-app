@@ -16,7 +16,6 @@ import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_NAME,
   DEFAULT_CURRENCY_SIGN,
-  IS_RESEND_ENABLE,
   RESEND_API_KEY,
   RESEND_EMAIL,
 } from '@/config/constants/main'
@@ -53,8 +52,6 @@ import type {
 } from './types'
 
 export const getAuthSession = async (): Promise<TSession> => {
-  let a = 1
-  a += 2
   try {
     const session = await auth()
 
@@ -80,7 +77,7 @@ export async function getBalance(
   userId: TUserId,
 ): Promise<TTransaction['balance']> {
   if (!userId) {
-    throw new Error('User ID is required to fetch balance.')
+    throw new Error('User IDd is required to fetch balance.')
   }
   try {
     await dbConnect()
