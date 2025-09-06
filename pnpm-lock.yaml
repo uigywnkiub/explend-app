@@ -115,8 +115,8 @@ importers:
         specifier: ^7.5.2
         version: 7.5.2
       resend:
-        specifier: ^4.8.0
-        version: 4.8.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: ^6.0.2
+        version: 6.0.2(@react-email/render@1.1.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
       tailwind-merge:
         specifier: ^2.6.0
         version: 2.6.0
@@ -6269,9 +6269,14 @@ packages:
     resolution: {integrity: sha512-gAZ+kLqBdHarXB64XpAe2VCjB7rIRv+mU8tfRWziHRJ5umKsIHN2tLLv6EtMw7WCdP19S0ERVMldNvxYCHnhSQ==}
     engines: {node: '>=8.6.0'}
 
-  resend@4.8.0:
-    resolution: {integrity: sha512-R8eBOFQDO6dzRTDmaMEdpqrkmgSjPpVXt4nGfWsZdYOet0kqra0xgbvTES6HmCriZEXbmGk3e0DiGIaLFTFSHA==}
+  resend@6.0.2:
+    resolution: {integrity: sha512-um08qWpSVvEVqAePEy/bsa7pqtnJK+qTCZ0Et7YE7xuqM46J0C9gnSbIJKR3LIcRVMgO9jUeot8rH0UI84eqMQ==}
     engines: {node: '>=18'}
+    peerDependencies:
+      '@react-email/render': ^1.1.0
+    peerDependenciesMeta:
+      '@react-email/render':
+        optional: true
 
   resize-observer-polyfill@1.5.1:
     resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
@@ -10555,6 +10560,7 @@ snapshots:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       react-promise-suspense: 0.3.4
+    optional: true
 
   '@react-stately/calendar@3.8.2(react@19.1.1)':
     dependencies:
@@ -11136,6 +11142,7 @@ snapshots:
     dependencies:
       domhandler: 5.0.3
       selderee: 0.11.0
+    optional: true
 
   '@sentry-internal/browser-utils@9.46.0':
     dependencies:
@@ -13023,7 +13030,8 @@ snapshots:
 
   expect-type@1.2.2: {}
 
-  fast-deep-equal@2.0.1: {}
+  fast-deep-equal@2.0.1:
+    optional: true
 
   fast-deep-equal@3.1.3: {}
 
@@ -13325,6 +13333,7 @@ snapshots:
       dom-serializer: 2.0.0
       htmlparser2: 8.0.2
       selderee: 0.11.0
+    optional: true
 
   htmlparser2@8.0.2:
     dependencies:
@@ -13332,6 +13341,7 @@ snapshots:
       domhandler: 5.0.3
       domutils: 3.2.2
       entities: 4.5.0
+    optional: true
 
   http-proxy-agent@7.0.2:
     dependencies:
@@ -13736,7 +13746,8 @@ snapshots:
     dependencies:
       language-subtag-registry: 0.3.23
 
-  leac@0.6.0: {}
+  leac@0.6.0:
+    optional: true
 
   leven@3.1.0: {}
 
@@ -14258,6 +14269,7 @@ snapshots:
     dependencies:
       leac: 0.6.0
       peberminta: 0.9.0
+    optional: true
 
   path-exists@4.0.0: {}
 
@@ -14280,7 +14292,8 @@ snapshots:
 
   pathval@2.0.1: {}
 
-  peberminta@0.9.0: {}
+  peberminta@0.9.0:
+    optional: true
 
   pg-int8@1.0.1: {}
 
@@ -14443,6 +14456,7 @@ snapshots:
   react-promise-suspense@0.3.4:
     dependencies:
       fast-deep-equal: 2.0.1
+    optional: true
 
   react-refresh@0.17.0: {}
 
@@ -14582,12 +14596,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  resend@4.8.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
-    dependencies:
+  resend@6.0.2(@react-email/render@1.1.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)):
+    optionalDependencies:
       '@react-email/render': 1.1.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-    transitivePeerDependencies:
-      - react
-      - react-dom
 
   resize-observer-polyfill@1.5.1: {}
 
@@ -14714,6 +14725,7 @@ snapshots:
   selderee@0.11.0:
     dependencies:
       parseley: 0.12.1
+    optional: true
 
   semver@6.3.1: {}
 

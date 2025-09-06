@@ -16,6 +16,8 @@ import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_NAME,
   DEFAULT_CURRENCY_SIGN,
+  RESEND_API_KEY,
+  RESEND_EMAIL,
 } from '@/config/constants/main'
 import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
@@ -272,29 +274,25 @@ export async function setCookie(
 }
 
 export async function sendFeedback(formData: FormData) {
-  const resend = new Resend(process.env.RESEND_API_KEY)
-  const email = process.env.RESEND_EMAIL
-  const isResendEnable = process.env.IS_RESEND_ENABLE
-  const feedback = formData.get('feedback') as string
+  const RESEND = new Resend(RESEND_API_KEY)
+  const feedback = formData.get('feedback')?.toString().trim()
   if (!feedback) {
     throw new Error('Feedback is required.')
   }
   try {
-    if (email && isResendEnable === 'true') {
-      await Promise.all([
-        resend.emails.send({
-          from: `${APP_NAME.FULL} <onboarding@resend.dev>`,
-          to: email,
-          subject: 'Feedback',
-          html: `<h3>${feedback}</h3>`,
-        }),
-        setCookie(
-          COOKIE_FEEDBACK.NAME,
-          COOKIE_FEEDBACK.VALUE,
-          COOKIE_FEEDBACK.MAX_AGE,
-        ),
-      ])
-    }
+    await Promise.all([
+      RESEND.emails.send({
+        from: `${APP_NAME.FULL} <onboarding@resend.dev>`,
+        to: RESEND_EMAIL,
+        subject: 'Feedback',
+        html: `<h3>${feedback}</h3>`,
+      }),
+      setCookie(
+        COOKIE_FEEDBACK.NAME,
+        COOKIE_FEEDBACK.VALUE,
+        COOKIE_FEEDBACK.MAX_AGE,
+      ),
+    ])
   } catch (err) {
     throw err
   }
