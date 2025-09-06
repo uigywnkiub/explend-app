@@ -15,7 +15,6 @@
 // export default config
 /**
  * Refactored config to run Prettier only on staged files,
- * and ESLint only on JS/TS files.
  */
 // const buildPrettierCommand = (filenames) =>
 //   `pnpm prettier --write ${filenames.map((f) => `"${f}"`).join(' ')}`
