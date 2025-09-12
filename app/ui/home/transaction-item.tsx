@@ -41,6 +41,7 @@ import {
   cn,
   copyToClipboard,
   createFormData,
+  formatDate,
   formatTime,
   getCategoryWithoutEmoji,
   getEmojiFromCategory,
@@ -68,12 +69,13 @@ function TransactionItem({ hasCategoryChanged, ...t }: TProps) {
   const query = searchParams.get(SEARCH_PARAM.QUERY)?.toString() || ''
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [isBlinkTransaction, setIsBlinkTransaction] = useState(false)
-  const transactionDataToCopy = `Transaction data from ${APP_NAME.FULL}
+  const transactionDataToCopy = `Transaction data from ${APP_NAME.SHORT}
 
 ${t.isIncome ? 'Type: Income' : 'Type: Expense'}
 Category: ${t.category}
 Description: ${t.description}
 Amount: ${t.isIncome ? '+' : '-'} ${getFormattedCurrency(t.amount)} ${t.currency.sign}
+Date: ${formatDate(t.createdAt)}
 Time: ${formatTime(t.createdAt)}`
 
   const onBlinkTransaction = async () => {
