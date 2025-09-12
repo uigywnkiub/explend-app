@@ -38,6 +38,7 @@ import { SEARCH_PARAM } from '@/config/constants/navigation'
 
 import { createTransaction, deleteTransaction } from '../../lib/actions'
 import {
+  cn,
   copyToClipboard,
   createFormData,
   formatTime,
@@ -133,7 +134,7 @@ Time: ${formatTime(t.createdAt)}`
             </div>
             <div className='font-semibold'>
               {t.isIncome ? (
-                <p className='text-lg text-success'>
+                <p className='text-lg text-success selection:bg-success selection:text-light'>
                   +{' '}
                   <HighlighterText
                     query={[getFormattedCurrency(query)]}
@@ -142,7 +143,7 @@ Time: ${formatTime(t.createdAt)}`
                   {t.currency.sign}
                 </p>
               ) : (
-                <p className='text-lg'>
+                <p className='text-lg selection:bg-danger selection:text-light'>
                   -{' '}
                   <HighlighterText
                     query={[getFormattedCurrency(query)]}
@@ -151,7 +152,14 @@ Time: ${formatTime(t.createdAt)}`
                   {t.currency.sign}
                 </p>
               )}
-              <p className='text-balance text-sm font-medium'>
+              <p
+                className={cn(
+                  'text-balance text-sm font-medium',
+                  t.isIncome
+                    ? 'selection:bg-success selection:text-light'
+                    : 'selection:bg-danger selection:text-light',
+                )}
+              >
                 <HighlighterText query={[query]} text={t.description} />
               </p>
               <p className='text-xs font-medium italic text-default-500'>
