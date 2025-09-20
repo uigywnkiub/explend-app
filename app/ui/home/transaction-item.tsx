@@ -120,7 +120,7 @@ Time: ${formatTime(t.createdAt)}`
   return (
     <>
       <div
-        className={`h-auto w-full rounded-medium bg-content1 px-4 py-2 text-left md:px-6 md:py-4 ${isBlinkTransaction && 'animate-blink-light-once dark:animate-blink-dark-once'}`}
+        className={`h-auto w-full select-none rounded-medium bg-content1 px-4 py-2 text-left md:select-auto md:px-6 md:py-4 ${isBlinkTransaction && 'animate-blink-light-once dark:animate-blink-dark-once'}`}
       >
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
