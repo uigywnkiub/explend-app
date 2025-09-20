@@ -98,7 +98,7 @@ export default function CategoryWithImage({ t }: TProps) {
               ? getEmojiFromCategory(t.category)
               : currImage && (
                   <Image
-                    radius='md'
+                    radius='none'
                     src={currImage}
                     width={40}
                     height={40}
@@ -135,7 +135,7 @@ export default function CategoryWithImage({ t }: TProps) {
                 )}
 
                 <Image
-                  radius='md'
+                  radius='none'
                   src={currImage}
                   alt={`transaction #${currIdx + 1}`}
                   className='pointer-events-none aspect-square select-none object-contain md:aspect-auto md:max-h-[80vh] md:max-w-[80vw]'
@@ -164,7 +164,7 @@ export default function CategoryWithImage({ t }: TProps) {
                         shadow='md'
                         content={
                           <Image
-                            radius='md'
+                            radius='none'
                             src={img}
                             alt={`preview #${idx + 1}`}
                             className='pointer-events-none size-16 select-none object-cover'
