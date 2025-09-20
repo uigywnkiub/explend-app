@@ -22,7 +22,7 @@ import {
 import { useImageNavigation } from '@/app/lib/hooks'
 import type { TTransaction } from '@/app/lib/types'
 
-const HOLD_DELAY = 500
+const HOLD_DELAY = 800
 
 type TProps = {
   t: TTransaction
