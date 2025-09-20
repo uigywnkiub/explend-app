@@ -102,7 +102,7 @@ export default function CategoryWithImage({ t }: TProps) {
                     src={currImage}
                     width={40}
                     height={40}
-                    className='size-full object-contain'
+                    className='pointer-events-none size-full select-none object-contain'
                     alt={`transaction #${currIdx + 1}`}
                   />
                 )}
@@ -138,7 +138,7 @@ export default function CategoryWithImage({ t }: TProps) {
                   radius='md'
                   src={currImage}
                   alt={`transaction #${currIdx + 1}`}
-                  className='aspect-square object-contain md:aspect-auto md:max-h-[80vh] md:max-w-[80vw]'
+                  className='pointer-events-none aspect-square select-none object-contain md:aspect-auto md:max-h-[80vh] md:max-w-[80vw]'
                 />
 
                 {images.length > 1 && (
@@ -167,7 +167,7 @@ export default function CategoryWithImage({ t }: TProps) {
                             radius='md'
                             src={img}
                             alt={`preview #${idx + 1}`}
-                            className='size-16 object-cover'
+                            className='pointer-events-none size-16 select-none object-cover'
                           />
                         }
                         delay={100}
