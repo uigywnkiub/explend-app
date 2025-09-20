@@ -78,7 +78,7 @@ export default async function Page(props: {
   }
   const userCategories = getUserCategories(transactions)
 
-  const createTransactionWithUserId = createTransaction.bind(
+  const createTransactionWithExtraData = createTransaction.bind(
     null,
     userId,
     currency,
@@ -166,7 +166,7 @@ export default async function Page(props: {
           currency={currency}
           hasTransactions={totalEntries > 0}
         />
-        <form action={createTransactionWithUserId} className='mt-4'>
+        <form action={createTransactionWithExtraData} className='mt-4'>
           <TransactionForm
             currency={currency}
             userCategories={userCategories}

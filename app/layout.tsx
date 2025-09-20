@@ -87,7 +87,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang={DEFAULT_LANG} dir={DEFAULT_DIR}>
+    <html lang={DEFAULT_LANG} dir={DEFAULT_DIR} data-scroll-behavior='smooth'>
       <head>
         <meta name='mobile-web-app-capable' content='yes' />
         <link rel='icon' href='/favicon.ico' sizes='48x48' />

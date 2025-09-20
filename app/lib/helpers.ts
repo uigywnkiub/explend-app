@@ -550,3 +550,32 @@ export const formatPercentage = (
 
   return formattedValue
 }
+
+export const convertStrToArrayBySeparator = (
+  str: FormDataEntryValue | null | undefined,
+  separator: string | RegExp = ',',
+): string[] => {
+  if (!str || typeof str !== 'string') return []
+
+  return str
+    .split(separator)
+    .map((s) => s.trim())
+    .filter(Boolean)
+}
+
+export const filterStrArrayByRegExp = (
+  arr: string[],
+  regexp: RegExp,
+): string[] => {
+  if (!Array.isArray(arr) || arr.length === 0) return []
+
+  return arr
+    .map((e) => e.trim())
+    .filter((e) => typeof e === 'string' && regexp.test(e))
+}
+
+export const uniqueArray = (arr: string[]): string[] => {
+  if (!Array.isArray(arr)) return []
+
+  return Array.from(new Set(arr.map((s) => s.trim())))
+}

@@ -3,7 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import toast, { type ToastOptions } from 'react-hot-toast'
-import { PiCamera, PiCameraFill } from 'react-icons/pi'
+import {
+  PiCamera,
+  PiCameraFill,
+  PiImageFill,
+  PiUploadFill,
+} from 'react-icons/pi'
 import { useDebounce, useLocalStorage } from 'react-use'
 import type { UseDebounceReturn } from 'react-use/lib/useDebounce'
 
@@ -14,16 +19,27 @@ import {
   AccordionItem,
   Badge,
   Button,
+  Card,
+  CardBody,
   Input,
   Kbd,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Select,
   Selection,
   SelectItem,
   SelectSection,
   Spacer,
   Switch,
+  Tab,
+  Tabs,
+  useDisclosure,
 } from '@heroui/react'
 import Compressor from 'compressorjs'
+import { AnimatePresence, motion } from 'framer-motion'
 import heic2any from 'heic2any'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
@@ -32,6 +48,7 @@ import {
   DEFAULT_ICON_SIZE,
   IS_PROD,
 } from '@/config/constants/main'
+import { MOTION_LIST } from '@/config/constants/motion'
 import {
   TOAST_DARK_STYLE,
   TOAST_DURATION,
@@ -49,6 +66,7 @@ import {
   AMOUNT_LENGTH,
   capitalizeFirstLetter,
   cn,
+  filterStrArrayByRegExp,
   findApproxCategoryByValue,
   formatAmount,
   getBooleanFromLocalStorage,
@@ -59,6 +77,7 @@ import {
   pluralize,
   removeFromLocalStorage,
   setInLocalStorage,
+  uniqueArray,
 } from '../../lib/helpers'
 import type {
   TReceipt,
@@ -70,6 +89,8 @@ import AILogo from '../ai-logo'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import LimitToast from '../limit-toast'
+
+const URL_REGEXP = /^https?:\/\/[^\s]+$/
 
 const ACCORDION_ITEM_KEY = 'Form'
 
@@ -85,6 +106,17 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const [isSwitchedOn, setIsSwitchedOn] = useState(false)
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
+  // Image-related states
+  const {
+    isOpen: isOpenImageModal,
+    onOpen: onOpenImageModal,
+    onOpenChange: onOpenChangeImageModal,
+    onClose: onCloseImageModal,
+  } = useDisclosure()
+
+  const [imageSrcs, setImageSrcs] = useState<
+    NonNullable<TTransaction['images']>
+  >(['', '', ''])
   // Receipt AI-related states
   const [
     receiptAIDataLocalStorageRaw,
@@ -127,6 +159,9 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const [categoryItemNameAI, setCategoryItemNameAI] = useState('')
   const trimmedDescription = description.trim()
   // Memoized values
+  const validImageSrcs = useMemo(() => {
+    return uniqueArray(filterStrArrayByRegExp(imageSrcs, URL_REGEXP))
+  }, [imageSrcs])
   const approxCategoryItemName = useMemo(
     () =>
       findApproxCategoryByValue(trimmedDescription, userCategories)?.item.name,
@@ -159,6 +194,21 @@ function TransactionForm({ currency, userCategories }: TProps) {
       removeFromLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
   }, [categoryName])
 
+  const onImageChange = (index: number, value: string) => {
+    const updated = [...imageSrcs]
+    updated[index] = value
+    // Remove trailing empty inputs beyond 3
+    while (updated.length > 3 && updated[updated.length - 1].trim() === '') {
+      updated.pop()
+    }
+    // If first 3 inputs are filled, add one more (up to 5)
+    const firstThreeFilled = updated.slice(0, 3).every((v) => v.trim() !== '')
+    if (firstThreeFilled && updated.length < 5) {
+      updated.push('')
+    }
+    setImageSrcs(updated)
+  }
+
   const resumeToastId = 'resume'
   const autoProcessingToastId = 'auto-processing'
 
@@ -173,6 +223,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     setCategoryItemNameAI('')
     setCategory(new Set([DEFAULT_CATEGORY]))
     if (hasCurrOrPrevReceiptAIData) setReceiptAIData([])
+    setImageSrcs(['', '', ''])
   }, [hasCurrOrPrevReceiptAIData])
 
   const resetAIRelatedStates = useCallback(() => {
@@ -213,6 +264,9 @@ function TransactionForm({ currency, userCategories }: TProps) {
   }
 
   const onUploadReceipt = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    onCloseImageModal()
+    setImageSrcs(['', '', ''])
+
     const targetFile = e.target.files?.[0]
     if (!targetFile || !(targetFile instanceof File)) return
 
@@ -572,6 +626,124 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
   return (
     <>
+      <>
+        <Modal
+          isOpen={isOpenImageModal}
+          onOpenChange={onOpenChangeImageModal}
+          size='lg'
+        >
+          <ModalContent>
+            {(onCloseImageModal) => (
+              <>
+                <ModalHeader className='flex flex-col gap-1'>
+                  <div className='flex items-center space-x-2'>
+                    <PiUploadFill />
+                    <span>Upload</span>
+                  </div>
+                </ModalHeader>
+
+                <ModalBody>
+                  <Tabs aria-label='Upload Options' fullWidth>
+                    <Tab
+                      key='camera'
+                      title={
+                        <div className='flex items-center space-x-2'>
+                          <PiCameraFill />
+                          <span>Camera</span>
+                        </div>
+                      }
+                    >
+                      <div className='flex flex-col items-center gap-2 text-balance text-center text-sm md:text-medium'>
+                        <p>
+                          Take or select a photo of your receipt to
+                          automatically fill in the transaction fields
+                        </p>
+                        <InfoText text='Attached images will not be included' />
+                      </div>
+                      <Card shadow='none'>
+                        <CardBody className='flex h-[176px] items-center justify-center p-0'>
+                          <input
+                            type='file'
+                            accept='image/*, .heic'
+                            onChange={onUploadReceipt}
+                            className='hidden'
+                            ref={fileInputRef}
+                          />
+                          <Badge
+                            content={<AILogo asIcon />}
+                            classNames={{
+                              badge:
+                                'right-0 border-0 bg-transparent cursor-pointer md:hover:opacity-hover',
+                            }}
+                          >
+                            <Button
+                              isIconOnly
+                              size='lg'
+                              onPress={() => fileInputRef.current?.click()}
+                              className='bg-ai-gradient text-background'
+                            >
+                              <HoverableElement
+                                uKey='camera'
+                                element={<PiCamera size={DEFAULT_ICON_SIZE} />}
+                                hoveredElement={
+                                  <PiCameraFill size={DEFAULT_ICON_SIZE} />
+                                }
+                                withShift={false}
+                              />
+                            </Button>
+                          </Badge>
+                        </CardBody>
+                      </Card>
+                    </Tab>
+
+                    <Tab
+                      key='images'
+                      title={
+                        <div className='flex items-center space-x-2'>
+                          <PiImageFill />
+                          <span>Images</span>
+                        </div>
+                      }
+                    >
+                      <div className='flex flex-col items-center gap-2 text-balance text-center text-sm md:text-medium'>
+                        <p>Attach an image to your transaction</p>
+                      </div>
+
+                      <Card shadow='none'>
+                        <CardBody className='flex flex-col gap-4'>
+                          <AnimatePresence>
+                            {imageSrcs.map((src, idx) => (
+                              <motion.div key={idx} {...MOTION_LIST(idx)}>
+                                <Input
+                                  autoComplete='off'
+                                  type='text'
+                                  aria-label='Image URL'
+                                  label={`Image ${idx + 1}`}
+                                  value={src}
+                                  pattern={URL_REGEXP.source}
+                                  onChange={(e) =>
+                                    onImageChange(idx, e.target.value)
+                                  }
+                                  placeholder='Paste image URL'
+                                />
+                              </motion.div>
+                            ))}
+                          </AnimatePresence>
+                        </CardBody>
+                      </Card>
+                    </Tab>
+                  </Tabs>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button onPress={onCloseImageModal}>Done</Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      </>
+
       <LimitToast triggerBy={categoryName} />
       <Accordion
         isCompact
@@ -609,6 +781,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
               Income
             </Switch>
           </Badge>
+          <input
+            type='hidden'
+            name='images'
+            value={JSON.stringify(validImageSrcs)}
+          />
           <Input
             isDisabled={pending}
             isRequired
@@ -638,27 +815,18 @@ function TransactionForm({ currency, userCategories }: TProps) {
               inputWrapper: 'h-16 md:h-20 my-2 px-3',
             }}
             startContent={
-              <>
-                <input
-                  type='file'
-                  accept='image/*, .heic'
-                  onChange={onUploadReceipt}
-                  className='hidden'
-                  ref={fileInputRef}
+              <Button
+                isIconOnly
+                onPress={onOpenImageModal}
+                className='bg-transparent'
+              >
+                <HoverableElement
+                  uKey='camera'
+                  element={<PiCamera size={DEFAULT_ICON_SIZE} />}
+                  hoveredElement={<PiCameraFill size={DEFAULT_ICON_SIZE} />}
+                  withShift={false}
                 />
-                <Button
-                  isIconOnly
-                  onPress={() => fileInputRef.current?.click()}
-                  className='bg-transparent'
-                >
-                  <HoverableElement
-                    uKey='camera'
-                    element={<PiCamera size={DEFAULT_ICON_SIZE} />}
-                    hoveredElement={<PiCameraFill size={DEFAULT_ICON_SIZE} />}
-                    withShift={false}
-                  />
-                </Button>
-              </>
+              </Button>
             }
             endContent={
               <div className='w-[154px] md:w-36'>

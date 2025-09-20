@@ -18,7 +18,7 @@ export default function GlobalError({
   }, [error])
 
   return (
-    <html lang={DEFAULT_LANG} dir={DEFAULT_DIR}>
+    <html lang={DEFAULT_LANG} dir={DEFAULT_DIR} data-scroll-behavior='smooth'>
       <body>
         {/* `NextError` is the default Next.js error page component. Its type
         definition requires a `statusCode` prop. However, since the App Router

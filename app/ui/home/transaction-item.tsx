@@ -28,7 +28,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Tooltip,
   useDisclosure,
 } from '@heroui/react'
 
@@ -43,14 +42,15 @@ import {
   createFormData,
   formatDate,
   formatTime,
-  getCategoryWithoutEmoji,
   getEmojiFromCategory,
   getFormattedCurrency,
   omit,
+  pluralize,
 } from '../../lib/helpers'
 import type { TTransaction } from '../../lib/types'
 import HighlighterText from '../highlighter-text'
 import { HoverableElement } from '../hoverables'
+import CategoryWithImage from './category-with-images'
 
 const enum DROPDOWN_KEY {
   REPEAT = 'repeat',
@@ -124,16 +124,7 @@ Time: ${formatTime(t.createdAt)}`
       >
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
-            <div className='rounded-medium bg-content2 px-4 py-2 text-2xl md:px-4 md:py-2 md:text-[28px]'>
-              <Tooltip
-                content={getCategoryWithoutEmoji(t.category)}
-                placement='bottom'
-              >
-                <div className='select-none pt-1.5 md:pt-2'>
-                  {getEmojiFromCategory(t.category)}
-                </div>
-              </Tooltip>
-            </div>
+            <CategoryWithImage t={t} />
             <div className='font-semibold'>
               {t.isIncome ? (
                 <p className='text-lg text-success selection:bg-success selection:text-light'>
@@ -164,12 +155,18 @@ Time: ${formatTime(t.createdAt)}`
               >
                 <HighlighterText query={[query]} text={t.description} />
               </p>
-              <p className='text-xs font-medium italic text-default-500'>
-                {formatTime(t.createdAt)} {t.isEdited && 'edited'}{' '}
+              <p className='text-wrap text-xs font-medium italic text-default-500'>
+                <span className='pr-1'>{formatTime(t.createdAt)}</span>
+                {t.isEdited && <span className='pr-1'>edited</span>}
+                {t.isTest && <span className='pr-1 text-danger-700'>test</span>}
                 {t.isSubscription && (
-                  <span className='text-primary-700'>subscription</span>
+                  <span className='pr-1 text-primary-700'>subscription</span>
                 )}
-                {t.isTest && <span className='text-danger-700'>test</span>}
+                {t.images && t.images.length > 0 && (
+                  <span className='text-secondary-700'>
+                    with {pluralize(t.images.length, 'image', 'images')}
+                  </span>
+                )}
               </p>
             </div>
           </div>
@@ -203,6 +200,7 @@ Time: ${formatTime(t.createdAt)}`
               onAction={(key) => {
                 if (key === DROPDOWN_KEY.REPEAT) {
                   onRepeatTransaction(t)
+                  onBlinkTransaction()
                 }
                 if (key === DROPDOWN_KEY.COPY) {
                   copyToClipboard(
@@ -211,6 +209,7 @@ Time: ${formatTime(t.createdAt)}`
                     undefined,
                     transactionDataToCopy,
                   )
+                  onBlinkTransaction()
                 }
                 if (key === DROPDOWN_KEY.EDIT) {
                   router.push(`/transaction/${t.id}/edit`)
