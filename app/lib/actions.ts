@@ -230,6 +230,9 @@ export async function createTransaction(
       balance: '0' as TTransaction['balance'],
       currency,
       categories: userCategories,
+      images: JSON.parse(
+        formData.get('images')?.toString() || '[]',
+      ) as TTransaction['images'],
     }
     newTransaction.amount = newTransaction.amount.replace(/\s/g, '')
     const amount = parseFloat(newTransaction.amount)

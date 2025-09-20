@@ -72,6 +72,7 @@ const nextConfig: NextConfig = {
   },
   // browserDebugInfoInTerminal: true,
   typedRoutes: false,
+  allowedDevOrigins: ['local-origin.dev', '*.local-origin.dev'],
 }
 
 const withPWA = withPWAInit({

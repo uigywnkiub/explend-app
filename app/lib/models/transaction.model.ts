@@ -135,6 +135,10 @@ const transactionSchema = new Schema<TTransaction>(
       type: [subscriptionsSchema],
       default: [],
     },
+    images: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

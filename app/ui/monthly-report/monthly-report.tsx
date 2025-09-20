@@ -42,7 +42,7 @@ import {
   sortArrayByKeyByReferenceArray,
   toCalendarDate,
 } from '@/app/lib/helpers'
-import useAttemptTracker from '@/app/lib/hooks'
+import { useAttemptTracker } from '@/app/lib/hooks'
 import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
 
 import AILogo from '../ai-logo'

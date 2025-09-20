@@ -31,6 +31,7 @@ describe('calculateMonthlyReportData', () => {
     categories: [],
     categoryLimits: undefined,
     subscriptions: [],
+    images: [],
     description: '',
     balance: '',
     transactionLimit: undefined,

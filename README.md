@@ -22,6 +22,9 @@
 - **Receipt Scanning**
   Upload receipts—Explend extracts key details and fills in your transactions automatically.
 
+- **Attach Images**
+  Users can attach images to transactions for better tracking and record-keeping.
+
 - **Custom Categories**
   Edit or add categories to suit your personal needs.
 

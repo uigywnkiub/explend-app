@@ -42,6 +42,7 @@ export type TTransaction = {
   categories: TCategories[]
   categoryLimits: TCategoryLimits[] | undefined
   subscriptions: TSubscriptions[] | []
+  images: string[] | undefined
   description: string
   amount: string
   isIncome: boolean
