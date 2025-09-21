@@ -413,6 +413,9 @@ export async function editTransactionById(
       if (newTransactionData.isEdited) {
         updateFields.isEdited = newTransactionData.isEdited
       }
+      if (newTransactionData.images) {
+        updateFields.images = newTransactionData.images
+      }
       await TransactionModel.updateOne({ id }, updateFields, { session })
       await session.commitTransaction()
       session.endSession()

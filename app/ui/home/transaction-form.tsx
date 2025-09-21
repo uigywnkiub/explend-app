@@ -7,6 +7,7 @@ import {
   PiCamera,
   PiCameraFill,
   PiImageFill,
+  PiReceiptFill,
   PiUploadFill,
 } from 'react-icons/pi'
 import { useDebounce, useLocalStorage } from 'react-use'
@@ -49,6 +50,7 @@ import {
   IS_PROD,
 } from '@/config/constants/main'
 import { MOTION_LIST } from '@/config/constants/motion'
+import { URL_REGEXP } from '@/config/constants/regexp'
 import {
   TOAST_DARK_STYLE,
   TOAST_DURATION,
@@ -90,8 +92,6 @@ import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import LimitToast from '../limit-toast'
 
-const URL_REGEXP = /^https?:\/\/[^\s]+$/
-
 const ACCORDION_ITEM_KEY = 'Form'
 
 type TProps = {
@@ -113,7 +113,6 @@ function TransactionForm({ currency, userCategories }: TProps) {
     onOpenChange: onOpenChangeImageModal,
     onClose: onCloseImageModal,
   } = useDisclosure()
-
   const [imageSrcs, setImageSrcs] = useState<
     NonNullable<TTransaction['images']>
   >(['', '', ''])
@@ -648,8 +647,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
                       key='camera'
                       title={
                         <div className='flex items-center space-x-2'>
-                          <PiCameraFill />
-                          <span>Camera</span>
+                          <PiReceiptFill />
+                          <span>Receipt</span>
                         </div>
                       }
                     >
