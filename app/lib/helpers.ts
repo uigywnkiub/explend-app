@@ -521,17 +521,17 @@ export const createFormData = (data: Record<string, unknown>): FormData => {
   return formData
 }
 
-export const omit = <T extends Record<string, unknown>>(
+export const omit = <T extends Record<string, unknown>, K extends keyof T>(
   obj: T,
-  keys: (keyof T)[],
-): Omit<T, keyof typeof keys> => {
+  keys: K[],
+): Omit<T, K> => {
   if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
     throw new Error('omit function only accepts plain objects.')
   }
 
   return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => !keys.includes(key as keyof T)),
-  ) as Omit<T, keyof typeof keys>
+    Object.entries(obj).filter(([key]) => !keys.includes(key as K)),
+  ) as Omit<T, K>
 }
 
 export const formatPercentage = (

@@ -103,7 +103,14 @@ Time: ${formatTime(t.createdAt)}`
 
   const onRepeatTransaction = async (transaction: TTransaction) => {
     try {
-      const { userId, currency, categories, ...restT } = omit(transaction, [])
+      const {
+        userId,
+        currency,
+        categories,
+        // eslint-disable-next-line unused-imports/no-unused-vars
+        images,
+        ...restT
+      } = omit(transaction, [])
       await toast.promise(
         createTransaction(userId, currency, categories, createFormData(restT)),
         {
