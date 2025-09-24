@@ -1,7 +1,14 @@
+import Link from 'next/link'
+
+import { Tooltip } from '@heroui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { MOTION_LIST } from '@/config/constants/motion'
 
+import {
+  createSearchHrefWithKeyword,
+  getCategoryWithoutEmoji,
+} from '@/app/lib/helpers'
 import type { TExpenseAdvice } from '@/app/lib/types'
 
 type TProps = {
@@ -14,7 +21,16 @@ export default function TipsList({ tipsDataAI }: TProps) {
       {tipsDataAI.map((tip, idx) => {
         return (
           <div key={tip.category || idx} className='text-balance'>
-            <h2 className='mb-2 font-semibold'>{tip.category}</h2>
+            <Tooltip content='Search by category' placement='left'>
+              <Link
+                href={createSearchHrefWithKeyword(
+                  getCategoryWithoutEmoji(tip.category),
+                )}
+                className='hover:opacity-hover'
+              >
+                <h2 className='mb-2 font-semibold'>{tip.category}</h2>
+              </Link>
+            </Tooltip>
             <ul className='text-sm'>
               <AnimatePresence>
                 <motion.div className='mb-4 ml-8 md:mb-6' {...MOTION_LIST(idx)}>
