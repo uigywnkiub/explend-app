@@ -349,7 +349,9 @@ function Categories({
       try {
         const newCategoriesData = {
           subject: category.subject,
-          items: stripPlaceholder([category])[0].items,
+          items: stripPlaceholder([category])[0].items.filter((i) =>
+            Boolean(i.name),
+          ),
         }
         await updateCategories(userId, category.subject, newCategoriesData)
 
