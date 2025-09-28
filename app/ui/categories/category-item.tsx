@@ -136,45 +136,47 @@ function CategoryItem({
                 {!(
                   isLoading.item ||
                   (newItemName.trim() === item.name && !isNewEmojiPick)
-                ) && (
-                  <motion.div
-                    key='reset-button'
-                    initial={{ opacity: 0, x: 40, scale: 0.95 }}
-                    animate={{ opacity: 1, x: 0, scale: 1 }}
-                    exit={{ opacity: 0, x: 40, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Tooltip
-                      content='Reset category by your data'
-                      placement='bottom'
+                ) &&
+                  !item.__isPlaceholder &&
+                  !item.__isNew && (
+                    <motion.div
+                      key='reset-button'
+                      initial={{ opacity: 0, x: 40, scale: 0.95 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      exit={{ opacity: 0, x: 40, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
                     >
-                      <Button
-                        onPress={() => {
-                          setNewItemName(item.name)
-                          onResetEmojiClick(categoryIndex, itemIndex)
-                        }}
-                        color='danger'
-                        variant='flat'
-                        className='min-w-4 px-4 font-medium md:min-w-20 md:px-0'
+                      <Tooltip
+                        content='Reset category by your data'
+                        placement='bottom'
                       >
-                        <HoverableElement
-                          uKey={item.name}
-                          element={
-                            <PiArrowClockwise size={DEFAULT_ICON_SIZE} />
-                          }
-                          hoveredElement={
-                            <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
-                          }
-                          withShift={false}
-                        />
-                        <span className='hidden md:block'>Reset</span>
-                      </Button>
-                    </Tooltip>
-                  </motion.div>
-                )}
+                        <Button
+                          onPress={() => {
+                            setNewItemName(item.name)
+                            onResetEmojiClick(categoryIndex, itemIndex)
+                          }}
+                          color='danger'
+                          variant='flat'
+                          className='min-w-4 px-4 font-medium md:min-w-20 md:px-0'
+                        >
+                          <HoverableElement
+                            uKey={item.name}
+                            element={
+                              <PiArrowClockwise size={DEFAULT_ICON_SIZE} />
+                            }
+                            hoveredElement={
+                              <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />
+                            }
+                            withShift={false}
+                          />
+                          <span className='hidden md:block'>Reset</span>
+                        </Button>
+                      </Tooltip>
+                    </motion.div>
+                  )}
               </AnimatePresence>
 
-              {!isLoading.item && (
+              {!item.__isPlaceholder && !item.__isNew && !isLoading.item && (
                 <Tooltip content='Delete category' placement='bottom'>
                   <Button
                     onPress={() => onDeleteItemClick(categoryIndex, itemIndex)}
