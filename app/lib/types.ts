@@ -22,6 +22,8 @@ export type TTransactionType = 'expense' | 'income'
 export type TCategoriesItem = {
   emoji: string
   name: string
+  __isPlaceholder?: boolean
+  __isNew?: boolean
 }
 
 export type TCategories = {

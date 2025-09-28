@@ -26,6 +26,8 @@ import { resetCategories, updateCategories } from '@/app/lib/actions'
 import { deepCloneCategories } from '@/app/lib/data'
 import { capitalizeFirstLetter, deepCompareArrays } from '@/app/lib/helpers'
 import type {
+  TCategories,
+  TCategoriesItem,
   TCategoriesLoading,
   TEditingItemIndex,
   TTransaction,
@@ -51,7 +53,42 @@ function Categories({
   areCategoriesLengthMismatch,
 }: TProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
-  const [categories, setCategories] = useState(userCategories)
+
+  const PLACEHOLDER = useMemo(
+    () =>
+      ({
+        emoji: '➕',
+        name: 'Add new item',
+        __isPlaceholder: true as const,
+      }) as TCategoriesItem,
+    [],
+  )
+  const withPlaceholder = useCallback((cats: TCategories[]) => {
+    return cats.map((cat) => {
+      const hasPlaceholder = cat.items.some((i) => i.__isPlaceholder)
+
+      return {
+        ...cat,
+        items: hasPlaceholder ? cat.items : [...cat.items, PLACEHOLDER],
+      }
+    })
+  }, [])
+  const stripPlaceholder = useCallback((cats: TCategories[]) => {
+    return cats.map((cat) => ({
+      ...cat,
+      items: cat.items.filter((i) => !i.__isPlaceholder),
+    }))
+  }, [])
+  const [categories, setCategories] = useState<TCategories[]>(() =>
+    withPlaceholder(userCategories),
+  )
+  const updateCategoriesState = useCallback(
+    (updater: (prev: TCategories[]) => TCategories[]) => {
+      setCategories((prev) => withPlaceholder(updater(prev)))
+    },
+    [withPlaceholder],
+  )
+
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [newTargetName, setNewTargetName] = useState('')
   const [editingItemIndex, setEditingItemIndex] =
@@ -92,18 +129,20 @@ function Categories({
       if (oldTargetName === _newTargetName) {
         setEditingIndex(null)
         setNewTargetName('')
-        // toast.error('No changes detected.')
 
         return
       }
 
       updatedCategories[index].subject = _newTargetName
-      setCategories(updatedCategories)
+      updateCategoriesState(() => updatedCategories)
 
       const newCategoriesData = {
         subject: _newTargetName,
-        items: updatedCategories[index].items,
+        items: stripPlaceholder(updatedCategories)[index].items.filter((i) =>
+          Boolean(i.name),
+        ),
       }
+
       setIsLoading({ subject: true, item: false, reset: false })
       try {
         await updateCategories(userId, oldTargetName, newCategoriesData)
@@ -117,16 +156,52 @@ function Categories({
         setIsLoading({ subject: false, item: false, reset: false })
       }
     },
-    [categories, newTargetName, userId],
+    [
+      categories,
+      newTargetName,
+      stripPlaceholder,
+      updateCategoriesState,
+      userId,
+    ],
   )
 
   const onEditItemClick = useCallback(
     (categoryIndex: number, itemIndex: number, currentItemName: string) => {
+      const item = categories?.[categoryIndex]?.items?.[itemIndex]
+      if (!item) return
+
+      if (item.__isPlaceholder) {
+        // Replace placeholder with a temporary new editable item and mark it as __isNew.
+        updateCategoriesState((prev) => {
+          const updated = [...prev]
+          const cat = {
+            ...updated[categoryIndex],
+            items: [...updated[categoryIndex].items],
+          }
+          cat.items.splice(itemIndex, 1, {
+            emoji: '📝',
+            name: '',
+            __isNew: true,
+          })
+          updated[categoryIndex] = cat
+
+          return updated
+        })
+
+        // Open editor for that new row.
+        setEditingItemIndex({ categoryIndex, itemIndex })
+        setNewItemName('') // Start with empty input.
+        setShowEmojiPicker(true)
+
+        return
+      }
+
+      // Normal edit for existing item.
       setEditingItemIndex({ categoryIndex, itemIndex })
       setNewItemName(currentItemName)
       setShowEmojiPicker(true)
     },
-    [],
+    [categories, updateCategoriesState],
   )
 
   const onEmojiClick = useCallback(
@@ -138,11 +213,10 @@ function Categories({
           emojiData.emoji
 
         setIsNewEmojiPick(true)
-        setCategories(updatedCategories)
-        // setShowEmojiPicker(false)
+        updateCategoriesState(() => updatedCategories)
       }
     },
-    [categories, editingItemIndex],
+    [categories, editingItemIndex, updateCategoriesState],
   )
 
   const onResetEmojiClick = useCallback(
@@ -152,10 +226,10 @@ function Categories({
       const updatedCategories = [...categories]
       updatedCategories[categoryIndex].items[itemIndex].emoji = originalEmoji
 
-      setCategories(updatedCategories)
+      updateCategoriesState(() => updatedCategories)
       setIsNewEmojiPick(false)
     },
-    [categories, originalUserCategories],
+    [categories, originalUserCategories, updateCategoriesState],
   )
 
   const onSaveItemClick = useCallback(
@@ -167,17 +241,21 @@ function Categories({
       if (oldItemName === _newItemName && !isNewEmojiPick) {
         setEditingItemIndex(null)
         setNewItemName('')
-        // toast.error('No changes detected.')
+        toast.error('No changes detected.')
 
         return
       }
 
+      // Locally update name.
       updatedCategories[categoryIndex].items[itemIndex].name = _newItemName
-      setCategories(updatedCategories)
+      updateCategoriesState(() => updatedCategories)
 
+      // Prepare payload (placeholder stripped).
       const newCategoriesData = {
         subject: updatedCategories[categoryIndex].subject,
-        items: updatedCategories[categoryIndex].items,
+        items: stripPlaceholder(updatedCategories)
+          [categoryIndex].items.map(({ emoji, name }) => ({ emoji, name }))
+          .filter((i) => Boolean(i.name)),
       }
 
       setIsLoading({ subject: false, item: true, reset: false })
@@ -188,6 +266,40 @@ function Categories({
           newCategoriesData.subject,
           newCategoriesData,
         )
+
+        // remove __isNew flag locally so item becomes "real".
+        setCategories((prev) => {
+          const copy = [...prev]
+
+          // Get the category we are updating.
+          const cat = {
+            ...copy[categoryIndex],
+            items: [...copy[categoryIndex].items],
+          }
+
+          // Remove __isNew flag and any items with empty name.
+          cat.items = cat.items
+            .filter((i) => i.name.trim() !== '') // Remove empty names.
+            .map((i) => {
+              if (i.__isNew) {
+                const newItem = { ...i }
+                delete newItem.__isNew
+
+                return newItem
+              }
+
+              return i
+            })
+
+          // Apply placeholder at the end.
+          copy[categoryIndex] = {
+            ...cat,
+            items: withPlaceholder([cat])[0].items,
+          }
+
+          return copy
+        })
+
         toast.success('Categories updated.')
       } catch (err) {
         toast.error('Failed to update categories.')
@@ -199,38 +311,49 @@ function Categories({
         setIsLoading({ subject: false, item: false, reset: false })
       }
     },
-    [categories, isNewEmojiPick, newItemName, userId],
+    [
+      categories,
+      isNewEmojiPick,
+      newItemName,
+      stripPlaceholder,
+      updateCategoriesState,
+      userId,
+      withPlaceholder,
+    ],
   )
 
   const onDeleteItemClick = useCallback(
     async (categoryIndex: number, itemIndex: number) => {
-      const updatedCategories = [...categories]
-      const category = updatedCategories[categoryIndex]
+      const category = categories[categoryIndex]
       const itemToDelete = category.items[itemIndex]
 
-      if (!itemToDelete) {
-        toast.error('Item not found.')
+      if (!itemToDelete || itemToDelete.__isPlaceholder) {
+        toast.error('Item not found or cannot delete placeholder.')
 
         return
       }
 
+      const updatedCategories = [...categories]
       category.items.splice(itemIndex, 1)
 
-      const isNoCategoryItems = category.items.length === 0
-
+      const isNoCategoryItems =
+        stripPlaceholder([category])[0].items.length === 0
       if (isNoCategoryItems) {
         updatedCategories.splice(categoryIndex, 1)
       }
 
-      setCategories(updatedCategories)
+      updateCategoriesState(() => updatedCategories)
       setShowEmojiPicker(false)
       setEditingItemIndex(null)
 
       try {
-        await updateCategories(userId, category.subject, {
+        const newCategoriesData = {
           subject: category.subject,
-          items: category.items,
-        })
+          items: stripPlaceholder([category])[0].items.filter((i) =>
+            Boolean(i.name),
+          ),
+        }
+        await updateCategories(userId, category.subject, newCategoriesData)
 
         if (isNoCategoryItems) {
           toast.success('Item and subject deleted.')
@@ -246,13 +369,17 @@ function Categories({
         throw err
       }
     },
-    [categories, userId],
+    [categories, stripPlaceholder, updateCategoriesState, userId],
   )
 
-  const haveCategoriesChanged = useMemo(
-    () => deepCompareArrays(categories, DEFAULT_CATEGORIES),
-    [categories],
-  )
+  const haveCategoriesChanged = useMemo(() => {
+    const cleanedCategories = categories.map((c) => ({
+      ...c,
+      items: c.items.filter((i) => !i.__isPlaceholder && i.name.trim() !== ''),
+    }))
+
+    return deepCompareArrays(cleanedCategories, DEFAULT_CATEGORIES)
+  }, [categories])
 
   const onResetCategories = useCallback(async () => {
     setIsLoading({ subject: false, item: false, reset: true })

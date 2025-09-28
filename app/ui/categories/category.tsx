@@ -208,7 +208,7 @@ function Category({
           {category.items?.map((item, itemIndex) => {
             return (
               <CategoryItem
-                key={item.name}
+                key={item.name + itemIndex}
                 item={item}
                 categoryIndex={index}
                 itemIndex={itemIndex}
