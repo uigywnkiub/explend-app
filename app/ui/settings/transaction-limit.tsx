@@ -22,7 +22,7 @@ import {
 
 import { HoverableElement } from '../hoverables'
 
-const limits: TSelect[] = [
+const LIMITS: TSelect[] = [
   {
     key: '10',
     value: '10',
@@ -88,7 +88,7 @@ function TransactionLimit({
     <Select
       isVirtualized={false}
       label='Select a limit'
-      items={limits}
+      items={LIMITS}
       isDisabled={!transactionsCount}
       isLoading={isLoading}
       disabledKeys={[disableState]}
@@ -96,7 +96,7 @@ function TransactionLimit({
       onChange={(key) => onChangeLimit(key.target.value)}
     >
       <SelectSection title='Quantity per page'>
-        {limits.map((limit) => (
+        {LIMITS.map((limit) => (
           <SelectItem
             key={limit.key}
             startContent={

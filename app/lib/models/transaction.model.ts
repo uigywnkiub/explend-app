@@ -6,6 +6,7 @@ import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_NAME,
   DEFAULT_CURRENCY_SIGN,
+  DEFAULT_SALARY_DAY,
 } from '@/config/constants/main'
 
 import type {
@@ -110,6 +111,10 @@ const transactionSchema = new Schema<TTransaction>(
     transactionLimit: {
       type: Number,
       default: null,
+    },
+    salaryDay: {
+      type: Number,
+      default: DEFAULT_SALARY_DAY,
     },
     isEdited: {
       type: Boolean,

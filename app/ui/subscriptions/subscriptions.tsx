@@ -87,6 +87,7 @@ type TProps = {
   currency: TTransaction['currency']
   subscriptionsData: TTransaction['subscriptions']
   userCategories: TTransaction['categories']
+  userSalaryDay: TTransaction['salaryDay']
   transactions: TTransaction[]
 }
 
@@ -95,6 +96,7 @@ export default function Subscriptions({
   currency,
   subscriptionsData,
   userCategories,
+  userSalaryDay,
   transactions,
 }: TProps) {
   const {
@@ -213,7 +215,13 @@ export default function Subscriptions({
     try {
       const newSubscription = createFormData(subscriptionData)
       await toast.promise(
-        createTransaction(userId, currency, userCategories, newSubscription),
+        createTransaction(
+          userId,
+          currency,
+          userCategories,
+          userSalaryDay,
+          newSubscription,
+        ),
         {
           loading: 'Processing as transaction...',
           success: 'Transaction added.',

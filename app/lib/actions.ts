@@ -188,10 +188,30 @@ export async function updateTransactionLimit(
   }
 }
 
+export async function updateSalaryDay(
+  userId: TUserId,
+  salaryDay: TTransaction['salaryDay'],
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to update salary day.')
+  }
+  if (!salaryDay || salaryDay < 1 || salaryDay > 31) {
+    throw new Error('Salary day must be a valid number between 1 and 31.')
+  }
+  try {
+    await dbConnect()
+    await TransactionModel.updateMany({ userId }, { salaryDay })
+    revalidatePath(ROUTE.HOME)
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function createTransaction(
   userId: TUserId,
   currency: TTransaction['currency'],
   userCategories: TTransaction['categories'],
+  userSalaryDay: TTransaction['salaryDay'],
   formData: FormData,
 ): Promise<void> {
   if (!userId) {
@@ -230,6 +250,7 @@ export async function createTransaction(
       balance: '0' as TTransaction['balance'],
       currency,
       categories: userCategories,
+      salaryDay: userSalaryDay,
       images: JSON.parse(
         formData.get('images')?.toString() || '[]',
       ) as TTransaction['images'],
@@ -576,6 +597,26 @@ export async function getCategoryLimits(
     throw err
   }
 }
+
+export async function getSalaryDay(
+  userId: TUserId,
+): Promise<TTransaction['salaryDay']> {
+  if (!userId) {
+    throw new Error('User ID is required to get salary day.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne(
+      { userId },
+      { salaryDay: 1, _id: 0 },
+    ).lean<{ salaryDay: TTransaction['salaryDay'] }>()
+
+    return transaction?.salaryDay
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedSalaryDay = cache(getSalaryDay)
 
 export async function addLimit(
   userId: TUserId,

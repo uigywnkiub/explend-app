@@ -14,6 +14,7 @@ import {
   getCachedAuthSession,
   getCachedBalance,
   getCachedCurrency,
+  getCachedSalaryDay,
   getCachedTransactionLimit,
   getCachedTransactions,
   resetCategories,
@@ -61,12 +62,17 @@ export default async function Page(props: {
     : await getCachedTransactionLimit(userId)
   const limit = userTransactionLimit || DEFAULT_TRANSACTION_LIMIT
   const offset = (page - 1) * limit
-  const [balance, currency, { transactions, totalEntries, totalPages }] =
-    await Promise.all([
-      getCachedBalance(userId),
-      getCachedCurrency(userId),
-      getCachedTransactions(userId, offset, limit),
-    ])
+  const [
+    balance,
+    currency,
+    userSalaryDay,
+    { transactions, totalEntries, totalPages },
+  ] = await Promise.all([
+    getCachedBalance(userId),
+    getCachedCurrency(userId),
+    getCachedSalaryDay(userId),
+    getCachedTransactions(userId, offset, limit),
+  ])
 
   const allHaveCategories = transactions.every(
     (t) => Array.isArray(t.categories) && t.categories.length > 0,
@@ -83,6 +89,7 @@ export default async function Page(props: {
     userId,
     currency,
     userCategories,
+    userSalaryDay,
   )
 
   const transactionsWithChangedCategory = getTransactionsWithChangedCategory(
@@ -219,6 +226,7 @@ export default async function Page(props: {
             userId={userId}
             currency={currency}
             userCategories={userCategories}
+            userSalaryDay={userSalaryDay}
           />
         </div>
       )}
