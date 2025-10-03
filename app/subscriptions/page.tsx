@@ -6,6 +6,7 @@ import {
   getAllTransactions,
   getAuthSession,
   getCurrency,
+  getSalaryDay,
   getSubscriptions,
 } from '../lib/actions'
 import { getUserCategories } from '../lib/data'
@@ -20,11 +21,13 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const [transactions, userSubscriptions, currency] = await Promise.all([
-    getAllTransactions(userId),
-    getSubscriptions(userId),
-    getCurrency(userId),
-  ])
+  const [transactions, userSubscriptions, currency, userSalaryDay] =
+    await Promise.all([
+      getAllTransactions(userId),
+      getSubscriptions(userId),
+      getCurrency(userId),
+      getSalaryDay(userId),
+    ])
   const userCategories = getUserCategories(transactions)
 
   const content = (
@@ -41,6 +44,7 @@ export default async function Page() {
             currency={currency}
             subscriptionsData={userSubscriptions}
             userCategories={userCategories}
+            userSalaryDay={userSalaryDay}
             transactions={transactions}
           />
         )}

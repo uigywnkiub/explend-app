@@ -2,7 +2,12 @@ import type { Metadata } from 'next'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import { getAllTransactions, getAuthSession, getCurrency } from '../lib/actions'
+import {
+  getAllTransactions,
+  getAuthSession,
+  getCurrency,
+  getSalaryDay,
+} from '../lib/actions'
 import MonthlyReport from '../ui/monthly-report/monthly-report'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
@@ -21,9 +26,10 @@ export default async function Page() {
   // getCachedAllTransactions(userId)
   // getCachedCurrency(userId)
   // Caching data for a child server component END
-  const [transactions, currency] = await Promise.all([
+  const [transactions, currency, userSalaryDay] = await Promise.all([
     getAllTransactions(userId),
     getCurrency(userId),
+    getSalaryDay(userId),
   ])
 
   const content = (
@@ -35,7 +41,11 @@ export default async function Page() {
         {transactions.length === 0 ? (
           <NoTransactionsPlug />
         ) : (
-          <MonthlyReport transactions={transactions} currency={currency} />
+          <MonthlyReport
+            transactions={transactions}
+            currency={currency}
+            userSalaryDay={userSalaryDay}
+          />
         )}
       </div>
     </>

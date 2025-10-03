@@ -41,6 +41,12 @@ import Category from './category'
 
 const RESET_CATEGORIES_BTN_TEXT = 'Reset categories'
 
+const PLACEHOLDER = {
+  emoji: '➕',
+  name: 'Add new item',
+  __isPlaceholder: true as const,
+} as TCategoriesItem
+
 type TProps = {
   userId: TUserId
   userCategories: TTransaction['categories']
@@ -54,15 +60,6 @@ function Categories({
 }: TProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
-  const PLACEHOLDER = useMemo(
-    () =>
-      ({
-        emoji: '➕',
-        name: 'Add new item',
-        __isPlaceholder: true as const,
-      }) as TCategoriesItem,
-    [],
-  )
   const withPlaceholder = useCallback((cats: TCategories[]) => {
     return cats.map((cat) => {
       const hasPlaceholder = cat.items.some((i) => i.__isPlaceholder)

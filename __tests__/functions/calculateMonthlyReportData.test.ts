@@ -4,6 +4,7 @@ import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_NAME,
   DEFAULT_CURRENCY_SIGN,
+  DEFAULT_SALARY_DAY,
 } from '@/config/constants/main'
 
 import { calculateMonthlyReportData } from '../../app/lib/data'
@@ -35,6 +36,7 @@ describe('calculateMonthlyReportData', () => {
     description: '',
     balance: '',
     transactionLimit: undefined,
+    salaryDay: DEFAULT_SALARY_DAY,
     isEdited: false,
     isSubscription: false,
     isTest: false,

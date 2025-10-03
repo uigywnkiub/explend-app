@@ -62,9 +62,10 @@ const REFRESH_TIPS_BTN_TEXT = 'Refresh tips'
 type TProps = {
   transactions: TTransaction[]
   currency: TTransaction['currency']
+  userSalaryDay: TTransaction['salaryDay']
 }
 
-function MonthlyReport({ transactions, currency }: TProps) {
+function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
   const [tipsDataAI, setTipsDataAI] = useState<TExpenseAdvice[] | null>(null)
   const [isLoadingTips, setIsLoadingTips] = useState(false)
 
@@ -213,6 +214,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
             onDateSelection={onDateSelection}
             minTransaction={minTransaction}
             maxTransaction={maxTransaction}
+            userSalaryDay={userSalaryDay}
           />
         </div>
         <p className='text-balance text-center text-default-500'>
@@ -231,6 +233,7 @@ function MonthlyReport({ transactions, currency }: TProps) {
             onDateSelection={onDateSelection}
             minTransaction={minTransaction}
             maxTransaction={maxTransaction}
+            userSalaryDay={userSalaryDay}
           />
         </div>
         <div className='mb-3 flex-none items-end justify-between md:mb-6 md:flex'>

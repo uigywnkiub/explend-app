@@ -114,6 +114,10 @@ input::-webkit-inner-spin-button {
 }
 /* Emoji Picker END */
 
+.salary-calendar-day {
+  @apply !text-success;
+}
+
 /* Check if View Transitions API browser support. */
 /* @supports (view-transition-name: figure-caption) {
 } */

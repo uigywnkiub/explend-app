@@ -17,12 +17,14 @@ type TProps = {
   userId: TUserId
   currency: TTransaction['currency']
   userCategories: TTransaction['categories']
+  userSalaryDay: TTransaction['salaryDay']
 }
 
 export default function CreateTestTransactions({
   userId,
   currency,
   userCategories,
+  userSalaryDay,
 }: TProps) {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -121,6 +123,7 @@ export default function CreateTestTransactions({
           userId,
           currency,
           userCategories,
+          userSalaryDay,
           testTransactions[i],
         )
       }

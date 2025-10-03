@@ -109,10 +109,17 @@ Time: ${formatTime(t.createdAt)}`
         categories,
         // eslint-disable-next-line unused-imports/no-unused-vars
         images,
+        salaryDay,
         ...restT
       } = omit(transaction, [])
       await toast.promise(
-        createTransaction(userId, currency, categories, createFormData(restT)),
+        createTransaction(
+          userId,
+          currency,
+          categories,
+          salaryDay,
+          createFormData(restT),
+        ),
         {
           loading: 'Repeating transaction...',
           success: 'Transaction repeated.',

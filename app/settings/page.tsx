@@ -9,6 +9,7 @@ import {
   getCachedAuthSession,
   getCountDocuments,
   getCurrency,
+  getSalaryDay,
   getTransactionLimit,
   signOutAccount,
 } from '../lib/actions'
@@ -17,6 +18,7 @@ import InfoText from '../ui/info-text'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
 import ExitAccount from '../ui/settings/exit-account'
+import SalaryDay from '../ui/settings/salary-day'
 import Section from '../ui/settings/section'
 import SectionItem from '../ui/settings/section-item'
 import LocalStorageSwitch from '../ui/settings/switch'
@@ -32,13 +34,13 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getCachedAuthSession()
   const userId = session?.user?.email
-  const [userTransactionLimit, transactionsCount, currency] = await Promise.all(
-    [
+  const [userTransactionLimit, transactionsCount, currency, userSalaryDay] =
+    await Promise.all([
       getTransactionLimit(userId),
       getCountDocuments(userId),
       getCurrency(userId),
-    ],
-  )
+      getSalaryDay(userId),
+    ])
 
   const content = (
     <div className='mx-auto max-w-3xl'>
@@ -140,6 +142,22 @@ export default async function Page() {
                 userId={userId}
                 userTransactionLimit={userTransactionLimit}
                 transactionsCount={transactionsCount}
+              />
+            </div>
+          </SectionItem>
+
+          <Divider className='my-4' />
+
+          <SectionItem
+            title='Salary Day'
+            subtitle='Select the day of the month on which you receive your salary. This will help you track expenses/incomes in a calendar, etc.'
+          >
+            <div className='max-w-xs'>
+              <Spacer y={2} />
+              <SalaryDay
+                userId={userId}
+                transactionsCount={transactionsCount}
+                userSalaryDay={userSalaryDay}
               />
             </div>
           </SectionItem>
