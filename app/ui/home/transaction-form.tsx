@@ -93,6 +93,10 @@ import InfoText from '../info-text'
 import LimitToast from '../limit-toast'
 
 const ACCORDION_ITEM_KEY = 'Form'
+const TAB_KEY = {
+  CAMERA: 'camera',
+  IMAGES: 'images',
+}
 
 type TProps = {
   currency: TTransaction['currency']
@@ -116,6 +120,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
   const [imageSrcs, setImageSrcs] = useState<
     NonNullable<TTransaction['images']>
   >(['', '', ''])
+  const [selectedTab, setSelectedTab] = useState(TAB_KEY.CAMERA)
   // Receipt AI-related states
   const [
     receiptAIDataLocalStorageRaw,
@@ -642,9 +647,14 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 </ModalHeader>
 
                 <ModalBody>
-                  <Tabs aria-label='Upload Options' fullWidth>
+                  <Tabs
+                    aria-label='Upload Options'
+                    fullWidth
+                    onSelectionChange={(tab) => setSelectedTab(tab.toString())}
+                    selectedKey={selectedTab}
+                  >
                     <Tab
-                      key='camera'
+                      key={TAB_KEY.CAMERA}
                       title={
                         <div className='flex items-center space-x-2'>
                           <PiReceiptFill />
@@ -696,7 +706,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                     </Tab>
 
                     <Tab
-                      key='images'
+                      key={TAB_KEY.IMAGES}
                       title={
                         <div className='flex items-center space-x-2'>
                           <PiImageFill />
@@ -735,6 +745,17 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 </ModalBody>
 
                 <ModalFooter>
+                  {selectedTab === TAB_KEY.IMAGES && (
+                    <Button
+                      type='submit'
+                      color='danger'
+                      variant='light'
+                      isDisabled={validImageSrcs.length === 0}
+                      onPress={() => setImageSrcs(['', '', ''])}
+                    >
+                      Reset
+                    </Button>
+                  )}
                   <Button onPress={onCloseImageModal}>Done</Button>
                 </ModalFooter>
               </>
@@ -814,18 +835,25 @@ function TransactionForm({ currency, userCategories }: TProps) {
               inputWrapper: 'h-16 md:h-20 my-2 px-3',
             }}
             startContent={
-              <Button
-                isIconOnly
-                onPress={onOpenImageModal}
-                className='bg-transparent'
+              <Badge
+                isInvisible={validImageSrcs.length === 0}
+                content={validImageSrcs.length}
+                size='sm'
+                className='text-foreground'
               >
-                <HoverableElement
-                  uKey='camera'
-                  element={<PiCamera size={DEFAULT_ICON_SIZE} />}
-                  hoveredElement={<PiCameraFill size={DEFAULT_ICON_SIZE} />}
-                  withShift={false}
-                />
-              </Button>
+                <Button
+                  isIconOnly
+                  onPress={onOpenImageModal}
+                  className='bg-transparent'
+                >
+                  <HoverableElement
+                    uKey='camera'
+                    element={<PiCamera size={DEFAULT_ICON_SIZE} />}
+                    hoveredElement={<PiCameraFill size={DEFAULT_ICON_SIZE} />}
+                    withShift={false}
+                  />
+                </Button>
+              </Badge>
             }
             endContent={
               <div className='w-[154px] md:w-36'>
