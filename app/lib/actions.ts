@@ -13,6 +13,8 @@ import { Resend } from 'resend'
 import { COOKIE_FEEDBACK } from '@/config/constants/cookies'
 import {
   APP_NAME,
+  DEFAULT_CATEGORY,
+  DEFAULT_CATEGORY_EMOJI,
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_NAME,
   DEFAULT_CURRENCY_SIGN,
@@ -238,10 +240,9 @@ export async function createTransaction(
         formData.get('description') as TTransaction['description'],
       ).trim(),
       amount: formData.get('amount') as TTransaction['amount'],
-      category: getCategoryWithEmoji(
-        formData.get('category'),
-        userCategories,
-      ) as TTransaction['category'],
+      category:
+        getCategoryWithEmoji(formData.get('category'), userCategories) ||
+        (`${DEFAULT_CATEGORY_EMOJI} ${DEFAULT_CATEGORY}` as TTransaction['category']),
       isIncome: (formData.get('isIncome') ===
         'true') as TTransaction['isIncome'],
       isSubscription: (formData.get('isSubscription') ===
