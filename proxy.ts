@@ -5,6 +5,7 @@ import { auth } from '@/auth'
 import type { TSession } from './app/lib/types'
 import { DISABLED_ROUTES, ROUTE } from './config/constants/routes'
 
+// @ts-ignore
 export default auth((req: NextRequest & { auth: TSession }) => {
   const url = req.nextUrl.clone()
 

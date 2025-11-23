@@ -7,6 +7,7 @@ import type { RuleSetRule } from 'webpack'
 import { IS_PROD } from './config/constants/main'
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   images: {
     remotePatterns: [
       {
@@ -56,6 +57,7 @@ const nextConfig: NextConfig = {
     resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
   },
   experimental: {
+    turbopackFileSystemCacheForDev: true,
     optimizePackageImports: [
       '@heroui/react',
       'framer-motion',
