@@ -5,6 +5,8 @@ import {
   PiBugBeetleFill,
   PiChatText,
   PiChatTextFill,
+  PiDownloadSimple,
+  PiDownloadSimpleFill,
   PiEscalatorUp,
   PiEscalatorUpFill,
   PiGearSix,
@@ -69,6 +71,12 @@ const topNavLinks: TNavLink[] = [
     url: ROUTE.CATEGORIES,
     icon: <PiStack size={NAV_ICON_SIZE} />,
     hoverIcon: <PiStackFill size={NAV_ICON_SIZE} />,
+  },
+  {
+    title: NAV_TITLE.EXPORT,
+    url: ROUTE.EXPORT,
+    icon: <PiDownloadSimple size={NAV_ICON_SIZE} />,
+    hoverIcon: <PiDownloadSimpleFill size={NAV_ICON_SIZE} />,
   },
   {
     title: NAV_TITLE.SETTINGS,
