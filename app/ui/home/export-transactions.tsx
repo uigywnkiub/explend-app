@@ -26,8 +26,8 @@ import {
   generateJSON,
   getExportFilename,
   getMimeType,
-} from '../../lib/export-utils'
-import type { TTransaction } from '../../lib/types'
+} from '@/app/lib/export-utils'
+import type { TTransaction } from '@/app/lib/types'
 
 type ExportTransactionsProps = {
   transactions: TTransaction[]
