@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+
 import toast from 'react-hot-toast'
-import { PiDownloadSimple, PiDownloadSimpleFill } from 'react-icons/pi'
+import { PiDownloadSimpleFill } from 'react-icons/pi'
 
 import {
   Button,
