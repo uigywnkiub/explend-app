@@ -19,15 +19,15 @@ import { format, subMonths } from 'date-fns'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
-import type { ExportFormat } from '@/app/lib/export-utils'
+import type { ExportFormat } from '../../lib/export-utils'
 import {
   downloadFile,
   generateCSV,
   generateJSON,
   getExportFilename,
   getMimeType,
-} from '@/app/lib/export-utils'
-import type { TTransaction } from '@/app/lib/types'
+} from '../../lib/export-utils'
+import type { TTransaction } from '../../lib/types'
 
 type ExportTransactionsProps = {
   transactions: TTransaction[]

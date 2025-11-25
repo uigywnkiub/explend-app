@@ -6,12 +6,11 @@ import {
   getCachedAllTransactions,
   getCachedAuthSession,
   getTransactionsForExport,
-} from '@/app/lib/actions'
-import type { TTransaction } from '@/app/lib/types'
-
-import ExportTransactions from '@/app/ui/home/export-transactions'
-import NoTransactionsPlug from '@/app/ui/no-transactions-plug'
-import WithSidebar from '@/app/ui/sidebar/with-sidebar'
+} from '../lib/actions'
+import type { TTransaction } from '../lib/types'
+import ExportTransactions from '../ui/home/export-transactions'
+import NoTransactionsPlug from '../ui/no-transactions-plug'
+import WithSidebar from '../ui/sidebar/with-sidebar'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.EXPORT,
