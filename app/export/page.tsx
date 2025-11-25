@@ -34,15 +34,15 @@ export default async function Page() {
 
   const content = (
     <>
-      <h1 className="mb-8 text-center text-2xl font-semibold">
+      <h1 className='mb-8 text-center text-2xl font-semibold'>
         {NAV_TITLE.EXPORT}
       </h1>
       {transactions.length === 0 ? (
-        <div className="mx-auto max-w-3xl">
+        <div className='mx-auto max-w-3xl'>
           <NoTransactionsPlug />
         </div>
       ) : (
-        <div className="mx-auto max-w-2xl">
+        <div className='mx-auto max-w-2xl'>
           <ExportTransactions
             transactions={transactions}
             onExport={handleExport}
