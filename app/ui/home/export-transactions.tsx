@@ -19,8 +19,8 @@ import { format, subMonths } from 'date-fns'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
-import type { ExportFormat } from '../../lib/export-utils'
 import {
+  type ExportFormat,
   downloadFile,
   generateCSV,
   generateJSON,
