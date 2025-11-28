@@ -170,5 +170,5 @@
       "@types/react-dom": "19.1.9"
     }
   },
-  "packageManager": "pnpm@10.5.1"
+  "packageManager": "pnpm@10.24.0"
 }
