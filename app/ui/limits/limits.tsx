@@ -633,7 +633,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default md:relative md:w-full'>
                         <div
                           className={cn(
-                            'absolute h-[5px] rounded-full bg-secondary',
+                            'absolute h-[5px] rounded-full bg-secondary/50',
                             isIncreasedAmountByCurrMonth && 'z-10',
                           )}
                           style={{ width: `${prevMonthPercentage}%` }}
