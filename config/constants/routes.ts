@@ -6,6 +6,7 @@ export const enum ROUTE {
   LIMITS = '/limits',
   SUBSCRIPTIONS = '/subscriptions',
   CATEGORIES = '/categories',
+  EXPORT = '/export',
   SETTINGS = '/settings',
   FEEDBACK = '/feedback',
   ISSUE = '/issue',

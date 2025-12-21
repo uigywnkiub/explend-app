@@ -969,3 +969,40 @@ export async function getAnalyzedReceiptAI(file: Blob): Promise<string> {
     throw err
   }
 }
+
+export async function getTransactionsForExport(
+  userId: TUserId,
+  startDate?: Date,
+  endDate?: Date,
+): Promise<TTransaction[]> {
+  if (!userId) {
+    throw new Error('User ID is required to export transactions.')
+  }
+  try {
+    await dbConnect()
+    const query: Record<string, unknown> = { userId }
+
+    if (startDate && endDate) {
+      query.createdAt = {
+        $gte: startDate,
+        $lte: endDate,
+      }
+    }
+
+    const transactions = await TransactionModel.find(query)
+      .sort({ createdAt: -1 })
+      .lean<TRawTransaction[]>({
+        transform: (doc: TRawTransaction) => {
+          doc.id = formatObjectIdToString(doc?._id)
+          delete doc?._id
+          delete doc?.__v
+
+          return doc
+        },
+      })
+
+    return transactions as unknown as TTransaction[]
+  } catch (err) {
+    throw err
+  }
+}
