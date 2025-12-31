@@ -15,31 +15,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${APP_URL}${ROUTE.MONTHLY_REPORT}`,
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 0.8,
+      priority: 0.9,
     },
     {
       url: `${APP_URL}${ROUTE.CHART}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.8,
+      priority: 0.9,
     },
     {
       url: `${APP_URL}${ROUTE.LIMITS}`,
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 0.6,
+      priority: 0.9,
+    },
+    {
+      url: `${APP_URL}${ROUTE.SUBSCRIPTIONS}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
     },
     {
       url: `${APP_URL}${ROUTE.CATEGORIES}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.6,
+      priority: 0.9,
     },
     {
       url: `${APP_URL}${ROUTE.SETTINGS}`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.7,
+      priority: 0.9,
     },
   ]
 }
