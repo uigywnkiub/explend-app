@@ -9,7 +9,7 @@ import EmojiPicker, {
   SuggestionMode,
   Theme,
 } from 'emoji-picker-react'
-import { type CategoryConfig } from 'emoji-picker-react/dist/config/categoryConfig'
+import { type CategoryConfig } from 'emoji-picker-react/dist/types/exposedTypes'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
