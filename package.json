@@ -163,11 +163,7 @@
       "oxc-resolver",
       "sharp",
       "unrs-resolver"
-    ],
-    "overrides": {
-      "@types/react": "19.1.12",
-      "@types/react-dom": "19.1.9"
-    }
+    ]
   },
   "packageManager": "pnpm@10.28.2"
 }
