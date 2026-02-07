@@ -51,3 +51,6 @@ next-env.d.ts
 
 # Localhost https 
 certificates
+
+# MCP
+.mcp.json
