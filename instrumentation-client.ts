@@ -10,8 +10,28 @@ Sentry.init({
 
   enabled: IS_PROD,
 
+  // Docs https://docs.sentry.io/platforms/javascript/configuration/filtering/#using-before-send
+  // beforeSend(event) {
+  //   if (
+  //     event.message &&
+  //     Object.values(FILTERED_SENTRY_ERROR_TEXT).some((errText) =>
+  //       event.message?.startsWith(errText),
+  //     )
+  //   ) {
+  //     return null
+  //   }
+
+  //   return event
+  // },
+
   // Add optional integrations for additional features
-  // integrations: [Sentry.replayIntegration()],
+  integrations: [
+    Sentry.replayIntegration({
+      // Additional Replay configuration goes in here, for example:
+      maskAllText: true,
+      blockAllMedia: true,
+    }),
+  ],
   // Enable logs to be sent to Sentry
   enableLogs: IS_PROD,
 
