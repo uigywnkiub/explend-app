@@ -11,7 +11,7 @@ Sentry.init({
   enabled: IS_PROD,
 
   // Add optional integrations for additional features
-  integrations: [Sentry.replayIntegration()],
+  // integrations: [Sentry.replayIntegration()],
   // Enable logs to be sent to Sentry
   enableLogs: IS_PROD,
 
