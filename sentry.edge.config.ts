@@ -25,8 +25,12 @@ Sentry.init({
   //   return event
   // },
 
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1,
+  // Enable logs to be sent to Sentry
+  enableLogs: IS_PROD,
+
+  // Enable sending user PII (Personally Identifiable Information)
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
+  sendDefaultPii: IS_PROD,
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,

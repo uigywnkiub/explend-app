@@ -186,6 +186,7 @@ const config = [
 
       // Other
       'instrumentation.ts',
+      'instrumentation-client.ts',
     ],
   },
 ]
