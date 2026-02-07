@@ -43,7 +43,7 @@
     "get-user-locale": "^3.0.0",
     "heic2any": "^0.0.4",
     "import-in-the-middle": "^1.15.0",
-    "mongoose": "^8.18.3",
+    "mongoose": "^8.22.1",
     "mongoose-encryption-decryption": "^1.2.1",
     "next": "15.5.7",
     "next-auth": "5.0.0-beta.29",

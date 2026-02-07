@@ -70,8 +70,8 @@ importers:
         specifier: ^1.15.0
         version: 1.15.0
       mongoose:
-        specifier: ^8.18.3
-        version: 8.18.3(socks@2.8.7)
+        specifier: ^8.22.1
+        version: 8.22.1(socks@2.8.7)
       mongoose-encryption-decryption:
         specifier: ^1.2.1
         version: 1.2.1
@@ -1976,6 +1976,9 @@ packages:
 
   '@mongodb-js/saslprep@1.3.0':
     resolution: {integrity: sha512-zlayKCsIjYb7/IdfqxorK5+xUMyi4vOKcFy10wKJYc63NSdKI8mNME+uJqfatkPmOSMMUiojrL58IePKBm3gvQ==}
+
+  '@mongodb-js/saslprep@1.4.5':
+    resolution: {integrity: sha512-k64Lbyb7ycCSXHSLzxVdb2xsKGPMvYZfCICXvDsI8Z65CeWQzTEKS4YmGbnqw+U9RBvLPTsB6UCmwkgsDTGWIw==}
 
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
@@ -5784,8 +5787,8 @@ packages:
       snappy:
         optional: true
 
-  mongodb@6.18.0:
-    resolution: {integrity: sha512-fO5ttN9VC8P0F5fqtQmclAkgXZxbIkYRTUi1j8JO6IYwvamkhtYDilJr35jOPELR49zqCJgXZWwCtW7B+TM8vQ==}
+  mongodb@6.20.0:
+    resolution: {integrity: sha512-Tl6MEIU3K4Rq3TSHd+sZQqRBoGlFsOgNrH5ltAcFBV62Re3Fd+FcaVf8uSEQFOJ51SDowDVttBTONMfoYWrWlQ==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
@@ -5793,7 +5796,7 @@ packages:
       gcp-metadata: ^5.2.0
       kerberos: ^2.0.1
       mongodb-client-encryption: '>=6.0.0 <7'
-      snappy: ^7.2.2
+      snappy: ^7.3.2
       socks: ^2.7.1
     peerDependenciesMeta:
       '@aws-sdk/credential-providers':
@@ -5814,12 +5817,12 @@ packages:
   mongoose-encryption-decryption@1.2.1:
     resolution: {integrity: sha512-ySULhdUrtch15M8sIkjxVXJxS9m971jDXdhsk8xO6ssnVCtPi7MqhFNDQW4iiok173qKmdjEaGuW4RNuAMKjhw==}
 
-  mongoose@7.8.7:
-    resolution: {integrity: sha512-5Bo4CrUxrPITrhMKsqUTOkXXo2CoRC5tXxVQhnddCzqDMwRXfyStrxj1oY865g8gaekSBhxAeNkYyUSJvGm9Hw==}
+  mongoose@7.8.9:
+    resolution: {integrity: sha512-V3GBAJbmOAdzEP8murOvlg7q1szlbe4jTBRyW+JBHRduJBe7F9dk5eyqJDTuYrdBcOOWfLbr6AgXrDK7F0/o5A==}
     engines: {node: '>=14.20.1'}
 
-  mongoose@8.18.3:
-    resolution: {integrity: sha512-5kuHl9IYD19xItCBKl0gtp7WKRH0X9Vm95pSRUml/Qv6uYAqDvGvKqEufluIBNextU22nB7w67N+UTmQxDA3RQ==}
+  mongoose@8.22.1:
+    resolution: {integrity: sha512-c0bzt7ElI1CwWiyFSgg9bfhlFcblAoPwr+gmDcLCryClyKaeixWhP9KDGnr13kRPE8KPAuUN3ZZ3jSDxSPvoTg==}
     engines: {node: '>=16.20.1'}
 
   motion-dom@12.33.0:
@@ -10470,6 +10473,11 @@ snapshots:
   '@mongodb-js/saslprep@1.3.0':
     dependencies:
       sparse-bitfield: 3.0.3
+    optional: true
+
+  '@mongodb-js/saslprep@1.4.5':
+    dependencies:
+      sparse-bitfield: 3.0.3
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
@@ -14941,9 +14949,9 @@ snapshots:
     optionalDependencies:
       '@mongodb-js/saslprep': 1.3.0
 
-  mongodb@6.18.0(socks@2.8.7):
+  mongodb@6.20.0(socks@2.8.7):
     dependencies:
-      '@mongodb-js/saslprep': 1.3.0
+      '@mongodb-js/saslprep': 1.4.5
       bson: 6.10.4
       mongodb-connection-string-url: 3.0.2
     optionalDependencies:
@@ -14952,7 +14960,7 @@ snapshots:
   mongoose-encryption-decryption@1.2.1:
     dependencies:
       bcrypt: 5.1.1
-      mongoose: 7.8.7
+      mongoose: 7.8.9
     transitivePeerDependencies:
       - '@aws-sdk/credential-providers'
       - '@mongodb-js/zstd'
@@ -14962,7 +14970,7 @@ snapshots:
       - snappy
       - supports-color
 
-  mongoose@7.8.7:
+  mongoose@7.8.9:
     dependencies:
       bson: 5.5.1
       kareem: 2.5.1
@@ -14979,11 +14987,11 @@ snapshots:
       - snappy
       - supports-color
 
-  mongoose@8.18.3(socks@2.8.7):
+  mongoose@8.22.1(socks@2.8.7):
     dependencies:
       bson: 6.10.4
       kareem: 2.6.3
-      mongodb: 6.18.0(socks@2.8.7)
+      mongodb: 6.20.0(socks@2.8.7)
       mpath: 0.9.0
       mquery: 5.0.0
       ms: 2.1.3

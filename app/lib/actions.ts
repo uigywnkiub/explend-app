@@ -87,10 +87,8 @@ export async function getBalance(
       'amount',
       'isIncome',
     ] as TBalanceProjection).lean<TBalance[]>({
-      transform: (doc: TRawTransaction) => {
-        delete doc?._id
-
-        return doc
+      transform: (doc) => {
+        if (doc) delete doc._id
       },
     })
     const balance = transactions.reduce((acc, t) => {
@@ -355,11 +353,10 @@ export async function getTransactions(
         .limit(limit)
         .sort({ createdAt: 'desc' })
         .lean<TTransaction[]>({
-          transform: (doc: TRawTransaction) => {
-            delete doc?._id
-            delete doc?.__v
-
-            return doc
+          transform: (doc) => {
+            if (!doc) return
+            delete doc._id
+            delete doc.__v
           },
         }),
       getCountDocuments(userId),
@@ -383,11 +380,10 @@ export async function getAllTransactions(
     await dbConnect()
 
     return TransactionModel.find({ userId }).lean<TTransaction[]>({
-      transform: (doc: TRawTransaction) => {
-        delete doc?._id
-        delete doc?.__v
-
-        return doc
+      transform: (doc) => {
+        if (!doc) return
+        delete doc._id
+        delete doc.__v
       },
     })
   } catch (err) {
@@ -551,11 +547,10 @@ export async function findTransactionById(
     const transaction = await TransactionModel.findOne({
       id,
     }).lean<TTransaction>({
-      transform: (doc: TRawTransaction) => {
-        delete doc?._id
-        delete doc?.__v
-
-        return doc
+      transform: (doc) => {
+        if (!doc) return
+        delete doc._id
+        delete doc.__v
       },
     })
 
@@ -743,13 +738,13 @@ export async function getSubscriptions(
       { userId },
       { subscriptions: 1, _id: 1 },
     ).lean<{ subscriptions: TTransaction['subscriptions'] }>({
-      transform: (doc: TRawTransaction) => {
+      transform: (doc) => {
+        if (!doc) return
         if (doc._id && isObjectIdOrHexString(doc._id)) {
-          // @ts-expect-error: doc._id is ObjectId and it has toString method. To avoid undefined we use to boolean checking.
-          doc._id = formatObjectIdToString(doc._id)
+          doc._id = formatObjectIdToString(
+            doc._id as NonNullable<TRawTransaction['_id']>,
+          )
         }
-
-        return doc
       },
     })
 
