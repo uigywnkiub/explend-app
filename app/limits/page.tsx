@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import { getAllTransactions, getAuthSession, getCurrency } from '../lib/actions'
 import { getUserCategories } from '../lib/data'
+import { getAllTransactions, getAuthSession, getCurrency } from '../lib/queries'
 import Limits from '../ui/limits/limits'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'

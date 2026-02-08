@@ -1,4 +1,4 @@
-import { getAuthSession } from '@/app/lib/actions'
+import { getAuthSession } from '@/app/lib/queries'
 
 import UserProfileInfo from './user-profile-info'
 

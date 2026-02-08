@@ -2,7 +2,7 @@ import {
   getCachedAllTransactions,
   getCachedAuthSession,
   getCachedCurrency,
-} from '@/app/lib/actions'
+} from '@/app/lib/queries'
 
 import RadarChart from './radar-chart'
 

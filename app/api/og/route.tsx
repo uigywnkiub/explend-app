@@ -8,8 +8,9 @@ import {
 } from '@/config/constants/colors'
 import { APP_NAME, APP_TITLE } from '@/config/constants/main'
 
-export const runtime = 'edge'
+// export const runtime = 'edge'
 
+// eslint-disable-next-line import/prefer-default-export
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
 

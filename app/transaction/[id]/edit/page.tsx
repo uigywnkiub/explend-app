@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { findTransactionById, getAuthSession } from '@/app/lib/actions'
+import { findTransactionById, getAuthSession } from '@/app/lib/queries'
 
 import WithSidebar from '@/app/ui/sidebar/with-sidebar'
 import TransactionFormEdit from '@/app/ui/transaction-form-edit'
