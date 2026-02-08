@@ -152,9 +152,6 @@
   "engines": {
     "node": "20.x"
   },
-  "overrides": {
-    "react-is": "19.1.1"
-  },
   "pnpm": {
     "onlyBuiltDependencies": [
       "@heroui/shared-utils",
@@ -167,5 +164,5 @@
       "unrs-resolver"
     ]
   },
-  "packageManager": "pnpm@10.28.2"
+  "packageManager": "pnpm@10.29.1"
 }
