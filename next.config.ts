@@ -8,6 +8,7 @@ import { IS_PROD } from './config/constants/main'
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  cacheComponents: true,
   images: {
     remotePatterns: [
       {

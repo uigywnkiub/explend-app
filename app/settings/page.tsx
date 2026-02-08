@@ -5,15 +5,15 @@ import { Divider, Spacer } from '@heroui/react'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
+import { signOutAccount } from '../lib/actions'
+import { toLowerCase } from '../lib/helpers'
 import {
   getCachedAuthSession,
   getCountDocuments,
   getCurrency,
   getSalaryDay,
   getTransactionLimit,
-  signOutAccount,
-} from '../lib/actions'
-import { toLowerCase } from '../lib/helpers'
+} from '../lib/queries'
 import InfoText from '../ui/info-text'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'

@@ -579,3 +579,7 @@ export const uniqueArray = (arr: string[]): string[] => {
 
   return Array.from(new Set(arr.map((s) => s.trim())))
 }
+
+export const getCacheTagByUserId = (userId: TTransaction['userId']) => {
+  return `user-${userId}`
+}

@@ -7,7 +7,7 @@ import {
   getCachedAuthSession,
   getCachedCurrency,
   getCountDocuments,
-} from '../lib/actions'
+} from '../lib/queries'
 import Chart from '../ui/chart/chart'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
