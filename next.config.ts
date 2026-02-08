@@ -7,6 +7,7 @@ import type { RuleSetRule } from 'webpack'
 import { IS_PROD } from './config/constants/main'
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   images: {
     remotePatterns: [
       {

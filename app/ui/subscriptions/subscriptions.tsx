@@ -676,7 +676,7 @@ export default function Subscriptions({
                     </div>
                   </div>
                   {Boolean(note) && (
-                    <div className='text-balanced mt-1 w-full pl-7 pr-11 text-left text-sm text-default-500 md:pl-8 md:pr-12'>
+                    <div className='mt-1 w-full pl-7 pr-11 text-left text-sm text-default-500 md:pl-8 md:pr-12'>
                       <p>{note}</p>
                     </div>
                   )}
