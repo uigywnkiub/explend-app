@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Toaster } from 'react-hot-toast'
 
 import { Next13ProgressBar } from 'next13-progressbar'
@@ -34,7 +34,10 @@ const NextThemesProvider = dynamic(
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const [theme, setTheme] = useState<TTheme | undefined>(undefined)
+  const [theme] = useState<TTheme | undefined>(
+    getFromLocalStorage(LOCAL_STORAGE_KEY.THEME) as TTheme | undefined,
+  )
+
   // Getting only when reloading the page.
   const isPositiveBalance = getBooleanFromLocalStorage(
     LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE,
@@ -45,10 +48,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   const toastOptions =
     theme === 'dark' || theme === 'system' ? DARK_TOAST_OPTS : LIGHT_TOAST_OPTS
-
-  useEffect(() => {
-    setTheme(getFromLocalStorage(LOCAL_STORAGE_KEY.THEME) as TTheme)
-  }, [])
 
   return (
     <HeroUIProvider navigate={router.push} locale={userLocale}>

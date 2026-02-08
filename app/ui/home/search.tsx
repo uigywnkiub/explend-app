@@ -91,6 +91,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
         // hideIndicator
         onExpandedChange={onExpandedChange}
         defaultExpandedKeys={
+          // eslint-disable-next-line react-hooks/refs
           isInitialExpanded.current ? [ACCORDION_ITEM_KEY] : []
         }
         className='p-0'

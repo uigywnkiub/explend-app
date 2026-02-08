@@ -49,6 +49,9 @@ export default function ThemeSwitcher() {
   const { theme, setTheme } = useTheme()
 
   useEffect(() => {
+    // This is a legitimate use case for detecting client-side mount
+    // We suppress the warning as this pattern is recommended by next-themes
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
   }, [])
 

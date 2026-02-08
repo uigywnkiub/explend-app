@@ -15,6 +15,7 @@ export function useAttemptTracker(
 ) {
   const [attemptsData, setAttemptsData] = useLocalStorage(storageKey, {
     count: 0,
+    // eslint-disable-next-line react-hooks/purity
     lastAttemptTime: Date.now(),
   })
 
