@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import { getUserCategories } from '../lib/data'
 import {
   getAllTransactions,
   getAuthSession,
   getCurrency,
   getSalaryDay,
   getSubscriptions,
-} from '../lib/queries'
+} from '../lib/actions'
+import { getUserCategories } from '../lib/data'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
 import Subscriptions from '../ui/subscriptions/subscriptions'

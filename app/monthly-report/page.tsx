@@ -7,7 +7,7 @@ import {
   getAuthSession,
   getCurrency,
   getSalaryDay,
-} from '../lib/queries'
+} from '../lib/actions'
 import MonthlyReport from '../ui/monthly-report/monthly-report'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'

@@ -2,11 +2,12 @@
 
 import { cache } from 'react'
 
-import { revalidatePath, updateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 
-import { signOut } from '@/auth'
+import { auth, signOut } from '@/auth'
 import { SignOutError } from '@auth/core/errors'
+import { isObjectIdOrHexString } from 'mongoose'
 import { Resend } from 'resend'
 
 import { COOKIE_FEEDBACK } from '@/config/constants/cookies'
@@ -14,9 +15,13 @@ import {
   APP_NAME,
   DEFAULT_CATEGORY,
   DEFAULT_CATEGORY_EMOJI,
+  DEFAULT_CURRENCY_CODE,
+  DEFAULT_CURRENCY_NAME,
+  DEFAULT_CURRENCY_SIGN,
   RESEND_API_KEY,
   RESEND_EMAIL,
 } from '@/config/constants/main'
+import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
 import TransactionModel from '@/app/lib/models/transaction.model'
@@ -28,46 +33,36 @@ import {
 } from './ai'
 import {
   capitalizeFirstLetter,
-  getCacheTagByUserId,
+  formatObjectIdToString,
   getCategoryItemNames,
   getCategoryWithEmoji,
 } from './helpers'
 import dbConnect from './mongodb'
-import {
-  getAllTransactions as _getAllTransactions,
-  getAuthSession as _getAuthSession,
-  getCategoryLimits as _getCategoryLimits,
-} from './queries'
 import type {
+  TBalance,
+  TBalanceProjection,
   TCategories,
   TCategoryLimits,
   TCookie,
   TCurrency,
+  TGetTransactions,
+  TRawTransaction,
   TSession,
   TSubscriptions,
   TTransaction,
   TUserId,
 } from './types'
 
-// Server action wrappers for client components calling cached query functions.
-// These delegate to 'use cache' functions in queries.ts.
-export async function getAuthSession(): Promise<TSession> {
-  return _getAuthSession()
+export const getAuthSession = async (): Promise<TSession> => {
+  try {
+    const session = await auth()
+
+    return session
+  } catch (err) {
+    throw err
+  }
 }
 export const getCachedAuthSession = cache(getAuthSession)
-
-export async function getAllTransactions(
-  userId: TUserId,
-): Promise<TTransaction[]> {
-  return _getAllTransactions(userId)
-}
-export const getCachedAllTransactions = cache(getAllTransactions)
-
-export async function getCategoryLimits(
-  userId: TUserId,
-): Promise<TTransaction['categoryLimits']> {
-  return _getCategoryLimits(userId)
-}
 
 export async function signOutAccount(): Promise<void> {
   try {
@@ -79,6 +74,81 @@ export async function signOutAccount(): Promise<void> {
     throw err
   }
 }
+
+export async function getBalance(
+  userId: TUserId,
+): Promise<TTransaction['balance']> {
+  if (!userId) {
+    throw new Error('User ID is required to fetch balance.')
+  }
+  try {
+    await dbConnect()
+    const transactions = await TransactionModel.find({ userId }, [
+      'amount',
+      'isIncome',
+    ] as TBalanceProjection).lean<TBalance[]>({
+      transform: (doc) => {
+        if (doc) delete doc._id
+      },
+    })
+    const balance = transactions.reduce((acc, t) => {
+      const amount = parseFloat(t.amount)
+
+      return t.isIncome ? acc + amount : acc - amount
+    }, 0)
+
+    return balance.toString()
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedBalance = cache(getBalance)
+
+export async function getTransactionLimit(
+  userId: TUserId,
+): Promise<TTransaction['transactionLimit']> {
+  if (!userId) {
+    throw new Error('User ID is required to fetch transaction limit.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne(
+      { userId },
+      { transactionLimit: 1, _id: 0 },
+    ).lean<{ transactionLimit: TTransaction['transactionLimit'] }>()
+
+    return transaction?.transactionLimit
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedTransactionLimit = cache(getTransactionLimit)
+
+export async function getCurrency(
+  userId: TUserId,
+): Promise<TTransaction['currency']> {
+  if (!userId) {
+    throw new Error('User ID is required to fetch currency.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne(
+      { userId },
+      { currency: 1, _id: 0 },
+    ).lean<{ currency: TTransaction['currency'] }>()
+
+    return (
+      transaction?.currency || {
+        name: DEFAULT_CURRENCY_NAME,
+        code: DEFAULT_CURRENCY_CODE,
+        sign: DEFAULT_CURRENCY_SIGN,
+      }
+    )
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedCurrency = cache(getCurrency)
 
 export async function updateCurrency(
   userId: TUserId,
@@ -93,7 +163,6 @@ export async function updateCurrency(
   try {
     await dbConnect()
     await TransactionModel.updateMany({ userId }, { currency })
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -113,7 +182,6 @@ export async function updateTransactionLimit(
   try {
     await dbConnect()
     await TransactionModel.updateMany({ userId }, { transactionLimit })
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -133,7 +201,6 @@ export async function updateSalaryDay(
   try {
     await dbConnect()
     await TransactionModel.updateMany({ userId }, { salaryDay })
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -203,7 +270,6 @@ export async function createTransaction(
       await TransactionModel.create([newTransaction], { session })
       await session.commitTransaction()
       session.endSession()
-      updateTag(getCacheTagByUserId(userId))
       revalidatePath(ROUTE.HOME)
     } catch (err) {
       await session.abortTransaction()
@@ -255,6 +321,77 @@ export async function sendFeedback(formData: FormData) {
   }
 }
 
+export async function getCountDocuments(
+  userId: TUserId,
+): Promise<TGetTransactions['totalEntries']> {
+  if (!userId) {
+    throw new Error('User ID is required to fetch count documents.')
+  }
+  try {
+    await dbConnect()
+
+    return await TransactionModel.countDocuments({ userId })
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedCountDocuments = cache(getCountDocuments)
+
+export async function getTransactions(
+  userId: TUserId,
+  offset: number = 0,
+  limit: number = DEFAULT_TRANSACTION_LIMIT,
+): Promise<TGetTransactions> {
+  if (!userId) {
+    throw new Error('User ID is required to get transactions.')
+  }
+  try {
+    await dbConnect()
+    const [transactions, totalEntries] = await Promise.all([
+      TransactionModel.find({ userId })
+        .skip(offset)
+        .limit(limit)
+        .sort({ createdAt: 'desc' })
+        .lean<TTransaction[]>({
+          transform: (doc) => {
+            if (!doc) return
+            delete doc._id
+            delete doc.__v
+          },
+        }),
+      getCountDocuments(userId),
+    ])
+    const totalPages = Math.ceil(totalEntries / limit)
+
+    return { transactions, totalEntries, totalPages }
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedTransactions = cache(getTransactions)
+
+export async function getAllTransactions(
+  userId: TUserId,
+): Promise<TTransaction[]> {
+  if (!userId) {
+    throw new Error('User ID is required to get all transactions.')
+  }
+  try {
+    await dbConnect()
+
+    return TransactionModel.find({ userId }).lean<TTransaction[]>({
+      transform: (doc) => {
+        if (!doc) return
+        delete doc._id
+        delete doc.__v
+      },
+    })
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedAllTransactions = cache(getAllTransactions)
+
 export async function editTransactionById(
   id: TTransaction['id'],
   newTransactionData: Partial<TTransaction>,
@@ -264,10 +401,6 @@ export async function editTransactionById(
   }
   try {
     await dbConnect()
-    const existingDoc = await TransactionModel.findOne(
-      { id },
-      { userId: 1 },
-    ).lean<{ userId: TTransaction['userId'] }>()
     const session = await TransactionModel.startSession()
     try {
       session.startTransaction()
@@ -304,10 +437,6 @@ export async function editTransactionById(
       await TransactionModel.updateOne({ id }, updateFields, { session })
       await session.commitTransaction()
       session.endSession()
-      if (existingDoc?.userId) {
-        updateTag(`user-${existingDoc.userId}`)
-        updateTag(`transaction-${id}`)
-      }
       revalidatePath(ROUTE.HOME)
     } catch (err) {
       await session.abortTransaction()
@@ -356,7 +485,6 @@ export async function updateCategories(
         { $set: { 'categories.$': newCategories } },
       )
     }
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.CATEGORIES)
   } catch (err) {
     throw err
@@ -374,10 +502,7 @@ export async function resetCategories(
   try {
     await dbConnect()
     await TransactionModel.updateMany({ userId }, { categories })
-    if (withPathRevalidate) {
-      updateTag(getCacheTagByUserId(userId))
-      revalidatePath(ROUTE.CATEGORIES)
-    }
+    if (withPathRevalidate) revalidatePath(ROUTE.CATEGORIES)
   } catch (err) {
     throw err
   }
@@ -389,15 +514,7 @@ export async function deleteTransaction(id: TTransaction['id']): Promise<void> {
   }
   try {
     await dbConnect()
-    const transaction = await TransactionModel.findOne(
-      { id },
-      { userId: 1 },
-    ).lean<{ userId: TTransaction['userId'] }>()
     await TransactionModel.deleteOne({ id })
-    if (transaction?.userId) {
-      updateTag(`user-${transaction.userId}`)
-    }
-    updateTag(`transaction-${id}`)
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -411,8 +528,33 @@ export async function deleteTestTransactions(userId: TUserId): Promise<void> {
   try {
     await dbConnect()
     await TransactionModel.deleteMany({ userId, isTest: true })
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.HOME)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function findTransactionById(
+  id: TTransaction['id'],
+): Promise<TTransaction | null> {
+  if (!id) {
+    throw new Error(
+      'Transaction ID and User ID are required to find a transaction.',
+    )
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne({
+      id,
+    }).lean<TTransaction>({
+      transform: (doc) => {
+        if (!doc) return
+        delete doc._id
+        delete doc.__v
+      },
+    })
+
+    return transaction
   } catch (err) {
     throw err
   }
@@ -427,12 +569,50 @@ export async function deleteAllTransactionsAndSignOut(
   try {
     await dbConnect()
     await TransactionModel.deleteMany({ userId })
-    updateTag(getCacheTagByUserId(userId))
     await signOutAccount()
   } catch (err) {
     throw err
   }
 }
+
+export async function getCategoryLimits(
+  userId: TUserId,
+): Promise<TTransaction['categoryLimits']> {
+  if (!userId) {
+    throw new Error('User ID is required to get category limits.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne(
+      { userId },
+      { categoryLimits: 1, _id: 0 },
+    ).lean<{ categoryLimits: TTransaction['categoryLimits'] }>()
+
+    return transaction?.categoryLimits
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getSalaryDay(
+  userId: TUserId,
+): Promise<TTransaction['salaryDay']> {
+  if (!userId) {
+    throw new Error('User ID is required to get salary day.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne(
+      { userId },
+      { salaryDay: 1, _id: 0 },
+    ).lean<{ salaryDay: TTransaction['salaryDay'] }>()
+
+    return transaction?.salaryDay
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedSalaryDay = cache(getSalaryDay)
 
 export async function addLimit(
   userId: TUserId,
@@ -447,7 +627,6 @@ export async function addLimit(
   try {
     await dbConnect()
     await TransactionModel.updateMany({ userId }, { categoryLimits })
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.LIMITS)
   } catch (err) {
     throw err
@@ -477,7 +656,6 @@ export async function deleteLimit(
       { userId },
       { categoryLimits: updatedCategoryLimits },
     )
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.LIMITS)
   } catch (err) {
     throw err
@@ -520,7 +698,6 @@ export async function editLimit(
       { userId },
       { categoryLimits: updatedCategoryLimits },
     )
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.LIMITS)
   } catch (err) {
     throw err
@@ -543,8 +720,35 @@ export async function addSubscription(
       { userId },
       { $push: { subscriptions: subscription } },
     )
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.SUBSCRIPTIONS)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getSubscriptions(
+  userId: TUserId,
+): Promise<TTransaction['subscriptions']> {
+  if (!userId) {
+    throw new Error('User ID is required to get subscriptions.')
+  }
+  try {
+    await dbConnect()
+    const transaction = await TransactionModel.findOne(
+      { userId },
+      { subscriptions: 1, _id: 1 },
+    ).lean<{ subscriptions: TTransaction['subscriptions'] }>({
+      transform: (doc) => {
+        if (!doc) return
+        if (doc._id && isObjectIdOrHexString(doc._id)) {
+          doc._id = formatObjectIdToString(
+            doc._id as NonNullable<TRawTransaction['_id']>,
+          )
+        }
+      },
+    })
+
+    return transaction?.subscriptions || []
   } catch (err) {
     throw err
   }
@@ -586,7 +790,6 @@ export async function editSubscription(
         },
       },
     )
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
     throw err
@@ -609,7 +812,6 @@ export async function deleteSubscription(
       { userId },
       { $pull: { subscriptions: { _id } } },
     )
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
     throw err
@@ -626,7 +828,6 @@ export async function resetAllSubscriptions(userId: TUserId): Promise<void> {
       { userId },
       { $set: { subscriptions: [] } },
     )
-    updateTag(getCacheTagByUserId(userId))
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
     throw err

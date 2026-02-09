@@ -4,8 +4,8 @@ import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 
+import { getAllTransactions, getAuthSession } from '../lib/actions'
 import { getUserCategories } from '../lib/data'
-import { getAllTransactions, getAuthSession } from '../lib/queries'
 import Categories from '../ui/categories/categories'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
