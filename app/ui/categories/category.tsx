@@ -17,6 +17,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import {
+  TCategoriesItem,
   TCategoriesLoading,
   TEditingItemIndex,
   TTransaction,
@@ -49,6 +50,7 @@ type TProps = {
   onResetEmojiClick: (categoryIndex: number, itemIndex: number) => void
   isNewEmojiPick: boolean
   onDeleteItemClick: (categoryIndex: number, itemIndex: number) => void
+  placeholderItemName: TCategoriesItem['name']
 }
 
 function Category({
@@ -71,6 +73,7 @@ function Category({
   onResetEmojiClick,
   isNewEmojiPick,
   onDeleteItemClick,
+  placeholderItemName,
 }: TProps) {
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -224,6 +227,7 @@ function Category({
                 onResetEmojiClick={onResetEmojiClick}
                 isNewEmojiPick={isNewEmojiPick}
                 onDeleteItemClick={onDeleteItemClick}
+                placeholderItemName={placeholderItemName}
               />
             )
           })}

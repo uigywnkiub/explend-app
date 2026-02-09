@@ -10,6 +10,7 @@ import {
   PiTrashFill,
 } from 'react-icons/pi'
 
+import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { Button, Input, Tooltip } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -17,8 +18,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { MOTION_LIST } from '@/config/constants/motion'
 
-import { cn } from '@/app/lib/helpers'
+import { cn, toLowerCase } from '@/app/lib/helpers'
 import type {
+  TCategoriesItem,
   TCategoriesLoading,
   TEditingItemIndex,
   TTransaction,
@@ -48,6 +50,7 @@ type TProps = {
   onResetEmojiClick: (categoryIndex: number, itemIndex: number) => void
   isNewEmojiPick: boolean
   onDeleteItemClick: (categoryIndex: number, itemIndex: number) => void
+  placeholderItemName: TCategoriesItem['name']
 }
 
 function CategoryItem({
@@ -66,6 +69,7 @@ function CategoryItem({
   onResetEmojiClick,
   isNewEmojiPick,
   onDeleteItemClick,
+  placeholderItemName,
 }: TProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -223,9 +227,23 @@ function CategoryItem({
       ) : (
         <div className='flex h-20 w-full items-center justify-between gap-2 break-all rounded-medium bg-content1 p-2 text-left md:p-4'>
           <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
-            <div className='rounded-medium bg-content2 px-3 py-1 text-2xl'>
-              <div className='select-none pt-1.5'>{item.emoji}</div>
-            </div>
+            <Tooltip
+              content={
+                DEFAULT_CATEGORIES.flatMap((c) => c.items)
+                  .map((i) => toLowerCase(i.name))
+                  .includes(toLowerCase(item.name))
+                  ? 'Default category'
+                  : 'Custom category'
+              }
+              isDisabled={
+                toLowerCase(item.name) === toLowerCase(placeholderItemName)
+              }
+              placement='bottom'
+            >
+              <div className='rounded-medium bg-content2 px-3 py-1 text-2xl'>
+                <div className='select-none pt-1.5'>{item.emoji}</div>
+              </div>
+            </Tooltip>
             <div className='truncate'>
               {item.name}
               {item.name === DEFAULT_CATEGORY && (

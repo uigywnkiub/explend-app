@@ -416,6 +416,7 @@ function Categories({
             onResetEmojiClick={onResetEmojiClick}
             isNewEmojiPick={isNewEmojiPick}
             onDeleteItemClick={onDeleteItemClick}
+            placeholderItemName={PLACEHOLDER.name}
           />
         )
       })}
