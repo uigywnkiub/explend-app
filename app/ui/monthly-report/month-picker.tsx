@@ -97,6 +97,7 @@ function MonthPicker({
           label='Select a date range'
           labelPlacement='outside'
           classNames={{ popoverContent: 'my-date-range-picker-popover' }}
+          // @ts-ignore
           value={dateRange}
           minValue={minTransactionValue}
           // maxValue={maxTransactionValue}

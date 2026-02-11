@@ -48,7 +48,7 @@ export default function AILogo({
           showArrow={isMd}
           classNames={{
             // `before:` is an arrow.
-            base: 'before:bg-gradient-to-b before:from-blue-400 before:via-purple-400 before:to-red-400 bg-clip-text',
+            base: 'before:bg-linear-to-b before:from-blue-400 before:via-purple-400 before:to-red-400 bg-clip-text',
             content: twJoin('text-center', textSize),
           }}
         >

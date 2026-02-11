@@ -116,7 +116,7 @@ function CategoryItem({
                 placeholder={item.name}
                 size='lg'
                 classNames={{
-                  input: '!placeholder:text-default-500 !text-foreground',
+                  input: '!placeholder:text-default-500 text-foreground!',
                 }}
                 // endContent={
                 //   <Kbd

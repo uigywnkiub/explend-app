@@ -583,11 +583,11 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       content={
                         <div
                           className={cn(
-                            'flex justify-center gap-3 bg-gradient-to-r from-secondary to-success bg-clip-text p-2 text-xs text-transparent',
+                            'flex justify-center gap-3 bg-linear-to-r from-secondary to-success bg-clip-text p-2 text-xs text-transparent',
                             !isIncreasedAmountByCurrMonth &&
                               prevMonthAmount !== 0 &&
                               currMonthAmount !== 0 &&
-                              'flex-row-reverse bg-gradient-to-l',
+                              'flex-row-reverse bg-linear-to-l',
                             isLimitOver && 'to-danger',
                           )}
                         >

@@ -420,7 +420,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                         size='sm'
                         isIconOnly
                         onPress={() => onDeleteImage(idx)}
-                        className='absolute -right-1 -top-0 z-10 size-6 bg-transparent'
+                        className='absolute -right-1 top-0 z-10 size-6 bg-transparent'
                       >
                         <PiXCircleFill
                           size={DEFAULT_ICON_SIZE}

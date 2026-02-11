@@ -104,7 +104,7 @@ function Category({
             placeholder={category.subject}
             size='lg'
             classNames={{
-              input: '!placeholder:text-default-500 !text-foreground',
+              input: '!placeholder:text-default-500 text-foreground!',
               base: 'w-fit',
             }}
             // endContent={

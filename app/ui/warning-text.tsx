@@ -9,7 +9,7 @@ type TProps = {
 
 export default function WarningText({ text, actionText }: TProps) {
   return (
-    <div className='flex flex-col items-center gap-1 text-balance text-center text-sm'>
+    <div className='flex flex-col items-center gap-1 text-center text-sm text-balance'>
       <span className='text-warning'>
         <HoverableElement
           uKey='warning-text'
