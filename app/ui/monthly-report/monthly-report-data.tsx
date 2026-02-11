@@ -27,9 +27,9 @@ function MonthlyReportData({ type, data, currency }: TProps) {
   return useMemo(
     () => (
       <div className='grid grid-cols-[2fr_1fr_1.5fr] gap-4'>
-        <div className='text-xs text-default-500 md:text-sm'>Category</div>
-        <div className='text-xs text-default-500 md:text-sm'>Percentage</div>
-        <div className='text-xs text-default-500 md:text-sm'>
+        <div className='text-default-500 text-xs md:text-sm'>Category</div>
+        <div className='text-default-500 text-xs md:text-sm'>Percentage</div>
+        <div className='text-default-500 text-xs md:text-sm'>
           {type === 'expense' ? 'Spent' : 'Earned'}
         </div>
         {data.map((category) => (

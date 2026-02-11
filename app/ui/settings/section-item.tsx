@@ -10,7 +10,7 @@ export default function SectionItem({ title, subtitle, children }: TProps) {
   return (
     <div className='max-w-3xl'>
       <h2>{title}</h2>
-      <p className='text-balance text-sm text-default-500'>{subtitle}</p>
+      <p className='text-default-500 text-sm text-balance'>{subtitle}</p>
       {children}
     </div>
   )

@@ -23,7 +23,7 @@ export default function Section({
   return (
     <div className='max-w-3xl'>
       <h1 className={cn('text-xl font-semibold', titleClassName)}>{title}</h1>
-      <p className='text-balance text-default-500'>{subtitle}</p>
+      <p className='text-default-500 text-balance'>{subtitle}</p>
       <Spacer y={8} />
       {children}
       {withDivider && <Divider className='my-6 h-2 rounded-full' />}

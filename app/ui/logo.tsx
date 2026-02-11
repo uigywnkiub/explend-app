@@ -46,7 +46,7 @@ export default function Logo({ size = 'md', isSignInPage = false }: TProps) {
     <div className='flex items-center justify-center'>
       <div
         className={cn(
-          'flex items-center justify-center rounded-3xl bg-logo-gradient',
+          'bg-logo-gradient flex items-center justify-center rounded-3xl',
           logoSizeClass,
           (size === 'sm' || size === 'xs') && 'rounded-2xl',
           (size === 'xxs' || size === 'smallest') && 'rounded-md',

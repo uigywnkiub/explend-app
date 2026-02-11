@@ -8,7 +8,7 @@ import ClientButton from './client-button'
 
 export default function DisabledRoute() {
   return (
-    <main className='mx-auto flex h-screen max-w-md flex-col items-center justify-center gap-4 px-4 text-center xs:px-0'>
+    <main className='xs:px-0 mx-auto flex h-screen max-w-md flex-col items-center justify-center gap-4 px-4 text-center'>
       <div className='flex flex-col items-center'>
         <p className='text-default-500'>#DisabledRoute</p>
       </div>
@@ -18,7 +18,7 @@ export default function DisabledRoute() {
       <Link href={ROUTE.HOME}>
         <ClientButton
           title='Return home'
-          className='max-w-md bg-primary font-medium text-default-50'
+          className='bg-primary text-default-50 max-w-md font-medium'
         />
       </Link>
     </main>

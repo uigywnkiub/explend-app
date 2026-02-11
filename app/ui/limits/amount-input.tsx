@@ -22,7 +22,7 @@ function AmountInput({
 }: TProps) {
   return (
     <div>
-      <p className='mb-1 text-sm text-default-500'>
+      <p className='text-default-500 mb-1 text-sm'>
         Amount{' '}
         <span className={cn('text-danger', !isAmountInvalid && 'hidden')}>
           *

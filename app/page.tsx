@@ -179,7 +179,7 @@ export default async function Page(props: {
             userCategories={userCategories}
           />
         </form>
-        <div className='text-center text-default-500'>
+        <div className='text-default-500 text-center'>
           {totalEntries === 0 ? (
             <div className='mt-4'>
               <NoTransactionsPlug />
@@ -261,7 +261,7 @@ export default async function Page(props: {
           )
         )}
         {countTransactionsWithChangedCategory > 0 && (
-          <p className='mt-4 text-center text-sm text-warning'>
+          <p className='text-warning mt-4 text-center text-sm'>
             <PiWarningOctagonFill className='inline animate-pulse' />{' '}
             {`You have ${countTransactionsWithChangedCategory} ${pluralize(countTransactionsWithChangedCategory, 'transaction', 'transactions')} with the old category.`}
           </p>

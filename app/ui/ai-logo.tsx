@@ -61,7 +61,7 @@ export default function AILogo({
               priority
               unoptimized
               className={cn(
-                'inline-block cursor-pointer select-none drop-shadow-ai md:hover:opacity-hover',
+                'drop-shadow-ai md:hover:opacity-hover inline-block cursor-pointer select-none',
                 asIcon ? 'mr-0' : 'mr-1',
               )}
             />

@@ -335,9 +335,9 @@ function TransactionForm({ currency, userCategories }: TProps) {
             <div className='text-center'>
               <div className='flex flex-col justify-center gap-2'>
                 <p>Auto processing...</p>
-                <div className='relative h-2 overflow-hidden rounded-full bg-content1'>
+                <div className='bg-content1 relative h-2 overflow-hidden rounded-full'>
                   <div
-                    className='h-full animate-pulse-fast rounded-full bg-success transition-all duration-300'
+                    className='animate-pulse-fast bg-success h-full rounded-full transition-all duration-300'
                     style={{
                       width: `${progressPercentage}%`,
                     }}
@@ -662,7 +662,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                         </div>
                       }
                     >
-                      <div className='flex flex-col items-center gap-2 text-balance text-center text-sm md:text-medium'>
+                      <div className='md:text-medium flex flex-col items-center gap-2 text-center text-sm text-balance'>
                         <p>
                           Take or select a photo of your receipt to
                           automatically fill in the transaction fields
@@ -714,7 +714,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                         </div>
                       }
                     >
-                      <div className='flex flex-col items-center gap-2 text-balance text-center text-sm md:text-medium'>
+                      <div className='md:text-medium flex flex-col items-center gap-2 text-center text-sm text-balance'>
                         <p>Attach an image to your transaction</p>
                       </div>
 
@@ -971,7 +971,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   isDisabled={
                     !amount || amount === '0' || pending || isLoadingAIData
                   }
-                  className='cursor-pointer bg-background px-0'
+                  className='bg-background cursor-pointer px-0'
                   size='sm'
                 >
                   <Kbd keys={['enter']}>Enter</Kbd>

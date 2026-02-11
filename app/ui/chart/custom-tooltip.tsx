@@ -42,7 +42,7 @@ function CustomTooltip({
       className='text-foreground'
     >
       <div className='rounded-medium bg-background/90 p-2 drop-shadow-md md:p-4'>
-        <p className='mb-2 text-sm md:text-medium'>{label}</p>
+        <p className='md:text-medium mb-2 text-sm'>{label}</p>
         {payload?.map((item, idx) => {
           const isIncome = item.dataKey === 'income'
           const isPositive = isIncome
@@ -55,12 +55,12 @@ function CustomTooltip({
           const iconClassName = isIncome ? 'fill-success' : 'fill-danger'
 
           return (
-            <p key={idx} className='text-sm md:text-medium'>
+            <p key={idx} className='md:text-medium text-sm'>
               <Icon
                 size={DEFAULT_ICON_SIZE}
                 className={cn('inline', iconClassName)}
               />{' '}
-              <span className='text-xs text-default-500 md:text-sm'>
+              <span className='text-default-500 text-xs md:text-sm'>
                 {capitalizeFirstLetter(item.dataKey as string)}:{' '}
               </span>
               <span className='font-semibold'>

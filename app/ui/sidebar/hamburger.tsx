@@ -2,7 +2,7 @@ export default function Hamburger() {
   return (
     <label
       htmlFor='sidebar-toggle'
-      className='label fixed right-4 top-[19px] z-50 cursor-pointer rounded-md bg-background/5 px-[3px] py-[8px] backdrop-blur-3xl duration-300 transition-background md:hidden'
+      className='label bg-background/5 transition-background fixed top-[19px] right-4 z-50 cursor-pointer rounded-md px-[3px] py-[8px] backdrop-blur-3xl duration-300 md:hidden'
       aria-label='Toggle sidebar'
       aria-controls='sidebar-toggle'
     >

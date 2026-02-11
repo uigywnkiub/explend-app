@@ -61,7 +61,7 @@ export default function InstallPWA() {
     <Button
       variant='light'
       onPress={onInstall}
-      className='fixed right-3 top-3 text-default-500'
+      className='text-default-500 fixed top-3 right-3'
     >
       Install
     </Button>

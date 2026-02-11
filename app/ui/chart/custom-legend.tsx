@@ -31,7 +31,7 @@ function CustomLegend({
   isChartForExpensesOnly,
 }: TProps) {
   return (
-    <ul className='mb-4 flex list-none justify-center gap-2 text-sm md:text-medium'>
+    <ul className='md:text-medium mb-4 flex list-none justify-center gap-2 text-sm'>
       {payload?.map((entry) => {
         const isIncomeTransactionType =
           (entry.dataKey as TTransactionType) === 'income'

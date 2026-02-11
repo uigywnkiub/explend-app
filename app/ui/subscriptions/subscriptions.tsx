@@ -423,10 +423,10 @@ export default function Subscriptions({
             </ModalContent>
           </Modal>
         </div>
-        <Divider className='mx-auto my-3 bg-divider md:my-6' />
+        <Divider className='bg-divider mx-auto my-3 md:my-6' />
 
         {!hasSubscriptions && (
-          <p className='text-center text-default-500'>No Subscriptions Found</p>
+          <p className='text-default-500 text-center'>No Subscriptions Found</p>
         )}
 
         <ul className='space-y-4'>
@@ -532,7 +532,7 @@ export default function Subscriptions({
                               size='md'
                               className='md:size-10'
                             >
-                              <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
+                              <PiDotsThreeOutlineVerticalFill className='fill-foreground size-4' />
                             </Button>
                           </DropdownTrigger>
                         </Badge>
@@ -676,7 +676,7 @@ export default function Subscriptions({
                     </div>
                   </div>
                   {Boolean(note) && (
-                    <div className='mt-1 w-full pl-7 pr-11 text-left text-sm text-default-500 md:pl-8 md:pr-12'>
+                    <div className='text-default-500 mt-1 w-full pr-11 pl-7 text-left text-sm md:pr-12 md:pl-8'>
                       <p>{note}</p>
                     </div>
                   )}
@@ -693,7 +693,7 @@ export default function Subscriptions({
       </div>
 
       {changedCategoryNames.length > 0 && (
-        <p className='mt-4 text-center text-sm text-warning'>
+        <p className='text-warning mt-4 text-center text-sm'>
           <PiWarningOctagonFill className='inline animate-pulse' />{' '}
           {`You have ${changedCategoryNames.length} ${pluralize(changedCategoryNames.length, 'subscription', 'subscriptions')} with the old category.`}
         </p>
@@ -787,7 +787,7 @@ export default function Subscriptions({
                 </div>
               </ModalHeader>
               <ModalBody>
-                <p className='overflow-hidden text-ellipsis text-default-500'>
+                <p className='text-default-500 overflow-hidden text-ellipsis'>
                   Are you sure you want to delete the
                   <br />
                   <span className='text-foreground'>

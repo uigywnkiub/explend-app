@@ -18,7 +18,7 @@ export default function MaskAmountInfo() {
 
   return (
     <Tooltip content='Masked amounts' size='sm' placement='left'>
-      <div className='fixed bottom-8 right-6 md:bottom-8 md:right-11'>
+      <div className='fixed right-6 bottom-8 md:right-11 md:bottom-8'>
         <HoverableElement
           uKey='mask-amount-info'
           element={<PiLock fill={DEFAULT} />}

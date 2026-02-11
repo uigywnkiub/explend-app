@@ -134,14 +134,14 @@ Time: ${formatTime(t.createdAt)}`
   return (
     <>
       <div
-        className={`h-auto w-full select-none rounded-medium bg-content1 px-4 py-2 text-left md:select-auto md:px-6 md:py-4 ${isBlinkTransaction && 'animate-blink-light-once dark:animate-blink-dark-once'}`}
+        className={`rounded-medium bg-content1 h-auto w-full px-4 py-2 text-left select-none md:px-6 md:py-4 md:select-auto ${isBlinkTransaction && 'animate-blink-light-once dark:animate-blink-dark-once'}`}
       >
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
             <CategoryWithImage t={t} />
             <div className='font-semibold'>
               {t.isIncome ? (
-                <p className='text-lg text-success selection:bg-success selection:text-light'>
+                <p className='text-success selection:bg-success selection:text-light text-lg'>
                   +{' '}
                   <HighlighterText
                     query={[getFormattedCurrency(query)]}
@@ -150,7 +150,7 @@ Time: ${formatTime(t.createdAt)}`
                   {t.currency.sign}
                 </p>
               ) : (
-                <p className='text-lg selection:bg-danger selection:text-light'>
+                <p className='selection:bg-danger selection:text-light text-lg'>
                   -{' '}
                   <HighlighterText
                     query={[getFormattedCurrency(query)]}
@@ -161,7 +161,7 @@ Time: ${formatTime(t.createdAt)}`
               )}
               <p
                 className={cn(
-                  'text-balance text-sm font-medium',
+                  'text-sm font-medium text-balance',
                   t.isIncome
                     ? 'selection:bg-success selection:text-light'
                     : 'selection:bg-danger selection:text-light',
@@ -169,12 +169,12 @@ Time: ${formatTime(t.createdAt)}`
               >
                 <HighlighterText query={[query]} text={t.description} />
               </p>
-              <p className='text-wrap text-xs font-medium italic text-default-500'>
+              <p className='text-default-500 text-xs font-medium text-wrap italic'>
                 <span className='pr-1'>{formatTime(t.createdAt)}</span>
                 {t.isEdited && <span className='pr-1'>edited</span>}
-                {t.isTest && <span className='pr-1 text-danger-700'>test</span>}
+                {t.isTest && <span className='text-danger-700 pr-1'>test</span>}
                 {t.isSubscription && (
-                  <span className='pr-1 text-primary-700'>subscription</span>
+                  <span className='text-primary-700 pr-1'>subscription</span>
                 )}
                 {t.images && t.images.length > 0 && (
                   <span className='text-secondary-700'>
@@ -205,7 +205,7 @@ Time: ${formatTime(t.createdAt)}`
                   size='md'
                   className='md:size-12'
                 >
-                  <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
+                  <PiDotsThreeOutlineVerticalFill className='fill-foreground size-4' />
                 </Button>
               </DropdownTrigger>
             </Badge>
@@ -341,7 +341,7 @@ Time: ${formatTime(t.createdAt)}`
                 </div>
               </ModalHeader>
               <ModalBody>
-                <p className='overflow-hidden text-ellipsis text-default-500'>
+                <p className='text-default-500 overflow-hidden text-ellipsis'>
                   Are you sure you want to delete the
                   <br />
                   <span className='text-foreground'>

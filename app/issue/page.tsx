@@ -23,7 +23,7 @@ export default function Page() {
         <Link
           href='https://github.com/uigywnkiub/explend-app/issues'
           target='_blank'
-          className='relative inline-block text-foreground transition-all duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:rounded-full after:bg-foreground after:transition-transform after:duration-200 hover:after:scale-x-100'
+          className='text-foreground after:bg-foreground relative inline-block transition-all duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:rounded-full after:transition-transform after:duration-200 hover:after:scale-x-100'
         >
           Report
         </Link>

@@ -36,7 +36,7 @@ export default function InfoText({
       className={cn(
         'text-default-500',
         isSm ? 'text-sm' : 'text-xs',
-        withHover && 'hover:cursor-none hover:text-foreground',
+        withHover && 'hover:text-foreground hover:cursor-none',
       )}
     >
       {withDoubleAsterisk && ' ** '}

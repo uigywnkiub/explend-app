@@ -34,7 +34,7 @@ export default function DeleteTestTransactions({ userId }: TProps) {
   }
 
   return (
-    <div className='flex flex-col items-center justify-center gap-2 text-balance text-center'>
+    <div className='flex flex-col items-center justify-center gap-2 text-center text-balance'>
       <p className='text-sm'>Delete all test transactions.</p>
       <Button
         onPress={onDeleteTestTransactions}

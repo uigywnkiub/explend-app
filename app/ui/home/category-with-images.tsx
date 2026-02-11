@@ -74,7 +74,7 @@ export default function CategoryWithImage({ t }: TProps) {
 
   return (
     <>
-      <div className='select-none rounded-medium bg-content2 px-3 py-1.5 md:px-3.5 md:py-2'>
+      <div className='rounded-medium bg-content2 px-3 py-1.5 select-none md:px-3.5 md:py-2'>
         <Tooltip
           content={
             currIdx === -1
@@ -85,7 +85,7 @@ export default function CategoryWithImage({ t }: TProps) {
         >
           <motion.div
             className={cn(
-              'flex h-10 w-8 cursor-pointer select-none items-center justify-center text-2xl outline-none md:text-[28px]',
+              'flex h-10 w-8 cursor-pointer items-center justify-center text-2xl outline-none select-none md:text-[28px]',
               currIdx === -1 ? 'pt-1.5 md:pt-2' : 'pt-0 md:pt-0',
             )}
             onClick={onClickCategoryOrImage}
@@ -102,7 +102,7 @@ export default function CategoryWithImage({ t }: TProps) {
                     src={currImage}
                     width={40}
                     height={40}
-                    className='pointer-events-none size-full select-none object-contain'
+                    className='pointer-events-none size-full object-contain select-none'
                     alt={`transaction #${currIdx + 1}`}
                   />
                 )}
@@ -119,12 +119,12 @@ export default function CategoryWithImage({ t }: TProps) {
         >
           <ModalContent>
             {() => (
-              <ModalBody className='flex select-none items-center justify-center p-0'>
+              <ModalBody className='flex items-center justify-center p-0 select-none'>
                 {images.length > 1 && (
                   <Button
                     isIconOnly
                     variant='flat'
-                    className='absolute left-4 top-1/2 z-50 -translate-y-1/2 text-white'
+                    className='absolute top-1/2 left-4 z-50 -translate-y-1/2 text-white'
                     onPress={prevImage}
                   >
                     <PiArrowArcLeft
@@ -138,14 +138,14 @@ export default function CategoryWithImage({ t }: TProps) {
                   radius='none'
                   src={currImage}
                   alt={`transaction #${currIdx + 1}`}
-                  className='pointer-events-none aspect-square select-none object-contain md:aspect-auto md:max-h-[80vh] md:max-w-[80vw]'
+                  className='pointer-events-none aspect-square object-contain select-none md:aspect-auto md:max-h-[80vh] md:max-w-[80vw]'
                 />
 
                 {images.length > 1 && (
                   <Button
                     isIconOnly
                     variant='flat'
-                    className='absolute right-4 top-1/2 z-50 -translate-y-1/2 text-white'
+                    className='absolute top-1/2 right-4 z-50 -translate-y-1/2 text-white'
                     onPress={nextImage}
                   >
                     <PiArrowArcRight
@@ -156,7 +156,7 @@ export default function CategoryWithImage({ t }: TProps) {
                 )}
 
                 {images.length > 1 && (
-                  <div className='absolute bottom-6 z-50 flex select-none gap-2'>
+                  <div className='absolute bottom-6 z-50 flex gap-2 select-none'>
                     {images.map((img, idx) => (
                       <Tooltip
                         key={idx}
@@ -167,7 +167,7 @@ export default function CategoryWithImage({ t }: TProps) {
                             radius='none'
                             src={img}
                             alt={`preview #${idx + 1}`}
-                            className='pointer-events-none size-16 select-none object-cover'
+                            className='pointer-events-none size-16 object-cover select-none'
                           />
                         }
                         delay={100}

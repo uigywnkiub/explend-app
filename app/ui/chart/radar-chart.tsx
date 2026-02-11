@@ -121,7 +121,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
                 <HeroUITooltip content='Search by category' placement='top'>
                   <text
                     {...props}
-                    className='cursor-pointer fill-foreground text-sm outline-none hover:opacity-hover md:text-medium'
+                    className='fill-foreground hover:opacity-hover md:text-medium cursor-pointer text-sm outline-none'
                     alignmentBaseline='central'
                     onClick={() =>
                       router.push(
@@ -182,7 +182,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
             tickFormatter={(value) =>
               `${getFormattedCurrency(value)} ${currency.sign}`
             }
-            className='text-sm md:text-medium'
+            className='md:text-medium text-sm'
           />
         </RechartRadarChart>
       </ResponsiveContainer>

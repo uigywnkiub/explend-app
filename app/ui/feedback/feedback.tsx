@@ -73,7 +73,7 @@ export default function Feedback() {
             type='submit'
             isDisabled={pending || feedback.length > MAX_TEXT_LENGTH}
             isLoading={pending}
-            className='cursor-pointer bg-background px-0'
+            className='bg-background cursor-pointer px-0'
             size='sm'
           >
             <Kbd keys={['command', 'enter']}>Enter</Kbd>

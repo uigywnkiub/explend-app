@@ -6,7 +6,7 @@
 /* @source '../../node_modules/@heroui/theme/dist*.{js,ts,jsx,tsx}'; */
 
 /* @custom-variant dark (&:is(.dark *)); */
-@config "../tailwind.config.ts";
+@config '../tailwind.config.ts';
 
 /* @theme {
   --ease-*: initial;

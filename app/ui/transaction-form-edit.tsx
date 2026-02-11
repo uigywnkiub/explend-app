@@ -360,7 +360,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                     </div>
                   </div>
                   <div className='flex items-center'>
-                    <p className='text-center text-sm md:text-medium'>
+                    <p className='md:text-medium text-center text-sm'>
                       <span className='hidden md:inline'>Press </span>
                       <span className='inline md:hidden'>Tap </span>
                       <Button
@@ -373,7 +373,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                           !isCategorySelect
                         }
                         className={cn(
-                          `${isCategorySelect && isTransactionWithChangedCategory ? `animate-blink-${(theme as TTheme) === 'system' ? 'light' : theme}-once` : ''} cursor-pointer bg-background px-0`,
+                          `${isCategorySelect && isTransactionWithChangedCategory ? `animate-blink-${(theme as TTheme) === 'system' ? 'light' : theme}-once` : ''} bg-background cursor-pointer px-0`,
                         )}
                         size='sm'
                       >
@@ -405,7 +405,7 @@ function TransactionFormEdit({ transaction }: TProps) {
               <AnimatePresence>
                 <div className='flex flex-wrap items-center justify-start'>
                   {validImageSrcs.length === 0 && (
-                    <p className='text-sm text-default-500'>
+                    <p className='text-default-500 text-sm'>
                       No images added yet.
                     </p>
                   )}
@@ -414,13 +414,13 @@ function TransactionFormEdit({ transaction }: TProps) {
                       <Image
                         src={img}
                         alt={`Transaction image ${idx + 1}`}
-                        className='max-h-20 max-w-20 rounded-medium md:max-h-28 md:max-w-28'
+                        className='rounded-medium max-h-20 max-w-20 md:max-h-28 md:max-w-28'
                       />
                       <Button
                         size='sm'
                         isIconOnly
                         onPress={() => onDeleteImage(idx)}
-                        className='absolute -right-1 top-0 z-10 size-6 bg-transparent'
+                        className='absolute top-0 -right-1 z-10 size-6 bg-transparent'
                       >
                         <PiXCircleFill
                           size={DEFAULT_ICON_SIZE}
