@@ -296,9 +296,10 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
 
         <Accordion
           defaultExpandedKeys={
-            expense.length === 0 && income.length > 0
-              ? [ACCORDION_KEY.INCOME]
-              : []
+            // expense.length === 0 && income.length > 0
+            //   ? [ACCORDION_KEY.INCOME]
+            //   : []
+            [ACCORDION_KEY.INCOME]
           }
         >
           <AccordionItem
