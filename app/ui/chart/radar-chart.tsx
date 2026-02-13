@@ -121,7 +121,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
                 <HeroUITooltip content='Search by category' placement='top'>
                   <text
                     {...props}
-                    className='fill-foreground hover:opacity-hover md:text-medium cursor-pointer text-sm outline-none'
+                    className='fill-foreground hover:opacity-hover md:text-medium cursor-pointer text-sm outline-hidden'
                     alignmentBaseline='central'
                     onClick={() =>
                       router.push(

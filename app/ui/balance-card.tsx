@@ -92,8 +92,8 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
         'p-2',
         isShowTotals && isTotalLoaded
           ? isPositiveBalance
-            ? 'bg-gradient-radial from-success/10 to-content1'
-            : 'bg-gradient-radial from-danger/10 to-content1'
+            ? 'from-success/10 to-content1 bg-radial'
+            : 'from-danger/10 to-content1 bg-radial'
           : 'bg-content1',
         isShowTotals && isTotalLoaded && isAmountHidden && 'bg-default/50',
       )}

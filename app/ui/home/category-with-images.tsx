@@ -85,7 +85,7 @@ export default function CategoryWithImage({ t }: TProps) {
         >
           <motion.div
             className={cn(
-              'flex h-10 w-8 cursor-pointer items-center justify-center text-2xl outline-none select-none md:text-[28px]',
+              'flex h-10 w-8 cursor-pointer items-center justify-center text-2xl outline-hidden select-none md:text-[28px]',
               currIdx === -1 ? 'pt-1.5 md:pt-2' : 'pt-0 md:pt-0',
             )}
             onClick={onClickCategoryOrImage}
