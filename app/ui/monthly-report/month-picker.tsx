@@ -97,7 +97,6 @@ function MonthPicker({
           label='Select a date range'
           labelPlacement='outside'
           classNames={{ popoverContent: 'my-date-range-picker-popover' }}
-          // @ts-expect-error - Regular IntrinsicAttributes & DateRangePickerProps<DateValue>'s are not compatible, but it works fine.
           value={dateRange}
           minValue={minTransactionValue}
           // maxValue={maxTransactionValue}
