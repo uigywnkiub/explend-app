@@ -1,6 +1,6 @@
 import { DefaultToastOptions, ToastPosition } from 'react-hot-toast'
 
-import { CUSTOM_DARK, CUSTOM_LIGHT, DANGER, SUCCESS } from './colors'
+import { CUSTOM_DARK, CUSTOM_LIGHT, DANGER, SUCCESS } from '@/tailwind.config'
 
 export const TOAST_POSITION: ToastPosition = 'bottom-center'
 

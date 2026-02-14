@@ -13,7 +13,7 @@ import {
   useTransform,
 } from 'framer-motion'
 
-// import { DANGER, SUCCESS } from '@/config/constants/colors'
+// import { DANGER, SUCCESS } from '@/tailwind.config'
 
 import {
   cn,

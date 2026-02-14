@@ -1,13 +1,7 @@
 @import 'tailwindcss';
-
-/* @plugin '../hero.ts'; */
-
-/* Note: You may need to change the path to fit your project structure */
-/* @source '../../node_modules/@heroui/theme/dist*.{js,ts,jsx,tsx}'; */
-
-/* @custom-variant dark (&:is(.dark *)); */
 @config '../tailwind.config.ts';
 
+/* This is mirgated by tailwind v4 cli new approach styles, but I used to old tailwind v4 config. */
 /* @theme {
   --ease-*: initial;
   --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);

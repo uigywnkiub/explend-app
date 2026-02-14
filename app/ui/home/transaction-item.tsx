@@ -15,6 +15,7 @@ import {
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
+import { BLINK_DURATION } from '@/tailwind.config'
 import {
   Badge,
   Button,
@@ -31,7 +32,6 @@ import {
   useDisclosure,
 } from '@heroui/react'
 
-import { BLINK_DURATION } from '@/config/constants/animation'
 import { APP_NAME, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { SEARCH_PARAM } from '@/config/constants/navigation'
 

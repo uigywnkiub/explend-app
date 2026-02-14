@@ -15,9 +15,9 @@ import {
   Tooltip,
 } from 'recharts'
 
+import { DANGER, SUCCESS } from '@/tailwind.config'
 import { Tooltip as HeroUITooltip } from '@heroui/react'
 
-import { DANGER, SUCCESS } from '@/config/constants/colors'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
 import {

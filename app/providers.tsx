@@ -7,9 +7,9 @@ import { Next13ProgressBar } from 'next13-progressbar'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 
+import { DANGER, DEFAULT, OPACITY, SUCCESS } from '@/tailwind.config'
 import { HeroUIProvider } from '@heroui/react'
 
-import { DANGER, DEFAULT, OPACITY, SUCCESS } from '@/config/constants/colors'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_THEME } from '@/config/constants/main'
 import {

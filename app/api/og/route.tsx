@@ -1,11 +1,7 @@
 import { ImageResponse } from 'next/og'
 
-import {
-  CUSTOM_DARK,
-  CUSTOM_LIGHT,
-  DANGER,
-  SUCCESS,
-} from '@/config/constants/colors'
+import { CUSTOM_DARK, CUSTOM_LIGHT, DANGER, SUCCESS } from '@/tailwind.config'
+
 import { APP_NAME, APP_TITLE } from '@/config/constants/main'
 
 export const runtime = 'edge'

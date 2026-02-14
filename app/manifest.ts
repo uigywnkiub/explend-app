@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 
-import { CUSTOM_DARK } from '@/config/constants/colors'
+import { CUSTOM_DARK } from '@/tailwind.config'
+
 import {
   APP_DESCRIPTION,
   APP_NAME,

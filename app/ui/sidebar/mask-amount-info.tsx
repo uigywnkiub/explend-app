@@ -2,9 +2,9 @@
 
 import { PiLock, PiLockFill } from 'react-icons/pi'
 
+import { DEFAULT } from '@/tailwind.config'
 import { Tooltip } from '@heroui/react'
 
-import { DEFAULT } from '@/config/constants/colors'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
 import { getBooleanFromLocalStorage } from '@/app/lib/helpers'
