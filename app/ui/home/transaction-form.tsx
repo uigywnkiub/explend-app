@@ -1,6 +1,13 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useFormStatus } from 'react-dom'
 import toast, { type ToastOptions } from 'react-hot-toast'
 import {
@@ -361,31 +368,41 @@ function TransactionForm({ currency, userCategories }: TProps) {
     }
 
     if (nextIndex < receiptAIData.length) {
-      toast.loading(`${nextIndex}/${receiptAIData.length} transactions added.`)
-
-      setReceiptAIDataLocalStorage(receiptAIData.slice(nextIndex))
-
-      setCurrReceiptAIDataIdx(nextIndex)
-      setDescription(receiptAIData[nextIndex].description)
-      setAmount(receiptAIData[nextIndex].amount)
+      startTransition(() => {
+        toast.loading(
+          `${nextIndex}/${receiptAIData.length} transactions added.`,
+        )
+        setReceiptAIDataLocalStorage(receiptAIData.slice(nextIndex))
+        setCurrReceiptAIDataIdx(nextIndex)
+        setDescription(receiptAIData[nextIndex].description)
+        setAmount(receiptAIData[nextIndex].amount)
+      })
     } else {
       toast.success(
         `${receiptAIData.length}/${receiptAIData.length} ${pluralize(receiptAIData.length, 'transaction', 'transactions')} added.`,
       )
 
-      setTimeout(() => {
+      queueMicrotask(() => {
         if (isAutoSubmitReceiptAIData) {
-          toast.success('Done.', {
-            id: autoProcessingToastId,
-            duration: TOAST_DURATION,
-          })
+          setTimeout(() => {
+            toast.success('Done.', {
+              id: autoProcessingToastId,
+              duration: TOAST_DURATION,
+            })
+          }, TOAST_DURATION)
         }
-        toast.success('All transactions added.')
-        setHasCurrOrPrevReceiptAIData(false)
-        setCurrReceiptAIDataIdx(0)
-        rmReceiptAIDataLocalStorage()
-      }, TOAST_DURATION)
-      resetAllStates()
+
+        setTimeout(() => {
+          toast.success('All transactions added.')
+        }, TOAST_DURATION)
+
+        startTransition(() => {
+          setHasCurrOrPrevReceiptAIData(false)
+          setCurrReceiptAIDataIdx(0)
+          rmReceiptAIDataLocalStorage()
+          resetAllStates()
+        })
+      })
     }
   }, [
     currReceiptAIDataIdx,
@@ -446,6 +463,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     },
     [currency, hasReceiptAIData, resetAIRelatedStates, trimmedDescription],
   )
+
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
     () =>
@@ -579,7 +597,12 @@ function TransactionForm({ currency, userCategories }: TProps) {
       !isLoadingAIData &&
       hasCurrOrPrevReceiptAIData &&
       Boolean(categoryItemNameAI)
-    if (shouldAutoSubmit) submitBtnRef.current?.click()
+
+    if (shouldAutoSubmit) {
+      startTransition(() => {
+        submitBtnRef.current?.click()
+      })
+    }
   }, [categoryItemNameAI, hasCurrOrPrevReceiptAIData, isLoadingAIData])
 
   const [isReadyAutoSubmit, cancelAutoSubmit] = useDebounce(
@@ -590,6 +613,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     0,
     [isLoadingAIData, hasCurrOrPrevReceiptAIData, categoryItemNameAI],
   )
+
   useEffect(() => {
     if (!isReadyAutoSubmit()) cancelAutoSubmit()
   }, [cancelAutoSubmit, isReadyAutoSubmit])
@@ -599,20 +623,27 @@ function TransactionForm({ currency, userCategories }: TProps) {
   useEffect(() => {
     if (pending) {
       // Abort useDebounce after form submit.
-      cancel()
-      if (hasReceiptAIData && hasCurrOrPrevReceiptAIData) {
-        return onSubmitReceiptAIDataTransaction()
-      }
-      resetAllStates()
+      startTransition(() => {
+        cancel()
+        if (hasReceiptAIData && hasCurrOrPrevReceiptAIData) {
+          onSubmitReceiptAIDataTransaction()
 
-      // The idea is to show toast after async form action.
-      setTimeout(() => toast.success('Transaction added.'), 0)
+          return
+        }
+        resetAllStates()
+      })
+
+      queueMicrotask(() => {
+        if (!hasReceiptAIData || !hasCurrOrPrevReceiptAIData) {
+          toast.success('Transaction added.')
+        }
+      })
     }
 
-    return () => {
-      toast.dismiss(autoProcessingToastId)
-      toast.dismiss(resumeToastId)
-    }
+    // return () => {
+    //   toast.dismiss(autoProcessingToastId)
+    //   toast.dismiss(resumeToastId)
+    // }
   }, [
     cancel,
     onSubmitReceiptAIDataTransaction,
