@@ -10,6 +10,7 @@
     "build": "next build",
     "build:webpack": "next build --webpack",
     "start": "next start",
+    "upgrade:next": "next upgrade",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:all": "pnpm prettier && pnpm lint && pnpm typecheck && pnpm test",
