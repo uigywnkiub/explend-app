@@ -48,7 +48,7 @@ export default function AILogo({
           showArrow={isMd}
           classNames={{
             // `before:` is an arrow.
-            base: 'before:bg-gradient-to-b before:from-blue-400 before:via-purple-400 before:to-red-400 bg-clip-text',
+            base: 'before:bg-linear-to-b before:from-blue-400 before:via-purple-400 before:to-red-400 bg-clip-text',
             content: twJoin('text-center', textSize),
           }}
         >
@@ -61,7 +61,7 @@ export default function AILogo({
               priority
               unoptimized
               className={cn(
-                'inline-block cursor-pointer select-none drop-shadow-ai md:hover:opacity-hover',
+                'drop-shadow-ai md:hover:opacity-hover inline-block cursor-pointer select-none',
                 asIcon ? 'mr-0' : 'mr-1',
               )}
             />

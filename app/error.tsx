@@ -11,7 +11,7 @@ export default function Error({
   reset: () => void
 }) {
   return (
-    <main className='mx-auto flex h-screen max-w-md flex-col items-center justify-center gap-4 px-4 text-center xs:px-0'>
+    <main className='xs:px-0 mx-auto flex h-screen max-w-md flex-col items-center justify-center gap-4 px-4 text-center'>
       <div className='flex flex-col items-center'>
         <p className='text-default-500'>#InternalError</p>
       </div>
@@ -21,7 +21,7 @@ export default function Error({
       </h1>
       <ClientButton
         title='Try Again'
-        className='max-w-md bg-primary font-medium text-default-50'
+        className='bg-primary text-default-50 max-w-md font-medium'
         onPress={() => [reset()]}
       />
     </main>

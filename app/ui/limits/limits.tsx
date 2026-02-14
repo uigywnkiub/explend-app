@@ -406,7 +406,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 <ModalBody>
                   <div className='flex flex-col gap-4'>
                     <div>
-                      <p className='mb-1 text-sm text-default-500'>
+                      <p className='text-default-500 mb-1 text-sm'>
                         Category{' '}
                         <span
                           className={cn(
@@ -495,10 +495,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
           </ModalContent>
         </Modal>
       </div>
-      <Divider className='mx-auto my-3 bg-divider md:my-6' />
+      <Divider className='bg-divider mx-auto my-3 md:my-6' />
 
       {isNoUserLimitsData && (
-        <p className='text-center text-default-500'>No Limits Found</p>
+        <p className='text-default-500 text-center'>No Limits Found</p>
       )}
 
       <Reorder.Group
@@ -506,7 +506,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         values={calculatedLimitsDataState.map((l) => l.categoryName)}
         onReorder={onReorderLimit}
         ref={reorderContainer}
-        className='select-none space-y-4'
+        className='space-y-4 select-none'
       >
         <AnimatePresence>
           {calculatedLimitsDataState.map((data, idx) => {
@@ -543,7 +543,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 dragConstraints={reorderContainer}
                 dragElastic={0.1}
                 {...MOTION_LIST(idx)}
-                className='relative flex items-center justify-between rounded-medium bg-content1 py-3'
+                className='rounded-medium bg-content1 relative flex items-center justify-between py-3'
               >
                 <div className='flex items-center text-balance md:w-1/2'>
                   <Tooltip content='Drag to reorder' placement='left'>
@@ -567,7 +567,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         <Link
                           href={createSearchHrefWithKeyword(categoryName)}
                           className={cn(
-                            '-mt-3 truncate text-balance hover:opacity-hover md:-mt-1.5',
+                            'hover:opacity-hover -mt-3 truncate text-balance md:-mt-1.5',
                             isChangedCategoryName &&
                               'text-default-500 line-through',
                           )}
@@ -583,16 +583,16 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       content={
                         <div
                           className={cn(
-                            'flex justify-center gap-3 bg-gradient-to-r from-secondary to-success bg-clip-text p-2 text-xs text-transparent',
+                            'from-secondary to-success flex justify-center gap-3 bg-linear-to-r bg-clip-text p-2 text-xs text-transparent',
                             !isIncreasedAmountByCurrMonth &&
                               prevMonthAmount !== 0 &&
                               currMonthAmount !== 0 &&
-                              'flex-row-reverse bg-gradient-to-l',
+                              'flex-row-reverse bg-linear-to-l',
                             isLimitOver && 'to-danger',
                           )}
                         >
                           <div className={cn('flex flex-col items-center')}>
-                            <span className='pb-2 text-default-500'>
+                            <span className='text-default-500 pb-2'>
                               Previous
                             </span>
                             <span>{`${formatPercentage(prevMonthPercentage)} %`}</span>
@@ -601,9 +601,9 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                               {currency.sign}
                             </span>
                           </div>
-                          <div className='w-px bg-default' />
+                          <div className='bg-default w-px' />
                           <div className='flex flex-col items-center'>
-                            <span className='pb-2 text-default-500'>Trend</span>
+                            <span className='text-default-500 pb-2'>Trend</span>
                             <div className='flex flex-col items-center'>
                               <span>
                                 {isIncreasedAmountByCurrMonth ? '↑' : '↓'}
@@ -615,9 +615,9 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                               </span>
                             </div>
                           </div>
-                          <div className='w-px bg-default' />
+                          <div className='bg-default w-px' />
                           <div className={cn('flex flex-col items-center')}>
-                            <span className='pb-2 text-default-500'>
+                            <span className='text-default-500 pb-2'>
                               Current
                             </span>
                             <span>{`${formatPercentage(currMonthPercentage)} %`}</span>
@@ -630,10 +630,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       }
                       placement='bottom'
                     >
-                      <div className='absolute -mt-0.5 h-[5px] w-[30%] rounded-full bg-default md:relative md:w-full'>
+                      <div className='bg-default absolute -mt-0.5 h-[5px] w-[30%] rounded-full md:relative md:w-full'>
                         <div
                           className={cn(
-                            'absolute h-[5px] rounded-full bg-secondary/50',
+                            'bg-secondary/50 absolute h-[5px] rounded-full',
                             isIncreasedAmountByCurrMonth && 'z-10',
                           )}
                           style={{ width: `${prevMonthPercentage}%` }}
@@ -683,7 +683,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         size='md'
                         className='z-0 md:size-10'
                       >
-                        <PiDotsThreeOutlineVerticalFill className='size-4 fill-foreground' />
+                        <PiDotsThreeOutlineVerticalFill className='fill-foreground size-4' />
                       </Button>
                     </DropdownTrigger>
                     <DropdownMenu
@@ -858,7 +858,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 </div>
               </ModalHeader>
               <ModalBody>
-                <p className='overflow-hidden text-ellipsis text-default-500'>
+                <p className='text-default-500 overflow-hidden text-ellipsis'>
                   Are you sure you want to delete the
                   <br />
                   <span className='text-foreground'>

@@ -1,18 +1,108 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config '../tailwind.config.ts';
+
+/* This is mirgated by tailwind v4 cli new approach styles, but I used to old tailwind v4 config. */
+/* @theme {
+  --ease-*: initial;
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+
+  --font-inter: var(--font-inter);
+  --font-fracktif: var(--font-fracktif);
+
+  --breakpoint-xxs: 360px;
+  --breakpoint-xs: 480px;
+
+  --color-light: #f9f9f9;
+  --color-dark: #080808;
+  --color-gold: #ffd700;
+  --color-silver: #c0c0c0;
+  --color-bronze: #cd7f32;
+  --color-ai: #62a4fa;
+
+  --shadow-inset-line-light: inset 0 -1px 0 0 #f9f9f9;
+  --shadow-inset-line-dark: inset 0 -1px 0 0 #080808;
+
+  --animate-blink-light-once: blink-light 0.8s linear;
+  --animate-blink-dark-once: blink-dark 0.8s linear;
+  --animate-pulse-fast: 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite pulse;
+  --animate-transform-scale: transform-scale 1s infinite;
+
+  --background-image-logo-gradient: linear-gradient(
+    to bottom,
+    #17c964,
+    #f31260
+  );
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+  --background-image-ai-gradient: linear-gradient(
+    to right,
+    #61a5fa,
+    #c084fc,
+    #f87171
+  );
+
+  --drop-shadow-ai: 0 0 1px #62a4fa;
+
+  @keyframes blink-light {
+    0% {
+      filter: brightness(0.8);
+    }
+    100% {
+      filter: brightness(1);
+    }
+  }
+  @keyframes blink-dark {
+    0% {
+      filter: brightness(1.6);
+    }
+    100% {
+      filter: brightness(1);
+    }
+  }
+  @keyframes transform-scale {
+    0% {
+      transform: scaleX(1);
+    }
+    50% {
+      transform: scaleX(1.2);
+    }
+    100% {
+      transform: scaleX(1);
+    }
+  }
+} */
+
+@utility text-balance {
+  /* Inside this, we can't use @apply directive because it creates a circular dependency. */
+  text-wrap: balance;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+    @apply scroll-smooth;
+  }
+}
 
 @layer base {
   * {
     @apply scroll-smooth;
     /* slashed-zero tabular-nums */
-  }
-}
-
-@layer utilities {
-  /* Inside this, we can't use @apply directive because it creates a circular dependency. */
-  .text-balance {
-    text-wrap: balance;
   }
 }
 
@@ -30,11 +120,11 @@ input::-webkit-inner-spin-button {
 }
 
 #sidebar-toggle:checked ~ .flex > .content-wrapper {
-  @apply translate-y-[10%] transform-gpu blur-3xl transition duration-300 ease-out-cubic md:blur-none;
+  @apply ease-out-cubic translate-y-[10%] transform-gpu blur-3xl transition duration-300 md:blur-none;
 }
 
 #sidebar-toggle:not(:checked) ~ .flex > .content-wrapper {
-  @apply translate-y-0 transform-gpu blur-none transition duration-300 ease-out-cubic;
+  @apply ease-out-cubic translate-y-0 transform-gpu blur-none transition duration-300;
 }
 
 .hamburger-menu {
@@ -42,7 +132,7 @@ input::-webkit-inner-spin-button {
 }
 
 .hamburger-bar {
-  @apply h-[2px] w-4 transform-gpu rounded-medium bg-foreground transition duration-300 ease-out-cubic;
+  @apply rounded-medium bg-foreground ease-out-cubic h-[2px] w-4 transform-gpu transition duration-300;
 }
 
 #sidebar-toggle:checked ~ .label > .hamburger-menu .bar1 {
@@ -59,9 +149,9 @@ input::-webkit-inner-spin-button {
 
 /* Emoji Picker START */
 .epr-main {
-  @apply !rounded-medium !rounded-tl-none !rounded-tr-none !border-0 !bg-content1;
+  @apply rounded-medium! bg-content1! rounded-tl-none! rounded-tr-none! border-0!;
   * {
-    @apply !font-fracktif !text-default-500;
+    @apply font-fracktif! text-default-500!;
   }
 }
 
@@ -78,7 +168,7 @@ input::-webkit-inner-spin-button {
 }
 
 .epr-search-container input {
-  @apply rounded-medium border-transparent bg-content2 px-3 text-foreground;
+  @apply rounded-medium bg-content2 text-foreground border-transparent px-3;
 }
 
 .epr-search-container input::placeholder {
@@ -94,15 +184,15 @@ input::-webkit-inner-spin-button {
 }
 
 .epr-category-nav {
-  @apply !-mt-4;
+  @apply -mt-4!;
 }
 
 .epr-category-nav button {
-  @apply !brightness-[120%];
+  @apply brightness-120!;
 }
 
 .epr-emoji-category-label {
-  @apply !px-2 md:!px-4;
+  @apply px-2! md:px-4!;
 }
 
 .epr-body + div {
@@ -110,12 +200,12 @@ input::-webkit-inner-spin-button {
 }
 
 .epr-skin-tones {
-  @apply !border-none;
+  @apply border-none!;
 }
 /* Emoji Picker END */
 
 .salary-calendar-day {
-  @apply !text-success;
+  @apply text-success!;
 }
 
 /* Check if View Transitions API browser support. */

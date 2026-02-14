@@ -92,8 +92,8 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
         'p-2',
         isShowTotals && isTotalLoaded
           ? isPositiveBalance
-            ? 'bg-gradient-radial from-success/10 to-content1'
-            : 'bg-gradient-radial from-danger/10 to-content1'
+            ? 'from-success/10 to-content1 bg-radial'
+            : 'from-danger/10 to-content1 bg-radial'
           : 'bg-content1',
         isShowTotals && isTotalLoaded && isAmountHidden && 'bg-default/50',
       )}
@@ -117,21 +117,21 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
               <>
                 {!isLoading && isTotalLoaded ? (
                   <motion.div
-                    className='flex select-none flex-wrap justify-center gap-0 text-lg md:gap-2'
+                    className='flex flex-wrap justify-center gap-0 text-lg select-none md:gap-2'
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ ...DIV.TRANSITION_SPRING }}
                   >
                     <p>
-                      <PiArrowCircleUpFill className='mr-1 inline fill-success' />
-                      <span className='text-sm text-default-500'>Income:</span>{' '}
+                      <PiArrowCircleUpFill className='fill-success mr-1 inline' />
+                      <span className='text-default-500 text-sm'>Income:</span>{' '}
                       <span className='font-semibold'>
                         <AnimatedNumber value={total.income} /> {currency.code}
                       </span>
                     </p>
                     <p>
-                      <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
-                      <span className='text-sm text-default-500'>Expense:</span>{' '}
+                      <PiArrowCircleDownFill className='fill-danger mr-1 inline' />
+                      <span className='text-default-500 text-sm'>Expense:</span>{' '}
                       <span className='font-semibold'>
                         <AnimatedNumber value={total.expense} /> {currency.code}
                       </span>
@@ -155,7 +155,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
               </>
             ) : (
               <motion.p
-                className='select-none font-semibold'
+                className='font-semibold select-none'
                 initial={
                   isTotalLoaded
                     ? { opacity: 0, scale: 0 }

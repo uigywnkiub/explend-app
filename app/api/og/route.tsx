@@ -1,11 +1,12 @@
 import { ImageResponse } from 'next/og'
 
 import {
-  CUSTOM_DARK,
-  CUSTOM_LIGHT,
-  DANGER,
-  SUCCESS,
-} from '@/config/constants/colors'
+  CUSTOM_DARK_COLOR,
+  CUSTOM_LIGHT_COLOR,
+  DANGER_COLOR,
+  SUCCESS_COLOR,
+} from '@/tailwind.config'
+
 import { APP_NAME, APP_TITLE } from '@/config/constants/main'
 
 export const runtime = 'edge'
@@ -34,8 +35,8 @@ export async function GET(req: Request) {
         justifyContent: 'center',
         letterSpacing: '-.02em',
         fontFamily: fontFamilyName,
-        background: CUSTOM_LIGHT,
-        // backgroundImage: `radial-gradient(circle at 25px 25px, ${CUSTOM_DARK}${OPACITY.O30} 2%, transparent 0%), radial-gradient(circle at 75px 75px, ${CUSTOM_DARK}${OPACITY.O30} 2%, transparent 0%)`,
+        background: CUSTOM_LIGHT_COLOR,
+        // backgroundImage: `radial-gradient(circle at 25px 25px, ${CUSTOM_DARK_COLOR}${OPACITY_COLOR.O30} 2%, transparent 0%), radial-gradient(circle at 75px 75px, ${CUSTOM_DARK_COLOR}${OPACITY_COLOR.O30} 2%, transparent 0%)`,
         // backgroundSize: '100px 100px',
       }}
     >
@@ -52,7 +53,7 @@ export async function GET(req: Request) {
           style={{
             width: 24,
             height: 24,
-            background: `linear-gradient(to bottom, ${SUCCESS}, ${DANGER})`,
+            background: `linear-gradient(to bottom, ${SUCCESS_COLOR}, ${DANGER_COLOR})`,
             borderRadius: 6,
           }}
         />
@@ -77,8 +78,8 @@ export async function GET(req: Request) {
           width: 'auto',
           maxWidth: 640,
           textAlign: 'center',
-          backgroundColor: CUSTOM_DARK,
-          color: CUSTOM_LIGHT,
+          backgroundColor: CUSTOM_DARK_COLOR,
+          color: CUSTOM_LIGHT_COLOR,
           lineHeight: 1.4,
           borderRadius: 24,
         }}

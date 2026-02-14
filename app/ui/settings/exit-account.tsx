@@ -20,7 +20,7 @@ function ExitAccount() {
       isLoading={pending}
       isDisabled={pending}
       startContent={!pending && icon}
-      className='w-full bg-foreground font-medium text-default-50'
+      className='bg-foreground text-default-50 w-full font-medium'
     >
       Sign out
     </Button>

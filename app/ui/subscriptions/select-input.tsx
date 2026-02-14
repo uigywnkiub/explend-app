@@ -36,7 +36,7 @@ function SelectInput({
 }: TProps) {
   return (
     <div className='flex w-full flex-col'>
-      <p className='mb-1 text-sm text-default-500'>
+      <p className='text-default-500 mb-1 text-sm'>
         Category{' '}
         <span className={cn('text-danger', categoryName && 'hidden')}>*</span>
       </p>

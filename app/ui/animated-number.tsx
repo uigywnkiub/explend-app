@@ -13,7 +13,7 @@ import {
   useTransform,
 } from 'framer-motion'
 
-// import { DANGER, SUCCESS } from '@/config/constants/colors'
+// import { DANGER_COLOR, SUCCESS_COLOR } from '@/tailwind.config'
 
 import {
   cn,
@@ -82,9 +82,9 @@ export default function AnimatedNumber({
     // const roundedLatest = Math.round(latest)
     // color.set(
     //   numericValue > roundedLatest
-    //     ? SUCCESS //  If the value is increasing.
+    //     ? SUCCESS_COLOR //  If the value is increasing.
     //     : numericValue < roundedLatest
-    //       ? DANGER // If the value is decreasing.
+    //       ? DANGER_COLOR // If the value is decreasing.
     //       : 'inherit', // If the value remains unchanged.
     // )
   })

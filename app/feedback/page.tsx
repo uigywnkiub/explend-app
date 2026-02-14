@@ -33,7 +33,7 @@ export default async function Page() {
             <h2 className='mb-4 text-center text-lg font-semibold'>
               Thank you for your valuable feedback!
             </h2>
-            <p className='mb-4 text-center text-sm text-default-500'>
+            <p className='text-default-500 mb-4 text-center text-sm'>
               Your input is crucial in shaping the future of {APP_NAME.SHORT}{' '}
               and ensuring a fantastic experience for everyone.
             </p>

@@ -44,7 +44,7 @@ export default function WithSidebar({
         <main className={contentWrapper} role='main'>
           {contentNearby}
           <footer
-            className='mt-32 flex flex-col-reverse items-center justify-center gap-2 text-center text-default-500'
+            className='text-default-500 mt-32 flex flex-col-reverse items-center justify-center gap-2 text-center'
             role='contentinfo'
           >
             <Footer />

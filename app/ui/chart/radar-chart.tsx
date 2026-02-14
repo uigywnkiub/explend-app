@@ -15,9 +15,9 @@ import {
   Tooltip,
 } from 'recharts'
 
+import { DANGER_COLOR, SUCCESS_COLOR } from '@/tailwind.config'
 import { Tooltip as HeroUITooltip } from '@heroui/react'
 
-import { DANGER, SUCCESS } from '@/config/constants/colors'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
 import {
@@ -121,7 +121,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
                 <HeroUITooltip content='Search by category' placement='top'>
                   <text
                     {...props}
-                    className='cursor-pointer fill-foreground text-sm outline-none hover:opacity-hover md:text-medium'
+                    className='fill-foreground hover:opacity-hover md:text-medium cursor-pointer text-sm outline-hidden'
                     alignmentBaseline='central'
                     onClick={() =>
                       router.push(
@@ -139,14 +139,14 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
           />
           <Radar
             dataKey={DATA_KEY.INCOME}
-            stroke={SUCCESS}
-            fill={SUCCESS}
+            stroke={SUCCESS_COLOR}
+            fill={SUCCESS_COLOR}
             fillOpacity={0.6}
           />
           <Radar
             dataKey={DATA_KEY.EXPENSE}
-            stroke={DANGER}
-            fill={DANGER}
+            stroke={DANGER_COLOR}
+            fill={DANGER_COLOR}
             fillOpacity={0.6}
           />
           <Legend
@@ -182,7 +182,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
             tickFormatter={(value) =>
               `${getFormattedCurrency(value)} ${currency.sign}`
             }
-            className='text-sm md:text-medium'
+            className='md:text-medium text-sm'
           />
         </RechartRadarChart>
       </ResponsiveContainer>

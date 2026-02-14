@@ -65,7 +65,7 @@ export const HoverableNavLink = ({
       <Link
         href={link.url}
         className={cn(
-          'flex w-full items-center gap-4 rounded-medium py-1 text-2xl md:py-2 md:text-base',
+          'rounded-medium flex w-full items-center gap-4 py-1 text-2xl md:py-2 md:text-base',
           !isActiveLink && 'text-default-500 hover:text-foreground',
           idx === 0 && 'mt-8 md:mt-4',
         )}

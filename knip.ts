@@ -1,7 +1,7 @@
 import type { KnipConfig } from 'knip'
 
 const config: KnipConfig = {
-  ignore: ['./app/sw.{js,ts}', './config/constants/colors.ts'],
+  ignore: ['./app/sw.{js,ts}'],
   ignoreDependencies: [
     '@testing-library/dom',
     '@testing-library/react',

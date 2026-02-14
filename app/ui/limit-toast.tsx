@@ -94,7 +94,7 @@ export default function LimitToast({ triggerBy }: TProps) {
           <div className='flex items-center gap-2'>
             <span>{limitToastCategoryName} limit is over!</span>
             {limitCountByCategoryName > 1 && (
-              <span className='rounded-full bg-warning px-1 text-xs font-semibold'>
+              <span className='bg-warning rounded-full px-1 text-xs font-semibold'>
                 ×{limitCountByCategoryName}
               </span>
             )}

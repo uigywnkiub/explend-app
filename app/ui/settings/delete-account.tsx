@@ -57,7 +57,7 @@ function DeleteAccount({ userId }: TProps) {
 
   const buttonWithIcon = (icon: TIcon) => (
     <Button
-      className='w-full bg-danger font-medium text-default-50'
+      className='bg-danger text-default-50 w-full font-medium'
       onPress={onOpen}
       startContent={icon}
     >
@@ -103,9 +103,9 @@ function DeleteAccount({ userId }: TProps) {
                   . Once deleted, you will no longer be able to access any
                   information associated with your account.
                 </p>
-                <p className='mt-2 text-sm text-default-500'>
+                <p className='text-default-500 mt-2 text-sm'>
                   To confirm type:{' '}
-                  <span className='select-none text-foreground'>
+                  <span className='text-foreground select-none'>
                     {CONFIRM_TEXT}
                   </span>
                 </p>

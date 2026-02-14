@@ -90,7 +90,7 @@ function CategoryItem({
       editingItemIndex.categoryIndex === categoryIndex &&
       editingItemIndex.itemIndex === itemIndex ? (
         <div className='w-full'>
-          <div className='flex h-20 w-full items-center justify-between gap-2 rounded-medium bg-content1 p-2 text-left md:p-4 md:text-lg'>
+          <div className='rounded-medium bg-content1 flex h-20 w-full items-center justify-between gap-2 p-2 text-left md:p-4 md:text-lg'>
             <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
               <Tooltip
                 content={
@@ -99,10 +99,10 @@ function CategoryItem({
                 placement='bottom'
               >
                 <div
-                  className='cursor-pointer rounded-medium bg-content2 px-3 py-1 text-2xl hover:bg-default-200'
+                  className='rounded-medium bg-content2 hover:bg-default-200 cursor-pointer px-3 py-1 text-2xl'
                   onClick={toggleEmojiPicker}
                 >
-                  <div className='select-none pt-1.5'>{item.emoji}</div>
+                  <div className='pt-1.5 select-none'>{item.emoji}</div>
                 </div>
               </Tooltip>
               <Input
@@ -116,7 +116,7 @@ function CategoryItem({
                 placeholder={item.name}
                 size='lg'
                 classNames={{
-                  input: '!placeholder:text-default-500 !text-foreground',
+                  input: '!placeholder:text-default-500 text-foreground!',
                 }}
                 // endContent={
                 //   <Kbd
@@ -201,7 +201,7 @@ function CategoryItem({
                 onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
                 isLoading={isLoading.item}
                 isDisabled={newItemName.length < 1 || isLoading.item}
-                className='min-w-4 bg-foreground px-4 font-medium text-default-50 md:min-w-20 md:px-0'
+                className='bg-foreground text-default-50 min-w-4 px-4 font-medium md:min-w-20 md:px-0'
               >
                 {!isLoading.item && (
                   <HoverableElement
@@ -225,7 +225,7 @@ function CategoryItem({
           </div>
         </div>
       ) : (
-        <div className='flex h-20 w-full items-center justify-between gap-2 break-all rounded-medium bg-content1 p-2 text-left md:p-4'>
+        <div className='rounded-medium bg-content1 flex h-20 w-full items-center justify-between gap-2 p-2 text-left break-all md:p-4'>
           <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
             <Tooltip
               content={
@@ -241,7 +241,7 @@ function CategoryItem({
               placement='bottom'
             >
               <div className='rounded-medium bg-content2 px-3 py-1 text-2xl'>
-                <div className='select-none pt-1.5'>{item.emoji}</div>
+                <div className='pt-1.5 select-none'>{item.emoji}</div>
               </div>
             </Tooltip>
             <div className='truncate'>

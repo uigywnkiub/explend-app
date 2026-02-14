@@ -431,7 +431,7 @@ function Categories({
       <div className='mx-auto max-w-md'>
         <Button
           isDisabled={haveCategoriesChanged}
-          className='mx-auto w-full bg-danger font-medium text-default-50'
+          className='bg-danger text-default-50 mx-auto w-full font-medium'
           onPress={onOpen}
           startContent={
             <HoverableElement

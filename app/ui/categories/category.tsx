@@ -104,7 +104,7 @@ function Category({
             placeholder={category.subject}
             size='lg'
             classNames={{
-              input: '!placeholder:text-default-500 !text-foreground',
+              input: '!placeholder:text-default-500 text-foreground!',
               base: 'w-fit',
             }}
             // endContent={
@@ -166,7 +166,7 @@ function Category({
               onPress={() => onSaveTargetClick(index)}
               isLoading={isLoading.subject}
               isDisabled={newTargetName.length < 1}
-              className='bg-foreground px-0 font-medium text-default-50'
+              className='bg-foreground text-default-50 px-0 font-medium'
             >
               {!isLoading.subject && (
                 <HoverableElement
@@ -181,11 +181,11 @@ function Category({
           </div>
         </div>
       ) : (
-        <div className='mb-3 flex h-[40px] items-center justify-between gap-2 rounded-medium bg-background px-2 md:gap-4 md:px-4'>
+        <div className='rounded-medium bg-background mb-3 flex h-[40px] items-center justify-between gap-2 px-2 md:gap-4 md:px-4'>
           <h2 className='text-lg font-semibold md:text-xl'>
             {category.subject}
             <button className='ml-1 h-0' onClick={() => router.push('#hint-1')}>
-              <sup className='cursor-pointer p-1 text-xs text-default-500 md:hover:text-foreground md:hover:opacity-hover'>
+              <sup className='text-default-500 md:hover:text-foreground md:hover:opacity-hover cursor-pointer p-1 text-xs'>
                 1
               </sup>
             </button>

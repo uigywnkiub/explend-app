@@ -14,7 +14,7 @@ function NoteInput({ note, onChangeNote }: TProps) {
 
   return (
     <div>
-      <p className='mb-1 text-sm text-default-500'>Note</p>
+      <p className='text-default-500 mb-1 text-sm'>Note</p>
       <Input
         ref={inputRef}
         autoComplete='off'

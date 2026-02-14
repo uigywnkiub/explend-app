@@ -138,7 +138,7 @@ export default function CreateTestTransactions({
   }
 
   return (
-    <div className='flex flex-col items-center justify-center gap-2 text-balance text-center'>
+    <div className='flex flex-col items-center justify-center gap-2 text-center text-balance'>
       <p className='text-sm'>
         <span className='text-default-500'>Optional:</span> Take the app for a
         test drive by creating {testTransactions.length} diverse test

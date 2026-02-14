@@ -133,7 +133,7 @@ function SignIn() {
   const accordionTitle = isExpanded ? 'Show less' : ACCORDION_ITEM_KEY
 
   return (
-    <div className='flex min-h-screen flex-col justify-between text-balance p-4 md:p-8'>
+    <div className='flex min-h-screen flex-col justify-between p-4 text-balance md:p-8'>
       <div className='flex grow flex-col items-center justify-center text-center'>
         <div className='mb-4 flex items-center justify-center'>
           <Logo size='md2' isSignInPage />
@@ -142,7 +142,7 @@ function SignIn() {
           Welcome to {APP_NAME.FULL}
         </h1>
         <p className='text-default-500'>{APP_DESCRIPTION}</p>
-        <Divider className='my-4 w-full bg-divider md:w-1/2' />
+        <Divider className='bg-divider my-4 w-full md:w-1/2' />
         <p className='mb-4'>{APP_TITLE}</p>
         <div className='flex flex-col items-center space-y-2'>
           {signInButtons
@@ -152,7 +152,7 @@ function SignIn() {
                 <ClientButton
                   title={title}
                   isDisabled={isAnyLoading}
-                  className='min-w-[220px] bg-foreground font-medium text-default-50'
+                  className='bg-foreground text-default-50 min-w-[220px] font-medium'
                   isLoading={isLoading}
                   onPress={(e) => onSignIn(e, provider)}
                   startContent={!isLoading && icon}
@@ -193,7 +193,7 @@ function SignIn() {
                       <ClientButton
                         title={title}
                         isDisabled={isAnyLoading}
-                        className='min-w-[220px] bg-foreground font-medium text-default-50'
+                        className='bg-foreground text-default-50 min-w-[220px] font-medium'
                         isLoading={isLoading}
                         onPress={(e) => onSignIn(e, provider)}
                         startContent={!isLoading && icon}

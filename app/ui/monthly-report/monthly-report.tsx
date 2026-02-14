@@ -217,7 +217,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             userSalaryDay={userSalaryDay}
           />
         </div>
-        <p className='text-balance text-center text-default-500'>
+        <p className='text-default-500 text-center text-balance'>
           No transactions found from {formattedDateRange}
         </p>
       </div>
@@ -226,7 +226,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
 
   return (
     <>
-      <div className='relative rounded-medium bg-content1 p-4 md:p-8'>
+      <div className='rounded-medium bg-content1 relative p-4 md:p-8'>
         <div className='mb-6'>
           <MonthPicker
             selectedDate={selectedDate}
@@ -241,13 +241,13 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             href={createSearchHrefWithKeyword(format(startDate, 'MMMM'))}
             className='hover:opacity-hover'
           >
-            <span className='mb-3 inline-block text-balance text-lg text-default-500 md:mb-0 md:text-xl'>
+            <span className='text-default-500 mb-3 inline-block text-lg text-balance md:mb-0 md:text-xl'>
               {formattedDateRange}
             </span>
           </Link>
           <div className='flex gap-4 md:gap-8'>
             <div>
-              <p className='text-xs text-default-500 md:text-sm'>
+              <p className='text-default-500 text-xs md:text-sm'>
                 Total Income
               </p>
               <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
@@ -256,7 +256,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
               </p>
             </div>
             <div>
-              <p className='text-xs text-default-500 md:text-sm'>
+              <p className='text-default-500 text-xs md:text-sm'>
                 Total Expense
               </p>
               <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
@@ -267,7 +267,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
           </div>
         </div>
 
-        <Divider className='mx-auto mb-0 bg-divider md:mb-2' />
+        <Divider className='bg-divider mx-auto mb-0 md:mb-2' />
 
         <Accordion defaultExpandedKeys={[ACCORDION_KEY.EXPENSE]}>
           <AccordionItem
@@ -296,9 +296,10 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
 
         <Accordion
           defaultExpandedKeys={
-            expense.length === 0 && income.length > 0
-              ? [ACCORDION_KEY.INCOME]
-              : []
+            // expense.length === 0 && income.length > 0
+            //   ? [ACCORDION_KEY.INCOME]
+            //   : []
+            [ACCORDION_KEY.INCOME]
           }
         >
           <AccordionItem
@@ -334,7 +335,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             <TipsList tipsDataAI={tipsDataAI} />
           </>
         ) : (
-          <p className='text-balance text-center text-sm'>
+          <p className='text-center text-sm text-balance'>
             Get useful tips for managing expenses.
           </p>
         )}

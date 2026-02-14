@@ -18,11 +18,11 @@ export default function SearchedTransactions({
 }: TProps) {
   return (
     <div className='flex flex-col justify-center gap-2 text-center'>
-      <p className='mt-2 text-default-500 md:mt-4'>Searched Totals</p>
+      <p className='text-default-500 mt-2 md:mt-4'>Searched Totals</p>
       <div className='flex flex-col flex-wrap justify-center'>
         <p>
-          <PiArrowCircleUpFill className='mr-1 inline fill-success' />
-          <span className='text-sm text-default-500'>Income:</span>{' '}
+          <PiArrowCircleUpFill className='fill-success mr-1 inline' />
+          <span className='text-default-500 text-sm'>Income:</span>{' '}
           <span className='text-lg font-semibold'>
             <AnimatedNumber
               value={getTransactionsTotals(searchedTransactionsByQuery).income}
@@ -31,8 +31,8 @@ export default function SearchedTransactions({
           </span>
         </p>
         <p>
-          <PiArrowCircleDownFill className='mr-1 inline fill-danger' />
-          <span className='text-sm text-default-500'>Expense:</span>{' '}
+          <PiArrowCircleDownFill className='fill-danger mr-1 inline' />
+          <span className='text-default-500 text-sm'>Expense:</span>{' '}
           <span className='text-lg font-semibold'>
             <AnimatedNumber
               value={getTransactionsTotals(searchedTransactionsByQuery).expense}

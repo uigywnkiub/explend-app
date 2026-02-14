@@ -49,7 +49,7 @@ function CustomEmojiPicker({ showEmojiPicker, onEmojiClick }: TProps) {
         theme={(theme as TTheme) === 'system' ? Theme.AUTO : (theme as Theme)}
         suggestedEmojisMode={SuggestionMode.RECENT}
         skinTonePickerLocation={SkinTonePickerLocation.PREVIEW}
-        className='!w-full'
+        className='w-full!'
       />
     ),
     [onEmojiClick, theme],

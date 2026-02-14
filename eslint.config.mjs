@@ -6,7 +6,7 @@ import checkFile from 'eslint-plugin-check-file'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import prettier from 'eslint-plugin-prettier'
 import reactHooks from 'eslint-plugin-react-hooks'
-import tailwind from 'eslint-plugin-tailwindcss'
+// import tailwind from 'eslint-plugin-tailwindcss'
 import unusedImports from 'eslint-plugin-unused-imports'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -29,7 +29,7 @@ const config = [
       'next-env.d.ts',
     ],
   }, // ...ts.configs.recommended,
-  ...tailwind.configs['flat/recommended'],
+  // ...tailwind.configs['flat/recommended'],
   reactHooks.configs.flat['recommended-latest'],
   ...compat.extends('next', 'next/core-web-vitals', 'prettier'),
   {
