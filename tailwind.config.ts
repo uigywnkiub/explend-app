@@ -4,21 +4,21 @@ import type { Config } from 'tailwindcss'
 export const BLINK_DURATION: number = 0.8
 
 // Default base colors from https://nextui.org/docs/customization/colors
-export const DANGER = '#f31260'
-export const SUCCESS = '#17c964'
-export const DEFAULT = '#d4d4d8'
+export const DANGER_COLOR = '#f31260'
+export const SUCCESS_COLOR = '#17c964'
+export const DEFAULT_COLOR = '#d4d4d8'
 
 // Custom
-export const CUSTOM_DARK = '#080808'
-export const CUSTOM_LIGHT = '#F9F9F9'
+export const CUSTOM_DARK_COLOR = '#080808'
+export const CUSTOM_LIGHT_COLOR = '#F9F9F9'
 
-export const GOLD = '#FFD700'
-export const SILVER = '#C0C0C0'
-export const BRONZE = '#CD7F32'
+export const GOLD_COLOR = '#FFD700'
+export const SILVER_COLOR = '#C0C0C0'
+export const BRONZE_COLOR = '#CD7F32'
 
-export const AI = '#62A4FA'
+export const AI_COLOR = '#62A4FA'
 
-export const enum OPACITY {
+export const enum OPACITY_COLOR {
   O100 = 'FF', // 100% opacity
   O95 = 'F2', // 95% opacity
   O90 = 'E6', // 90% opacity
@@ -63,16 +63,16 @@ const config: Config = {
         xs: '480px',
       },
       colors: {
-        light: CUSTOM_LIGHT,
-        dark: CUSTOM_DARK,
-        gold: GOLD,
-        silver: SILVER,
-        bronze: BRONZE,
-        ai: AI,
+        light: CUSTOM_LIGHT_COLOR,
+        dark: CUSTOM_DARK_COLOR,
+        gold: GOLD_COLOR,
+        silver: SILVER_COLOR,
+        bronze: BRONZE_COLOR,
+        ai: AI_COLOR,
       },
       boxShadow: {
-        'inset-line-light': `inset 0 -1px 0 0 ${CUSTOM_LIGHT}`,
-        'inset-line-dark': `inset 0 -1px 0 0 ${CUSTOM_DARK}`,
+        'inset-line-light': `inset 0 -1px 0 0 ${CUSTOM_LIGHT_COLOR}`,
+        'inset-line-dark': `inset 0 -1px 0 0 ${CUSTOM_DARK_COLOR}`,
       },
       keyframes: {
         ['blink-light']: {
@@ -96,14 +96,14 @@ const config: Config = {
         'transform-scale': 'transform-scale 1s infinite',
       },
       backgroundImage: {
-        'logo-gradient': `linear-gradient(to bottom, ${SUCCESS}, ${DANGER})`,
+        'logo-gradient': `linear-gradient(to bottom, ${SUCCESS_COLOR}, ${DANGER_COLOR})`,
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'ai-gradient': 'linear-gradient(to right, #61A5FA, #C084FC, #F87171)',
       },
       dropShadow: {
-        ai: `0 0 1px ${AI}`,
+        ai: `0 0 1px ${AI_COLOR}`,
       },
     },
     transitionTimingFunction: {
@@ -115,14 +115,14 @@ const config: Config = {
       themes: {
         light: {
           colors: {
-            background: CUSTOM_LIGHT,
-            foreground: CUSTOM_DARK,
+            background: CUSTOM_LIGHT_COLOR,
+            foreground: CUSTOM_DARK_COLOR,
           },
         },
         dark: {
           colors: {
-            background: CUSTOM_DARK,
-            foreground: CUSTOM_LIGHT,
+            background: CUSTOM_DARK_COLOR,
+            foreground: CUSTOM_LIGHT_COLOR,
           },
         },
       },

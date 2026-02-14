@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 
-import { CUSTOM_DARK } from '@/tailwind.config'
+import { CUSTOM_DARK_COLOR } from '@/tailwind.config'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: CUSTOM_DARK,
+  themeColor: CUSTOM_DARK_COLOR,
 }
 
 export default function RootLayout({

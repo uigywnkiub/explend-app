@@ -2,7 +2,7 @@
 
 import { PiLock, PiLockFill } from 'react-icons/pi'
 
-import { DEFAULT } from '@/tailwind.config'
+import { DEFAULT_COLOR } from '@/tailwind.config'
 import { Tooltip } from '@heroui/react'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
@@ -21,8 +21,8 @@ export default function MaskAmountInfo() {
       <div className='fixed right-6 bottom-8 md:right-11 md:bottom-8'>
         <HoverableElement
           uKey='mask-amount-info'
-          element={<PiLock fill={DEFAULT} />}
-          hoveredElement={<PiLockFill fill={DEFAULT} />}
+          element={<PiLock fill={DEFAULT_COLOR} />}
+          hoveredElement={<PiLockFill fill={DEFAULT_COLOR} />}
           withShift={false}
         />
       </div>

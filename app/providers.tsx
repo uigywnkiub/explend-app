@@ -7,7 +7,12 @@ import { Next13ProgressBar } from 'next13-progressbar'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 
-import { DANGER, DEFAULT, OPACITY, SUCCESS } from '@/tailwind.config'
+import {
+  DANGER_COLOR,
+  DEFAULT_COLOR,
+  OPACITY_COLOR,
+  SUCCESS_COLOR,
+} from '@/tailwind.config'
 import { HeroUIProvider } from '@heroui/react'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
@@ -59,9 +64,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           color={
             !isAmountHidden
               ? isPositiveBalance
-                ? SUCCESS
-                : DANGER
-              : `${DEFAULT}${OPACITY.O50}`
+                ? SUCCESS_COLOR
+                : DANGER_COLOR
+              : `${DEFAULT_COLOR}${OPACITY_COLOR.O50}`
           }
           options={{ showSpinner: false }}
           showOnShallow={true}

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-import { CUSTOM_DARK } from '@/tailwind.config'
+import { CUSTOM_DARK_COLOR } from '@/tailwind.config'
 
 import {
   APP_DESCRIPTION,
@@ -32,8 +32,8 @@ export default function manifest(): MetadataRoute.Manifest {
     display: 'standalone',
     display_override: ['window-controls-overlay'],
     orientation: 'portrait',
-    background_color: CUSTOM_DARK,
-    theme_color: CUSTOM_DARK,
+    background_color: CUSTOM_DARK_COLOR,
+    theme_color: CUSTOM_DARK_COLOR,
     icons: [
       {
         src: '/icons/favicon.ico',

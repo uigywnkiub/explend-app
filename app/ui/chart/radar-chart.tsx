@@ -15,7 +15,7 @@ import {
   Tooltip,
 } from 'recharts'
 
-import { DANGER, SUCCESS } from '@/tailwind.config'
+import { DANGER_COLOR, SUCCESS_COLOR } from '@/tailwind.config'
 import { Tooltip as HeroUITooltip } from '@heroui/react'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
@@ -139,14 +139,14 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
           />
           <Radar
             dataKey={DATA_KEY.INCOME}
-            stroke={SUCCESS}
-            fill={SUCCESS}
+            stroke={SUCCESS_COLOR}
+            fill={SUCCESS_COLOR}
             fillOpacity={0.6}
           />
           <Radar
             dataKey={DATA_KEY.EXPENSE}
-            stroke={DANGER}
-            fill={DANGER}
+            stroke={DANGER_COLOR}
+            fill={DANGER_COLOR}
             fillOpacity={0.6}
           />
           <Legend
