@@ -88,12 +88,23 @@ const config: Config = {
           '50%': { transform: 'scaleX(1.2)' },
           '100%': { transform: 'scaleX(1)' },
         },
+        wave: {
+          '0%': { transform: 'rotate(0deg)' },
+          '10%': { transform: 'rotate(14deg)' },
+          '20%': { transform: 'rotate(-8deg)' },
+          '30%': { transform: 'rotate(14deg)' },
+          '40%': { transform: 'rotate(-4deg)' },
+          '50%': { transform: 'rotate(10deg)' },
+          '60%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(0deg)' },
+        },
       },
       animation: {
         'blink-light-once': `blink-light ${BLINK_DURATION}s linear`,
         'blink-dark-once': `blink-dark ${BLINK_DURATION}s linear`,
         'pulse-fast': `${BLINK_DURATION}s cubic-bezier(.4, 0, .6, 1) infinite pulse`,
         'transform-scale': 'transform-scale 1s infinite',
+        wave: 'wave 1s ease-in-out',
       },
       backgroundImage: {
         'logo-gradient': `linear-gradient(to bottom, ${SUCCESS_COLOR}, ${DANGER_COLOR})`,
@@ -106,6 +117,7 @@ const config: Config = {
         ai: `0 0 1px ${AI_COLOR}`,
       },
     },
+
     transitionTimingFunction: {
       'out-cubic': 'cubic-bezier(.33,1,.68,1)',
     },

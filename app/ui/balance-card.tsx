@@ -20,6 +20,7 @@ import {
 } from '../lib/helpers'
 import type { TTransaction, TUser } from '../lib/types'
 import Loading from '../loading'
+import AnimatedGreeting from './animated-greeting'
 import AnimatedNumber from './animated-number'
 
 type TProps = {
@@ -112,7 +113,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
             )}
             onClick={onChangeInfo}
           >
-            <p className='mb-4 text-xs'>{greetingMsg}</p>
+            <AnimatedGreeting message={greetingMsg} />
             {isShowTotals ? (
               <>
                 {!isLoading && isTotalLoaded ? (
