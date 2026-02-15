@@ -75,6 +75,20 @@ export default function manifest(): MetadataRoute.Manifest {
         label: NAV_TITLE.CHART,
       },
       {
+        src: '/images/screenshots/limits.png',
+        sizes: SCREENSHOT_SIZE_DESKTOP,
+        type: SCREENSHOT_TYPE,
+        form_factor: SCREENSHOT_FORM_FACTOR_DESKTOP,
+        label: NAV_TITLE.LIMITS,
+      },
+      {
+        src: '/images/screenshots/table.png',
+        sizes: SCREENSHOT_SIZE_DESKTOP,
+        type: SCREENSHOT_TYPE,
+        form_factor: SCREENSHOT_FORM_FACTOR_DESKTOP,
+        label: NAV_TITLE.TABLE,
+      },
+      {
         src: '/images/screenshots/home-mobile.png',
         sizes: SCREENSHOT_SIZE_MOBILE,
         type: SCREENSHOT_TYPE,

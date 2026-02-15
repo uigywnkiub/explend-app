@@ -24,6 +24,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${APP_URL}${ROUTE.TABLE}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
       url: `${APP_URL}${ROUTE.LIMITS}`,
       lastModified: new Date(),
       changeFrequency: 'daily',

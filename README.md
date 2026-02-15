@@ -13,6 +13,9 @@
 - **Dynamic Radar Chart**
   Visualize expenses with a radar chart that updates as you add new categories.
 
+- **Interactive Table**
+  Sort transactions by any column, filter results by searching category, description, or type, with real-time totals displaying income, expenses, and net balance.
+
 - **Category Limits**
   Set and adjust monthly spending limits for specific categories.
 

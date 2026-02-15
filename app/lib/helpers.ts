@@ -103,6 +103,7 @@ export const getCategoryWithEmoji = (
 }
 
 export const toLowerCase = (str: string) => str.toLowerCase()
+export const toUpperCase = (str: string) => str.toUpperCase()
 
 export const getSlicedCurrencyCode = (code: CURRENCY_CODE): string => {
   return toLowerCase(code).slice(0, 2)

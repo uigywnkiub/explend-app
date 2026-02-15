@@ -3,7 +3,7 @@ type TProps = {
 }
 
 export default function NoTransactionsPlug({
-  text = 'No Transactions Found',
+  text = 'No transactions found',
 }: TProps) {
   return (
     <p className='rounded-medium bg-content1 text-default-500 p-2 text-center'>

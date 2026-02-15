@@ -19,6 +19,8 @@ import {
   PiRepeatFill,
   PiStack,
   PiStackFill,
+  PiTable,
+  PiTableFill,
 } from 'react-icons/pi'
 import { useMedia } from 'react-use'
 
@@ -51,6 +53,12 @@ const topNavLinks: TNavLink[] = [
     url: ROUTE.CHART,
     icon: <PiPolygon size={NAV_ICON_SIZE} />,
     hoverIcon: <PiPolygonFill size={NAV_ICON_SIZE} />,
+  },
+  {
+    title: NAV_TITLE.TABLE,
+    url: ROUTE.TABLE,
+    icon: <PiTable size={NAV_ICON_SIZE} />,
+    hoverIcon: <PiTableFill size={NAV_ICON_SIZE} />,
   },
   {
     title: NAV_TITLE.LIMITS,

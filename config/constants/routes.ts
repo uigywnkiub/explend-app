@@ -3,6 +3,7 @@ export const enum ROUTE {
   SIGNIN = '/sign-in',
   MONTHLY_REPORT = '/monthly-report',
   CHART = '/chart',
+  TABLE = '/table',
   LIMITS = '/limits',
   SUBSCRIPTIONS = '/subscriptions',
   CATEGORIES = '/categories',
