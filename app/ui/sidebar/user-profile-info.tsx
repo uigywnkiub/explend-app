@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 import { Popover, PopoverContent, PopoverTrigger, User } from '@heroui/react'
 
 import { signOutAccount } from '@/app/lib/actions'
@@ -19,11 +21,12 @@ function UserProfileInfo({ user, withoutPopover }: TProps) {
         name={user?.name}
         description={user?.email}
         avatarProps={{
-          // ImgComponent: Image,
-          ImgComponent: 'img',
+          ImgComponent: Image,
+          // ImgComponent: 'img',
           imgProps: {
             // priority: true,
-            // quality: 100,
+            // quality: 70,
+            // loading: 'eager',
             width: 40,
             height: 40,
           },

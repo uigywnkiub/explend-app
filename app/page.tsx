@@ -1,5 +1,7 @@
 import { PiWarningOctagonFill } from 'react-icons/pi'
 
+import { Metadata } from 'next'
+
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 
 import {
@@ -7,6 +9,7 @@ import {
   NAV_TITLE,
   SEARCH_PARAM,
 } from '@/config/constants/navigation'
+import { siteMeta } from '@/config/site-meta'
 
 import {
   createTransaction,
@@ -45,6 +48,12 @@ import TransactionList from './ui/home/transaction-list'
 import NoTransactionsPlug from './ui/no-transactions-plug'
 import PaginationList from './ui/pagination/pagination-list'
 import WithSidebar from './ui/sidebar/with-sidebar'
+
+export const metadata: Metadata = {
+  title: `${NAV_TITLE.HOME} | ${siteMeta.title}`,
+  description:
+    'Track your expenses and income with Explend. Get insights, manage budgets, and achieve your financial goals.',
+}
 
 export default async function Page(props: {
   searchParams?: Promise<{
