@@ -13,6 +13,7 @@ import {
   AUTHOR,
   DEFAULT_DIR,
   DEFAULT_LANG,
+  IS_PROD,
 } from '@/config/constants/main'
 import { siteMeta } from '@/config/site-meta'
 
@@ -109,9 +110,13 @@ export default function RootLayout({
         className={`${fracktif.className} ${fracktif.variable} ${inter.variable} bg-background text-foreground`}
       >
         <Providers>{children}</Providers>
-        <SpeedInsights debug={false} />
-        <Analytics debug={false} />
-        <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID} />
+        {IS_PROD && (
+          <>
+            <SpeedInsights />
+            <Analytics />
+            <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID} />
+          </>
+        )}
       </body>
     </html>
   )
