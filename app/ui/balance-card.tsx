@@ -107,6 +107,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
           placement='bottom'
         >
           <div
+            role='button'
             className={cn(
               'text-center text-xl',
               hasTransactions && 'cursor-pointer',

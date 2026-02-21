@@ -99,6 +99,7 @@ function CategoryItem({
                 placement='bottom'
               >
                 <div
+                  role='button'
                   className='rounded-medium bg-content2 hover:bg-default-200 cursor-pointer px-3 py-1 text-2xl'
                   onClick={toggleEmojiPicker}
                 >
