@@ -23,7 +23,7 @@ export default function WithSidebar({
           className='fixed-no-scroll hidden h-full w-64 flex-none md:flex'
           role='complementary'
         >
-          <div className='flex h-screen flex-col items-start justify-between p-8'>
+          <div className='flex h-screen flex-col items-start justify-between gap-6 overflow-x-hidden overflow-y-scroll p-8'>
             <nav
               className={linkWrapper}
               role='navigation'
