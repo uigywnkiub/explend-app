@@ -936,6 +936,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 <Button
                   isIconOnly
                   onPress={onOpenImageModal}
+                  isDisabled={hasCurrOrPrevReceiptAIData}
                   className='bg-transparent'
                 >
                   <HoverableElement
