@@ -56,7 +56,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <HeroUIProvider navigate={router.push} locale={userLocale}>
-      <NextThemesProvider attribute='class' defaultTheme={DEFAULT_THEME}>
+      <NextThemesProvider
+        disableTransitionOnChange
+        attribute='class'
+        defaultTheme={DEFAULT_THEME}
+      >
         <Toaster position={TOAST_POSITION} toastOptions={toastOptions} />
         {children}
         <Next13ProgressBar
