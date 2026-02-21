@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect } from 'react'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import {
+  redirect,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation'
 
 import Loading from '@/app/loading'
 import { Pagination } from '@heroui/react'
@@ -51,7 +56,7 @@ function PaginationList({ totalPages, totalEntries, limit }: TProps) {
   // Redirect to the last page if the pageParam is invalid or exceeds the total pages.
   useEffect(() => {
     if (isPageExceedingTotal) {
-      router.push(
+      redirect(
         `${pathname}?${createQueryString(SEARCH_PARAM.PAGE, totalPages.toString())}`,
       )
     }

@@ -13,6 +13,19 @@ type TProps = {
   query?: HighlighterProps['searchWords']
 }
 
+type TTextContentProps = {
+  text: string | React.ReactNode
+  query?: HighlighterProps['searchWords']
+}
+
+function TextContent({ text, query }: TTextContentProps) {
+  if (query && query.length > 0 && typeof text === 'string') {
+    return <HighlighterText query={query} text={text} />
+  }
+
+  return <>{text}</>
+}
+
 export default function InfoText({
   id,
   text,
@@ -22,14 +35,6 @@ export default function InfoText({
   isSm = false,
   query,
 }: TProps) {
-  const renderTextContent = () => {
-    if (query && query.length > 0 && typeof text === 'string') {
-      return <HighlighterText query={query} text={text} />
-    }
-
-    return text
-  }
-
   return (
     <p
       id={id}
@@ -41,7 +46,7 @@ export default function InfoText({
     >
       {withDoubleAsterisk && ' ** '}
       {!withDoubleAsterisk && withAsterisk && ' * '}
-      {renderTextContent()}
+      <TextContent text={text} query={query} />
     </p>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import toast from 'react-hot-toast'
 import {
   PiMonitor,
@@ -43,17 +43,21 @@ const themes: TSelect[] = [
   },
 ]
 
-export default function ThemeSwitcher() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
+const useIsMounted = () =>
+  useSyncExternalStore(
+    (cb) => {
+      window.addEventListener('mount', cb)
 
-  useEffect(() => {
-    // This is a legitimate use case for detecting client-side mount
-    // We suppress the warning as this pattern is recommended by next-themes
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true)
-  }, [])
+      return () => window.removeEventListener('mount', cb)
+    },
+    () => true, // client snapshot — always mounted
+    () => false, // server snapshot — never mounted
+  )
+
+export default function ThemeSwitcher() {
+  const mounted = useIsMounted()
+  const [isLoading, setIsLoading] = useState(false)
+  const { theme, setTheme } = useTheme()
 
   if (!mounted) return null
 

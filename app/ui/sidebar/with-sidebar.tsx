@@ -24,18 +24,10 @@ export default function WithSidebar({
           role='complementary'
         >
           <div className='flex h-screen flex-col items-start justify-between gap-6 overflow-x-hidden overflow-y-scroll p-8'>
-            <nav
-              className={linkWrapper}
-              role='navigation'
-              aria-label='Top menu'
-            >
+            <nav className={linkWrapper} aria-label='Top left menu'>
               <Navbar linksGroup='top' withLogo />
             </nav>
-            <nav
-              className={linkWrapper}
-              role='navigation'
-              aria-label='Bottom menu'
-            >
+            <nav className={linkWrapper} aria-label='Bottom left menu'>
               <Navbar linksGroup='bottom' />
               <User />
             </nav>
