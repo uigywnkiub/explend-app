@@ -100,7 +100,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
       )}
       shadow='none'
     >
-      <div className='pointer-events-none absolute -inset-px opacity-0 transition duration-300' />
+      <div className='pointer-events-none absolute -inset-px opacity-0' />
       <CardHeader className='flex flex-col items-center justify-between gap-4 px-2 md:px-4'>
         <Tooltip
           content={isShowTotals ? 'Totals' : 'Balance'}

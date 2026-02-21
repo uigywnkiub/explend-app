@@ -356,7 +356,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 <p>Auto processing...</p>
                 <div className='bg-content1 relative h-2 overflow-hidden rounded-full'>
                   <div
-                    className='animate-pulse-fast bg-success h-full rounded-full transition-all duration-300'
+                    className='animate-pulse-fast bg-success h-full rounded-full transition-all duration-250'
                     style={{
                       width: `${progressPercentage}%`,
                     }}

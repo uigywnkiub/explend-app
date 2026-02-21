@@ -2,17 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
+import { PiMagnifyingGlass, PiMagnifyingGlassFill } from 'react-icons/pi'
 import { useDebounce } from 'react-use'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { Accordion, AccordionItem, Input } from '@heroui/react'
+import { Accordion, AccordionItem, Button, Input } from '@heroui/react'
 
+import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import {
   DEFAULT_PAGINATION_PAGE_NUMBER,
   SEARCH_PARAM,
 } from '@/config/constants/navigation'
 
+import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 
 const ACCORDION_ITEM_KEY = 'Search'
@@ -108,7 +111,19 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
           <Input
             size='lg'
             color={hasSearchedTransactionsByQuery ? 'primary' : 'danger'}
-            placeholder='Type to search...'
+            startContent={
+              <Button isIconOnly className='bg-transparent'>
+                <HoverableElement
+                  uKey='camera'
+                  element={<PiMagnifyingGlass size={DEFAULT_ICON_SIZE} />}
+                  hoveredElement={
+                    <PiMagnifyingGlassFill size={DEFAULT_ICON_SIZE} />
+                  }
+                  withShift={false}
+                />
+              </Button>
+            }
+            placeholder='Type search...'
             description={
               <InfoText
                 text='You can search by date, description, category, or amount, including amount using < or > operators at the start.'

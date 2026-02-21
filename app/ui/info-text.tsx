@@ -10,6 +10,7 @@ type TProps = {
   withDoubleAsterisk?: boolean
   withHover?: boolean
   isSm?: boolean
+  isMd?: boolean
   query?: HighlighterProps['searchWords']
 }
 
@@ -33,14 +34,15 @@ export default function InfoText({
   withDoubleAsterisk = false,
   withHover = true,
   isSm = false,
+  isMd = false,
   query,
 }: TProps) {
   return (
     <p
       id={id}
       className={cn(
-        'text-default-500',
-        isSm ? 'text-sm' : 'text-xs',
+        'text-default-500 transition-colors duration-250',
+        isMd ? 'text-md' : isSm ? 'text-sm' : 'text-xs',
         withHover && 'hover:text-foreground hover:cursor-none',
       )}
     >

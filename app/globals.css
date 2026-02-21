@@ -120,11 +120,11 @@ input::-webkit-inner-spin-button {
 }
 
 #sidebar-toggle:checked ~ .flex > .content-wrapper {
-  @apply ease-out-cubic translate-y-[10%] transform-gpu blur-3xl transition duration-300 md:blur-none;
+  @apply ease-out-cubic translate-y-[10%] transform-gpu blur-3xl transition duration-250 md:blur-none;
 }
 
 #sidebar-toggle:not(:checked) ~ .flex > .content-wrapper {
-  @apply ease-out-cubic translate-y-0 transform-gpu blur-none transition duration-300;
+  @apply ease-out-cubic translate-y-0 transform-gpu blur-none transition duration-250;
 }
 
 .hamburger-menu {
@@ -132,7 +132,7 @@ input::-webkit-inner-spin-button {
 }
 
 .hamburger-bar {
-  @apply rounded-medium bg-foreground ease-out-cubic h-[2px] w-4 transform-gpu transition duration-300;
+  @apply rounded-medium bg-foreground ease-out-cubic h-[2px] w-4 transform-gpu transition duration-250;
 }
 
 #sidebar-toggle:checked ~ .label > .hamburger-menu .bar1 {
