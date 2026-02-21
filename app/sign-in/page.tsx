@@ -4,7 +4,6 @@ import { NAV_TITLE } from '@/config/constants/navigation'
 
 import SignIn from '@/app/ui/sign-in/sign-in'
 
-import CustomSpotlight from '../ui/custom-spotlight'
 import InstallPWA from '../ui/install-pwa-button'
 
 export const metadata: Metadata = {
@@ -18,7 +17,8 @@ export default function Page() {
     <>
       <SignIn />
       <InstallPWA />
-      <CustomSpotlight />
+      {/* Currently it won't works. */}
+      {/* <CustomSpotlight /> */}
     </>
   )
 }

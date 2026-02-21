@@ -17,7 +17,7 @@ type TProps = {
 
 export default function LocalStorageSwitch({ localStorageKey }: TProps) {
   const router = useRouter()
-  const [isSelected, setIsSelected] = useState(
+  const [isSelected, setIsSelected] = useState(() =>
     getBooleanFromLocalStorage(localStorageKey),
   )
 

@@ -1,4 +1,3 @@
-import CustomSpotlight from '../custom-spotlight'
 import Footer from '../settings/footer'
 import Hamburger from './hamburger'
 import MaskAmountInfo from './mask-amount-info'
@@ -46,7 +45,8 @@ export default function WithSidebar({
 
       <Hamburger />
       <MaskAmountInfo />
-      <CustomSpotlight />
+      {/* Currently it won't works. */}
+      {/* <CustomSpotlight /> */}
     </div>
   )
 }

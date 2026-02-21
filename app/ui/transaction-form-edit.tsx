@@ -12,6 +12,7 @@ import {
   Button,
   Card,
   CardBody,
+  CardFooter,
   Image,
   Input,
   Kbd,
@@ -41,6 +42,7 @@ import {
   getCategoryWithoutEmoji,
   getFormattedAmountState,
   getFormattedCurrency,
+  pluralize,
   removeFromLocalStorage,
   setInLocalStorage,
   uniqueArray,
@@ -49,6 +51,11 @@ import type { TTheme, TTransaction } from '../lib/types'
 import Loading from '../loading'
 import InfoText from './info-text'
 import LimitToast from './limit-toast'
+
+const TAB_KEY = {
+  TRANSACTION: 'transaction',
+  IMAGE: 'image',
+}
 
 type TProps = {
   transaction: TTransaction
@@ -214,9 +221,9 @@ function TransactionFormEdit({ transaction }: TProps) {
   return (
     <>
       <LimitToast triggerBy={categoryName} />
-      <Tabs fullWidth className='mb-4'>
+      <Tabs aria-label='Edit Transaction' fullWidth className='mb-4'>
         <Tab
-          key='transaction'
+          key={TAB_KEY.TRANSACTION}
           title={
             <div className='flex items-center space-x-2'>
               <PiReadCvLogoFill />
@@ -392,25 +399,39 @@ function TransactionFormEdit({ transaction }: TProps) {
         </Tab>
 
         <Tab
-          key='images'
+          key={TAB_KEY.IMAGE}
           title={
             <div className='flex items-center space-x-2'>
               <PiImageFill />
-              <span>Images</span>
+              <span>
+                {validImageSrcs.length === 0
+                  ? 'Image'
+                  : `${pluralize(validImageSrcs.length, 'Image', 'Images')}`}
+              </span>
             </div>
           }
         >
+          <div className='md:text-medium flex flex-col items-center justify-center gap-2 text-center text-sm text-balance'>
+            <p>
+              {validImageSrcs.length === 0
+                ? 'No image attached yet'
+                : `Attached ${pluralize(
+                    validImageSrcs.length,
+                    'image',
+                    'images',
+                  )} to your transaction`}
+            </p>
+          </div>
           <Card shadow='none' className='bg-transparent'>
             <CardBody className='flex flex-col gap-4'>
               <AnimatePresence>
-                <div className='flex flex-wrap items-center justify-start'>
-                  {validImageSrcs.length === 0 && (
-                    <p className='text-default-500 text-sm'>
-                      No images added yet.
-                    </p>
-                  )}
+                <div className='flex flex-wrap items-center justify-start gap-2'>
                   {validImageSrcs.map((img, idx) => (
-                    <div key={idx} className='relative m-1 inline-block'>
+                    <motion.div
+                      key={img}
+                      {...MOTION_LIST(idx)}
+                      className='relative inline-block'
+                    >
                       <Image
                         src={img}
                         alt={`Transaction image ${idx + 1}`}
@@ -427,7 +448,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                           className='fill-background'
                         />
                       </Button>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
                 {imageSrcs.map((src, idx) => (
@@ -445,14 +466,26 @@ function TransactionFormEdit({ transaction }: TProps) {
                   </motion.div>
                 ))}
               </AnimatePresence>
-              <Button
-                onPress={onResetImages}
-                className='mx-auto mt-4'
-                variant='flat'
-              >
-                Reset
-              </Button>
+
+              <div className='mt-2 flex flex-col gap-2'>
+                <InfoText text='You may attach up to five images.' />
+              </div>
             </CardBody>
+
+            <CardFooter>
+              <Button
+                className='mt-4 ml-auto'
+                color='danger'
+                variant='light'
+                isDisabled={
+                  initTransactionImagesState.filter(Boolean).length ===
+                  validImageSrcs.length
+                }
+                onPress={onResetImages}
+              >
+                Reset to initial state
+              </Button>
+            </CardFooter>
           </Card>
         </Tab>
       </Tabs>

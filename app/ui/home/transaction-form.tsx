@@ -16,6 +16,7 @@ import {
   PiImageFill,
   PiReceiptFill,
   PiUploadFill,
+  PiXCircleFill,
 } from 'react-icons/pi'
 import { useDebounce, useLocalStorage } from 'react-use'
 import type { UseDebounceReturn } from 'react-use/lib/useDebounce'
@@ -29,6 +30,7 @@ import {
   Button,
   Card,
   CardBody,
+  Image,
   Input,
   Kbd,
   Modal,
@@ -102,7 +104,7 @@ import LimitToast from '../limit-toast'
 const ACCORDION_ITEM_KEY = 'Form'
 const TAB_KEY = {
   CAMERA: 'camera',
-  IMAGES: 'images',
+  IMAGE: 'image',
 }
 
 type TProps = {
@@ -218,6 +220,16 @@ function TransactionForm({ currency, userCategories }: TProps) {
       updated.push('')
     }
     setImageSrcs(updated)
+  }
+
+  const onDeleteImage = (idx: number) => {
+    setImageSrcs((prev) => {
+      const newImages = [...prev]
+      newImages.splice(idx, 1)
+      newImages.push('')
+
+      return newImages
+    })
   }
 
   const resumeToastId = 'resume'
@@ -516,9 +528,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   variant='light'
                   onPress={() => {
                     if (isValidAttemptResumeAIReceiptData) {
-                      setAttemptResumeAIReceiptData(
-                        attemptResumeAIReceiptData + 1,
-                      )
+                      setAttemptResumeAIReceiptData((prev) => (prev ?? 0) + 1)
                     }
                     toast.dismiss(t.id)
                   }}
@@ -677,9 +687,13 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   </div>
                 </ModalHeader>
 
-                <ModalBody>
+                <ModalBody className='px-3'>
                   <Tabs
-                    aria-label='Upload Options'
+                    aria-label={
+                      selectedTab === TAB_KEY.CAMERA
+                        ? 'Receipt Image Upload'
+                        : 'Attach Image URL'
+                    }
                     fullWidth
                     onSelectionChange={(tab) => setSelectedTab(tab.toString())}
                     selectedKey={selectedTab}
@@ -698,7 +712,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                           Take or select a photo of your receipt to
                           automatically fill in the transaction fields
                         </p>
-                        <InfoText text='Attached images will not be included' />
+                        <InfoText text='Attached images will not be included.' />
                       </div>
                       <Card shadow='none'>
                         <CardBody className='flex h-[176px] items-center justify-center p-0'>
@@ -737,21 +751,62 @@ function TransactionForm({ currency, userCategories }: TProps) {
                     </Tab>
 
                     <Tab
-                      key={TAB_KEY.IMAGES}
+                      key={TAB_KEY.IMAGE}
                       title={
                         <div className='flex items-center space-x-2'>
                           <PiImageFill />
-                          <span>Images</span>
+                          <span>
+                            {validImageSrcs.length === 0
+                              ? 'Image'
+                              : `${pluralize(
+                                  validImageSrcs.length,
+                                  'Image',
+                                  'Images',
+                                )}`}
+                          </span>
                         </div>
                       }
                     >
-                      <div className='md:text-medium flex flex-col items-center gap-2 text-center text-sm text-balance'>
-                        <p>Attach an image to your transaction</p>
+                      <div className='md:text-medium flex flex-col items-center justify-center gap-2 text-center text-sm text-balance'>
+                        <p>
+                          {validImageSrcs.length === 0
+                            ? 'Attach image to your transaction'
+                            : `Attached ${pluralize(
+                                validImageSrcs.length,
+                                'image',
+                                'images',
+                              )} to your transaction`}
+                        </p>
                       </div>
-
-                      <Card shadow='none'>
+                      <Card shadow='none' className='bg-transparent'>
                         <CardBody className='flex flex-col gap-4'>
                           <AnimatePresence>
+                            <div className='flex flex-wrap items-center justify-start gap-2'>
+                              {validImageSrcs.map((img, idx) => (
+                                <motion.div
+                                  key={img}
+                                  {...MOTION_LIST(idx)}
+                                  className='relative inline-block'
+                                >
+                                  <Image
+                                    src={img}
+                                    alt={`Transaction image ${idx + 1}`}
+                                    className='rounded-medium max-h-20 max-w-20 md:max-h-28 md:max-w-28'
+                                  />
+                                  <Button
+                                    size='sm'
+                                    isIconOnly
+                                    onPress={() => onDeleteImage(idx)}
+                                    className='absolute top-0 -right-1 z-10 size-6 bg-transparent'
+                                  >
+                                    <PiXCircleFill
+                                      size={DEFAULT_ICON_SIZE}
+                                      className='fill-background'
+                                    />
+                                  </Button>
+                                </motion.div>
+                              ))}
+                            </div>
                             {imageSrcs.map((src, idx) => (
                               <motion.div key={idx} {...MOTION_LIST(idx)}>
                                 <Input
@@ -769,6 +824,10 @@ function TransactionForm({ currency, userCategories }: TProps) {
                               </motion.div>
                             ))}
                           </AnimatePresence>
+
+                          <div className='mt-2 flex flex-col gap-2'>
+                            <InfoText text='You may attach up to five images.' />
+                          </div>
                         </CardBody>
                       </Card>
                     </Tab>
@@ -776,7 +835,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 </ModalBody>
 
                 <ModalFooter>
-                  {selectedTab === TAB_KEY.IMAGES && (
+                  {selectedTab === TAB_KEY.IMAGE && (
                     <Button
                       type='submit'
                       color='danger'
@@ -787,7 +846,9 @@ function TransactionForm({ currency, userCategories }: TProps) {
                       Reset
                     </Button>
                   )}
-                  <Button onPress={onCloseImageModal}>Done</Button>
+                  <Button variant='light' onPress={onCloseImageModal}>
+                    Done
+                  </Button>
                 </ModalFooter>
               </>
             )}
