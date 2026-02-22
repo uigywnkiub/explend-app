@@ -14,6 +14,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:all": "pnpm prettier && pnpm lint && pnpm typecheck && pnpm test",
+    "lint:doctor": "pnpm dlx react-doctor@latest . --verbose",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:dev": "vitest",
