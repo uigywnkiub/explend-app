@@ -30,6 +30,8 @@ export const HoverableElement = ({
   const isMd = useMedia(getBreakpointWidth('md'), typeof window !== 'undefined')
 
   return useHover((hovered: boolean) => {
+    const showHovered = isMd && hoveredElement && hovered
+
     return (
       <motion.div
         key={uKey}
@@ -37,11 +39,26 @@ export const HoverableElement = ({
         animate={{ ...DIV.ANIMATE(hovered, isMd && withScale), y: 0 }}
         transition={{ ...DIV.TRANSITION }}
       >
-        {isMd
-          ? hoveredElement && hovered
-            ? hoveredElement
-            : element
-          : hoveredElement || element}
+        <div className='relative'>
+          <motion.div
+            animate={{ opacity: showHovered ? 0.3 : 1 }}
+            transition={{ ...DIV.TRANSITION }}
+          >
+            {isMd ? element : hoveredElement || element}
+          </motion.div>
+
+          {isMd && hoveredElement && (
+            <motion.div
+              className='absolute inset-0'
+              initial={false}
+              animate={{ opacity: showHovered ? 1 : 0.3 }}
+              transition={{ ...DIV.TRANSITION }}
+            >
+              {hoveredElement}
+            </motion.div>
+          )}
+        </div>
+
         {text && <span className='ml-1'>{text}</span>}
       </motion.div>
     )
