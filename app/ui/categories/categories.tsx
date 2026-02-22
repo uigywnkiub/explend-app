@@ -30,6 +30,7 @@ import type {
   TCategoriesItem,
   TCategoriesLoading,
   TEditingItemIndex,
+  TIcon,
   TTransaction,
   TUserId,
 } from '@/app/lib/types'
@@ -391,6 +392,17 @@ function Categories({
     }
   }, [userId])
 
+  const buttonWithIcon = (icon: TIcon) => (
+    <Button
+      isDisabled={haveCategoriesChanged}
+      className='bg-danger text-default-50 mx-auto w-full font-medium'
+      onPress={onOpen}
+      startContent={icon}
+    >
+      {RESET_CATEGORIES_BTN_TEXT}
+    </Button>
+  )
+
   return (
     <>
       {categories.map((category, index) => {
@@ -429,21 +441,16 @@ function Categories({
         </div>
       )}
       <div className='mx-auto max-w-md'>
-        <Button
-          isDisabled={haveCategoriesChanged}
-          className='bg-danger text-default-50 mx-auto w-full font-medium'
-          onPress={onOpen}
-          startContent={
-            <HoverableElement
-              uKey='reset-categories'
-              element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
-              hoveredElement={<PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />}
-              withShift={false}
-            />
-          }
-        >
-          {RESET_CATEGORIES_BTN_TEXT}
-        </Button>
+        <HoverableElement
+          uKey={RESET_CATEGORIES_BTN_TEXT}
+          element={buttonWithIcon(
+            <PiArrowClockwise size={DEFAULT_ICON_SIZE} />,
+          )}
+          hoveredElement={buttonWithIcon(
+            <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />,
+          )}
+          withShift={false}
+        />
       </div>
       <div className='mt-4 flex flex-col gap-1 md:mt-8'>
         <InfoText
