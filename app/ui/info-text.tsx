@@ -41,7 +41,7 @@ export default function InfoText({
     <p
       id={id}
       className={cn(
-        'text-default-500 transition-colors duration-250',
+        'text-default-500 transition-colors duration-100',
         isMd ? 'text-md' : isSm ? 'text-sm' : 'text-xs',
         withHover && 'hover:text-foreground hover:cursor-none',
       )}
