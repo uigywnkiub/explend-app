@@ -9,6 +9,7 @@ export const enum NAV_TITLE {
   LIMITS = 'Limits',
   SUBSCRIPTIONS = 'Subscriptions',
   CATEGORIES = 'Categories',
+  EXPORT = 'Export',
   SETTINGS = 'Settings',
   FEEDBACK = 'Give Feedback',
   ISSUE = 'Report Issue',
