@@ -460,7 +460,7 @@ export default function Subscriptions({
                   {...MOTION_LIST(idx)}
                 >
                   <div className='flex w-full items-center justify-between'>
-                    <div className='flex items-center gap-2 text-balance md:w-1/2'>
+                    <div className='flex items-center gap-2 md:w-1/2'>
                       <Tooltip
                         content={getCategoryWithoutEmoji(category)}
                         placement='bottom'

@@ -4,7 +4,10 @@ import withPWAInit from '@ducanh2912/next-pwa'
 import { withSentryConfig } from '@sentry/nextjs'
 import type { RuleSetRule } from 'webpack'
 
-import { IS_PROD } from './config/constants/main'
+import {
+  DEFAULT_SERVER_ACTION_BODY_SIZE_LIMIT,
+  IS_PROD,
+} from './config/constants/main'
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -70,6 +73,9 @@ const nextConfig: NextConfig = {
       'react-highlight-words',
       'react-hot-toast',
     ],
+    serverActions: {
+      bodySizeLimit: DEFAULT_SERVER_ACTION_BODY_SIZE_LIMIT,
+    },
   },
   // browserDebugInfoInTerminal: true,
   typedRoutes: false,

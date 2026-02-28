@@ -114,7 +114,7 @@ function CategoryItem({
                 value={newItemName}
                 onChange={(e) => setNewItemName(e.target.value)}
                 // onKeyDown={onTabPress}
-                placeholder={item.name}
+                placeholder={item.name || placeholderItemName}
                 size='lg'
                 classNames={{
                   input: '!placeholder:text-default-500 text-foreground!',
