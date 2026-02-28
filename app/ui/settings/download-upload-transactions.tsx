@@ -113,7 +113,7 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
               'transactions',
             )}, skipped ${result.skipped} ${pluralize(
               result.skipped,
-              'dublicate',
+              'duplicate',
               'duplicates',
             )}.`
           : `Successfully imported ${result.count} ${pluralize(
