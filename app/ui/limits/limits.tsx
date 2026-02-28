@@ -78,6 +78,12 @@ import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import AmountInput from './amount-input'
 
+const enum SELECT_END_CONTENT_KEY {
+  ADDED_BY = 'Added by',
+  EXPENSE_BY = 'Expense by',
+  DEFAULT = 'Default',
+}
+
 const enum DROPDOWN_KEY {
   EDIT = 'edit',
   DELETE = 'delete',
@@ -205,6 +211,14 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     const limit = userLimitsData.find((l) => l.categoryName === categoryName)
 
     return limit ? limit.limitAmount : null
+  }
+
+  const getCurrMonthAmount = (
+    categoryName: TCategoryLimits['categoryName'],
+  ) => {
+    const currAmount = totalsByCategoryCurrMonth[categoryName]
+
+    return currAmount || 0
   }
 
   const categoryName = Array.from(category)[0]?.toString()
@@ -447,18 +461,32 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                               <SelectItem
                                 key={item.name}
                                 endContent={
-                                  disabledCategories.includes(item.name) ? (
-                                    <span className='text-xs'>
-                                      added by {getLimitAmount(item.name)}{' '}
-                                      {currency.code}
-                                    </span>
-                                  ) : item.name === DEFAULT_CATEGORY ? (
-                                    <InfoText
-                                      text='default'
-                                      withAsterisk={false}
-                                      withHover={false}
-                                    />
-                                  ) : null
+                                  <div className='text-default-500 flex flex-col items-end gap-1 text-xs'>
+                                    {disabledCategories.includes(item.name) ? (
+                                      <InfoText
+                                        text={`${SELECT_END_CONTENT_KEY.ADDED_BY} ${getLimitAmount(
+                                          item.name,
+                                        )} ${currency.sign}`}
+                                        withAsterisk={false}
+                                        withHover={false}
+                                      />
+                                    ) : item.name === DEFAULT_CATEGORY ? (
+                                      <InfoText
+                                        text={SELECT_END_CONTENT_KEY.DEFAULT}
+                                        withAsterisk={false}
+                                        withHover={false}
+                                      />
+                                    ) : null}
+                                    {getCurrMonthAmount(item.name) > 0 && (
+                                      <InfoText
+                                        text={`${SELECT_END_CONTENT_KEY.EXPENSE_BY} ${getFormattedCurrency(
+                                          getCurrMonthAmount(item.name),
+                                        )} ${currency.sign}`}
+                                        withAsterisk={false}
+                                        withHover={false}
+                                      />
+                                    )}
+                                  </div>
                                 }
                               >
                                 {`${item.emoji} ${item.name}`}
@@ -474,6 +502,14 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                       setAmount={setAmount}
                       onChangeAmount={onChangeAmount}
                       currency={currency}
+                    />
+                  </div>
+                  <div className='my-2 flex flex-col gap-2'>
+                    <InfoText
+                      text={`${SELECT_END_CONTENT_KEY.ADDED_BY} is your current limit.`}
+                    />
+                    <InfoText
+                      text={`${SELECT_END_CONTENT_KEY.EXPENSE_BY} is your current month expense.`}
                     />
                   </div>
                 </ModalBody>
