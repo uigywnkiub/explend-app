@@ -28,7 +28,7 @@ export default function Error({
         title='Try again'
         color='primary'
         className='text-default-50'
-        onPress={() => [reset()]}
+        onPress={reset}
       />
     </main>
   )

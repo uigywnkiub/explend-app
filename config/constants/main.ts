@@ -1,4 +1,4 @@
-import { type MetadataRoute, SizeLimit } from 'next/types'
+import type { MetadataRoute, SizeLimit } from 'next/types'
 
 import type { TTheme } from '@/app/lib/types'
 

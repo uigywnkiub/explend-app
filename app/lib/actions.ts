@@ -397,29 +397,35 @@ export async function importTransactions(
   userId: TUserId,
   transactions: Partial<TTransaction>[],
 ): Promise<TImportTransactions> {
-  await dbConnect()
-
-  const ids = transactions.map((t) => t.id)
-
-  // Find which IDs already exist.
-  const existing = await TransactionModel.find({ userId, id: { $in: ids } })
-    .lean()
-    .select('id')
-  const existingIds = new Set(existing.map((t) => t.id))
-
-  const newTransactions = transactions.filter((t) => !existingIds.has(t.id))
-  const skipped = transactions.length - newTransactions.length
-
-  if (!newTransactions.length) {
-    return { count: 0, skipped }
+  if (!userId) {
+    throw new Error('User ID is required to get all transactions.')
   }
+  try {
+    await dbConnect()
 
-  const result = await TransactionModel.insertMany(
-    newTransactions.map((t) => ({ ...t, userId })),
-    { ordered: false },
-  )
+    const ids = transactions.map((t) => t.id)
+    // Find which IDs already exist.
+    const existing = await TransactionModel.find({ userId, id: { $in: ids } })
+      .lean()
+      .select('id')
+    const existingIds = new Set(existing.map((t) => t.id))
 
-  return { count: result.length, skipped }
+    const newTransactions = transactions.filter((t) => !existingIds.has(t.id))
+    const skipped = transactions.length - newTransactions.length
+
+    if (!newTransactions.length) {
+      return { count: 0, skipped }
+    }
+
+    const result = await TransactionModel.insertMany(
+      newTransactions.map((t) => ({ ...t, userId })),
+      { ordered: false },
+    )
+
+    return { count: result.length, skipped }
+  } catch (err) {
+    throw err
+  }
 }
 
 export async function editTransactionById(
