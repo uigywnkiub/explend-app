@@ -231,3 +231,8 @@ export type TCalculatedLimits = {
   currMonthPercentage: number
   prevMonthPercentage: number
 }
+
+export type TImportTransactions = {
+  count: number
+  skipped: number
+}

@@ -580,3 +580,22 @@ export const uniqueArray = (arr: string[]): string[] => {
 
   return Array.from(new Set(arr.map((s) => s.trim())))
 }
+
+export const triggerDownloadJSON = (content: string, filename: string) => {
+  const blob = new Blob([content], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
+export const readFileAsText = async (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = (e) => resolve(e.target?.result as string)
+    reader.onerror = () => reject(new Error('Failed to read file'))
+    reader.readAsText(file)
+  })
+}

@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import { getAllTransactions, getAuthSession } from '../lib/actions'
+import { cn } from '../lib/helpers'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
 import TransactionTable from '../ui/table/transaction-table'
@@ -21,7 +22,12 @@ export default async function Page() {
       <h1 className='mb-4 text-center text-2xl font-semibold md:mb-8'>
         {NAV_TITLE.TABLE}
       </h1>
-      <div className='mx-auto max-w-6xl'>
+      <div
+        className={cn(
+          'mx-auto',
+          transactions.length === 0 ? 'max-w-3xl' : 'max-w-6xl',
+        )}
+      >
         {transactions.length === 0 ? (
           <NoTransactionsPlug />
         ) : (

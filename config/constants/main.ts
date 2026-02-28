@@ -1,4 +1,4 @@
-import { type MetadataRoute } from 'next/types'
+import type { MetadataRoute, SizeLimit } from 'next/types'
 
 import type { TTheme } from '@/app/lib/types'
 
@@ -14,13 +14,15 @@ export const DEFAULT_LANG: string = 'en'
 export const DEFAULT_DIR: MetadataRoute.Manifest['dir'] = 'ltr'
 export const DEFAULT_THEME: TTheme = 'dark'
 export const DEFAULT_LOADING_TEXT: string = 'Just a second...'
-export const DEFAULT_SALARY_DAY: number = 13
+export const DEFAULT_SALARY_DAY: number = 12
 
 export const HIDDEN_AMOUNT_SIGN = '✱'
 
 export const DEFAULT_CURRENCY_NAME = CURRENCY_NAME.USD
 export const DEFAULT_CURRENCY_CODE = CURRENCY_CODE.USD
 export const DEFAULT_CURRENCY_SIGN = CURRENCY_SIGN.USD
+
+export const DEFAULT_SERVER_ACTION_BODY_SIZE_LIMIT: SizeLimit = '100mb' // Default is 1mb.
 
 export const enum APP_NAME {
   FULL = 'Explend App',

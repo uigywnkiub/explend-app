@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Divider, Spacer } from '@heroui/react'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
+import { DEFAULT_SERVER_ACTION_BODY_SIZE_LIMIT } from '@/config/constants/main'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
@@ -17,6 +18,7 @@ import { toLowerCase } from '../lib/helpers'
 import InfoText from '../ui/info-text'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
+import DownloadUploadTransactions from '../ui/settings/download-upload-transactions'
 import ExitAccount from '../ui/settings/exit-account'
 import SalaryDay from '../ui/settings/salary-day'
 import Section from '../ui/settings/section'
@@ -104,7 +106,7 @@ export default async function Page() {
             <>
               <div className='my-2 flex flex-col gap-2'>
                 <InfoText text='Will reload the page.' />
-                <InfoText text='When you select the system theme, the general pop-up will always be dark.' />
+                <InfoText text='When you select the system theme, the general toast pop-up will always be dark.' />
               </div>
               <div className='max-w-xs'>
                 <ThemeSwitcher />
@@ -186,15 +188,39 @@ export default async function Page() {
         withDivider={false}
         titleClassName='text-danger'
       >
-        <SectionItem
-          title='Delete Account'
-          subtitle='Removing your account will delete all your data.'
-        >
-          <div className='max-w-md'>
-            <Spacer y={2} />
-            <DeleteAccount userId={userId} />
-          </div>
-        </SectionItem>
+        <>
+          <SectionItem
+            title='Management Transactions'
+            subtitle='Download all your transactions as JSON or upload a backup to restore missing data.'
+          >
+            <>
+              <div className='my-2 flex flex-col gap-2'>
+                <InfoText
+                  text={`You can upload nearly 10,000 transactions or a JSON file with a maximum size of ${DEFAULT_SERVER_ACTION_BODY_SIZE_LIMIT.toString().replace('mb', ' MB')}.`}
+                  withDoubleAsterisk
+                />
+                <InfoText text='10,000 transactions ≈ 10 years of data.' />
+                <InfoText text='You may upload an unlimited number of dumps, as long as each one contains unique data.' />
+              </div>
+              <div className='max-w-md'>
+                <Spacer y={2} />
+                <DownloadUploadTransactions userId={userId} />
+              </div>
+            </>
+          </SectionItem>
+
+          <Divider className='my-4' />
+
+          <SectionItem
+            title='Delete Account'
+            subtitle='Removing your account will delete all your data.'
+          >
+            <div className='max-w-md'>
+              <Spacer y={2} />
+              <DeleteAccount userId={userId} />
+            </div>
+          </SectionItem>
+        </>
       </Section>
     </div>
   )
