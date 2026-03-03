@@ -68,10 +68,10 @@ import {
 } from '@/app/lib/helpers'
 import type { TSubscriptions, TTransaction, TUserId } from '@/app/lib/types'
 
+import AmountInput from '../amount-input'
 import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
-import AmountInput from '../limits/amount-input'
 import DescriptionInput from './description-input'
 import NoteInput from './note-input'
 import SelectInput from './select-input'
