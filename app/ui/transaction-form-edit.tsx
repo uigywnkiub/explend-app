@@ -372,7 +372,6 @@ function TransactionFormEdit({ transaction }: TProps) {
                         }}
                         items={userCategories}
                         defaultSelectedKeys={category}
-                        disabledKeys={[DEFAULT_CATEGORY]}
                         selectedKeys={category}
                         onSelectionChange={setCategory}
                       >
