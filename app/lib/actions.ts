@@ -264,11 +264,19 @@ export async function createTransaction(
       balance -= amount
     }
     newTransaction.balance = balance.toString()
+
+    const dateStr = formData.get('date')?.toString()
+    const customDate = dateStr ? new Date(dateStr) : null
+    const createPayload =
+      customDate && !isNaN(customDate.getTime())
+        ? { ...newTransaction, createdAt: customDate }
+        : newTransaction
+
     await dbConnect()
     const session = await TransactionModel.startSession()
     try {
       session.startTransaction()
-      await TransactionModel.create([newTransaction], { session })
+      await TransactionModel.create([createPayload], { session })
       await session.commitTransaction()
       session.endSession()
       revalidatePath(ROUTE.HOME)
@@ -470,7 +478,17 @@ export async function editTransactionById(
       if (newTransactionData.images) {
         updateFields.images = newTransactionData.images
       }
+      const newCreatedAt = newTransactionData.createdAt
+        ? new Date(newTransactionData.createdAt)
+        : null
       await TransactionModel.updateOne({ id }, updateFields, { session })
+      if (newCreatedAt) {
+        await TransactionModel.collection.updateOne(
+          { id },
+          { $set: { createdAt: newCreatedAt } },
+          { session },
+        )
+      }
       await session.commitTransaction()
       session.endSession()
       revalidatePath(ROUTE.HOME)

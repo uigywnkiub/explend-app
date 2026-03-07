@@ -13,6 +13,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  DatePicker,
   Image,
   Input,
   Kbd,
@@ -24,6 +25,12 @@ import {
   Tab,
   Tabs,
 } from '@heroui/react'
+import {
+  CalendarDate,
+  type DateValue,
+  getLocalTimeZone,
+  today,
+} from '@internationalized/date'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
@@ -70,6 +77,11 @@ function TransactionFormEdit({ transaction }: TProps) {
   const [amount, setAmount] = useState(
     getFormattedCurrency(transaction.amount, false),
   )
+  const [date, setDate] = useState<DateValue | null>(() => {
+    const d = new Date(transaction.createdAt)
+
+    return new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getDate())
+  })
   const isTransactionWithChangedCategory = Boolean(
     getTransactionsWithChangedCategory([transaction]).length,
   )
@@ -123,7 +135,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     }
 
     const transactionChanged = Object.keys(newData).some((key) => {
-      if (key === 'images') return false // Handled separately.
+      if (key === 'images' || key === 'createdAt') return false // Handled separately.
 
       const newKey = key as keyof typeof newData
 
@@ -132,6 +144,18 @@ function TransactionFormEdit({ transaction }: TProps) {
         newData[newKey] !== modifiedOldData[newKey as keyof TTransaction]
       )
     })
+
+    const dateChanged = (() => {
+      if (!newData.createdAt) return false
+      const oldDate = new Date(oldData.createdAt)
+      const newDate = new Date(newData.createdAt)
+
+      return (
+        oldDate.getFullYear() !== newDate.getFullYear() ||
+        oldDate.getMonth() !== newDate.getMonth() ||
+        oldDate.getDate() !== newDate.getDate()
+      )
+    })()
 
     const imagesChanged = (() => {
       if (!newData.images) return false
@@ -142,7 +166,7 @@ function TransactionFormEdit({ transaction }: TProps) {
       return newData.images.some((img, i) => img !== oldImages[i])
     })()
 
-    return transactionChanged || imagesChanged
+    return transactionChanged || imagesChanged || dateChanged
   }
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -158,6 +182,7 @@ function TransactionFormEdit({ transaction }: TProps) {
       | 'category'
       | 'currency'
       | 'images'
+      | 'createdAt'
     > = {
       isIncome: isSwitchedOn,
       isEdited,
@@ -166,6 +191,19 @@ function TransactionFormEdit({ transaction }: TProps) {
       category: categoryWithEmoji,
       currency,
       images: validImageSrcs,
+      createdAt: (() => {
+        if (!date) return transaction.createdAt
+        const now = new Date()
+        const selected = date.toDate(getLocalTimeZone())
+        selected.setHours(
+          now.getHours(),
+          now.getMinutes(),
+          now.getSeconds(),
+          now.getMilliseconds(),
+        )
+
+        return selected
+      })(),
     }
 
     if (!hasChanges(newTransactionData, transaction)) {
@@ -304,69 +342,81 @@ function TransactionFormEdit({ transaction }: TProps) {
                     />
                   }
                 />
-                <div className='flex justify-between'>
-                  <div className='flex items-center gap-2'>
-                    <div className='flex w-full flex-wrap gap-4 md:flex-nowrap'>
-                      <Badge
-                        content=''
-                        shape='rectangle'
-                        color='warning'
-                        variant='solid'
-                        size='sm'
-                        isDot
-                        placement='top-right'
+                <div className='mt-1.5 grid grid-cols-[1fr_auto] items-center gap-2'>
+                  <div className='flex flex-col gap-4 lg:flex-row'>
+                    <Badge
+                      content=''
+                      shape='rectangle'
+                      color='warning'
+                      variant='solid'
+                      size='sm'
+                      isDot
+                      placement='top-right'
+                      classNames={{
+                        // base: 'w-full',
+                        badge: 'right-1',
+                      }}
+                      isInvisible={
+                        !isTransactionWithChangedCategory || isCategorySelect
+                      }
+                    >
+                      <Select
+                        isVirtualized={false}
+                        isDisabled={isLoading}
+                        name='category'
+                        label='Select a category'
+                        className='w-56'
                         classNames={{
-                          base: 'w-full',
-                          badge: 'right-1',
+                          trigger:
+                            'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
                         }}
-                        isInvisible={
-                          !isTransactionWithChangedCategory || isCategorySelect
-                        }
+                        items={userCategories}
+                        selectedKeys={category}
+                        defaultSelectedKeys={category}
+                        onSelectionChange={setCategory}
                       >
-                        <Select
-                          isVirtualized={false}
-                          isDisabled={isLoading}
-                          name='category'
-                          label='Select a category'
-                          className='w-56'
-                          classNames={{
-                            trigger:
-                              'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
-                          }}
-                          items={userCategories}
-                          selectedKeys={category}
-                          defaultSelectedKeys={category}
-                          onSelectionChange={setCategory}
-                        >
-                          {userCategories.map((category, idx, arr) => (
-                            <SelectSection
-                              key={category.subject}
-                              showDivider={idx !== arr.length - 1}
-                              title={category.subject}
-                            >
-                              {category.items.map((item) => (
-                                <SelectItem
-                                  key={item.name}
-                                  endContent={
-                                    item.name === DEFAULT_CATEGORY && (
-                                      <InfoText
-                                        text='default'
-                                        withAsterisk={false}
-                                        withHover={false}
-                                      />
-                                    )
-                                  }
-                                >
-                                  {`${item.emoji} ${item.name}`}
-                                </SelectItem>
-                              ))}
-                            </SelectSection>
-                          ))}
-                        </Select>
-                      </Badge>
-                    </div>
+                        {userCategories.map((category, idx, arr) => (
+                          <SelectSection
+                            key={category.subject}
+                            showDivider={idx !== arr.length - 1}
+                            title={category.subject}
+                          >
+                            {category.items.map((item) => (
+                              <SelectItem
+                                key={item.name}
+                                endContent={
+                                  item.name === DEFAULT_CATEGORY && (
+                                    <InfoText
+                                      text='default'
+                                      withAsterisk={false}
+                                      withHover={false}
+                                    />
+                                  )
+                                }
+                              >
+                                {`${item.emoji} ${item.name}`}
+                              </SelectItem>
+                            ))}
+                          </SelectSection>
+                        ))}
+                      </Select>
+                    </Badge>
+                    <DatePicker
+                      isDisabled={isLoading}
+                      granularity='day'
+                      label='Select a date'
+                      value={date}
+                      onChange={setDate}
+                      maxValue={today(getLocalTimeZone())}
+                      className='w-56'
+                      classNames={{
+                        selectorButton: 'text-default-500',
+                        inputWrapper:
+                          'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                      }}
+                    />
                   </div>
-                  <div className='flex items-center'>
+                  <div className='flex items-center justify-end self-center'>
                     <p className='md:text-medium text-center text-sm'>
                       <span className='hidden md:inline'>Press </span>
                       <span className='inline md:hidden'>Tap </span>

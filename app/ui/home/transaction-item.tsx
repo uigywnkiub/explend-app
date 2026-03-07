@@ -69,7 +69,7 @@ function TransactionItem({ hasCategoryChanged, ...t }: TProps) {
   const query = searchParams.get(SEARCH_PARAM.QUERY)?.toString() || ''
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [isBlinkTransaction, setIsBlinkTransaction] = useState(false)
-  const transactionDataToCopy = `Transaction data from ${APP_NAME.SHORT}
+  const transactionDataToCopy = `Transaction data from ${APP_NAME.FULL}
 
 ${t.isIncome ? 'Type: Income' : 'Type: Expense'}
 Category: ${t.category}

@@ -30,6 +30,7 @@ import {
   Button,
   Card,
   CardBody,
+  DatePicker,
   Image,
   Input,
   Kbd,
@@ -48,6 +49,11 @@ import {
   Tabs,
   useDisclosure,
 } from '@heroui/react'
+import {
+  type DateValue,
+  getLocalTimeZone,
+  today,
+} from '@internationalized/date'
 import Compressor from 'compressorjs'
 import { AnimatePresence, motion } from 'framer-motion'
 import heic2any from 'heic2any'
@@ -126,6 +132,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     onOpenChange: onOpenChangeImageModal,
     onClose: onCloseImageModal,
   } = useDisclosure()
+  const [date, setDate] = useState<DateValue | null>(today(getLocalTimeZone()))
   const [imageSrcs, setImageSrcs] = useState<
     NonNullable<TTransaction['images']>
   >(['', '', ''])
@@ -247,6 +254,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     setCategory(new Set([DEFAULT_CATEGORY]))
     if (hasCurrOrPrevReceiptAIData) setReceiptAIData([])
     setImageSrcs(['', '', ''])
+    setDate(today(getLocalTimeZone()))
   }, [hasCurrOrPrevReceiptAIData])
 
   const resetAIRelatedStates = useCallback(() => {
@@ -898,6 +906,24 @@ function TransactionForm({ currency, userCategories }: TProps) {
             name='images'
             value={JSON.stringify(validImageSrcs)}
           />
+          {date && (
+            <input
+              type='hidden'
+              name='date'
+              value={(() => {
+                const now = new Date()
+                const selected = date.toDate(getLocalTimeZone())
+                selected.setHours(
+                  now.getHours(),
+                  now.getMinutes(),
+                  now.getSeconds(),
+                  now.getMilliseconds(),
+                )
+
+                return selected.toISOString()
+              })()}
+            />
+          )}
           <Input
             isDisabled={pending}
             isRequired
@@ -998,62 +1024,74 @@ function TransactionForm({ currency, userCategories }: TProps) {
               </div>
             }
           />
-          <div className='mt-1.5 flex justify-between'>
-            <div className='flex items-center gap-2'>
-              <div className='flex w-full flex-wrap gap-4 md:flex-nowrap'>
-                <Badge
-                  isInvisible={!isCategoryItemNameAIValid || isLoadingAIData}
-                  content={<AILogo asIcon />}
+          <div className='mt-1.5 grid grid-cols-[1fr_auto] items-center gap-2'>
+            <div className='flex flex-col gap-4 lg:flex-row'>
+              <Badge
+                isInvisible={!isCategoryItemNameAIValid || isLoadingAIData}
+                content={<AILogo asIcon />}
+                classNames={{
+                  badge:
+                    'right-0 border-0 bg-transparent cursor-pointer md:hover:opacity-hover',
+                }}
+              >
+                <Select
+                  isVirtualized={false}
+                  isDisabled={pending || isLoadingAIData}
+                  isLoading={isLoadingAIData}
+                  items={userCategories}
+                  defaultSelectedKeys={[DEFAULT_CATEGORY]}
+                  selectedKeys={category}
+                  onSelectionChange={setCategory}
+                  name='category'
+                  label='Select a category'
+                  className='w-56'
                   classNames={{
-                    badge:
-                      'right-0 border-0 bg-transparent cursor-pointer md:hover:opacity-hover',
+                    trigger:
+                      'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
                   }}
                 >
-                  <Select
-                    isVirtualized={false}
-                    isDisabled={pending || isLoadingAIData}
-                    isLoading={isLoadingAIData}
-                    items={userCategories}
-                    defaultSelectedKeys={[DEFAULT_CATEGORY]}
-                    selectedKeys={category}
-                    onSelectionChange={setCategory}
-                    name='category'
-                    label='Select a category'
-                    className='w-56'
-                    classNames={{
-                      trigger:
-                        'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
-                    }}
-                  >
-                    {userCategories.map((category, idx, arr) => (
-                      <SelectSection
-                        key={category.subject}
-                        showDivider={idx !== arr.length - 1}
-                        title={category.subject}
-                      >
-                        {category.items.map((item) => (
-                          <SelectItem
-                            key={item.name}
-                            endContent={
-                              item.name === DEFAULT_CATEGORY && (
-                                <InfoText
-                                  text='default'
-                                  withAsterisk={false}
-                                  withHover={false}
-                                />
-                              )
-                            }
-                          >
-                            {`${item.emoji} ${item.name}`}
-                          </SelectItem>
-                        ))}
-                      </SelectSection>
-                    ))}
-                  </Select>
-                </Badge>
-              </div>
+                  {userCategories.map((category, idx, arr) => (
+                    <SelectSection
+                      key={category.subject}
+                      showDivider={idx !== arr.length - 1}
+                      title={category.subject}
+                    >
+                      {category.items.map((item) => (
+                        <SelectItem
+                          key={item.name}
+                          endContent={
+                            item.name === DEFAULT_CATEGORY && (
+                              <InfoText
+                                text='default'
+                                withAsterisk={false}
+                                withHover={false}
+                              />
+                            )
+                          }
+                        >
+                          {`${item.emoji} ${item.name}`}
+                        </SelectItem>
+                      ))}
+                    </SelectSection>
+                  ))}
+                </Select>
+              </Badge>
+              <DatePicker
+                isDisabled={pending || isLoadingAIData}
+                granularity='day'
+                label='Select a date'
+                value={date}
+                onChange={setDate}
+                maxValue={today(getLocalTimeZone())}
+                className='w-56'
+                classNames={{
+                  selectorButton: 'text-default-500',
+                  inputWrapper:
+                    'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                }}
+              />
             </div>
-            <div className='flex items-center'>
+            <div className='flex items-center justify-end self-center'>
               <p>
                 <span className='hidden md:inline'>Press </span>
                 <span className='inline md:hidden'>Tap </span>
