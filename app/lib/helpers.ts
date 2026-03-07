@@ -13,7 +13,6 @@ import {
 } from 'date-fns'
 import { formatInTimeZone } from 'date-fns-tz'
 import emojiRegex from 'emoji-regex'
-import getUserLocale from 'get-user-locale'
 import { extendTailwindMerge } from 'tailwind-merge'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
@@ -409,9 +408,11 @@ export const findApproxCategoryByValue = (
   return null
 }
 
-export const userLocale = getUserLocale({
-  fallbackLocale: DEFAULT_LANG,
-})
+// A function that returns user's locale as an IETF language tag, based on all available sources.
+// export const userLocale = getUserLocale({
+//   fallbackLocale: DEFAULT_LANG,
+// })
+export const userLocale = DEFAULT_LANG
 
 export const getExpenseCategories = (
   categoriesData: TExpenseReport[],
