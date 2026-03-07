@@ -1040,6 +1040,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   isLoading={isLoadingAIData}
                   items={userCategories}
                   defaultSelectedKeys={[DEFAULT_CATEGORY]}
+                  disabledKeys={[DEFAULT_CATEGORY]}
                   selectedKeys={category}
                   onSelectionChange={setCategory}
                   name='category'
@@ -1062,7 +1063,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                           endContent={
                             item.name === DEFAULT_CATEGORY && (
                               <InfoText
-                                text='default'
+                                text='Default'
                                 withAsterisk={false}
                                 withHover={false}
                               />
