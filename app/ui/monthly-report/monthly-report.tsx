@@ -2,7 +2,12 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
-import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
+import {
+  PiArrowCircleDownFill,
+  PiArrowCircleUpFill,
+  PiArrowClockwise,
+  PiArrowClockwiseFill,
+} from 'react-icons/pi'
 import { useLocalStorage } from 'react-use'
 
 import Link from 'next/link'
@@ -14,6 +19,7 @@ import {
   DateValue,
   Divider,
   RangeValue,
+  Tooltip,
 } from '@heroui/react'
 import { getLocalTimeZone } from '@internationalized/date'
 import {
@@ -25,6 +31,7 @@ import {
 } from 'date-fns'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
+import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { getCachedExpenseTipsAI } from '@/app/lib/actions'
 import {
@@ -47,6 +54,7 @@ import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
 
 import AILogo from '../ai-logo'
 import AnimatedNumber from '../animated-number'
+import { HoverableElement } from '../hoverables'
 import Magnetic from '../magnetic'
 import WarningText from '../warning-text'
 import MonthPicker from './month-picker'
@@ -117,6 +125,13 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     return `${formatDate(startDate, true)} - ${formatDate(endDate, true)}`
   }, [startDate, endDate])
 
+  const isCurrMonthSelected = useMemo(
+    () =>
+      selectedDate.start.compare(startOfMonthCalendarDate) === 0 &&
+      selectedDate.end.compare(endOfMonthCalendarDate) === 0,
+    [selectedDate, startOfMonthCalendarDate, endOfMonthCalendarDate],
+  )
+
   const onDateSelection = useCallback(
     (dateRange: RangeValue<DateValue>) => {
       setSelectedDate(dateRange)
@@ -125,6 +140,14 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     },
     [isTipsDataExist],
   )
+
+  const onResetToCurrMonth = useCallback(() => {
+    setSelectedDate({
+      start: startOfMonthCalendarDate,
+      end: endOfMonthCalendarDate,
+    })
+    if (isTipsDataExist) setTipsDataAI(null)
+  }, [startOfMonthCalendarDate, endOfMonthCalendarDate, isTipsDataExist])
 
   const filteredTransactionsByDateRange = useMemo(
     () => filterTransactionsByDateRange(transactions, startDate, endDate),
@@ -205,10 +228,32 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     registerAttempt,
   ])
 
+  const resetCurrMonthButton = useMemo(
+    () => (
+      <Tooltip content='Reset to current month' placement='bottom'>
+        <Button
+          isDisabled={isCurrMonthSelected}
+          onPress={onResetToCurrMonth}
+          color='danger'
+          variant='flat'
+          className='min-w-4 font-medium'
+        >
+          <HoverableElement
+            uKey='reset'
+            element={<PiArrowClockwise size={DEFAULT_ICON_SIZE} />}
+            hoveredElement={<PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />}
+            withShift={false}
+          />
+        </Button>
+      </Tooltip>
+    ),
+    [isCurrMonthSelected, onResetToCurrMonth],
+  )
+
   if (filteredTransactionsByDateRange.length === 0) {
     return (
       <div className='rounded-medium bg-content1 p-4 md:p-8'>
-        <div className='mb-6'>
+        <div className='mb-6 flex items-center justify-between'>
           <MonthPicker
             selectedDate={selectedDate}
             onDateSelection={onDateSelection}
@@ -216,6 +261,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             maxTransaction={maxTransaction}
             userSalaryDay={userSalaryDay}
           />
+          {resetCurrMonthButton}
         </div>
         <p className='text-default-500 text-center text-balance'>
           No transactions found from {formattedDateRange}
@@ -227,7 +273,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
   return (
     <>
       <div className='rounded-medium bg-content1 relative p-4 md:p-8'>
-        <div className='mb-6'>
+        <div className='mb-6 flex items-center justify-between'>
           <MonthPicker
             selectedDate={selectedDate}
             onDateSelection={onDateSelection}
@@ -235,6 +281,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             maxTransaction={maxTransaction}
             userSalaryDay={userSalaryDay}
           />
+          {resetCurrMonthButton}
         </div>
         <div className='mb-3 flex-none items-end justify-between md:mb-6 md:flex'>
           <Link

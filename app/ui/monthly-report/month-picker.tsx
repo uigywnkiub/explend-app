@@ -53,6 +53,10 @@ function MonthPicker({
   }, [cancel, isReady])
 
   useEffect(() => {
+    setDateRange(selectedDate)
+  }, [selectedDate])
+
+  useEffect(() => {
     const popoverSelector = '.my-date-range-picker-popover'
 
     const applyMark = (root: Element | null) => {
