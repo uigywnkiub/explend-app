@@ -7,8 +7,8 @@
 - **AI-Powered Smart Entry**
   Automatically complete transaction details (category, amount, type: income/expense) using Explend Intelligence based on your description.
 
-- **Detailed Reports**
-  Generate monthly or custom-range reports with AI-driven insights into your spending habits.
+- **Detailed Monthly Reports**
+  Generate monthly or custom-range reports with AI-driven insights into your spending habits, powered by advanced forecasting techniques including exponential smoothing, trend analysis, and intelligent outlier handling to deliver more accurate and stable financial predictions.
 
 - **Dynamic Radar Chart**
   Visualize expenses with a radar chart that updates as you add new categories.

@@ -89,7 +89,7 @@ function SelectInput({
                   endContent={
                     item.name === DEFAULT_CATEGORY && (
                       <InfoText
-                        text='default'
+                        text='Default'
                         withAsterisk={false}
                         withHover={false}
                       />

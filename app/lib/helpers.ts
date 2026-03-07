@@ -20,6 +20,7 @@ import { CURRENCY_CODE } from '@/config/constants/currencies'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
   DEFAULT_CATEGORY,
+  DEFAULT_CATEGORY_EMOJI,
   DEFAULT_LANG,
   DEFAULT_TIME_ZONE,
   HIDDEN_AMOUNT_SIGN,
@@ -89,7 +90,7 @@ export const getCategoryWithEmoji = (
   categories: TTransaction['categories'],
 ): TTransaction['category'] => {
   if (!category || typeof category !== 'string') {
-    return DEFAULT_CATEGORY
+    return `${DEFAULT_CATEGORY_EMOJI} ${DEFAULT_CATEGORY}`
   }
   for (const { items } of categories) {
     const foundCategory = items.find((item) => item.name === category)

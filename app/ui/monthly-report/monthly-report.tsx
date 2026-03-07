@@ -7,6 +7,8 @@ import {
   PiArrowCircleUpFill,
   PiArrowClockwise,
   PiArrowClockwiseFill,
+  PiChartLine,
+  PiChartLineFill,
 } from 'react-icons/pi'
 import { useLocalStorage } from 'react-use'
 
@@ -35,6 +37,7 @@ import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { getCachedExpenseTipsAI } from '@/app/lib/actions'
 import {
+  calculateForecast,
   calculateMonthlyReportData,
   filterTransactions,
   filterTransactionsByDateRange,
@@ -50,7 +53,11 @@ import {
   toCalendarDate,
 } from '@/app/lib/helpers'
 import { useAttemptTracker } from '@/app/lib/hooks'
-import type { TExpenseAdvice, TTransaction } from '@/app/lib/types'
+import type {
+  TExpenseAdvice,
+  TForecastData,
+  TTransaction,
+} from '@/app/lib/types'
 
 import AILogo from '../ai-logo'
 import AnimatedNumber from '../animated-number'
@@ -76,6 +83,8 @@ type TProps = {
 function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
   const [tipsDataAI, setTipsDataAI] = useState<TExpenseAdvice[] | null>(null)
   const [isLoadingTips, setIsLoadingTips] = useState(false)
+  const [forecastData, setForecastData] = useState<TForecastData | null>(null)
+  const [showForecast, setShowForecast] = useState(false)
 
   const [expenseTipsAIDataLocalStorageRaw, setExpenseTipsAIDataLocalStorage] =
     useLocalStorage(LOCAL_STORAGE_KEY.AI_EXPENSE_TIPS_DATA)
@@ -148,6 +157,24 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     })
     if (isTipsDataExist) setTipsDataAI(null)
   }, [startOfMonthCalendarDate, endOfMonthCalendarDate, isTipsDataExist])
+
+  const onToggleForecast = useCallback(() => {
+    if (showForecast) {
+      setShowForecast(false)
+      setForecastData(null)
+
+      return
+    }
+    const data = calculateForecast(transactions)
+    if (data.expenseForecast.length === 0 && data.incomeForecast.length === 0) {
+      toast.error('Not enough data to forecast.')
+
+      return
+    }
+    setForecastData(data)
+    setShowForecast(true)
+    toast.success('Forecast generated.')
+  }, [showForecast, transactions])
 
   const filteredTransactionsByDateRange = useMemo(
     () => filterTransactionsByDateRange(transactions, startDate, endDate),
@@ -228,6 +255,33 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     registerAttempt,
   ])
 
+  const displayTotalIncome =
+    showForecast && forecastData ? forecastData.totalIncome : totalIncome
+  const displayTotalExpense =
+    showForecast && forecastData ? forecastData.totalExpense : totalExpense
+  const displayExpenseData = useMemo(() => {
+    if (showForecast && forecastData) {
+      return forecastData.expenseForecast.map((f) => ({
+        category: f.category,
+        spent: f.amount,
+        percentage: f.percentage,
+      }))
+    }
+
+    return expenseReportData
+  }, [showForecast, forecastData, expenseReportData])
+  const displayIncomeData = useMemo(() => {
+    if (showForecast && forecastData) {
+      return forecastData.incomeForecast.map((f) => ({
+        category: f.category,
+        earned: f.amount,
+        percentage: f.percentage,
+      }))
+    }
+
+    return incomeReportData
+  }, [showForecast, forecastData, incomeReportData])
+
   const resetCurrMonthButton = useMemo(
     () => (
       <Tooltip content='Reset to current month' placement='bottom'>
@@ -250,10 +304,34 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     [isCurrMonthSelected, onResetToCurrMonth],
   )
 
+  const forecastButton = useMemo(
+    () => (
+      <Tooltip
+        content={showForecast ? 'Hide forecast' : 'Forecast next month'}
+        placement='bottom'
+      >
+        <Button
+          onPress={onToggleForecast}
+          color={showForecast ? 'primary' : 'default'}
+          variant='flat'
+          className='min-w-4 font-medium'
+        >
+          <HoverableElement
+            uKey='forecast'
+            element={<PiChartLine size={DEFAULT_ICON_SIZE} />}
+            hoveredElement={<PiChartLineFill size={DEFAULT_ICON_SIZE} />}
+            withShift={false}
+          />
+        </Button>
+      </Tooltip>
+    ),
+    [showForecast, onToggleForecast],
+  )
+
   if (filteredTransactionsByDateRange.length === 0) {
     return (
       <div className='rounded-medium bg-content1 p-4 md:p-8'>
-        <div className='mb-6 flex items-center justify-between'>
+        <div className='xs:flex-row xs:items-center xs:justify-between mb-6 flex flex-col items-start gap-3'>
           <MonthPicker
             selectedDate={selectedDate}
             onDateSelection={onDateSelection}
@@ -261,7 +339,10 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             maxTransaction={maxTransaction}
             userSalaryDay={userSalaryDay}
           />
-          {resetCurrMonthButton}
+          <div className='flex gap-2'>
+            {forecastButton}
+            {resetCurrMonthButton}
+          </div>
         </div>
         <p className='text-default-500 text-center text-balance'>
           No transactions found from {formattedDateRange}
@@ -273,7 +354,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
   return (
     <>
       <div className='rounded-medium bg-content1 relative p-4 md:p-8'>
-        <div className='mb-6 flex items-center justify-between'>
+        <div className='xs:flex-row xs:items-center xs:justify-between mb-6 flex flex-col items-start gap-3'>
           <MonthPicker
             selectedDate={selectedDate}
             onDateSelection={onDateSelection}
@@ -281,7 +362,10 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             maxTransaction={maxTransaction}
             userSalaryDay={userSalaryDay}
           />
-          {resetCurrMonthButton}
+          <div className='flex gap-2'>
+            {forecastButton}
+            {resetCurrMonthButton}
+          </div>
         </div>
         <div className='mb-3 flex-none items-end justify-between md:mb-6 md:flex'>
           <Link
@@ -289,26 +373,26 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             className='hover:opacity-hover'
           >
             <span className='text-default-500 mb-3 inline-block text-lg text-balance md:mb-0 md:text-xl'>
-              {formattedDateRange}
+              {showForecast ? 'Next Month Forecast' : formattedDateRange}
             </span>
           </Link>
           <div className='flex gap-4 md:gap-8'>
             <div>
               <p className='text-default-500 text-xs md:text-sm'>
-                Total Income
+                {showForecast ? 'Predicted Income' : 'Total Income'}
               </p>
               <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
                 <PiArrowCircleUpFill className='fill-success' />
-                <AnimatedNumber value={totalIncome} /> {currency.code}
+                <AnimatedNumber value={displayTotalIncome} /> {currency.code}
               </p>
             </div>
             <div>
               <p className='text-default-500 text-xs md:text-sm'>
-                Total Expense
+                {showForecast ? 'Predicted Expense' : 'Total Expense'}
               </p>
               <p className='flex items-center gap-1 text-lg font-semibold md:text-xl'>
                 <PiArrowCircleDownFill className='fill-danger' />
-                <AnimatedNumber value={totalExpense} /> {currency.code}
+                <AnimatedNumber value={displayTotalExpense} /> {currency.code}
               </p>
             </div>
           </div>
@@ -320,8 +404,12 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
           <AccordionItem
             key={ACCORDION_KEY.EXPENSE}
             aria-label='Expense'
-            title='Expense'
-            subtitle='Total Spending Overview'
+            title={showForecast ? 'Expense Forecast' : 'Expense'}
+            subtitle={
+              showForecast
+                ? 'Total Predicted Spending Overview'
+                : 'Total Spending Overview'
+            }
             startContent={
               <PiArrowCircleDownFill className='fill-danger text-lg md:text-xl' />
             }
@@ -329,14 +417,18 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
               subtitle: 'text-default-500 text-xs md:text-sm',
             }}
           >
-            {expense.length !== 0 ? (
+            {displayExpenseData.length !== 0 ? (
               <MonthlyReportData
                 type='expense'
-                data={expenseReportData}
+                data={displayExpenseData}
                 currency={currency}
               />
             ) : (
-              <p className='text-default-500'>No expense found</p>
+              <p className='text-default-500'>
+                {showForecast
+                  ? 'No expense data to forecast'
+                  : 'No expense found'}
+              </p>
             )}
           </AccordionItem>
         </Accordion>
@@ -352,8 +444,12 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
           <AccordionItem
             key={ACCORDION_KEY.INCOME}
             aria-label='Income'
-            title='Income'
-            subtitle='Total Earnings Overview'
+            title={showForecast ? 'Income Forecast' : 'Income'}
+            subtitle={
+              showForecast
+                ? 'Total Predicted Earnings Overview'
+                : 'Total Earnings Overview'
+            }
             startContent={
               <PiArrowCircleUpFill className='fill-success text-lg md:text-xl' />
             }
@@ -361,14 +457,18 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
               subtitle: 'text-default-500 text-xs md:text-sm',
             }}
           >
-            {income.length !== 0 ? (
+            {displayIncomeData.length !== 0 ? (
               <MonthlyReportData
                 type='income'
-                data={incomeReportData}
+                data={displayIncomeData}
                 currency={currency}
               />
             ) : (
-              <p className='text-default-500'>No income found</p>
+              <p className='text-default-500'>
+                {showForecast
+                  ? 'No income data to forecast'
+                  : 'No income found'}
+              </p>
             )}
           </AccordionItem>
         </Accordion>

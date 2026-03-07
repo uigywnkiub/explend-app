@@ -371,8 +371,8 @@ function TransactionFormEdit({ transaction }: TProps) {
                             'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
                         }}
                         items={userCategories}
-                        selectedKeys={category}
                         defaultSelectedKeys={category}
+                        selectedKeys={category}
                         onSelectionChange={setCategory}
                       >
                         {userCategories.map((category, idx, arr) => (
@@ -387,7 +387,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                                 endContent={
                                   item.name === DEFAULT_CATEGORY && (
                                     <InfoText
-                                      text='default'
+                                      text='Default'
                                       withAsterisk={false}
                                       withHover={false}
                                     />

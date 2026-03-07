@@ -211,6 +211,20 @@ export type TExpenseAdvice = {
   savings: string
 }
 
+export type TForecastReport = {
+  category: TTransaction['category']
+  amount: number
+  percentage: string
+  trend: 'up' | 'down' | 'stable'
+}
+
+export type TForecastData = {
+  totalExpense: number
+  totalIncome: number
+  expenseForecast: TForecastReport[]
+  incomeForecast: TForecastReport[]
+}
+
 export type TReceipt = {
   description: TTransaction['description']
   amount: number
