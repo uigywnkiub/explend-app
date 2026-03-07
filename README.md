@@ -2,7 +2,7 @@
 
 **Explend** is a personal finance tracking application designed to help you manage income and expenses with ease. It offers a clear overview of your financial activities, empowering smarter spending decisions.
 
-## Features
+## ✨ Features
 
 - **AI-Powered Smart Entry**
   Automatically complete transaction details (category, amount, type: income/expense) using Explend Intelligence based on your description.
@@ -43,14 +43,14 @@
 - **Theme Personalization**
   Switch between light, dark, or system themes to match your preferences.
 
-## Review
+## 🎥 Review
 
 ▶ [Watch the project demo video](https://www.youtube.com/watch?v=v_tLuYTPoSI)
 
-## Contributing
+## 🤝 Contributing
 
 We welcome contributions! Feel free to open an issue or submit a pull request to help improve Explend.
 
-## License
+## 📄 License
 
 This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
