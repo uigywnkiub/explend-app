@@ -133,6 +133,16 @@ export const metadata: Metadata = {
         media:
           '(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)',
       },
+      {
+        url: '/apple-splash-1170-2532.jpg',
+        media:
+          '(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)',
+      },
+      {
+        url: '/apple-splash-2532-1170.jpg',
+        media:
+          '(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)',
+      },
     ],
   },
   robots: {
