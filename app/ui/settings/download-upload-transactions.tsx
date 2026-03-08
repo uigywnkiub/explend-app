@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import {
   PiDownload,
@@ -67,7 +67,7 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
     }
   }
 
-  async function onFileChange(e: ChangeEvent<HTMLInputElement>) {
+  async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
 
