@@ -52,9 +52,9 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: APP_NAME.SHORT,
-    startupImage: {
-      url: '/icons/apple-touch-icon.png',
-    },
+    // startupImage: {
+    //   url: '/icons/apple-touch-icon.png',
+    // },
   },
   robots: {
     index: true,
