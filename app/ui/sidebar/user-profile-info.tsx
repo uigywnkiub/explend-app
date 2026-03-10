@@ -25,6 +25,7 @@ function UserProfileInfo({ user, withoutPopover }: TProps) {
           // ImgComponent: 'img',
           imgProps: {
             // priority: true,
+            fetchPriority: 'high',
             // quality: 70,
             // loading: 'eager',
             width: 40,

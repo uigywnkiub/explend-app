@@ -20,7 +20,12 @@ import { siteMeta } from '@/config/site-meta'
 import './globals.css'
 import Providers from './providers'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+  preload: true,
+})
 const fracktif = localFont({
   src: [
     {
@@ -34,8 +39,9 @@ const fracktif = localFont({
       style: 'normal',
     },
   ],
-  display: 'swap',
   variable: '--font-fracktif',
+  display: 'swap',
+  preload: true,
 })
 
 export const metadata: Metadata = {
