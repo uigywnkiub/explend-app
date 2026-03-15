@@ -199,7 +199,7 @@ export const getFirstAndLastTransactions = (transactions: TTransaction[]) => {
 }
 
 // Forecast related vars.
-const FORECAST_MONTHS_BACK = 6
+export const FORECAST_MONTHS_BACK = 6
 const SMOOTHING_FACTOR = 0.4 // α for exponential smoothing (higher = more weight on recent).
 const OUTLIER_CAP_MULTIPLIER = 2 // cap values at 2× the median.
 const TREND_THRESHOLD = 0.05 // 5% change threshold for trend detection.
