@@ -34,7 +34,6 @@ function MonthPicker({
   const minTransactionValue = minTransaction
     ? toCalendarDate(minTransaction.createdAt)
     : null
-  // eslint-disable-next-line unused-imports/no-unused-vars
   const maxTransactionValue = maxTransaction
     ? toCalendarDate(maxTransaction.createdAt).add({
         days: daysInMonth - maxTransactionDayOfMonth,
@@ -103,7 +102,7 @@ function MonthPicker({
           classNames={{ popoverContent: 'my-date-range-picker-popover' }}
           value={dateRange}
           minValue={minTransactionValue}
-          // maxValue={maxTransactionValue}
+          maxValue={maxTransactionValue}
           onChange={(range: RangeValue<DateValue> | null) =>
             range && setDateRange(range)
           }
