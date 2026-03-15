@@ -46,7 +46,7 @@
     "framer-motion": "^12.36.0",
     "get-user-locale": "^3.0.0",
     "heic2any": "^0.0.4",
-    "import-in-the-middle": "^2.0.6",
+    "import-in-the-middle": "^3.0.0",
     "mongoose": "^8.23.0",
     "mongoose-encryption-decryption": "^1.2.1",
     "next": "16.1.6",
