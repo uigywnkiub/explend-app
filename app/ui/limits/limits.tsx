@@ -5,28 +5,16 @@ import toast from 'react-hot-toast'
 import {
   PiArrowClockwise,
   PiArrowClockwiseFill,
-  PiDotsSixVerticalBold,
-  PiDotsThreeOutlineVerticalFill,
-  PiNotePencil,
   PiNotePencilFill,
   PiPlus,
   PiPlusFill,
-  PiTrash,
-  PiTrashFill,
   PiWarningOctagonFill,
 } from 'react-icons/pi'
 import { useDebounce } from 'react-use'
 
-import Link from 'next/link'
-
 import {
   Button,
   Divider,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownSection,
-  DropdownTrigger,
   Modal,
   ModalBody,
   ModalContent,
@@ -39,14 +27,13 @@ import {
   Tooltip,
   useDisclosure,
 } from '@heroui/react'
-import { AnimatePresence, Reorder, useDragControls } from 'framer-motion'
+import { AnimatePresence, Reorder } from 'framer-motion'
 
 import {
   DEFAULT_CATEGORY,
   DEFAULT_CATEGORY_EMOJI,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
-import { MOTION_LIST } from '@/config/constants/motion'
 
 import { addLimit, deleteLimit, editLimit } from '@/app/lib/actions'
 import {
@@ -57,9 +44,7 @@ import {
 } from '@/app/lib/data'
 import {
   cn,
-  createSearchHrefWithKeyword,
   formatAmount,
-  formatPercentage,
   getCategoryItemNames,
   getCategoryWithEmoji,
   getEmojiFromCategory,
@@ -74,9 +59,9 @@ import type {
 } from '@/app/lib/types'
 
 import AmountInput from '../amount-input'
-import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
+import LimitItem from './limit-item'
 
 const enum SELECT_END_CONTENT_KEY {
   ADDED_BY = 'Added by',
@@ -84,7 +69,7 @@ const enum SELECT_END_CONTENT_KEY {
   DEFAULT = 'Default',
 }
 
-const enum DROPDOWN_KEY {
+export const enum DROPDOWN_KEY {
   EDIT = 'edit',
   DELETE = 'delete',
 }
@@ -124,7 +109,6 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   const [isReorderLimitSave, setIsReorderLimitSave] = useState(false)
 
   const reorderContainer = useRef(null)
-  const controls = useDragControls()
 
   // useMemo hooks
   const transactionsByPrevMonth = useMemo(
@@ -545,247 +529,32 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         className='space-y-4 select-none'
       >
         <AnimatePresence>
-          {calculatedLimitsDataState.map((data, idx) => {
-            const {
-              categoryName,
-              difference,
-              limitAmount,
-              isLimitOver,
-              currMonthAmount,
-              prevMonthAmount,
-              currMonthPercentage,
-              prevMonthPercentage,
-            } = data
-
-            const isChangedCategoryName =
-              changedCategoryNames.includes(categoryName)
-
-            const growthRate =
-              prevMonthAmount > 0
-                ? ((currMonthAmount - prevMonthAmount) / prevMonthAmount) * 100
-                : 0
-
-            const isIncreasedAmountByCurrMonth =
-              currMonthAmount > 0 &&
-              currMonthAmount >= prevMonthAmount &&
-              currMonthPercentage
-
-            return (
-              <Reorder.Item
-                key={categoryName}
-                value={categoryName}
-                dragListener={false}
-                dragControls={controls}
-                dragConstraints={reorderContainer}
-                dragElastic={0.1}
-                {...MOTION_LIST(idx)}
-                className='rounded-medium bg-content1 relative flex items-center justify-between py-3'
-              >
-                <div className='flex items-center text-balance md:w-1/2'>
-                  <Tooltip content='Drag to reorder' placement='left'>
-                    <div
-                      onPointerDown={(e) => controls.start(e)}
-                      className='mr-2 cursor-grab touch-none'
-                    >
-                      <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
-                    </div>
-                  </Tooltip>
-                  <p className='-mb-1.5 text-xl md:text-2xl'>
-                    {isChangedCategoryName
-                      ? DEFAULT_CATEGORY_EMOJI
-                      : getEmojiFromCategory(
-                          getCategoryWithEmoji(categoryName, userCategories),
-                        )}
-                  </p>
-                  <div className='mb-2 ml-2 w-full'>
-                    <div className='mb-2 text-left'>
-                      <Tooltip content='Search by category' placement='top'>
-                        <Link
-                          href={createSearchHrefWithKeyword(categoryName)}
-                          className={cn(
-                            'hover:opacity-hover -mt-3 truncate text-balance md:-mt-1.5',
-                            isChangedCategoryName &&
-                              'text-default-500 line-through',
-                          )}
-                        >
-                          {categoryName}
-                        </Link>
-                      </Tooltip>
-                      {isChangedCategoryName && (
-                        <p className='text-xs'>No longer exists</p>
-                      )}
-                    </div>
-                    <Tooltip
-                      content={
-                        <div
-                          className={cn(
-                            'from-secondary to-success flex justify-center gap-3 bg-linear-to-r bg-clip-text p-2 text-xs text-transparent',
-                            !isIncreasedAmountByCurrMonth &&
-                              prevMonthAmount !== 0 &&
-                              currMonthAmount !== 0 &&
-                              'flex-row-reverse bg-linear-to-l',
-                            isLimitOver && 'to-danger',
-                          )}
-                        >
-                          <div className={cn('flex flex-col items-center')}>
-                            <span className='text-default-500 pb-2'>
-                              Previous
-                            </span>
-                            <span>{`${formatPercentage(prevMonthPercentage)} %`}</span>
-                            <span>
-                              {getFormattedCurrency(prevMonthAmount)}{' '}
-                              {currency.sign}
-                            </span>
-                          </div>
-                          <div className='bg-default w-px' />
-                          <div className='flex flex-col items-center'>
-                            <span className='text-default-500 pb-2'>Trend</span>
-                            <div className='flex flex-col items-center'>
-                              <span>
-                                {isIncreasedAmountByCurrMonth ? '↑' : '↓'}
-                              </span>
-                              <span>
-                                {prevMonthAmount > 0
-                                  ? `${formatPercentage(growthRate, true)} %`
-                                  : '—'}
-                              </span>
-                            </div>
-                          </div>
-                          <div className='bg-default w-px' />
-                          <div className={cn('flex flex-col items-center')}>
-                            <span className='text-default-500 pb-2'>
-                              Current
-                            </span>
-                            <span>{`${formatPercentage(currMonthPercentage)} %`}</span>
-                            <span>
-                              {getFormattedCurrency(currMonthAmount)}{' '}
-                              {currency.sign}
-                            </span>
-                          </div>
-                        </div>
-                      }
-                      placement='bottom'
-                    >
-                      <div className='bg-default absolute -mt-0.5 h-[5px] w-[30%] rounded-full md:relative md:w-full'>
-                        <div
-                          className={cn(
-                            'bg-secondary/50 absolute h-[5px] rounded-full',
-                            isIncreasedAmountByCurrMonth && 'z-10',
-                          )}
-                          style={{ width: `${prevMonthPercentage}%` }}
-                        />
-
-                        <div
-                          className={cn(
-                            'absolute h-[5px] rounded-full',
-                            isLimitOver ? 'bg-danger' : 'bg-success',
-                          )}
-                          style={{ width: `${currMonthPercentage}%` }}
-                        />
-                      </div>
-                    </Tooltip>
-                  </div>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <div className='text-right'>
-                    <p>
-                      <AnimatedNumber value={limitAmount} /> {currency.code}
-                    </p>
-                    <p
-                      className={cn(
-                        'text-xs',
-                        isLimitOver ? 'text-danger' : 'text-success',
-                      )}
-                    >
-                      {isLimitOver ? (
-                        <>
-                          over by{' '}
-                          <AnimatedNumber value={Math.abs(difference)} />{' '}
-                          {currency.code}
-                        </>
-                      ) : (
-                        <>
-                          left <AnimatedNumber value={difference} />{' '}
-                          {currency.code}
-                        </>
-                      )}
-                    </p>
-                  </div>
-                  <Dropdown>
-                    <DropdownTrigger>
-                      <Button
-                        variant='light'
-                        isIconOnly
-                        size='md'
-                        className='z-0 md:size-10'
-                      >
-                        <PiDotsThreeOutlineVerticalFill className='fill-foreground size-4' />
-                      </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                      aria-label='Limit actions'
-                      onAction={(key) => {
-                        if (key === DROPDOWN_KEY.EDIT) {
-                          const prevLimitAmount = getLimitAmount(categoryName)
-                          if (prevLimitAmount) {
-                            setAmount(prevLimitAmount)
-                            setTempLimitAmount(prevLimitAmount)
-                          }
-                          setTempCategoryName(categoryName)
-                          onOpenEdit()
-                        }
-                        if (key === DROPDOWN_KEY.DELETE) {
-                          setTempCategoryName(categoryName)
-                          onOpenDelete()
-                        }
-                      }}
-                    >
-                      <DropdownSection title='Actions' showDivider>
-                        <DropdownItem
-                          key={DROPDOWN_KEY.EDIT}
-                          startContent={
-                            <HoverableElement
-                              uKey={DROPDOWN_KEY.EDIT}
-                              element={
-                                <PiNotePencil size={DEFAULT_ICON_SIZE} />
-                              }
-                              hoveredElement={
-                                <PiNotePencilFill size={DEFAULT_ICON_SIZE} />
-                              }
-                            />
-                          }
-                          description='Edit limit details'
-                          classNames={{ description: 'text-default-500' }}
-                        >
-                          Edit
-                        </DropdownItem>
-                      </DropdownSection>
-                      <DropdownSection title='Danger zone'>
-                        <DropdownItem
-                          key={DROPDOWN_KEY.DELETE}
-                          className='text-danger'
-                          color='danger'
-                          startContent={
-                            <HoverableElement
-                              uKey={DROPDOWN_KEY.DELETE}
-                              element={<PiTrash size={DEFAULT_ICON_SIZE} />}
-                              hoveredElement={
-                                <PiTrashFill size={DEFAULT_ICON_SIZE} />
-                              }
-                            />
-                          }
-                          description='Permanently delete limit'
-                          classNames={{ description: 'text-default-500' }}
-                        >
-                          Delete
-                        </DropdownItem>
-                      </DropdownSection>
-                    </DropdownMenu>
-                  </Dropdown>
-                </div>
-              </Reorder.Item>
-            )
-          })}
+          {calculatedLimitsDataState.map((data, idx) => (
+            <LimitItem
+              key={data.categoryName}
+              data={data}
+              idx={idx}
+              currency={currency}
+              userCategories={userCategories}
+              changedCategoryNames={changedCategoryNames}
+              reorderContainer={reorderContainer}
+              onAction={(key, categoryName) => {
+                if (key === DROPDOWN_KEY.EDIT) {
+                  const prevLimitAmount = getLimitAmount(categoryName)
+                  if (prevLimitAmount) {
+                    setAmount(prevLimitAmount)
+                    setTempLimitAmount(prevLimitAmount)
+                  }
+                  setTempCategoryName(categoryName)
+                  onOpenEdit()
+                }
+                if (key === DROPDOWN_KEY.DELETE) {
+                  setTempCategoryName(categoryName)
+                  onOpenDelete()
+                }
+              }}
+            />
+          ))}
         </AnimatePresence>
       </Reorder.Group>
 
