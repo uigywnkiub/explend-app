@@ -760,20 +760,17 @@ export async function editLimit(
 
 export async function addSubscription(
   userId: TUserId,
-  subscription: Omit<TSubscriptions, '_id'>,
+  subscriptions: Omit<TSubscriptions, '_id'>[],
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to add subscription.')
   }
-  if (!subscription) {
-    throw new Error('Subscription is required.')
+  if (!subscriptions) {
+    throw new Error('Subscriptions are required.')
   }
   try {
     await dbConnect()
-    await TransactionModel.updateMany(
-      { userId },
-      { $push: { subscriptions: subscription } },
-    )
+    await TransactionModel.updateMany({ userId }, { subscriptions })
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
     throw err
