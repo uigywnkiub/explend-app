@@ -250,3 +250,8 @@ export type TImportTransactions = {
   count: number
   skipped: number
 }
+
+export type TGetChangelog = {
+  sha: string
+  msg: string
+}

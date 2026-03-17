@@ -45,6 +45,7 @@ import type {
   TCategoryLimits,
   TCookie,
   TCurrency,
+  TGetChangelog,
   TGetTransactions,
   TImportTransactions,
   TRawTransaction,
@@ -1011,6 +1012,30 @@ export async function getAnalyzedReceiptAI(file: Blob): Promise<string> {
     const text = content.response.text().trim()
 
     return text
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getChangelog(): Promise<TGetChangelog> {
+  try {
+    const res = await fetch(
+      'https://api.github.com/repos/uigywnkiub/explend-app/commits?sha=main&per_page=1',
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.EXPLEND_APP_GITHUB_TOKEN}`,
+        },
+      },
+    )
+    if (!res.ok) {
+      throw new Error('Failed to fetch changelog data.')
+    }
+    const data = await res.json()
+
+    return {
+      sha: data[0]?.sha,
+      msg: data[0]?.commit?.message,
+    }
   } catch (err) {
     throw err
   }

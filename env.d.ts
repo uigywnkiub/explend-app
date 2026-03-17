@@ -14,6 +14,7 @@ declare namespace NodeJS {
     GOOGLE_ANALYTICS_ID: string
     SENTRY_AUTH_TOKEN: string
     NEXT_PUBLIC_SENTRY_DSN: string
+    EXPLEND_APP_GITHUB_TOKEN: string
     AUTH_SECRET: string
     AUTH_GITHUB_ID: string
     AUTH_GITHUB_SECRET: string
