@@ -11,4 +11,6 @@ export const enum LOCAL_STORAGE_KEY {
   AI_RECEIPT_DATA = 'AIReceiptData',
   ATTEMPT_RESUME_AI_RECEIPT_DATA = 'attemptResumeAIReceiptData',
   SELECTED_CATEGORY_NAME = 'selectedCategoryName',
+  LATEST_GITHUB_SHA_COMMIT = 'latestGithubShaCommit',
+  ATTEMPT_FETCH_LATEST_GITHUB_COMMIT = 'attemptFetchLatestGithubCommit',
 }

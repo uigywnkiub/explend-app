@@ -171,11 +171,11 @@ export default async function Page(props: {
   )
 
   const content = (
-    <>
+    <div className='mx-auto max-w-3xl'>
       <h1 className='mb-4 text-center text-3xl font-semibold md:mb-8'>
         {NAV_TITLE.HOME}
       </h1>
-      <div className='mx-auto flex max-w-3xl flex-col gap-y-0'>
+      <div className='mx-auto flex flex-col gap-y-0'>
         <BalanceCard
           user={session?.user}
           balance={balance}
@@ -245,7 +245,7 @@ export default async function Page(props: {
         transactionsWithChangedCategory={transactionsWithChangedCategory}
         currency={currency}
       />
-      <div className='mx-auto mt-4 max-w-3xl'>
+      <div className='mx-auto mt-4'>
         {!query ? (
           <>
             {totalEntries > 0 && (
@@ -276,7 +276,7 @@ export default async function Page(props: {
           </p>
         )}
       </div>
-    </>
+    </div>
   )
 
   return <WithSidebar contentNearby={content} />
