@@ -99,7 +99,7 @@ function LimitItem({
         <Tooltip content='Drag to reorder' placement='left'>
           <div
             onPointerDown={(e) => dragControls.start(e)}
-            className='mr-2 cursor-grab touch-none'
+            className='mr-2 cursor-grab touch-none active:cursor-grabbing'
           >
             <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
           </div>
