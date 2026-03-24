@@ -6,7 +6,6 @@ import {
   PiGithubLogo,
   PiGithubLogoFill,
 } from 'react-icons/pi'
-import { useMedia } from 'react-use'
 
 import Link from 'next/link'
 
@@ -15,7 +14,6 @@ import { getYear } from 'date-fns'
 
 import { APP_NAME, AUTHOR } from '@/config/constants/main'
 
-import { getBreakpointWidth } from '@/app/lib/helpers'
 import type { TSocialLink } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
@@ -36,8 +34,6 @@ const socialLinks: TSocialLink[] = [
 ]
 
 function Footer() {
-  const isMd = useMedia(getBreakpointWidth('md'), typeof window !== 'undefined')
-
   return (
     <>
       <div className='text-xs md:text-sm'>
@@ -69,7 +65,7 @@ function Footer() {
                 <HoverableElement
                   uKey={link.url}
                   element={link.icon}
-                  hoveredElement={isMd ? link.hoverIcon : undefined}
+                  hoveredElement={link.hoverIcon}
                   withShift={false}
                 />
               </Link>
