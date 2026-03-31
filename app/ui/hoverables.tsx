@@ -27,7 +27,7 @@ export const HoverableElement = ({
   withShift = true,
   text,
 }: THoverableElement) => {
-  const isMd = useMedia(getBreakpointWidth('md'), typeof window !== 'undefined')
+  const isMd = useMedia(getBreakpointWidth('md'), true)
 
   return useHover((hovered: boolean) => {
     const showHovered = isMd && hoveredElement && hovered

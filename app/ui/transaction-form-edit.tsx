@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { PiImageFill, PiReadCvLogoFill, PiXCircleFill } from 'react-icons/pi'
 
-import { useTheme } from 'next-themes'
 import { useRouter } from 'next/navigation'
 
 import {
@@ -31,6 +30,7 @@ import {
   getLocalTimeZone,
   today,
 } from '@internationalized/date'
+import { useTheme } from '@wrksz/themes/client'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'

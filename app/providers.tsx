@@ -1,9 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo } from 'react'
 import { Toaster } from 'react-hot-toast'
 
-import { Next13ProgressBar } from 'next13-progressbar'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 
@@ -14,9 +13,9 @@ import {
   SUCCESS_COLOR,
 } from '@/tailwind.config'
 import { HeroUIProvider } from '@heroui/react'
+import { DefaultTheme, useTheme } from '@wrksz/themes/client'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
-import { DEFAULT_THEME } from '@/config/constants/main'
 import {
   DARK_TOAST_OPTS,
   LIGHT_TOAST_OPTS,
@@ -25,13 +24,12 @@ import {
 
 import {
   getBooleanFromLocalStorage,
-  getFromLocalStorage,
+  isLocalStorageAvailable,
   userLocale,
 } from './lib/helpers'
-import { TTheme } from './lib/types'
 
-const NextThemesProvider = dynamic(
-  () => import('next-themes').then((e) => e.ThemeProvider),
+const DynamicNext13ProgressBar = dynamic(
+  () => import('next13-progressbar').then((e) => e.Next13ProgressBar),
   {
     ssr: false,
   },
@@ -39,9 +37,7 @@ const NextThemesProvider = dynamic(
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const [theme] = useState<TTheme | undefined>(
-    getFromLocalStorage(LOCAL_STORAGE_KEY.THEME) as TTheme | undefined,
-  )
+  const { theme } = useTheme()
 
   // Getting only when reloading the page.
   const isPositiveBalance = getBooleanFromLocalStorage(
@@ -51,27 +47,33 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
   )
 
-  const toastOptions =
-    theme === 'dark' || theme === 'system' ? DARK_TOAST_OPTS : LIGHT_TOAST_OPTS
+  const getResolvedToastOpts = (theme: DefaultTheme | undefined) => {
+    if (theme === 'light') return LIGHT_TOAST_OPTS
+    if (theme === 'dark') return DARK_TOAST_OPTS
+    const prefersDark =
+      isLocalStorageAvailable() &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+
+    return prefersDark ? DARK_TOAST_OPTS : LIGHT_TOAST_OPTS
+  }
+  const toastOptions = useMemo(() => getResolvedToastOpts(theme), [theme])
 
   return (
     <HeroUIProvider navigate={router.push} locale={userLocale}>
-      <NextThemesProvider attribute='class' defaultTheme={DEFAULT_THEME}>
-        <Toaster position={TOAST_POSITION} toastOptions={toastOptions} />
-        {children}
-        <Next13ProgressBar
-          height='3px'
-          color={
-            !isAmountHidden
-              ? isPositiveBalance
-                ? SUCCESS_COLOR
-                : DANGER_COLOR
-              : `${DEFAULT_COLOR}${OPACITY_COLOR.O50}`
-          }
-          options={{ showSpinner: false }}
-          showOnShallow={true}
-        />
-      </NextThemesProvider>
+      <Toaster position={TOAST_POSITION} toastOptions={toastOptions} />
+      {children}
+      <DynamicNext13ProgressBar
+        height='3px'
+        color={
+          !isAmountHidden
+            ? isPositiveBalance
+              ? SUCCESS_COLOR
+              : DANGER_COLOR
+            : `${DEFAULT_COLOR}${OPACITY_COLOR.O50}`
+        }
+        options={{ showSpinner: false }}
+        showOnShallow={true}
+      />
     </HeroUIProvider>
   )
 }

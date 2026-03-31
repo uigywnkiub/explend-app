@@ -3,10 +3,11 @@ import js from '@eslint/js'
 import typescriptEslintEslintPlugin from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import checkFile from 'eslint-plugin-check-file'
+import importPlugin from 'eslint-plugin-import'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import prettier from 'eslint-plugin-prettier'
+import reactPlugin from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
-// import tailwind from 'eslint-plugin-tailwindcss'
 import unusedImports from 'eslint-plugin-unused-imports'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -24,35 +25,51 @@ const config = [
     ignores: [
       'node_modules/**',
       '.next/**',
-      'out/**',
+      '.turbo/**',
+      '_next/**',
+      'dist/**',
       'build/**',
+      'out/**',
+      'public/**',
+      'coverage/**',
+      '__tests__/**',
+      '*.log',
+      '.env',
+      '.env.*',
+      'instrumentation.ts',
+      'instrumentation-client.ts',
       'next-env.d.ts',
     ],
-  }, // ...ts.configs.recommended,
-  // ...tailwind.configs['flat/recommended'],
-  reactHooks.configs.flat['recommended-latest'],
-  ...compat.extends('next', 'next/core-web-vitals', 'prettier'),
+  },
+  ...compat.extends('prettier'),
   {
     plugins: {
       prettier,
       'check-file': checkFile,
       'unused-imports': unusedImports,
-      jsxA11y,
+      'jsx-a11y': jsxA11y,
+      'react-hooks': reactHooks,
+      import: importPlugin,
+      react: reactPlugin,
     },
-
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
     rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'prettier/prettier': 'error',
       camelcase: 'off',
-      'import/prefer-default-export': 'error',
+      'import/prefer-default-export': 'off',
       'react/jsx-filename-extension': 'off',
       'react/jsx-props-no-spreading': 'off',
       'react/no-unused-prop-types': 'off',
       'react/require-default-props': 'off',
       'react/function-component-definition': [
         'error',
-        {
-          namedComponents: 'function-declaration',
-        },
+        { namedComponents: 'function-declaration' },
       ],
       'padding-line-between-statements': [
         'error',
@@ -63,10 +80,7 @@ const config = [
       'check-file/no-index': 'error',
       'check-file/filename-blocklist': [
         'error',
-        {
-          '**/*.js': '*.ts',
-          '**/*.jsx': '*.tsx',
-        },
+        { '**/*.js': '*.ts', '**/*.jsx': '*.tsx' },
       ],
       'check-file/filename-naming-convention': [
         'error',
@@ -74,9 +88,7 @@ const config = [
           '**/*.{jsx,tsx}': 'KEBAB_CASE',
           '**/*.{js,ts}': 'KEBAB_CASE',
         },
-        {
-          ignoreMiddleExtensions: true,
-        },
+        { ignoreMiddleExtensions: true },
       ],
       'check-file/folder-match-with-fex': [
         'error',
@@ -95,18 +107,7 @@ const config = [
       'no-fallthrough': 'error',
       'no-duplicate-imports': 'error',
       'prefer-spread': 'error',
-
-      'import/extensions': [
-        'error',
-        'ignorePackages',
-        {
-          ts: 'never',
-          tsx: 'never',
-          js: 'never',
-          jsx: 'never',
-        },
-      ],
-
+      'import/extensions': 'off',
       'jsx-a11y/anchor-is-valid': [
         'error',
         {
@@ -119,21 +120,11 @@ const config = [
   },
   ...compat
     .extends('plugin:@typescript-eslint/recommended', 'prettier')
-    .map((config) => ({
-      ...config,
-      files: ['**/*.+(ts|tsx)'],
-    })),
+    .map((c) => ({ ...c, files: ['**/*.+(ts|tsx)'] })),
   {
     files: ['**/*.+(ts|tsx)'],
-
-    plugins: {
-      '@typescript-eslint': typescriptEslintEslintPlugin,
-    },
-
-    languageOptions: {
-      parser: tsParser,
-    },
-
+    plugins: { '@typescript-eslint': typescriptEslintEslintPlugin },
+    languageOptions: { parser: tsParser },
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -143,53 +134,6 @@ const config = [
       '@typescript-eslint/no-var-requires': 'error',
       '@typescript-eslint/no-unused-vars': 'off',
     },
-  },
-  {
-    ignores: [
-      // Node modules
-      'node_modules/',
-
-      // Build directories
-      '.next/',
-      '.turbo/',
-      '_next/',
-      '__tmp__/',
-      'dist/',
-      'target/',
-      'compiled/',
-      'build/',
-      'public/',
-      'out/',
-
-      // Configuration files
-      'config/',
-      '.husky/',
-      '.vscode/',
-      '.idea/',
-      '.DS_Store',
-
-      // Lock files
-      'yarn.lock',
-      'package-lock.json',
-      'pnpm-lock.yaml',
-      'composer.lock',
-
-      // Logs
-      'logs/',
-      '*.log',
-
-      // Environment files
-      '.env',
-      '.env.*',
-
-      // Tests
-      '__tests__/',
-      'coverage/',
-
-      // Other
-      'instrumentation.ts',
-      'instrumentation-client.ts',
-    ],
   },
 ]
 

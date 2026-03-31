@@ -1,7 +1,6 @@
 import { memo, useEffect, useMemo } from 'react'
 
-import { useTheme } from 'next-themes'
-
+import { useTheme } from '@wrksz/themes/client'
 import EmojiPicker, {
   Categories,
   type EmojiClickData,

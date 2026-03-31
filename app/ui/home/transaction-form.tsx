@@ -21,8 +21,6 @@ import {
 import { useDebounce, useLocalStorage } from 'react-use'
 import type { UseDebounceReturn } from 'react-use/lib/useDebounce'
 
-import { useTheme } from 'next-themes'
-
 import {
   Accordion,
   AccordionItem,
@@ -54,6 +52,7 @@ import {
   getLocalTimeZone,
   today,
 } from '@internationalized/date'
+import { useTheme } from '@wrksz/themes/client'
 import Compressor from 'compressorjs'
 import { AnimatePresence, motion } from 'framer-motion'
 import heic2any from 'heic2any'

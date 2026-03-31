@@ -103,15 +103,10 @@ export default async function Page() {
             title='Theme Switcher'
             subtitle='Select your favorite theme to give the app a new look that matches your style.'
           >
-            <>
-              <div className='my-2 flex flex-col gap-2'>
-                <InfoText text='Will reload the page.' />
-                <InfoText text='When you select the system theme, the general toast pop-up will always be dark.' />
-              </div>
-              <div className='max-w-xs'>
-                <ThemeSwitcher />
-              </div>
-            </>
+            <div className='max-w-xs'>
+              <Spacer y={2} />
+              <ThemeSwitcher />
+            </div>
           </SectionItem>
         </>
       </Section>

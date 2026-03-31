@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useSyncExternalStore } from 'react'
+import { useSyncExternalStore } from 'react'
 import toast from 'react-hot-toast'
 import {
   PiMonitor,
@@ -11,12 +11,11 @@ import {
   PiSunFill,
 } from 'react-icons/pi'
 
-import { useTheme } from 'next-themes'
-
 import { Select, SelectItem } from '@heroui/react'
+import type { DefaultTheme } from '@wrksz/themes'
+import { useTheme } from '@wrksz/themes/client'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
-import { TOAST_DURATION } from '@/config/constants/toast'
 
 import { TSelect } from '@/app/lib/types'
 
@@ -43,6 +42,8 @@ const themes: TSelect[] = [
   },
 ]
 
+const THEME_KEYS = themes.map((t) => t.key) as DefaultTheme[]
+
 const useIsMounted = () =>
   useSyncExternalStore(
     (cb) => {
@@ -50,13 +51,12 @@ const useIsMounted = () =>
 
       return () => window.removeEventListener('mount', cb)
     },
-    () => true, // client snapshot — always mounted
-    () => false, // server snapshot — never mounted
+    () => true, // Client snapshot — always mounted.
+    () => false, // Server snapshot — never mounted.
   )
 
 export default function ThemeSwitcher() {
   const mounted = useIsMounted()
-  const [isLoading, setIsLoading] = useState(false)
   const { theme, setTheme } = useTheme()
 
   if (!mounted) return null
@@ -66,18 +66,14 @@ export default function ThemeSwitcher() {
       isVirtualized={false}
       label='Select a theme'
       items={themes}
-      isDisabled={isLoading}
-      isLoading={isLoading}
       disabledKeys={[theme!]}
       defaultSelectedKeys={[theme!]}
-      onChange={(key) => {
-        setIsLoading(true)
-        setTheme(key.target.value)
-        toast.success('Theme updated.')
-        setTimeout(
-          () => [setIsLoading(false), window.location.reload()],
-          TOAST_DURATION,
-        )
+      onSelectionChange={(keys) => {
+        const selected = Array.from(keys)[0] as string
+        if (THEME_KEYS.includes(selected as DefaultTheme)) {
+          setTheme(selected as DefaultTheme)
+          toast.success('Theme updated.')
+        }
       }}
     >
       {themes.map((theme) => (

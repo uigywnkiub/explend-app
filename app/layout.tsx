@@ -6,6 +6,7 @@ import { CUSTOM_DARK_COLOR } from '@/tailwind.config'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { ThemeProvider } from '@wrksz/themes/next'
 
 import {
   APP_NAME,
@@ -13,6 +14,7 @@ import {
   AUTHOR,
   DEFAULT_DIR,
   DEFAULT_LANG,
+  DEFAULT_THEME,
   IS_PROD,
 } from '@/config/constants/main'
 import { siteMeta } from '@/config/site-meta'
@@ -317,7 +319,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang={DEFAULT_LANG} dir={DEFAULT_DIR} data-scroll-behavior='smooth'>
+    <html
+      lang={DEFAULT_LANG}
+      dir={DEFAULT_DIR}
+      data-scroll-behavior='smooth'
+      suppressHydrationWarning
+    >
       <head>
         <meta name='mobile-web-app-capable' content='yes' />
         <meta name='apple-mobile-web-app-capable' content='yes' />
@@ -339,7 +346,13 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${fracktif.className} ${fracktif.variable} ${inter.variable} bg-background text-foreground`}
       >
-        <Providers>{children}</Providers>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme={DEFAULT_THEME}
+          storage='localStorage'
+        >
+          <Providers>{children}</Providers>
+        </ThemeProvider>
         {IS_PROD && (
           <>
             <SpeedInsights />

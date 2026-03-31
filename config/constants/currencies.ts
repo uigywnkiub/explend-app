@@ -51,6 +51,7 @@ export enum CURRENCY_SIGN {
   HUF = 'Ft',
   IDR = 'Rp',
   INR = '₹',
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   JPY = '¥',
   PLN = 'zł',
   UAH = '₴',
