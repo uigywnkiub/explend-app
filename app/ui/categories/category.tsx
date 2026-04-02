@@ -16,7 +16,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
+import { capitalizeFirstLetter } from '@/app/lib/helpers'
 import {
+  TCategories,
   TCategoriesItem,
   TCategoriesLoading,
   TEditingItemIndex,
@@ -51,6 +53,7 @@ type TProps = {
   isNewEmojiPick: boolean
   onDeleteItemClick: (categoryIndex: number, itemIndex: number) => void
   placeholderItemName: TCategoriesItem['name']
+  originalUserCategories: TCategories[]
 }
 
 function Category({
@@ -74,6 +77,7 @@ function Category({
   isNewEmojiPick,
   onDeleteItemClick,
   placeholderItemName,
+  originalUserCategories,
 }: TProps) {
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -99,7 +103,9 @@ function Category({
             type='text'
             aria-label={newTargetName}
             value={newTargetName}
-            onChange={(e) => setNewTargetName(e.target.value)}
+            onChange={(e) =>
+              setNewTargetName(capitalizeFirstLetter(e.target.value))
+            }
             // onKeyDown={onTabPress}
             placeholder={category.subject}
             size='lg'
@@ -162,22 +168,26 @@ function Category({
               )}
             </AnimatePresence>
 
-            <Button
-              onPress={() => onSaveTargetClick(index)}
-              isLoading={isLoading.subject}
-              isDisabled={newTargetName.length < 1}
-              className='bg-foreground text-default-50 px-0 font-medium'
-            >
-              {!isLoading.subject && (
-                <HoverableElement
-                  uKey={category.subject}
-                  element={<PiFloppyDisk size={DEFAULT_ICON_SIZE} />}
-                  hoveredElement={<PiFloppyDiskFill size={DEFAULT_ICON_SIZE} />}
-                  withShift={false}
-                />
-              )}{' '}
-              Save
-            </Button>
+            <Tooltip content='Save category subject' placement='bottom'>
+              <Button
+                onPress={() => onSaveTargetClick(index)}
+                isLoading={isLoading.subject}
+                isDisabled={newTargetName.length < 1}
+                className='bg-foreground text-default-50 px-0 font-medium'
+              >
+                {!isLoading.subject && (
+                  <HoverableElement
+                    uKey={category.subject}
+                    element={<PiFloppyDisk size={DEFAULT_ICON_SIZE} />}
+                    hoveredElement={
+                      <PiFloppyDiskFill size={DEFAULT_ICON_SIZE} />
+                    }
+                    withShift={false}
+                  />
+                )}{' '}
+                Save
+              </Button>
+            </Tooltip>
           </div>
         </div>
       ) : (
@@ -228,6 +238,7 @@ function Category({
                 isNewEmojiPick={isNewEmojiPick}
                 onDeleteItemClick={onDeleteItemClick}
                 placeholderItemName={placeholderItemName}
+                originalUserCategories={originalUserCategories}
               />
             )
           })}

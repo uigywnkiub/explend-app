@@ -44,7 +44,7 @@ const RESET_CATEGORIES_BTN_TEXT = 'Reset categories'
 
 const PLACEHOLDER = {
   emoji: '➕',
-  name: 'Add new item',
+  name: 'Add new category',
   __isPlaceholder: true as const,
 } as TCategoriesItem
 
@@ -429,6 +429,7 @@ function Categories({
             isNewEmojiPick={isNewEmojiPick}
             onDeleteItemClick={onDeleteItemClick}
             placeholderItemName={PLACEHOLDER.name}
+            originalUserCategories={originalUserCategories}
           />
         )
       })}

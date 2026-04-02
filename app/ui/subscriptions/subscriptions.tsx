@@ -48,7 +48,6 @@ import {
   getEmojiFromCategory,
   getFormattedAmountState,
   pluralize,
-  toUpperCase,
 } from '@/app/lib/helpers'
 import type { TSubscriptions, TTransaction, TUserId } from '@/app/lib/types'
 
@@ -339,19 +338,13 @@ export default function Subscriptions({
 
   const onChangeDescription = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value
-      const formatted = value ? toUpperCase(value[0]) + value.slice(1) : ''
-
-      setDescription(formatted)
+      setDescription(capitalizeFirstLetter(e.target.value))
     },
     [],
   )
 
   const onChangeNote = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    const formatted = value ? toUpperCase(value[0]) + value.slice(1) : ''
-
-    setNote(formatted)
+    setNote(capitalizeFirstLetter(e.target.value))
   }, [])
 
   return (

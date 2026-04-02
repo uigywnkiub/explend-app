@@ -6,6 +6,8 @@ import {
   PiFloppyDiskFill,
   PiNotePencil,
   PiNotePencilFill,
+  PiPlus,
+  PiPlusFill,
   PiTrash,
   PiTrashFill,
 } from 'react-icons/pi'
@@ -18,8 +20,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { MOTION_LIST } from '@/config/constants/motion'
 
-import { cn, toLowerCase } from '@/app/lib/helpers'
+import { capitalizeFirstLetter, cn, toLowerCase } from '@/app/lib/helpers'
 import type {
+  TCategories,
   TCategoriesItem,
   TCategoriesLoading,
   TEditingItemIndex,
@@ -51,6 +54,7 @@ type TProps = {
   isNewEmojiPick: boolean
   onDeleteItemClick: (categoryIndex: number, itemIndex: number) => void
   placeholderItemName: TCategoriesItem['name']
+  originalUserCategories: TCategories[]
 }
 
 function CategoryItem({
@@ -70,8 +74,16 @@ function CategoryItem({
   isNewEmojiPick,
   onDeleteItemClick,
   placeholderItemName,
+  originalUserCategories,
 }: TProps) {
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const isNewCategory = [...DEFAULT_CATEGORIES, ...originalUserCategories].some(
+    (c) => c.items.some((i) => toLowerCase(i.name) === toLowerCase(item.name)),
+  )
+  const isDefaultCategory = DEFAULT_CATEGORIES.some((c) =>
+    c.items.some((i) => toLowerCase(i.name) === toLowerCase(item.name)),
+  )
 
   // const isNewItemNameInvalid = newItemName.length < 1
 
@@ -112,7 +124,9 @@ function CategoryItem({
                 type='text'
                 aria-label={newItemName}
                 value={newItemName}
-                onChange={(e) => setNewItemName(e.target.value)}
+                onChange={(e) =>
+                  setNewItemName(capitalizeFirstLetter(e.target.value))
+                }
                 // onKeyDown={onTabPress}
                 placeholder={item.name || placeholderItemName}
                 size='lg'
@@ -198,24 +212,26 @@ function CategoryItem({
                 </Tooltip>
               )}
 
-              <Button
-                onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
-                isLoading={isLoading.item}
-                isDisabled={newItemName.length < 1 || isLoading.item}
-                className='bg-foreground text-default-50 min-w-4 px-4 font-medium md:min-w-20 md:px-0'
-              >
-                {!isLoading.item && (
-                  <HoverableElement
-                    uKey={item.name}
-                    element={<PiFloppyDisk size={DEFAULT_ICON_SIZE} />}
-                    hoveredElement={
-                      <PiFloppyDiskFill size={DEFAULT_ICON_SIZE} />
-                    }
-                    withShift={false}
-                  />
-                )}
-                <span className='hidden md:block'>Save</span>
-              </Button>
+              <Tooltip content='Save category' placement='bottom'>
+                <Button
+                  onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
+                  isLoading={isLoading.item}
+                  isDisabled={newItemName.length < 1 || isLoading.item}
+                  className='bg-foreground text-default-50 min-w-4 px-4 font-medium md:min-w-20 md:px-0'
+                >
+                  {!isLoading.item && (
+                    <HoverableElement
+                      uKey={item.name}
+                      element={<PiFloppyDisk size={DEFAULT_ICON_SIZE} />}
+                      hoveredElement={
+                        <PiFloppyDiskFill size={DEFAULT_ICON_SIZE} />
+                      }
+                      withShift={false}
+                    />
+                  )}
+                  <span className='hidden md:block'>Save</span>
+                </Button>
+              </Tooltip>
             </div>
           </div>
           <div className={cn(showEmojiPicker && '-mt-4')}>
@@ -230,11 +246,7 @@ function CategoryItem({
           <div className='flex items-center gap-2 truncate break-keep md:gap-4'>
             <Tooltip
               content={
-                DEFAULT_CATEGORIES.flatMap((c) => c.items)
-                  .map((i) => toLowerCase(i.name))
-                  .includes(toLowerCase(item.name))
-                  ? 'Default category'
-                  : 'Custom category'
+                isDefaultCategory ? 'Default category' : 'Custom category'
               }
               isDisabled={
                 toLowerCase(item.name) === toLowerCase(placeholderItemName)
@@ -252,7 +264,10 @@ function CategoryItem({
               )}
             </div>
           </div>
-          <Tooltip content='Edit category' placement='bottom'>
+          <Tooltip
+            content={!isNewCategory ? 'Add category' : 'Edit category'}
+            placement='bottom'
+          >
             <Button
               onPress={() =>
                 onEditItemClick(categoryIndex, itemIndex, item.name)
@@ -260,13 +275,29 @@ function CategoryItem({
               isDisabled={item.name === DEFAULT_CATEGORY}
               className='px-0 font-medium'
             >
-              <HoverableElement
-                uKey={item.name}
-                element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
-                hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
-                withShift={false}
-              />{' '}
-              Edit
+              {isNewCategory ? (
+                <>
+                  <HoverableElement
+                    uKey={item.name}
+                    element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
+                    hoveredElement={
+                      <PiNotePencilFill size={DEFAULT_ICON_SIZE} />
+                    }
+                    withShift={false}
+                  />{' '}
+                  Edit
+                </>
+              ) : (
+                <>
+                  <HoverableElement
+                    uKey={item.name}
+                    element={<PiPlus size={DEFAULT_ICON_SIZE} />}
+                    hoveredElement={<PiPlusFill size={DEFAULT_ICON_SIZE} />}
+                    withShift={false}
+                  />{' '}
+                  Add
+                </>
+              )}
             </Button>
           </Tooltip>
         </div>
