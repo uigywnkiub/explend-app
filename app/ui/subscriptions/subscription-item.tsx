@@ -256,7 +256,7 @@ function SubscriptionItem({
         </div>
       </div>
       {Boolean(note) && (
-        <div className='text-default-500 mt-1 mr-auto w-4/5 pr-11 pl-7 text-left text-sm md:pr-12 md:pl-8'>
+        <div className='text-default-500 mt-1 mr-auto w-4/5 text-left text-sm'>
           <p>{note}</p>
         </div>
       )}

@@ -55,7 +55,6 @@ import {
 import { useTheme } from '@wrksz/themes/client'
 import Compressor from 'compressorjs'
 import { AnimatePresence, motion } from 'framer-motion'
-import heic2any from 'heic2any'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
@@ -305,8 +304,10 @@ function TransactionForm({ currency, userCategories }: TProps) {
     try {
       let processedFile: File | Blob = targetFile
 
-      // Convert HEIC to jpeg
+      // Convert HEIC to jpeg.
       if (targetFile.type === 'image/heic') {
+        const heic2any = (await import('heic2any')).default
+
         const convertedBlob = await toast.promise(
           heic2any({
             blob: targetFile,
