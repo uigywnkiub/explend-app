@@ -1,4 +1,4 @@
-import Changelog from '../changelog'
+import ChangelogWrapper from '../changelog-wrapper'
 import Footer from '../settings/footer'
 import Hamburger from './hamburger'
 import MaskAmountInfo from './mask-amount-info'
@@ -46,9 +46,7 @@ export default function WithSidebar({
 
       <Hamburger />
       <MaskAmountInfo />
-      <Changelog />
-      {/* Currently it won't works. */}
-      {/* <CustomSpotlight /> */}
+      <ChangelogWrapper />
     </div>
   )
 }

@@ -155,7 +155,7 @@ export const safeConvertToNumber = (
 }
 
 export const isLocalStorageAvailable = (): boolean => {
-  return typeof localStorage !== 'undefined'
+  return typeof window !== 'undefined' && typeof localStorage !== 'undefined'
 }
 
 export const getBooleanFromLocalStorage = (

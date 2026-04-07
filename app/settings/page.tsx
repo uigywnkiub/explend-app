@@ -99,6 +99,18 @@ export default async function Page() {
 
           <Divider className='my-4' />
 
+          <div className='flex justify-between gap-2'>
+            <SectionItem
+              title='Changelog'
+              subtitle='Shows a popup with the latest commit message once a day whenever a new version is released.'
+            />
+            <LocalStorageSwitch
+              localStorageKey={LOCAL_STORAGE_KEY.IS_ENABLE_CHANGELOG}
+            />
+          </div>
+
+          <Divider className='my-4' />
+
           <SectionItem
             title='Theme Switcher'
             subtitle='Select your favorite theme to give the app a new look that matches your style.'
