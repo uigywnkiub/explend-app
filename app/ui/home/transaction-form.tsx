@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  CSSProperties,
   startTransition,
   useCallback,
   useEffect,
@@ -64,11 +65,7 @@ import {
 } from '@/config/constants/main'
 import { MOTION_LIST } from '@/config/constants/motion'
 import { URL_REGEXP } from '@/config/constants/regexp'
-import {
-  TOAST_DARK_STYLE,
-  TOAST_DURATION,
-  TOAST_LIGHT_STYLE,
-} from '@/config/constants/toast'
+import { getResolvedToastCfg, TOAST_DURATION } from '@/config/constants/toast'
 
 import {
   getAnalyzedReceiptAI,
@@ -94,12 +91,7 @@ import {
   setInLocalStorage,
   uniqueArray,
 } from '../../lib/helpers'
-import type {
-  TReceipt,
-  TReceiptState,
-  TTheme,
-  TTransaction,
-} from '../../lib/types'
+import type { TReceipt, TReceiptState, TTransaction } from '../../lib/types'
 import AILogo from '../ai-logo'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
@@ -304,7 +296,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
     try {
       let processedFile: File | Blob = targetFile
 
-      // Convert HEIC to jpeg.
+      // Convert HEIC to jpeg
       if (targetFile.type === 'image/heic') {
         const heic2any = (await import('heic2any')).default
 
@@ -376,10 +368,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           )
         },
         {
-          style:
-            (theme as TTheme) === 'dark' || (theme as TTheme) === 'system'
-              ? TOAST_DARK_STYLE
-              : TOAST_LIGHT_STYLE,
+          style: getResolvedToastCfg(theme, 'style') as CSSProperties,
           duration: Infinity,
           position: 'top-center',
           id: autoProcessingToastId,
@@ -593,10 +582,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           )
         },
         {
-          style:
-            (theme as TTheme) === 'dark' || (theme as TTheme) === 'system'
-              ? TOAST_DARK_STYLE
-              : TOAST_LIGHT_STYLE,
+          style: getResolvedToastCfg(theme, 'style') as CSSProperties,
           duration: Infinity,
           id: resumeToastId,
         },
