@@ -19,7 +19,7 @@ export default function ChangelogWrapper() {
     ) {
       setInLocalStorage(LOCAL_STORAGE_KEY.IS_ENABLE_CHANGELOG, 'true')
     }
-  }, [])
+  }, [localStorageChangelogValue])
 
   return localStorageChangelogValue === 'true' ? <Changelog /> : null
 }
