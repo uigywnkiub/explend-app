@@ -18,7 +18,7 @@ type TProps = {
 
 export default function LocalStorageSwitch({ localStorageKey }: TProps) {
   const router = useRouter()
-  const { triggerHaptic } = useHaptic(15)
+  const { triggerHaptic } = useHaptic(150)
   const [isSelected, setIsSelected] = useState<boolean | undefined>(undefined)
 
   useEffect(() => {
