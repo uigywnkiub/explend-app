@@ -13,6 +13,7 @@ import {
 } from 'date-fns'
 import { formatInTimeZone } from 'date-fns-tz'
 import emojiRegex from 'emoji-regex'
+import { haptic } from 'ios-haptics'
 import { extendTailwindMerge } from 'tailwind-merge'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
@@ -262,6 +263,7 @@ export const copyToClipboard = async (
   }
   try {
     await navigator.clipboard.writeText(content)
+    haptic.confirm()
     toast.success(successTitle)
   } catch {
     toast.error(errorTitle)

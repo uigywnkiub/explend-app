@@ -4,6 +4,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 
 import { Avatar, Select, SelectItem, SelectSection } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import {
   CURRENCIES_LIST,
@@ -56,6 +57,7 @@ function Currency({ userId, currency, transactionsCount }: TProps) {
     setIsLoading(true)
     try {
       await updateCurrency(userId, getCurrencyData(key as CURRENCY_NAME))
+      haptic.confirm()
       toast.success('Currency updated.')
     } catch (err) {
       toast.error('Failed to update currency.')

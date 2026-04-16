@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import { PiRocket, PiRocketFill } from 'react-icons/pi'
 
 import { Button } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
@@ -128,6 +129,7 @@ export default function CreateTestTransactions({
         )
       }
       toast.dismiss(toastCreatingId)
+      haptic.confirm()
       toast.success('Test transactions created.')
     } catch (err) {
       toast.error('Failed to create test transactions.')

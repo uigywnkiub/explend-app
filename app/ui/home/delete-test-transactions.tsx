@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import { PiTrash, PiTrashFill } from 'react-icons/pi'
 
 import { Button, cn } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
@@ -24,6 +25,7 @@ export default function DeleteTestTransactions({ userId }: TProps) {
     setIsLoading(true)
     try {
       await deleteTestTransactions(userId)
+      haptic.confirm()
       toast.success('Test transactions deleted.')
     } catch (err) {
       toast.error('Failed to delete test transactions.')

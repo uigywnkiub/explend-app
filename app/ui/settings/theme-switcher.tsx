@@ -14,6 +14,7 @@ import {
 import { Select, SelectItem } from '@heroui/react'
 import type { DefaultTheme } from '@wrksz/themes'
 import { useTheme } from '@wrksz/themes/client'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
@@ -72,6 +73,7 @@ export default function ThemeSwitcher() {
         const selected = Array.from(keys)[0] as string
         if (THEME_KEYS.includes(selected as DefaultTheme)) {
           setTheme(selected as DefaultTheme)
+          haptic.confirm()
           toast.success('Theme updated.')
         }
       }}

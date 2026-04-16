@@ -145,6 +145,7 @@ function Categories({
       setIsLoading({ subject: true, item: false, reset: false })
       try {
         await updateCategories(userId, oldTargetName, newCategoriesData)
+        haptic.confirm()
         toast.success('Categories updated.')
       } catch (err) {
         toast.error('Failed to update categories.')
@@ -300,6 +301,7 @@ function Categories({
           return copy
         })
 
+        haptic.confirm()
         toast.success('Categories updated.')
       } catch (err) {
         toast.error('Failed to update categories.')
@@ -356,8 +358,10 @@ function Categories({
         await updateCategories(userId, category.subject, newCategoriesData)
 
         if (isNoCategoryItems) {
+          haptic.confirm()
           toast.success('Item and subject deleted.')
         } else {
+          haptic.confirm()
           toast.success('Item deleted.')
         }
       } catch (err) {
@@ -385,6 +389,7 @@ function Categories({
     setIsLoading({ subject: false, item: false, reset: true })
     try {
       await resetCategories(userId, DEFAULT_CATEGORIES)
+      haptic.confirm()
       toast.success('All categories reset.')
     } catch (err) {
       toast.error('Failed to reset categories.')

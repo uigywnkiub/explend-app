@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import { PiCalendar, PiCalendarFill } from 'react-icons/pi'
 
 import { Select, SelectItem, SelectSection } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE, DEFAULT_SALARY_DAY } from '@/config/constants/main'
 
@@ -37,6 +38,7 @@ function SalaryDay({ userId, transactionsCount, userSalaryDay }: TProps) {
     setIsLoading(true)
     try {
       await updateSalaryDay(userId, Number(key))
+      haptic.confirm()
       toast.success('Salary day updated.')
     } catch (err) {
       toast.error('Failed to update salary day.')

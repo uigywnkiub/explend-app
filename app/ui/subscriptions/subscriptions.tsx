@@ -184,6 +184,7 @@ export default function Subscriptions({
       try {
         await addSubscription(userId, reorderedData)
         setIsReorderSave(false)
+        haptic.confirm()
         toast.success('Reordered.')
       } catch (err) {
         toast.error('Failed to reorder.')
@@ -223,6 +224,7 @@ export default function Subscriptions({
     setIsLoadingCreate(true)
     try {
       await addSubscription(userId, [...subscriptionsData, newSubscription])
+      haptic.confirm()
       toast.success('Subscription created.')
       resetStates()
     } catch (err) {
@@ -290,6 +292,7 @@ export default function Subscriptions({
         amount,
         note,
       )
+      haptic.confirm()
       toast.success('Subscription edited.')
     } catch (err) {
       toast.error('Failed to edit subscription.')
@@ -307,6 +310,7 @@ export default function Subscriptions({
     setIsLoadingDelete(true)
     try {
       await deleteSubscription(userId, _id)
+      haptic.confirm()
       toast.success('Subscription deleted.')
     } catch (err) {
       toast.error('Failed to delete subscription.')
@@ -321,6 +325,7 @@ export default function Subscriptions({
     setIsLoadingReset(true)
     try {
       await resetAllSubscriptions(userId)
+      haptic.confirm()
       toast.success('All subscriptions reset.')
     } catch (err) {
       toast.error('Failed to reset subscriptions.')

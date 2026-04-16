@@ -8,6 +8,7 @@ import { useDebounce } from 'react-use'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { Accordion, AccordionItem, Button, Input } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import {
@@ -76,6 +77,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
 
     if (isInitialExpanded.current) {
       if (hasSearchedTransactionsByQuery) {
+        haptic.confirm()
         toast.success('Transactions found.')
       } else {
         toast.error('No transactions found.')

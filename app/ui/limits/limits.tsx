@@ -28,6 +28,7 @@ import {
   useDisclosure,
 } from '@heroui/react'
 import { AnimatePresence, Reorder } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import {
   DEFAULT_CATEGORY,
@@ -223,6 +224,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     setIsLoadingAddLimit(true)
     try {
       await addLimit(userId, [...userLimitsData, newLimitData])
+      haptic.confirm()
       toast.success('Limit added.')
       resetStates()
     } catch (err) {
@@ -245,6 +247,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       try {
         await addLimit(userId, strippedLimitsOrder)
         setIsReorderLimitSave(false)
+        haptic.confirm()
         toast.success('Reordered.')
       } catch (err) {
         toast.error('Failed to reorder.')
@@ -292,6 +295,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     setIsLoadingDelete(true)
     try {
       await deleteLimit(userId, categoryName)
+      haptic.confirm()
       toast.success('Limit deleted.')
     } catch (err) {
       toast.error('Failed to delete limit.')
@@ -306,6 +310,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     setIsLoadingReset(true)
     try {
       await addLimit(userId, [])
+      haptic.confirm()
       toast.success('All limits reset.')
     } catch (err) {
       toast.error('Failed to reset limits.')
@@ -339,6 +344,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     setIsLoadingEdit(true)
     try {
       await editLimit(userId, categoryName, limitAmount)
+      haptic.confirm()
       toast.success('Limit edited.')
     } catch (err) {
       toast.error('Failed to edit limit.')

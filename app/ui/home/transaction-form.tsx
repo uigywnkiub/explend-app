@@ -388,6 +388,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         setAmount(receiptAIData[nextIndex].amount)
       })
     } else {
+      haptic()
       toast.success(
         `${receiptAIData.length}/${receiptAIData.length} ${pluralize(receiptAIData.length, 'transaction', 'transactions')} added.`,
       )
@@ -403,6 +404,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         }
 
         setTimeout(() => {
+          haptic.confirm()
           toast.success('All transactions added.')
         }, TOAST_DURATION)
 
@@ -640,6 +642,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
       queueMicrotask(() => {
         if (!hasReceiptAIData || !hasCurrOrPrevReceiptAIData) {
+          haptic.confirm()
           toast.success('Transaction added.')
         }
       })
