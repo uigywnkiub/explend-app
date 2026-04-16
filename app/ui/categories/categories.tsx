@@ -19,6 +19,7 @@ import {
   useDisclosure,
 } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
@@ -239,6 +240,7 @@ function Categories({
       if (oldItemName === _newItemName && !isNewEmojiPick) {
         setEditingItemIndex(null)
         setNewItemName('')
+        haptic.error()
         toast.error('No changes detected.')
 
         return

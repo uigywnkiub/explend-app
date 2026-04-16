@@ -25,6 +25,7 @@ import {
   useDisclosure,
 } from '@heroui/react'
 import { AnimatePresence, Reorder } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import {
   DEFAULT_CATEGORY_EMOJI,
@@ -268,12 +269,13 @@ export default function Subscriptions({
     note: TSubscriptions['note'],
     onCloseEditCallback: () => void,
   ) => {
-    const hasChanges =
+    const hasNoChanges =
       categoryName === tempCategoryName &&
       description === tempDescription &&
       amount === tempAmount &&
       note === tempNote
-    if (hasChanges) {
+    if (hasNoChanges) {
+      haptic.error()
       toast.error('No changes detected.')
 
       return

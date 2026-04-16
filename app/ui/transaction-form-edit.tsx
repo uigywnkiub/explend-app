@@ -208,6 +208,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     }
 
     if (!hasChanges(newTransactionData, transaction)) {
+      haptic.error()
       toast.error('No changes detected.')
       setIsLoading(false)
 
@@ -217,6 +218,7 @@ function TransactionFormEdit({ transaction }: TProps) {
 
     try {
       await editTransactionById(transactionId, newTransactionData)
+      haptic.confirm()
       toast.success('Transaction edited.')
       router.back()
     } catch (err) {
