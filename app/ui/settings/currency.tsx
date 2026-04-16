@@ -79,7 +79,10 @@ function Currency({ userId, currency, transactionsCount }: TProps) {
       isLoading={isLoading}
       disabledKeys={[disableState]}
       defaultSelectedKeys={[disableState]}
-      onChange={(key) => onChangeCurrency(key.target.value)}
+      onChange={(key) => {
+        haptic()
+        onChangeCurrency(key.target.value)
+      }}
     >
       <SelectSection title='Alphabetically ordered'>
         {currencies.map((currency) => (

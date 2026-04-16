@@ -372,15 +372,18 @@ function TransactionFormEdit({ transaction }: TProps) {
                         isDisabled={isLoading}
                         name='category'
                         label='Select a category'
+                        items={userCategories}
+                        defaultSelectedKeys={category}
+                        selectedKeys={category}
+                        onSelectionChange={(keys) => {
+                          haptic()
+                          setCategory(keys)
+                        }}
                         className='w-56'
                         classNames={{
                           trigger:
                             'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
                         }}
-                        items={userCategories}
-                        defaultSelectedKeys={category}
-                        selectedKeys={category}
-                        onSelectionChange={setCategory}
                       >
                         {userCategories.map((category, idx, arr) => (
                           <SelectSection

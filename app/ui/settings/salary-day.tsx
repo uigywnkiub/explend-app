@@ -61,7 +61,10 @@ function SalaryDay({ userId, transactionsCount, userSalaryDay }: TProps) {
       isLoading={isLoading}
       disabledKeys={disableState ? [disableState] : []}
       defaultSelectedKeys={disableState ? [disableState] : []}
-      onChange={(key) => onChangeSalaryDay(key.target.value)}
+      onChange={(key) => {
+        haptic()
+        onChangeSalaryDay(key.target.value)
+      }}
     >
       <SelectSection title='Days of the month'>
         {SALARY_DAYS.map((day) => (

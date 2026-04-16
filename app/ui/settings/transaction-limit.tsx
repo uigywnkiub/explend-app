@@ -96,7 +96,10 @@ function TransactionLimit({
       isLoading={isLoading}
       disabledKeys={[disableState]}
       defaultSelectedKeys={[disableState]}
-      onChange={(key) => onChangeLimit(key.target.value)}
+      onChange={(key) => {
+        haptic()
+        onChangeLimit(key.target.value)
+      }}
     >
       <SelectSection title='Quantity per page'>
         {LIMITS.map((limit) => (

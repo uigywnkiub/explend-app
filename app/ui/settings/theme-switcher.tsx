@@ -70,6 +70,7 @@ export default function ThemeSwitcher() {
       disabledKeys={[theme!]}
       defaultSelectedKeys={[theme!]}
       onSelectionChange={(keys) => {
+        haptic()
         const selected = Array.from(keys)[0] as string
         if (THEME_KEYS.includes(selected as DefaultTheme)) {
           setTheme(selected as DefaultTheme)

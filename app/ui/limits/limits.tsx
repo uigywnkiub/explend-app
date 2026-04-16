@@ -437,18 +437,21 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         name='category'
                         aria-label='Category'
                         placeholder='Select a category'
+                        items={userCategories}
+                        selectedKeys={category}
+                        onSelectionChange={(keys) => {
+                          haptic()
+                          setCategory(keys)
+                        }}
+                        disabledKeys={disabledCategories.concat(
+                          DEFAULT_CATEGORY,
+                        )}
                         className='w-full'
                         classNames={{
                           trigger:
                             'h-12 min-h-12 py-1.5 px-3 md:h-13 md:min-h-13 md:py-2',
                           innerWrapper: 'pl-1 text-default-500',
                         }}
-                        items={userCategories}
-                        selectedKeys={category}
-                        onSelectionChange={setCategory}
-                        disabledKeys={disabledCategories.concat(
-                          DEFAULT_CATEGORY,
-                        )}
                       >
                         {userCategories.map((category, idx, arr) => (
                           <SelectSection

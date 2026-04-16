@@ -7,6 +7,7 @@ import {
   SelectItem,
   SelectSection,
 } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_CATEGORY } from '@/config/constants/main'
 
@@ -60,14 +61,12 @@ function SelectInput({
           name='category'
           aria-label='Category'
           placeholder='Select a category'
-          className='w-full'
-          classNames={{
-            trigger: 'h-12 min-h-12 py-1.5 px-3 md:h-13 md:min-h-13 md:py-2',
-            innerWrapper: 'pl-1 text-default-500',
-          }}
           items={userCategories}
           selectedKeys={category}
-          onSelectionChange={setCategory}
+          onSelectionChange={(keys) => {
+            haptic()
+            setCategory(keys)
+          }}
           disabledKeys={[DEFAULT_CATEGORY]}
           description={
             isChangedCategoryName && (
@@ -76,6 +75,11 @@ function SelectInput({
               />
             )
           }
+          className='w-full'
+          classNames={{
+            trigger: 'h-12 min-h-12 py-1.5 px-3 md:h-13 md:min-h-13 md:py-2',
+            innerWrapper: 'pl-1 text-default-500',
+          }}
         >
           {userCategories.map((category, idx, arr) => (
             <SelectSection
