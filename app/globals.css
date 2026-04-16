@@ -85,6 +85,9 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
+
+@custom-variant mobile (@media (max-width: 768px));
+
 @layer base {
   *,
   ::after,
@@ -94,12 +97,17 @@
     border-color: var(--color-gray-200, currentcolor);
     @apply scroll-smooth;
   }
-}
 
-@layer base {
-  * {
-    @apply scroll-smooth;
-    /* slashed-zero tabular-nums */
+  @mobile {
+    * {
+      @apply select-none;
+    }
+
+    input,
+    textarea,
+    [contenteditable] {
+      @apply select-text;
+    }
   }
 }
 
