@@ -5,6 +5,7 @@ import { useHover, useMedia } from 'react-use'
 import Link from 'next/link'
 
 import { motion } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import { DIV } from '@/config/constants/motion'
 
@@ -78,7 +79,7 @@ export const HoverableNavLink = ({
   withScale = false,
 }: THoverableNavLink) => {
   return useHover((hovered: boolean) => (
-    <li key={link.title} role='listitem'>
+    <li key={link.title} role='listitem' onClick={haptic}>
       <Link
         href={link.url}
         className={cn(

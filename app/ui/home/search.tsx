@@ -68,7 +68,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
   }, [cancel, isReady])
 
   useEffect(() => {
-    // Skip the first render
+    // Skip the first render.
     if (isInitialRender.current) {
       isInitialRender.current = false
 
