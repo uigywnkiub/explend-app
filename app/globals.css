@@ -101,18 +101,16 @@
   @mobile {
     * {
       @apply select-none;
+      -webkit-touch-callout: none; /* Disables long press menu on iOS. */
     }
 
     input,
     textarea,
     [contenteditable] {
       @apply select-text;
+      -webkit-touch-callout: none; /* Disables long press menu on iOS. */
     }
   }
-}
-
-img {
-  -webkit-touch-callout: none; /* Disables long press menu on iOS. */
 }
 
 input::-webkit-outer-spin-button,
