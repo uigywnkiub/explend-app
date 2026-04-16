@@ -114,10 +114,10 @@ function Categories({
     [],
   )
 
-  const toggleEmojiPicker = useCallback(
-    () => setShowEmojiPicker((prev) => !prev),
-    [],
-  )
+  const toggleEmojiPicker = useCallback(() => {
+    haptic()
+    setShowEmojiPicker((prev) => !prev)
+  }, [])
 
   const onSaveTargetClick = useCallback(
     async (index: number) => {
@@ -207,6 +207,7 @@ function Categories({
 
   const onEmojiClick = useCallback(
     (emojiData: EmojiClickData) => {
+      haptic()
       if (editingItemIndex) {
         const { categoryIndex, itemIndex } = editingItemIndex
         const updatedCategories = [...categories]
