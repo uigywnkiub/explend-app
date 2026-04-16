@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import { haptic } from 'ios-haptics'
+
 import { ROUTE } from '@/config/constants/routes'
 
 import ClientButton from '@/app/ui/client-button'
@@ -17,7 +19,7 @@ export default function NotFound() {
         <InfoText withAsterisk={false} isMd text='#404NotFound' />
       </div>
       <h1 className='md:text-lg'>Could not find the requested transaction.</h1>
-      <Link href={ROUTE.HOME}>
+      <Link href={ROUTE.HOME} onClick={haptic}>
         <ClientButton
           title='Return home'
           color='primary'

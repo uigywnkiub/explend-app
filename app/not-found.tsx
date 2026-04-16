@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import { haptic } from 'ios-haptics'
+
 import { ROUTE } from '@/config/constants/routes'
 
 import ClientButton from './ui/client-button'
@@ -19,7 +21,7 @@ export default function NotFound() {
         Looks like this page got lost in the internet abyss. Do not worry, we
         will help you find your way home.
       </h1>
-      <Link href={ROUTE.HOME}>
+      <Link href={ROUTE.HOME} onClick={haptic}>
         <ClientButton
           title='Return home'
           color='primary'

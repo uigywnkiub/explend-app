@@ -12,6 +12,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
@@ -73,7 +74,7 @@ export default function Changelog() {
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button variant='light' onPress={onClose}>
+              <Button variant='light' onPress={() => [haptic(), onClose()]}>
                 Close
               </Button>
             </ModalFooter>
