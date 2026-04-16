@@ -228,6 +228,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       toast.success('Limit added.')
       resetStates()
     } catch (err) {
+      haptic.error()
       toast.error('Failed to add limit.')
       throw err
     } finally {
@@ -250,6 +251,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
         haptic.confirm()
         toast.success('Reordered.')
       } catch (err) {
+        haptic.error()
         toast.error('Failed to reorder.')
         throw err
       }
@@ -288,6 +290,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     onCloseDeleteCallback: () => void,
   ) => {
     if (!categoryName) {
+      haptic.error()
       toast.error('Invalid category name.')
 
       return
@@ -298,6 +301,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       haptic.confirm()
       toast.success('Limit deleted.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to delete limit.')
       throw err
     } finally {
@@ -313,6 +317,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       haptic.confirm()
       toast.success('All limits reset.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to reset limits.')
       throw err
     } finally {
@@ -327,16 +332,19 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     onCloseEditCallback: () => void,
   ) => {
     if (!categoryName) {
+      haptic.error()
       toast.error('Invalid category name.')
 
       return
     }
     if (!limitAmount) {
+      haptic.error()
       toast.error('Invalid limit amount.')
 
       return
     }
     if (limitAmount === tempLimitAmount) {
+      haptic.error()
       toast.error('Limit amount is the same.')
 
       return
@@ -347,6 +355,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       haptic.confirm()
       toast.success('Limit edited.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to edit limit.')
       throw err
     } finally {

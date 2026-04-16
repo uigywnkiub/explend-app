@@ -10,6 +10,7 @@ import {
 } from 'react-icons/pi'
 
 import { Button } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { APP_NAME, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
@@ -48,6 +49,7 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
 
       if (!transactions.length) {
         setError('No transactions found.')
+        haptic.error()
         toast.error('No transactions found.')
 
         return
@@ -73,6 +75,7 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
 
     if (!file.name.endsWith('.json')) {
       setError('Only .json files are supported.')
+      haptic.error()
       toast.error('Only .json files are supported.')
 
       return
@@ -88,6 +91,7 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
 
       if (!Array.isArray(transactions) || !transactions.length) {
         setError('File is empty or has an invalid format.')
+        haptic.error()
         toast.error('File is empty or has an invalid format.')
 
         return
@@ -131,12 +135,14 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
         setError(
           `Some transactions already exist and were skipped. (${err.name})`,
         )
+        haptic.error()
         toast.error(`Duplicate transactions skipped. (${err.name})`)
 
         return
       }
 
       setError('Upload failed. Check the file format and try again.')
+      haptic.error()
       toast.error('Upload failed. Check the file format and try again.')
     } finally {
       setUploading(false)

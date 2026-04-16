@@ -60,6 +60,7 @@ function Currency({ userId, currency, transactionsCount }: TProps) {
       haptic.confirm()
       toast.success('Currency updated.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to update currency.')
       throw err
     } finally {

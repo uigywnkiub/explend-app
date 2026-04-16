@@ -76,6 +76,7 @@ function TransactionLimit({
       haptic.confirm()
       toast.success('Transaction limit updated.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to update transaction limit.')
       throw err
     } finally {

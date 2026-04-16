@@ -41,6 +41,7 @@ function SalaryDay({ userId, transactionsCount, userSalaryDay }: TProps) {
       haptic.confirm()
       toast.success('Salary day updated.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to update salary day.')
       throw err
     } finally {

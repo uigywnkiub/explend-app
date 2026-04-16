@@ -132,6 +132,7 @@ export default function CreateTestTransactions({
       haptic.confirm()
       toast.success('Test transactions created.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to create test transactions.')
       throw err
     } finally {

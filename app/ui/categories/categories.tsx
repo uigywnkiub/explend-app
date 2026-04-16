@@ -148,6 +148,7 @@ function Categories({
         haptic.confirm()
         toast.success('Categories updated.')
       } catch (err) {
+        haptic.error()
         toast.error('Failed to update categories.')
         throw err
       } finally {
@@ -304,6 +305,7 @@ function Categories({
         haptic.confirm()
         toast.success('Categories updated.')
       } catch (err) {
+        haptic.error()
         toast.error('Failed to update categories.')
         throw err
       } finally {
@@ -330,6 +332,7 @@ function Categories({
       const itemToDelete = category.items[itemIndex]
 
       if (!itemToDelete || itemToDelete.__isPlaceholder) {
+        haptic.error()
         toast.error('Item not found or cannot delete placeholder.')
 
         return
@@ -366,8 +369,10 @@ function Categories({
         }
       } catch (err) {
         if (isNoCategoryItems) {
+          haptic.error()
           toast.error('Failed to delete item and subject.')
         } else {
+          haptic.error()
           toast.error('Failed to delete item.')
         }
         throw err
@@ -392,6 +397,7 @@ function Categories({
       haptic.confirm()
       toast.success('All categories reset.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to reset categories.')
       throw err
     } finally {

@@ -187,6 +187,7 @@ export default function Subscriptions({
         haptic.confirm()
         toast.success('Reordered.')
       } catch (err) {
+        haptic.error()
         toast.error('Failed to reorder.')
         throw err
       }
@@ -228,6 +229,7 @@ export default function Subscriptions({
       toast.success('Subscription created.')
       resetStates()
     } catch (err) {
+      haptic.error()
       toast.error('Failed to create subscription.')
       throw err
     } finally {
@@ -295,6 +297,7 @@ export default function Subscriptions({
       haptic.confirm()
       toast.success('Subscription edited.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to edit subscription.')
       throw err
     } finally {
@@ -313,6 +316,7 @@ export default function Subscriptions({
       haptic.confirm()
       toast.success('Subscription deleted.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to delete subscription.')
       throw err
     } finally {
@@ -328,6 +332,7 @@ export default function Subscriptions({
       haptic.confirm()
       toast.success('All subscriptions reset.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to reset subscriptions.')
       throw err
     } finally {

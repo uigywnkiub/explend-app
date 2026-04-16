@@ -28,6 +28,7 @@ export default function DeleteTestTransactions({ userId }: TProps) {
       haptic.confirm()
       toast.success('Test transactions deleted.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to delete test transactions.')
       throw err
     } finally {

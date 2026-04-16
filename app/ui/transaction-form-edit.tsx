@@ -222,6 +222,7 @@ function TransactionFormEdit({ transaction }: TProps) {
       toast.success('Transaction edited.')
       router.back()
     } catch (err) {
+      haptic.error()
       toast.error('Failed to edit transaction.')
       throw err
     }

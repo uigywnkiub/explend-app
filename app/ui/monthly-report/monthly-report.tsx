@@ -169,6 +169,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     }
     const data = calculateForecast(transactions)
     if (data.expenseForecast.length === 0 && data.incomeForecast.length === 0) {
+      haptic.error()
       toast.error('Not enough data to forecast.')
 
       return
@@ -207,6 +208,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
 
   const getExpenseTipsAIData = useCallback(async () => {
     if (expenseReportData.length === 0) {
+      haptic.error()
       toast.error('No expenses found.')
 
       return
@@ -227,6 +229,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
       return
     }
     if (!canAttempt()) {
+      haptic.error()
       toast.error('Limit reached. Try later.')
 
       return
@@ -241,6 +244,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
       haptic.confirm()
       toast.success(isTipsDataExist ? 'Tips refreshed.' : 'Tips loaded.')
     } catch (err) {
+      haptic.error()
       toast.error(
         isTipsDataExist ? 'Failed to refresh tips.' : 'Failed to load tips.',
       )

@@ -276,6 +276,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         setAmount(modifiedReceiptData[0].amount)
       } else {
         setTimeout(() => {
+          haptic.error()
           toast.error('Not a valid receipt.')
           setHasCurrOrPrevReceiptAIData(false)
         }, TOAST_DURATION)

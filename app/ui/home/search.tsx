@@ -80,6 +80,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
         haptic.confirm()
         toast.success('Transactions found.')
       } else {
+        haptic.error()
         toast.error('No transactions found.')
       }
     }
