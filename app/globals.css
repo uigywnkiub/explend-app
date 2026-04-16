@@ -108,7 +108,7 @@
     textarea,
     [contenteditable] {
       @apply select-text;
-      -webkit-touch-callout: none; /* Disables long press menu on iOS. */
+      -webkit-touch-callout: default;
     }
   }
 }
