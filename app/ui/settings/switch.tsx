@@ -18,7 +18,7 @@ type TProps = {
 
 export default function LocalStorageSwitch({ localStorageKey }: TProps) {
   const router = useRouter()
-  const { triggerHaptic } = useHaptic()
+  const { triggerHaptic } = useHaptic(15)
   const [isSelected, setIsSelected] = useState<boolean | undefined>(undefined)
 
   useEffect(() => {
@@ -31,8 +31,8 @@ export default function LocalStorageSwitch({ localStorageKey }: TProps) {
       color='primary'
       isSelected={isSelected || false}
       onValueChange={(value) => {
-        setIsSelected(value)
         triggerHaptic()
+        setIsSelected(value)
         toggleBooleanInLocalStorage(localStorageKey)
         router.refresh()
       }}
