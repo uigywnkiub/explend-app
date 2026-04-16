@@ -56,6 +56,7 @@ import {
 import { useTheme } from '@wrksz/themes/client'
 import Compressor from 'compressorjs'
 import { AnimatePresence, motion } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
@@ -882,7 +883,10 @@ function TransactionForm({ currency, userCategories }: TProps) {
               aria-label='Income switch'
               value={isSwitchedOn ? 'true' : 'false'}
               isSelected={isSwitchedOn}
-              onValueChange={(isSelected) => setIsSwitchedOn(isSelected)}
+              onValueChange={(isSelected) => {
+                haptic()
+                setIsSwitchedOn(isSelected)
+              }}
             >
               Income
             </Switch>

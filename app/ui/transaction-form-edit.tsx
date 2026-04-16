@@ -32,6 +32,7 @@ import {
 } from '@internationalized/date'
 import { useTheme } from '@wrksz/themes/client'
 import { AnimatePresence, motion } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
@@ -279,7 +280,10 @@ function TransactionFormEdit({ transaction }: TProps) {
                   aria-label='Income switch'
                   value={isSwitchedOn ? 'true' : 'false'}
                   isSelected={isSwitchedOn}
-                  onValueChange={(isSelected) => setIsSwitchedOn(isSelected)}
+                  onValueChange={(isSelected) => {
+                    haptic()
+                    setIsSwitchedOn(isSelected)
+                  }}
                 >
                   Income
                 </Switch>

@@ -30,7 +30,7 @@ export default function LocalStorageSwitch({ localStorageKey }: TProps) {
       color='primary'
       isSelected={isSelected || false}
       onValueChange={(value) => {
-        haptic.confirm()
+        haptic()
         setIsSelected(value)
         toggleBooleanInLocalStorage(localStorageKey)
         router.refresh()
