@@ -296,7 +296,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
       <Tooltip content='Reset to current month' placement='bottom'>
         <Button
           isDisabled={isCurrMonthSelected}
-          onPress={onResetToCurrMonth}
+          onPress={() => [haptic(), onResetToCurrMonth()]}
           color='danger'
           variant='flat'
           className='min-w-4 font-medium'
@@ -320,7 +320,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
         placement='bottom'
       >
         <Button
-          onPress={onToggleForecast}
+          onPress={() => [haptic(), onToggleForecast()]}
           color={showForecast ? 'primary' : 'default'}
           variant='flat'
           className='min-w-4 font-medium'
@@ -511,7 +511,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
           <Button
             isLoading={isLoadingTips}
             variant='flat'
-            onPress={getExpenseTipsAIData}
+            onPress={() => [haptic(), getExpenseTipsAIData()]}
             className='mx-auto mt-2 flex'
           >
             {!isLoadingTips && <AILogo asIcon iconSize='sm' />}{' '}

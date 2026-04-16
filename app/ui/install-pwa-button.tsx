@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import { Button } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 export default function InstallPWA() {
   const [deferredPrompt, setDeferredPrompt] =
@@ -60,7 +61,7 @@ export default function InstallPWA() {
   return (
     <Button
       variant='light'
-      onPress={onInstall}
+      onPress={() => [haptic(), onInstall()]}
       className='text-default-500 fixed top-3 right-3'
     >
       Install

@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 
 import { Button, Kbd, Textarea } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { cn } from '@/app/lib/helpers'
 
@@ -73,6 +74,7 @@ export default function Feedback() {
             type='submit'
             isDisabled={pending || feedback.length > MAX_TEXT_LENGTH}
             isLoading={pending}
+            onPress={haptic}
             className='bg-background cursor-pointer px-0'
             size='sm'
           >

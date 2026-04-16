@@ -4,6 +4,7 @@ import { useFormStatus } from 'react-dom'
 import { PiUserSwitch, PiUserSwitchFill } from 'react-icons/pi'
 
 import { Button } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
@@ -20,6 +21,7 @@ function ExitAccount() {
       isLoading={pending}
       isDisabled={pending}
       startContent={!pending && icon}
+      onPress={haptic}
       className='bg-foreground text-default-50 w-full font-medium'
     >
       Sign out

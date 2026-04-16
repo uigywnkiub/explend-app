@@ -154,7 +154,7 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
 
   const downloadButtonWithIcon = (icon: TIcon) => (
     <Button
-      onPress={onDownload}
+      onPress={() => [haptic(), onDownload()]}
       isLoading={downloading}
       isDisabled={busy}
       startContent={!downloading && icon}
@@ -166,7 +166,7 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
 
   const uploadButtonWithIcon = (icon: TIcon) => (
     <Button
-      onPress={() => fileInputRef.current?.click()}
+      onPress={() => [haptic(), fileInputRef.current?.click()]}
       isLoading={uploading}
       isDisabled={busy}
       variant='bordered'

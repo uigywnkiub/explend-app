@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import { Button, Input, Tooltip } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
@@ -147,6 +148,7 @@ function Category({
                   >
                     <Button
                       onPress={() => {
+                        haptic()
                         setNewTargetName(category.subject)
                       }}
                       color='danger'
@@ -170,7 +172,7 @@ function Category({
 
             <Tooltip content='Save category subject' placement='bottom'>
               <Button
-                onPress={() => onSaveTargetClick(index)}
+                onPress={() => [haptic(), onSaveTargetClick(index)]}
                 isLoading={isLoading.subject}
                 isDisabled={newTargetName.length < 1}
                 className='bg-foreground text-default-50 px-0 font-medium'
@@ -202,7 +204,10 @@ function Category({
           </h2>
           <Tooltip content='Edit category subject' placement='bottom'>
             <Button
-              onPress={() => onEditTargetClick(index, category.subject)}
+              onPress={() => [
+                haptic(),
+                onEditTargetClick(index, category.subject),
+              ]}
               className='px-0 font-medium'
             >
               <HoverableElement

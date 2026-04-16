@@ -368,7 +368,7 @@ export default function Subscriptions({
             <Tooltip content='Reset all subscriptions' placement='bottom'>
               <Button
                 isDisabled={!hasSubscriptions}
-                onPress={onOpenReset}
+                onPress={() => [haptic(), onOpenReset()]}
                 color='danger'
                 variant='flat'
                 className='min-w-4'
@@ -386,6 +386,7 @@ export default function Subscriptions({
             <Tooltip content='Add subscription' placement='bottom'>
               <Button
                 onPress={() => {
+                  haptic()
                   const predefinedCategory = 'Subscription'
                   if (userCategoriesMap.has(predefinedCategory)) {
                     const categoryName =
@@ -444,12 +445,15 @@ export default function Subscriptions({
                     </div>
                   </ModalBody>
                   <ModalFooter>
-                    <Button variant='light' onPress={onClose}>
+                    <Button
+                      variant='light'
+                      onPress={() => [haptic(), onClose()]}
+                    >
                       Close
                     </Button>
                     <Button
                       color='primary'
-                      onPress={() => [onAddSubscription(onClose)]}
+                      onPress={() => [haptic(), onAddSubscription(onClose)]}
                       isLoading={isLoadingCreate}
                       isDisabled={isDisabledAddBtn}
                     >
@@ -586,7 +590,10 @@ export default function Subscriptions({
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={onCloseEdit}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseEdit()]}
+                >
                   Close
                 </Button>
                 <Button
@@ -597,7 +604,8 @@ export default function Subscriptions({
                     isDescriptionInvalid ||
                     isCategoryNameInvalid
                   }
-                  onPress={() =>
+                  onPress={() => {
+                    haptic()
                     onEditSubscription(
                       subscriptionId,
                       categoryName,
@@ -606,7 +614,7 @@ export default function Subscriptions({
                       trimmedNote,
                       onCloseEdit,
                     )
-                  }
+                  }}
                 >
                   Edit
                 </Button>
@@ -647,15 +655,19 @@ export default function Subscriptions({
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={onCloseDelete}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseDelete()]}
+                >
                   Close
                 </Button>
                 <Button
                   color='danger'
                   isLoading={isLoadingDelete}
-                  onPress={() =>
+                  onPress={() => {
+                    haptic()
                     onDeleteSubscription(subscriptionId, onCloseDelete)
-                  }
+                  }}
                 >
                   Delete
                 </Button>
@@ -690,13 +702,19 @@ export default function Subscriptions({
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={onCloseReset}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseReset()]}
+                >
                   Close
                 </Button>
                 <Button
                   color='danger'
                   isLoading={isLoadingReset}
-                  onPress={() => [onResetAllSubscriptions(onCloseReset)]}
+                  onPress={() => [
+                    haptic(),
+                    onResetAllSubscriptions(onCloseReset),
+                  ]}
                 >
                   Reset
                 </Button>

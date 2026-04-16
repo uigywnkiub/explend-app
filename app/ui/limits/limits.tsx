@@ -376,7 +376,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
           <Tooltip content='Reset all limits' placement='bottom'>
             <Button
               isDisabled={isNoUserLimitsData}
-              onPress={onOpenReset}
+              onPress={() => [haptic(), onOpenReset()]}
               color='danger'
               variant='flat'
               className='min-w-4 font-medium'
@@ -393,7 +393,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
           </Tooltip>
           <Tooltip content='Add limit' placement='bottom'>
             <Button
-              onPress={onOpen}
+              onPress={() => [haptic(), onOpen()]}
               color='primary'
               variant='flat'
               className='min-w-4 font-medium'
@@ -516,12 +516,12 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   </div>
                 </ModalBody>
                 <ModalFooter>
-                  <Button variant='light' onPress={() => [onClose()]}>
+                  <Button variant='light' onPress={() => [haptic(), onClose()]}>
                     Close
                   </Button>
                   <Button
                     color='primary'
-                    onPress={() => [onAddLimit(onClose)]}
+                    onPress={() => [haptic(), onAddLimit(onClose)]}
                     isLoading={isLoadingAddLimit}
                     isDisabled={isDisabledSubmitBtn}
                   >
@@ -607,13 +607,16 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={() => [onCloseReset()]}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseReset()]}
+                >
                   Close
                 </Button>
                 <Button
                   color='danger'
                   isLoading={isLoadingReset}
-                  onPress={() => [onResetAllLimits(onCloseReset)]}
+                  onPress={() => [haptic(), onResetAllLimits(onCloseReset)]}
                 >
                   Reset
                 </Button>
@@ -647,7 +650,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 />
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={() => [onCloseEdit()]}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseEdit()]}
+                >
                   Close
                 </Button>
                 <Button
@@ -655,6 +661,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   isLoading={isLoadingEdit}
                   isDisabled={isAmountInvalid}
                   onPress={() => [
+                    haptic(),
                     onEditLimit(
                       categoryName || tempCategoryName,
                       amount,
@@ -694,13 +701,17 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={() => [onCloseDelete()]}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseDelete()]}
+                >
                   Close
                 </Button>
                 <Button
                   color='danger'
                   isLoading={isLoadingDelete}
                   onPress={() => [
+                    haptic(),
                     onDeleteLimit(
                       categoryName || tempCategoryName,
                       onCloseDelete,

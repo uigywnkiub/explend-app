@@ -409,7 +409,7 @@ function Categories({
     <Button
       isDisabled={haveCategoriesChanged}
       className='bg-danger text-default-50 mx-auto w-full font-medium'
-      onPress={onOpen}
+      onPress={() => [haptic(), onOpen()]}
       startContent={icon}
     >
       {RESET_CATEGORIES_BTN_TEXT}
@@ -508,7 +508,7 @@ function Categories({
               <ModalFooter>
                 <Button
                   variant='light'
-                  onPress={onClose}
+                  onPress={() => [haptic(), onClose()]}
                   isDisabled={isLoading.reset}
                 >
                   Close
@@ -518,6 +518,7 @@ function Categories({
                   color='danger'
                   isDisabled={isLoading.reset}
                   isLoading={isLoading.reset}
+                  onPress={haptic}
                 >
                   Reset
                 </Button>

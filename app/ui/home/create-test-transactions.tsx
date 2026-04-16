@@ -148,7 +148,7 @@ export default function CreateTestTransactions({
         transactions.
       </p>
       <Button
-        onPress={onCreateTestTransactions}
+        onPress={() => [haptic(), onCreateTestTransactions()]}
         isDisabled={isLoading}
         isLoading={isLoading}
       >

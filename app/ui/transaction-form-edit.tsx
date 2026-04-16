@@ -170,7 +170,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     return transactionChanged || imagesChanged || dateChanged
   }
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
 
@@ -442,6 +442,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                       <Button
                         aria-label='Enter'
                         type='submit'
+                        onPress={haptic}
                         isDisabled={
                           !amount ||
                           amount === '0' ||
@@ -509,7 +510,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                       <Button
                         size='sm'
                         isIconOnly
-                        onPress={() => onDeleteImage(idx)}
+                        onPress={() => [haptic(), onDeleteImage(idx)]}
                         className='absolute top-0 -right-1 z-10 size-6 bg-transparent'
                       >
                         <PiXCircleFill
@@ -550,7 +551,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                   initTransactionImagesState.filter(Boolean).length ===
                   validImageSrcs.length
                 }
-                onPress={onResetImages}
+                onPress={() => [haptic(), onResetImages()]}
               >
                 Reset to initial state
               </Button>

@@ -31,6 +31,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { APP_NAME, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { SEARCH_PARAM } from '@/config/constants/navigation'
@@ -204,6 +205,7 @@ Time: ${formatTime(t.createdAt)}`
                   isIconOnly
                   size='md'
                   className='md:size-12'
+                  onPress={haptic}
                 >
                   <PiDotsThreeOutlineVerticalFill className='fill-foreground size-4' />
                 </Button>
@@ -351,12 +353,16 @@ Time: ${formatTime(t.createdAt)}`
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={() => [onClose()]}>
+                <Button variant='light' onPress={() => [haptic(), onClose()]}>
                   Close
                 </Button>
                 <Button
                   color='danger'
-                  onPress={() => [onDeleteTransaction(t.id), onClose()]}
+                  onPress={() => [
+                    haptic(),
+                    onDeleteTransaction(t.id),
+                    onClose(),
+                  ]}
                 >
                   Delete
                 </Button>

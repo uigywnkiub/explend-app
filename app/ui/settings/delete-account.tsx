@@ -17,6 +17,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
@@ -41,7 +42,7 @@ function DeleteAccount({ userId }: TProps) {
 
   const deleteAccount = deleteAllTransactionsAndSignOut.bind(null, userId)
 
-  const onDeleteAccount = async (e: React.FormEvent) => {
+  const onDeleteAccount = async (e: React.SubmitEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
@@ -58,7 +59,7 @@ function DeleteAccount({ userId }: TProps) {
   const buttonWithIcon = (icon: TIcon) => (
     <Button
       className='bg-danger text-default-50 w-full font-medium'
-      onPress={onOpen}
+      onPress={() => [haptic(), onOpen()]}
       startContent={icon}
     >
       Delete account
@@ -123,7 +124,7 @@ function DeleteAccount({ userId }: TProps) {
               <ModalFooter>
                 <Button
                   variant='light'
-                  onPress={onClose}
+                  onPress={() => [haptic(), onClose()]}
                   isDisabled={isLoading}
                 >
                   Close
@@ -133,6 +134,7 @@ function DeleteAccount({ userId }: TProps) {
                   color='danger'
                   isDisabled={isInvalidText || isLoading}
                   isLoading={isLoading}
+                  onPress={haptic}
                 >
                   Delete
                 </Button>
