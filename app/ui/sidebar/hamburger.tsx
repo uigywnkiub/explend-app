@@ -1,3 +1,5 @@
+'use client'
+
 import { haptic } from 'ios-haptics'
 
 export default function Hamburger() {
