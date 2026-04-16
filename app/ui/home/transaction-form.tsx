@@ -694,7 +694,10 @@ function TransactionForm({ currency, userCategories }: TProps) {
                         : 'Attach Image URL'
                     }
                     fullWidth
-                    onSelectionChange={(tab) => setSelectedTab(tab.toString())}
+                    onSelectionChange={(tab) => {
+                      haptic()
+                      setSelectedTab(tab.toString())
+                    }}
                     selectedKey={selectedTab}
                   >
                     <Tab

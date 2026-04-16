@@ -263,7 +263,12 @@ function TransactionFormEdit({ transaction }: TProps) {
   return (
     <>
       <LimitToast triggerBy={categoryName} />
-      <Tabs aria-label='Edit Transaction' fullWidth className='mb-4'>
+      <Tabs
+        aria-label='Edit Transaction'
+        fullWidth
+        className='mb-4'
+        onSelectionChange={haptic}
+      >
         <Tab
           key={TAB_KEY.TRANSACTION}
           title={
