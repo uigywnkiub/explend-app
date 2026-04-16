@@ -1035,7 +1035,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   items={userCategories}
                   defaultSelectedKeys={[DEFAULT_CATEGORY]}
                   selectedKeys={category}
-                  onSelectionChange={setCategory}
+                  onSelectionChange={(keys) => {
+                    haptic()
+                    setCategory(keys)
+                  }}
+                  onClick={haptic}
                   name='category'
                   label='Select a category'
                   className='w-56'
