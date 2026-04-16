@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Switch } from '@heroui/react'
-import { useHaptic } from 'use-haptic'
+import { haptic } from 'ios-haptics'
 
 import {
   getBooleanFromLocalStorage,
@@ -18,7 +18,6 @@ type TProps = {
 
 export default function LocalStorageSwitch({ localStorageKey }: TProps) {
   const router = useRouter()
-  const { triggerHaptic } = useHaptic(150)
   const [isSelected, setIsSelected] = useState<boolean | undefined>(undefined)
 
   useEffect(() => {
@@ -31,7 +30,7 @@ export default function LocalStorageSwitch({ localStorageKey }: TProps) {
       color='primary'
       isSelected={isSelected || false}
       onValueChange={(value) => {
-        triggerHaptic()
+        haptic.confirm()
         setIsSelected(value)
         toggleBooleanInLocalStorage(localStorageKey)
         router.refresh()

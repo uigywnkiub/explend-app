@@ -48,6 +48,7 @@
     "get-user-locale": "^3.0.0",
     "heic2any": "^0.0.4",
     "import-in-the-middle": "^3.0.1",
+    "ios-haptics": "^0.1.4",
     "mongoose": "^8.23.0",
     "mongoose-encryption-decryption": "^1.2.1",
     "next": "16.2.3",
@@ -63,8 +64,7 @@
     "recharts": "^2.15.4",
     "require-in-the-middle": "^8.0.1",
     "resend": "^6.11.0",
-    "tailwind-merge": "^3.5.0",
-    "use-haptic": "^1.1.13"
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",

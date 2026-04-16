@@ -81,6 +81,9 @@ importers:
       import-in-the-middle:
         specifier: ^3.0.1
         version: 3.0.1
+      ios-haptics:
+        specifier: ^0.1.4
+        version: 0.1.4
       mongoose:
         specifier: ^8.23.0
         version: 8.23.0(socks@2.8.7)
@@ -129,9 +132,6 @@ importers:
       tailwind-merge:
         specifier: ^3.5.0
         version: 3.5.0
-      use-haptic:
-        specifier: ^1.1.13
-        version: 1.1.13
     devDependencies:
       '@commitlint/cli':
         specifier: ^20.5.0
@@ -5514,6 +5514,9 @@ packages:
   intl-messageformat@10.7.18:
     resolution: {integrity: sha512-m3Ofv/X/tV8Y3tHXLohcuVuhWKo7BBq62cqY15etqmLxg2DZ34AGGgQDeR+SCta2+zICb1NX83af0GJmbQ1++g==}
 
+  ios-haptics@0.1.4:
+    resolution: {integrity: sha512-94FJcSuvmhe4mHTX4Uauj+/2yhs56m4BLkRScy1vNvkv7H1cSjsvfT+olc1sYOUqWlPhtVttAFBHex0cY9CE7Q==}
+
   ip-address@10.0.1:
     resolution: {integrity: sha512-NWv9YLW4PoW2B7xtzaS3NCot75m6nK7Icdv0o3lfMceJVRfSoQwqD4wEH5rLwoKJwUiZ/rfpiVBhnaF0FK4HoA==}
     engines: {node: '>= 12'}
@@ -7364,9 +7367,6 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
-
-  use-haptic@1.1.13:
-    resolution: {integrity: sha512-Kg6+MaksFTPlbAbf+WTbJPlsXt6z61LsQ1TfnGv29Q/Ewp2pmmAG6WipOMf89zDOiCZ004IHNs/iwpsxSbDa4w==}
 
   use-isomorphic-layout-effect@1.2.1:
     resolution: {integrity: sha512-tpZZ+EX0gaghDAiFR37hj5MgY6ZN55kLiPkJsKxBMZ6GZdOSPJXiOzPM984oPYZ5AnehYx5WQp1+ME8I/P/pRA==}
@@ -14670,6 +14670,8 @@ snapshots:
       '@formatjs/icu-messageformat-parser': 2.11.4
       tslib: 2.8.1
 
+  ios-haptics@0.1.4: {}
+
   ip-address@10.0.1: {}
 
   is-array-buffer@3.0.5:
@@ -16605,11 +16607,6 @@ snapshots:
       react: 19.2.5
     optionalDependencies:
       '@types/react': 19.2.14
-
-  use-haptic@1.1.13:
-    dependencies:
-      react: 19.2.5
-      react-dom: 19.2.5(react@19.2.5)
 
   use-isomorphic-layout-effect@1.2.1(@types/react@19.2.14)(react@19.2.5):
     dependencies:
