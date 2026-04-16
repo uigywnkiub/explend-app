@@ -86,8 +86,6 @@
   color utility to any element that depends on these defaults.
 */
 
-@custom-variant mobile (@media (max-width: 768px));
-
 @layer base {
   *,
   ::after,
@@ -96,26 +94,17 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
     @apply scroll-smooth;
+    /* slashed-zero tabular-nums */
   }
 
-  @mobile {
-    * {
-      @apply select-none;
-      -webkit-touch-callout: none; /* Disables long press menu on iOS. */
-    }
-
-    input,
-    textarea,
-    [contenteditable] {
-      @apply select-text;
-      -webkit-touch-callout: default;
-    }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    @apply m-0 appearance-none;
   }
-}
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  @apply m-0 appearance-none;
+  img {
+    -webkit-touch-callout: none; /* Disables long press menu on iOS. */
+  }
 }
 
 #sidebar-toggle:checked ~ .flex > .fixed-no-scroll {
