@@ -1034,7 +1034,8 @@ export async function getChangelog(): Promise<TGetChangelog> {
 
     return {
       sha: data[0]?.sha,
-      msg: data[0]?.commit?.message,
+      msg: data[0]?.commit?.message?.split('\n')[0],
+      date: data[0]?.commit?.author?.date,
     }
   } catch (err) {
     throw err
