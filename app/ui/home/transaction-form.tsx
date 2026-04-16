@@ -1076,6 +1076,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
               <DatePicker
                 isDisabled={pending || isLoadingAIData}
                 granularity='day'
+                aria-label='Select a date'
                 label='Select a date'
                 value={date}
                 onChange={setDate}

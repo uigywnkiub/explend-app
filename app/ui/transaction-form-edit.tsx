@@ -414,9 +414,13 @@ function TransactionFormEdit({ transaction }: TProps) {
                     <DatePicker
                       isDisabled={isLoading}
                       granularity='day'
+                      aria-label='Select a date'
                       label='Select a date'
                       value={date}
-                      onChange={setDate}
+                      onChange={(val) => {
+                        haptic()
+                        setDate(val)
+                      }}
                       maxValue={today(getLocalTimeZone())}
                       className='w-56'
                       classNames={{
