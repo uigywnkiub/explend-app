@@ -16,6 +16,7 @@ import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { Button, Input, Tooltip } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { MOTION_LIST } from '@/config/constants/motion'
@@ -171,6 +172,7 @@ function CategoryItem({
                       >
                         <Button
                           onPress={() => {
+                            haptic()
                             setNewItemName(item.name)
                             onResetEmojiClick(categoryIndex, itemIndex)
                           }}
@@ -198,7 +200,10 @@ function CategoryItem({
               {!item.__isPlaceholder && !item.__isNew && !isLoading.item && (
                 <Tooltip content='Delete category' placement='bottom'>
                   <Button
-                    onPress={() => onDeleteItemClick(categoryIndex, itemIndex)}
+                    onPress={() => [
+                      haptic(),
+                      onDeleteItemClick(categoryIndex, itemIndex),
+                    ]}
                     color='danger'
                     className='min-w-4 px-4 font-medium'
                   >
@@ -214,7 +219,10 @@ function CategoryItem({
 
               <Tooltip content='Save category' placement='bottom'>
                 <Button
-                  onPress={() => onSaveItemClick(categoryIndex, itemIndex)}
+                  onPress={() => [
+                    haptic(),
+                    onSaveItemClick(categoryIndex, itemIndex),
+                  ]}
                   isLoading={isLoading.item}
                   isDisabled={newItemName.length < 1 || isLoading.item}
                   className='bg-foreground text-default-50 min-w-4 px-4 font-medium md:min-w-20 md:px-0'
@@ -269,9 +277,10 @@ function CategoryItem({
             placement='bottom'
           >
             <Button
-              onPress={() =>
+              onPress={() => {
+                haptic()
                 onEditItemClick(categoryIndex, itemIndex, item.name)
-              }
+              }}
               isDisabled={item.name === DEFAULT_CATEGORY}
               className='px-0 font-medium'
             >

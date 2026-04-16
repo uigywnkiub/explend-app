@@ -24,6 +24,7 @@ import {
   Tooltip,
 } from '@heroui/react'
 import { Reorder, useDragControls } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import {
   DEFAULT_CATEGORY_EMOJI,
@@ -176,6 +177,7 @@ function SubscriptionItem({
                   isIconOnly
                   size='md'
                   className='md:size-10'
+                  onPress={haptic}
                 >
                   <PiDotsThreeOutlineVerticalFill className='fill-foreground size-4' />
                 </Button>

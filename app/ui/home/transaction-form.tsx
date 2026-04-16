@@ -56,6 +56,7 @@ import {
 import { useTheme } from '@wrksz/themes/client'
 import Compressor from 'compressorjs'
 import { AnimatePresence, motion } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
@@ -275,6 +276,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         setAmount(modifiedReceiptData[0].amount)
       } else {
         setTimeout(() => {
+          haptic.error()
           toast.error('Not a valid receipt.')
           setHasCurrOrPrevReceiptAIData(false)
         }, TOAST_DURATION)
@@ -387,6 +389,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         setAmount(receiptAIData[nextIndex].amount)
       })
     } else {
+      haptic()
       toast.success(
         `${receiptAIData.length}/${receiptAIData.length} ${pluralize(receiptAIData.length, 'transaction', 'transactions')} added.`,
       )
@@ -402,6 +405,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         }
 
         setTimeout(() => {
+          haptic.confirm()
           toast.success('All transactions added.')
         }, TOAST_DURATION)
 
@@ -524,6 +528,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 <Button
                   variant='light'
                   onPress={() => {
+                    haptic()
                     if (isValidAttemptResumeAIReceiptData) {
                       setAttemptResumeAIReceiptData((prev) => (prev ?? 0) + 1)
                     }
@@ -537,6 +542,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                     color='danger'
                     variant='flat'
                     onPress={() => {
+                      haptic()
                       rmReceiptAIDataLocalStorage()
                       rmAttemptResumeAIReceiptData()
                       toast.dismiss(t.id)
@@ -552,6 +558,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   color='primary'
                   variant='flat'
                   onPress={() => {
+                    haptic()
                     setDescription(receiptAIData[0].description)
                     setAmount(receiptAIData[0].amount)
                     setHasCurrOrPrevReceiptAIData(true)
@@ -639,6 +646,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
       queueMicrotask(() => {
         if (!hasReceiptAIData || !hasCurrOrPrevReceiptAIData) {
+          haptic.confirm()
           toast.success('Transaction added.')
         }
       })
@@ -689,7 +697,10 @@ function TransactionForm({ currency, userCategories }: TProps) {
                         : 'Attach Image URL'
                     }
                     fullWidth
-                    onSelectionChange={(tab) => setSelectedTab(tab.toString())}
+                    onSelectionChange={(tab) => {
+                      haptic()
+                      setSelectedTab(tab.toString())
+                    }}
                     selectedKey={selectedTab}
                   >
                     <Tab
@@ -727,7 +738,10 @@ function TransactionForm({ currency, userCategories }: TProps) {
                             <Button
                               isIconOnly
                               size='lg'
-                              onPress={() => fileInputRef.current?.click()}
+                              onPress={() => [
+                                haptic(),
+                                fileInputRef.current?.click(),
+                              ]}
                               className='bg-ai-gradient text-background'
                             >
                               <HoverableElement
@@ -790,7 +804,10 @@ function TransactionForm({ currency, userCategories }: TProps) {
                                   <Button
                                     size='sm'
                                     isIconOnly
-                                    onPress={() => onDeleteImage(idx)}
+                                    onPress={() => [
+                                      haptic(),
+                                      onDeleteImage(idx),
+                                    ]}
                                     className='absolute top-0 -right-1 z-10 size-6 bg-transparent'
                                   >
                                     <PiXCircleFill
@@ -835,12 +852,15 @@ function TransactionForm({ currency, userCategories }: TProps) {
                       color='danger'
                       variant='light'
                       isDisabled={validImageSrcs.length === 0}
-                      onPress={() => setImageSrcs(['', '', ''])}
+                      onPress={() => [haptic(), setImageSrcs(['', '', ''])]}
                     >
                       Reset
                     </Button>
                   )}
-                  <Button variant='light' onPress={onCloseImageModal}>
+                  <Button
+                    variant='light'
+                    onPress={() => [haptic(), onCloseImageModal()]}
+                  >
                     Done
                   </Button>
                 </ModalFooter>
@@ -882,7 +902,10 @@ function TransactionForm({ currency, userCategories }: TProps) {
               aria-label='Income switch'
               value={isSwitchedOn ? 'true' : 'false'}
               isSelected={isSwitchedOn}
-              onValueChange={(isSelected) => setIsSwitchedOn(isSelected)}
+              onValueChange={(isSelected) => {
+                haptic()
+                setIsSwitchedOn(isSelected)
+              }}
             >
               Income
             </Switch>
@@ -947,7 +970,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
               >
                 <Button
                   isIconOnly
-                  onPress={onOpenImageModal}
+                  onPress={() => [haptic(), onOpenImageModal()]}
                   isDisabled={hasCurrOrPrevReceiptAIData}
                   className='bg-transparent'
                 >
@@ -1027,7 +1050,10 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   items={userCategories}
                   defaultSelectedKeys={[DEFAULT_CATEGORY]}
                   selectedKeys={category}
-                  onSelectionChange={setCategory}
+                  onSelectionChange={(keys) => {
+                    haptic()
+                    setCategory(keys)
+                  }}
                   name='category'
                   label='Select a category'
                   className='w-56'
@@ -1065,9 +1091,13 @@ function TransactionForm({ currency, userCategories }: TProps) {
               <DatePicker
                 isDisabled={pending || isLoadingAIData}
                 granularity='day'
+                aria-label='Select a date'
                 label='Select a date'
                 value={date}
-                onChange={setDate}
+                onChange={(val) => {
+                  haptic()
+                  setDate(val)
+                }}
                 maxValue={today(getLocalTimeZone())}
                 className='w-56'
                 classNames={{
@@ -1088,6 +1118,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                   isDisabled={
                     !amount || amount === '0' || pending || isLoadingAIData
                   }
+                  onPress={haptic}
                   className='bg-background cursor-pointer px-0'
                   size='sm'
                 >

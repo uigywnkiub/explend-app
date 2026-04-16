@@ -11,6 +11,7 @@ import {
   useDisclosure,
 } from '@heroui/react'
 import { motion } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import { NAV_ICON_SIZE } from '@/config/constants/navigation'
 
@@ -125,7 +126,7 @@ export default function CategoryWithImage({ t }: TProps) {
                     isIconOnly
                     variant='flat'
                     className='absolute top-1/2 left-4 z-50 -translate-y-1/2 text-white'
-                    onPress={prevImage}
+                    onPress={() => [haptic(), prevImage()]}
                   >
                     <PiArrowArcLeft
                       size={NAV_ICON_SIZE}
@@ -146,7 +147,7 @@ export default function CategoryWithImage({ t }: TProps) {
                     isIconOnly
                     variant='flat'
                     className='absolute top-1/2 right-4 z-50 -translate-y-1/2 text-white'
-                    onPress={nextImage}
+                    onPress={() => [haptic(), nextImage()]}
                   >
                     <PiArrowArcRight
                       size={NAV_ICON_SIZE}

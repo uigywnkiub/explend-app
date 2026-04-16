@@ -28,6 +28,7 @@ import {
   useDisclosure,
 } from '@heroui/react'
 import { AnimatePresence, Reorder } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import {
   DEFAULT_CATEGORY,
@@ -223,9 +224,11 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     setIsLoadingAddLimit(true)
     try {
       await addLimit(userId, [...userLimitsData, newLimitData])
+      haptic.confirm()
       toast.success('Limit added.')
       resetStates()
     } catch (err) {
+      haptic.error()
       toast.error('Failed to add limit.')
       throw err
     } finally {
@@ -245,8 +248,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       try {
         await addLimit(userId, strippedLimitsOrder)
         setIsReorderLimitSave(false)
+        haptic.confirm()
         toast.success('Reordered.')
       } catch (err) {
+        haptic.error()
         toast.error('Failed to reorder.')
         throw err
       }
@@ -285,6 +290,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     onCloseDeleteCallback: () => void,
   ) => {
     if (!categoryName) {
+      haptic.error()
       toast.error('Invalid category name.')
 
       return
@@ -292,8 +298,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     setIsLoadingDelete(true)
     try {
       await deleteLimit(userId, categoryName)
+      haptic.confirm()
       toast.success('Limit deleted.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to delete limit.')
       throw err
     } finally {
@@ -306,8 +314,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     setIsLoadingReset(true)
     try {
       await addLimit(userId, [])
+      haptic.confirm()
       toast.success('All limits reset.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to reset limits.')
       throw err
     } finally {
@@ -322,16 +332,19 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     onCloseEditCallback: () => void,
   ) => {
     if (!categoryName) {
+      haptic.error()
       toast.error('Invalid category name.')
 
       return
     }
     if (!limitAmount) {
+      haptic.error()
       toast.error('Invalid limit amount.')
 
       return
     }
     if (limitAmount === tempLimitAmount) {
+      haptic.error()
       toast.error('Limit amount is the same.')
 
       return
@@ -339,8 +352,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
     setIsLoadingEdit(true)
     try {
       await editLimit(userId, categoryName, limitAmount)
+      haptic.confirm()
       toast.success('Limit edited.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to edit limit.')
       throw err
     } finally {
@@ -361,7 +376,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
           <Tooltip content='Reset all limits' placement='bottom'>
             <Button
               isDisabled={isNoUserLimitsData}
-              onPress={onOpenReset}
+              onPress={() => [haptic(), onOpenReset()]}
               color='danger'
               variant='flat'
               className='min-w-4 font-medium'
@@ -378,7 +393,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
           </Tooltip>
           <Tooltip content='Add limit' placement='bottom'>
             <Button
-              onPress={onOpen}
+              onPress={() => [haptic(), onOpen()]}
               color='primary'
               variant='flat'
               className='min-w-4 font-medium'
@@ -422,18 +437,21 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                         name='category'
                         aria-label='Category'
                         placeholder='Select a category'
+                        items={userCategories}
+                        selectedKeys={category}
+                        onSelectionChange={(keys) => {
+                          haptic()
+                          setCategory(keys)
+                        }}
+                        disabledKeys={disabledCategories.concat(
+                          DEFAULT_CATEGORY,
+                        )}
                         className='w-full'
                         classNames={{
                           trigger:
                             'h-12 min-h-12 py-1.5 px-3 md:h-13 md:min-h-13 md:py-2',
                           innerWrapper: 'pl-1 text-default-500',
                         }}
-                        items={userCategories}
-                        selectedKeys={category}
-                        onSelectionChange={setCategory}
-                        disabledKeys={disabledCategories.concat(
-                          DEFAULT_CATEGORY,
-                        )}
                       >
                         {userCategories.map((category, idx, arr) => (
                           <SelectSection
@@ -498,12 +516,12 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   </div>
                 </ModalBody>
                 <ModalFooter>
-                  <Button variant='light' onPress={() => [onClose()]}>
+                  <Button variant='light' onPress={() => [haptic(), onClose()]}>
                     Close
                   </Button>
                   <Button
                     color='primary'
-                    onPress={() => [onAddLimit(onClose)]}
+                    onPress={() => [haptic(), onAddLimit(onClose)]}
                     isLoading={isLoadingAddLimit}
                     isDisabled={isDisabledSubmitBtn}
                   >
@@ -589,13 +607,16 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={() => [onCloseReset()]}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseReset()]}
+                >
                   Close
                 </Button>
                 <Button
                   color='danger'
                   isLoading={isLoadingReset}
-                  onPress={() => [onResetAllLimits(onCloseReset)]}
+                  onPress={() => [haptic(), onResetAllLimits(onCloseReset)]}
                 >
                   Reset
                 </Button>
@@ -629,7 +650,10 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 />
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={() => [onCloseEdit()]}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseEdit()]}
+                >
                   Close
                 </Button>
                 <Button
@@ -637,6 +661,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                   isLoading={isLoadingEdit}
                   isDisabled={isAmountInvalid}
                   onPress={() => [
+                    haptic(),
                     onEditLimit(
                       categoryName || tempCategoryName,
                       amount,
@@ -676,13 +701,17 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={() => [onCloseDelete()]}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseDelete()]}
+                >
                   Close
                 </Button>
                 <Button
                   color='danger'
                   isLoading={isLoadingDelete}
                   onPress={() => [
+                    haptic(),
                     onDeleteLimit(
                       categoryName || tempCategoryName,
                       onCloseDelete,

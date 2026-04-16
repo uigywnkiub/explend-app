@@ -31,6 +31,7 @@ import {
   startOfMonth,
   startOfToday,
 } from 'date-fns'
+import { haptic } from 'ios-haptics'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
@@ -145,6 +146,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     (dateRange: RangeValue<DateValue>) => {
       setSelectedDate(dateRange)
       if (isTipsDataExist) setTipsDataAI(null)
+      haptic.confirm()
       toast.success('Date range updated.')
     },
     [isTipsDataExist],
@@ -167,12 +169,14 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     }
     const data = calculateForecast(transactions)
     if (data.expenseForecast.length === 0 && data.incomeForecast.length === 0) {
+      haptic.error()
       toast.error('Not enough data to forecast.')
 
       return
     }
     setForecastData(data)
     setShowForecast(true)
+    haptic.confirm()
     toast.success('Forecast generated.')
   }, [showForecast, transactions])
 
@@ -204,6 +208,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
 
   const getExpenseTipsAIData = useCallback(async () => {
     if (expenseReportData.length === 0) {
+      haptic.error()
       toast.error('No expenses found.')
 
       return
@@ -218,11 +223,13 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
 
       setTipsDataAI(sortedExpenseTipsAIDataLocalStorage)
       setExpenseTipsAIDataLocalStorage(sortedExpenseTipsAIDataLocalStorage)
+      haptic.confirm()
       toast.success('Restored from memory.')
 
       return
     }
     if (!canAttempt()) {
+      haptic.error()
       toast.error('Limit reached. Try later.')
 
       return
@@ -234,8 +241,10 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
       setTipsDataAI(parsedRes)
       setExpenseTipsAIDataLocalStorage(parsedRes)
       registerAttempt()
+      haptic.confirm()
       toast.success(isTipsDataExist ? 'Tips refreshed.' : 'Tips loaded.')
     } catch (err) {
+      haptic.error()
       toast.error(
         isTipsDataExist ? 'Failed to refresh tips.' : 'Failed to load tips.',
       )
@@ -287,7 +296,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
       <Tooltip content='Reset to current month' placement='bottom'>
         <Button
           isDisabled={isCurrMonthSelected}
-          onPress={onResetToCurrMonth}
+          onPress={() => [haptic(), onResetToCurrMonth()]}
           color='danger'
           variant='flat'
           className='min-w-4 font-medium'
@@ -311,7 +320,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
         placement='bottom'
       >
         <Button
-          onPress={onToggleForecast}
+          onPress={() => [haptic(), onToggleForecast()]}
           color={showForecast ? 'primary' : 'default'}
           variant='flat'
           className='min-w-4 font-medium'
@@ -502,7 +511,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
           <Button
             isLoading={isLoadingTips}
             variant='flat'
-            onPress={getExpenseTipsAIData}
+            onPress={() => [haptic(), getExpenseTipsAIData()]}
             className='mx-auto mt-2 flex'
           >
             {!isLoadingTips && <AILogo asIcon iconSize='sm' />}{' '}

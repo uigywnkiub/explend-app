@@ -32,6 +32,7 @@ import {
 } from '@internationalized/date'
 import { useTheme } from '@wrksz/themes/client'
 import { AnimatePresence, motion } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
@@ -169,7 +170,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     return transactionChanged || imagesChanged || dateChanged
   }
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
 
@@ -207,6 +208,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     }
 
     if (!hasChanges(newTransactionData, transaction)) {
+      haptic.error()
       toast.error('No changes detected.')
       setIsLoading(false)
 
@@ -216,9 +218,11 @@ function TransactionFormEdit({ transaction }: TProps) {
 
     try {
       await editTransactionById(transactionId, newTransactionData)
+      haptic.confirm()
       toast.success('Transaction edited.')
       router.back()
     } catch (err) {
+      haptic.error()
       toast.error('Failed to edit transaction.')
       throw err
     }
@@ -259,7 +263,12 @@ function TransactionFormEdit({ transaction }: TProps) {
   return (
     <>
       <LimitToast triggerBy={categoryName} />
-      <Tabs aria-label='Edit Transaction' fullWidth className='mb-4'>
+      <Tabs
+        aria-label='Edit Transaction'
+        fullWidth
+        className='mb-4'
+        onSelectionChange={haptic}
+      >
         <Tab
           key={TAB_KEY.TRANSACTION}
           title={
@@ -279,7 +288,10 @@ function TransactionFormEdit({ transaction }: TProps) {
                   aria-label='Income switch'
                   value={isSwitchedOn ? 'true' : 'false'}
                   isSelected={isSwitchedOn}
-                  onValueChange={(isSelected) => setIsSwitchedOn(isSelected)}
+                  onValueChange={(isSelected) => {
+                    haptic()
+                    setIsSwitchedOn(isSelected)
+                  }}
                 >
                   Income
                 </Switch>
@@ -365,15 +377,18 @@ function TransactionFormEdit({ transaction }: TProps) {
                         isDisabled={isLoading}
                         name='category'
                         label='Select a category'
+                        items={userCategories}
+                        defaultSelectedKeys={category}
+                        selectedKeys={category}
+                        onSelectionChange={(keys) => {
+                          haptic()
+                          setCategory(keys)
+                        }}
                         className='w-56'
                         classNames={{
                           trigger:
                             'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
                         }}
-                        items={userCategories}
-                        defaultSelectedKeys={category}
-                        selectedKeys={category}
-                        onSelectionChange={setCategory}
                       >
                         {userCategories.map((category, idx, arr) => (
                           <SelectSection
@@ -404,9 +419,13 @@ function TransactionFormEdit({ transaction }: TProps) {
                     <DatePicker
                       isDisabled={isLoading}
                       granularity='day'
+                      aria-label='Select a date'
                       label='Select a date'
                       value={date}
-                      onChange={setDate}
+                      onChange={(val) => {
+                        haptic()
+                        setDate(val)
+                      }}
                       maxValue={today(getLocalTimeZone())}
                       className='w-56'
                       classNames={{
@@ -423,6 +442,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                       <Button
                         aria-label='Enter'
                         type='submit'
+                        onPress={haptic}
                         isDisabled={
                           !amount ||
                           amount === '0' ||
@@ -490,7 +510,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                       <Button
                         size='sm'
                         isIconOnly
-                        onPress={() => onDeleteImage(idx)}
+                        onPress={() => [haptic(), onDeleteImage(idx)]}
                         className='absolute top-0 -right-1 z-10 size-6 bg-transparent'
                       >
                         <PiXCircleFill
@@ -531,7 +551,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                   initTransactionImagesState.filter(Boolean).length ===
                   validImageSrcs.length
                 }
-                onPress={onResetImages}
+                onPress={() => [haptic(), onResetImages()]}
               >
                 Reset to initial state
               </Button>

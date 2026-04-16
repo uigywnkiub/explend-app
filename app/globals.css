@@ -85,6 +85,7 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
+
 @layer base {
   *,
   ::after,
@@ -93,23 +94,17 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
     @apply scroll-smooth;
-  }
-}
-
-@layer base {
-  * {
-    @apply scroll-smooth;
     /* slashed-zero tabular-nums */
   }
-}
 
-img {
-  -webkit-touch-callout: none; /* Disables long press menu on iOS. */
-}
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    @apply m-0 appearance-none;
+  }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  @apply m-0 appearance-none;
+  img {
+    -webkit-touch-callout: none; /* Disables long press menu on iOS. */
+  }
 }
 
 #sidebar-toggle:checked ~ .flex > .fixed-no-scroll {

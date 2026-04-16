@@ -254,16 +254,23 @@ export const copyToClipboard = async (
   text?: string,
 ): Promise<void> => {
   const content = text || ref?.current?.textContent || ''
+  const haptic = isLocalStorageAvailable()
+    ? (await import('ios-haptics')).haptic
+    : null
 
   if (!content) {
+    haptic?.error()
     toast.error(errorTitle)
 
     return
   }
+
   try {
     await navigator.clipboard.writeText(content)
+    haptic?.confirm()
     toast.success(successTitle)
   } catch {
+    haptic?.error()
     toast.error(errorTitle)
   }
 }

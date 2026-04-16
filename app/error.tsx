@@ -1,5 +1,7 @@
 'use client'
 
+import { haptic } from 'ios-haptics'
+
 import ClientButton from './ui/client-button'
 import InfoText from './ui/info-text'
 import Logo from './ui/logo'
@@ -28,7 +30,7 @@ export default function Error({
         title='Try again'
         color='primary'
         className='text-default-50'
-        onPress={reset}
+        onPress={() => [haptic(), reset()]}
       />
     </main>
   )

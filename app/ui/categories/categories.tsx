@@ -19,6 +19,7 @@ import {
   useDisclosure,
 } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
@@ -113,10 +114,10 @@ function Categories({
     [],
   )
 
-  const toggleEmojiPicker = useCallback(
-    () => setShowEmojiPicker((prev) => !prev),
-    [],
-  )
+  const toggleEmojiPicker = useCallback(() => {
+    haptic()
+    setShowEmojiPicker((prev) => !prev)
+  }, [])
 
   const onSaveTargetClick = useCallback(
     async (index: number) => {
@@ -144,8 +145,10 @@ function Categories({
       setIsLoading({ subject: true, item: false, reset: false })
       try {
         await updateCategories(userId, oldTargetName, newCategoriesData)
+        haptic.confirm()
         toast.success('Categories updated.')
       } catch (err) {
+        haptic.error()
         toast.error('Failed to update categories.')
         throw err
       } finally {
@@ -204,6 +207,7 @@ function Categories({
 
   const onEmojiClick = useCallback(
     (emojiData: EmojiClickData) => {
+      haptic()
       if (editingItemIndex) {
         const { categoryIndex, itemIndex } = editingItemIndex
         const updatedCategories = [...categories]
@@ -239,6 +243,7 @@ function Categories({
       if (oldItemName === _newItemName && !isNewEmojiPick) {
         setEditingItemIndex(null)
         setNewItemName('')
+        haptic.error()
         toast.error('No changes detected.')
 
         return
@@ -298,8 +303,10 @@ function Categories({
           return copy
         })
 
+        haptic.confirm()
         toast.success('Categories updated.')
       } catch (err) {
+        haptic.error()
         toast.error('Failed to update categories.')
         throw err
       } finally {
@@ -326,6 +333,7 @@ function Categories({
       const itemToDelete = category.items[itemIndex]
 
       if (!itemToDelete || itemToDelete.__isPlaceholder) {
+        haptic.error()
         toast.error('Item not found or cannot delete placeholder.')
 
         return
@@ -354,14 +362,18 @@ function Categories({
         await updateCategories(userId, category.subject, newCategoriesData)
 
         if (isNoCategoryItems) {
+          haptic.confirm()
           toast.success('Item and subject deleted.')
         } else {
+          haptic.confirm()
           toast.success('Item deleted.')
         }
       } catch (err) {
         if (isNoCategoryItems) {
+          haptic.error()
           toast.error('Failed to delete item and subject.')
         } else {
+          haptic.error()
           toast.error('Failed to delete item.')
         }
         throw err
@@ -383,8 +395,10 @@ function Categories({
     setIsLoading({ subject: false, item: false, reset: true })
     try {
       await resetCategories(userId, DEFAULT_CATEGORIES)
+      haptic.confirm()
       toast.success('All categories reset.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to reset categories.')
       throw err
     } finally {
@@ -396,7 +410,7 @@ function Categories({
     <Button
       isDisabled={haveCategoriesChanged}
       className='bg-danger text-default-50 mx-auto w-full font-medium'
-      onPress={onOpen}
+      onPress={() => [haptic(), onOpen()]}
       startContent={icon}
     >
       {RESET_CATEGORIES_BTN_TEXT}
@@ -495,7 +509,7 @@ function Categories({
               <ModalFooter>
                 <Button
                   variant='light'
-                  onPress={onClose}
+                  onPress={() => [haptic(), onClose()]}
                   isDisabled={isLoading.reset}
                 >
                   Close
@@ -505,6 +519,7 @@ function Categories({
                   color='danger'
                   isDisabled={isLoading.reset}
                   isLoading={isLoading.reset}
+                  onPress={haptic}
                 >
                   Reset
                 </Button>

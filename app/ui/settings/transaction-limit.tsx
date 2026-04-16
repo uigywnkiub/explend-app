@@ -8,6 +8,7 @@ import {
 } from 'react-icons/pi'
 
 import { Select, SelectItem, SelectSection } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
@@ -72,8 +73,10 @@ function TransactionLimit({
     setIsLoading(true)
     try {
       await updateTransactionLimit(userId, Number(key))
+      haptic.confirm()
       toast.success('Transaction limit updated.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to update transaction limit.')
       throw err
     } finally {
@@ -93,7 +96,10 @@ function TransactionLimit({
       isLoading={isLoading}
       disabledKeys={[disableState]}
       defaultSelectedKeys={[disableState]}
-      onChange={(key) => onChangeLimit(key.target.value)}
+      onChange={(key) => {
+        haptic()
+        onChangeLimit(key.target.value)
+      }}
     >
       <SelectSection title='Quantity per page'>
         {LIMITS.map((limit) => (

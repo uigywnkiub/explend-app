@@ -4,6 +4,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 
 import { Avatar, Select, SelectItem, SelectSection } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import {
   CURRENCIES_LIST,
@@ -56,8 +57,10 @@ function Currency({ userId, currency, transactionsCount }: TProps) {
     setIsLoading(true)
     try {
       await updateCurrency(userId, getCurrencyData(key as CURRENCY_NAME))
+      haptic.confirm()
       toast.success('Currency updated.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to update currency.')
       throw err
     } finally {
@@ -76,7 +79,10 @@ function Currency({ userId, currency, transactionsCount }: TProps) {
       isLoading={isLoading}
       disabledKeys={[disableState]}
       defaultSelectedKeys={[disableState]}
-      onChange={(key) => onChangeCurrency(key.target.value)}
+      onChange={(key) => {
+        haptic()
+        onChangeCurrency(key.target.value)
+      }}
     >
       <SelectSection title='Alphabetically ordered'>
         {currencies.map((currency) => (

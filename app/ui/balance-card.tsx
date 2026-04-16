@@ -5,6 +5,7 @@ import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
 import { Card, CardHeader, Tooltip } from '@heroui/react'
 import { motion } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_TIME_ZONE } from '@/config/constants/main'
@@ -52,6 +53,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
 
   const onChangeInfo = () => {
     if (!hasTransactions) return
+    haptic()
     setIsChangeInfo((prev) => !prev)
   }
 

@@ -3,6 +3,7 @@ import { useDebounce } from 'react-use'
 
 import { DateRangePicker, DateValue, RangeValue } from '@heroui/react'
 import { getDaysInMonth } from 'date-fns'
+import { haptic } from 'ios-haptics'
 
 import { toCalendarDate } from '@/app/lib/helpers'
 import type { TMinMaxTransactionByDate, TTransaction } from '@/app/lib/types'
@@ -103,9 +104,12 @@ function MonthPicker({
           value={dateRange}
           minValue={minTransactionValue}
           maxValue={maxTransactionValue}
-          onChange={(range: RangeValue<DateValue> | null) =>
-            range && setDateRange(range)
-          }
+          onChange={(range: RangeValue<DateValue> | null) => {
+            if (range) {
+              haptic()
+              setDateRange(range)
+            }
+          }}
         />
       </div>
     </div>

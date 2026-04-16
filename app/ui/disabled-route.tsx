@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 
+import { haptic } from 'ios-haptics'
+
 import { ROUTE } from '@/config/constants/routes'
 
 import ClientButton from './client-button'
@@ -15,7 +17,7 @@ export default function DisabledRoute() {
       <h1 className='text-lg font-medium'>
         Access to this page has been disabled.
       </h1>
-      <Link href={ROUTE.HOME}>
+      <Link href={ROUTE.HOME} onClick={haptic}>
         <ClientButton
           title='Return home'
           className='bg-primary text-default-50 max-w-md font-medium'

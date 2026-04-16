@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useAudio, useDebounce } from 'react-use'
 
+import { haptic } from 'ios-haptics'
+
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { TOAST_DURATION } from '@/config/constants/toast'
 
@@ -101,6 +103,7 @@ export default function LimitToast({ triggerBy }: TProps) {
           </div>
         )
 
+        haptic.error()
         toast.error(toastMsg, {
           icon: getEmojiFromCategory(
             getCategoryWithEmoji(limitToastCategoryName, userCategories),

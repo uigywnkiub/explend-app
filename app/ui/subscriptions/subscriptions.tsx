@@ -25,6 +25,7 @@ import {
   useDisclosure,
 } from '@heroui/react'
 import { AnimatePresence, Reorder } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 import {
   DEFAULT_CATEGORY_EMOJI,
@@ -183,8 +184,10 @@ export default function Subscriptions({
       try {
         await addSubscription(userId, reorderedData)
         setIsReorderSave(false)
+        haptic.confirm()
         toast.success('Reordered.')
       } catch (err) {
+        haptic.error()
         toast.error('Failed to reorder.')
         throw err
       }
@@ -222,9 +225,11 @@ export default function Subscriptions({
     setIsLoadingCreate(true)
     try {
       await addSubscription(userId, [...subscriptionsData, newSubscription])
+      haptic.confirm()
       toast.success('Subscription created.')
       resetStates()
     } catch (err) {
+      haptic.error()
       toast.error('Failed to create subscription.')
       throw err
     } finally {
@@ -268,12 +273,13 @@ export default function Subscriptions({
     note: TSubscriptions['note'],
     onCloseEditCallback: () => void,
   ) => {
-    const hasChanges =
+    const hasNoChanges =
       categoryName === tempCategoryName &&
       description === tempDescription &&
       amount === tempAmount &&
       note === tempNote
-    if (hasChanges) {
+    if (hasNoChanges) {
+      haptic.error()
       toast.error('No changes detected.')
 
       return
@@ -288,8 +294,10 @@ export default function Subscriptions({
         amount,
         note,
       )
+      haptic.confirm()
       toast.success('Subscription edited.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to edit subscription.')
       throw err
     } finally {
@@ -305,8 +313,10 @@ export default function Subscriptions({
     setIsLoadingDelete(true)
     try {
       await deleteSubscription(userId, _id)
+      haptic.confirm()
       toast.success('Subscription deleted.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to delete subscription.')
       throw err
     } finally {
@@ -319,8 +329,10 @@ export default function Subscriptions({
     setIsLoadingReset(true)
     try {
       await resetAllSubscriptions(userId)
+      haptic.confirm()
       toast.success('All subscriptions reset.')
     } catch (err) {
+      haptic.error()
       toast.error('Failed to reset subscriptions.')
       throw err
     } finally {
@@ -356,7 +368,7 @@ export default function Subscriptions({
             <Tooltip content='Reset all subscriptions' placement='bottom'>
               <Button
                 isDisabled={!hasSubscriptions}
-                onPress={onOpenReset}
+                onPress={() => [haptic(), onOpenReset()]}
                 color='danger'
                 variant='flat'
                 className='min-w-4'
@@ -374,6 +386,7 @@ export default function Subscriptions({
             <Tooltip content='Add subscription' placement='bottom'>
               <Button
                 onPress={() => {
+                  haptic()
                   const predefinedCategory = 'Subscription'
                   if (userCategoriesMap.has(predefinedCategory)) {
                     const categoryName =
@@ -432,12 +445,15 @@ export default function Subscriptions({
                     </div>
                   </ModalBody>
                   <ModalFooter>
-                    <Button variant='light' onPress={onClose}>
+                    <Button
+                      variant='light'
+                      onPress={() => [haptic(), onClose()]}
+                    >
                       Close
                     </Button>
                     <Button
                       color='primary'
-                      onPress={() => [onAddSubscription(onClose)]}
+                      onPress={() => [haptic(), onAddSubscription(onClose)]}
                       isLoading={isLoadingCreate}
                       isDisabled={isDisabledAddBtn}
                     >
@@ -574,7 +590,10 @@ export default function Subscriptions({
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={onCloseEdit}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseEdit()]}
+                >
                   Close
                 </Button>
                 <Button
@@ -585,7 +604,8 @@ export default function Subscriptions({
                     isDescriptionInvalid ||
                     isCategoryNameInvalid
                   }
-                  onPress={() =>
+                  onPress={() => {
+                    haptic()
                     onEditSubscription(
                       subscriptionId,
                       categoryName,
@@ -594,7 +614,7 @@ export default function Subscriptions({
                       trimmedNote,
                       onCloseEdit,
                     )
-                  }
+                  }}
                 >
                   Edit
                 </Button>
@@ -635,15 +655,19 @@ export default function Subscriptions({
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={onCloseDelete}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseDelete()]}
+                >
                   Close
                 </Button>
                 <Button
                   color='danger'
                   isLoading={isLoadingDelete}
-                  onPress={() =>
+                  onPress={() => {
+                    haptic()
                     onDeleteSubscription(subscriptionId, onCloseDelete)
-                  }
+                  }}
                 >
                   Delete
                 </Button>
@@ -678,13 +702,19 @@ export default function Subscriptions({
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button variant='light' onPress={onCloseReset}>
+                <Button
+                  variant='light'
+                  onPress={() => [haptic(), onCloseReset()]}
+                >
                   Close
                 </Button>
                 <Button
                   color='danger'
                   isLoading={isLoadingReset}
-                  onPress={() => [onResetAllSubscriptions(onCloseReset)]}
+                  onPress={() => [
+                    haptic(),
+                    onResetAllSubscriptions(onCloseReset),
+                  ]}
                 >
                   Reset
                 </Button>

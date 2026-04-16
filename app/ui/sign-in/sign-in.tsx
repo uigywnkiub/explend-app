@@ -18,6 +18,7 @@ import { AuthError } from 'next-auth'
 import { signIn } from 'next-auth/react'
 
 import { Accordion, AccordionItem, Button, Divider } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import {
   APP_DESCRIPTION,
@@ -154,7 +155,7 @@ function SignIn() {
                   isDisabled={isAnyLoading}
                   className='bg-foreground text-default-50 min-w-[220px] font-medium'
                   isLoading={isLoading}
-                  onPress={(e) => onSignIn(e, provider)}
+                  onPress={(e) => [haptic(), onSignIn(e, provider)]}
                   startContent={!isLoading && icon}
                 />
               )
@@ -195,7 +196,7 @@ function SignIn() {
                         isDisabled={isAnyLoading}
                         className='bg-foreground text-default-50 min-w-[220px] font-medium'
                         isLoading={isLoading}
-                        onPress={(e) => onSignIn(e, provider)}
+                        onPress={(e) => [haptic(), onSignIn(e, provider)]}
                         startContent={!isLoading && icon}
                       />
                     )

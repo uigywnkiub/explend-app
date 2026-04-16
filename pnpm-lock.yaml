@@ -81,6 +81,9 @@ importers:
       import-in-the-middle:
         specifier: ^3.0.1
         version: 3.0.1
+      ios-haptics:
+        specifier: ^0.1.4
+        version: 0.1.4
       mongoose:
         specifier: ^8.23.0
         version: 8.23.0(socks@2.8.7)
@@ -5510,6 +5513,9 @@ packages:
 
   intl-messageformat@10.7.18:
     resolution: {integrity: sha512-m3Ofv/X/tV8Y3tHXLohcuVuhWKo7BBq62cqY15etqmLxg2DZ34AGGgQDeR+SCta2+zICb1NX83af0GJmbQ1++g==}
+
+  ios-haptics@0.1.4:
+    resolution: {integrity: sha512-94FJcSuvmhe4mHTX4Uauj+/2yhs56m4BLkRScy1vNvkv7H1cSjsvfT+olc1sYOUqWlPhtVttAFBHex0cY9CE7Q==}
 
   ip-address@10.0.1:
     resolution: {integrity: sha512-NWv9YLW4PoW2B7xtzaS3NCot75m6nK7Icdv0o3lfMceJVRfSoQwqD4wEH5rLwoKJwUiZ/rfpiVBhnaF0FK4HoA==}
@@ -14663,6 +14669,8 @@ snapshots:
       '@formatjs/fast-memoize': 2.2.7
       '@formatjs/icu-messageformat-parser': 2.11.4
       tslib: 2.8.1
+
+  ios-haptics@0.1.4: {}
 
   ip-address@10.0.1: {}
 
