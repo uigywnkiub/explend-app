@@ -198,9 +198,9 @@ export default async function Page(props: {
               <Search
                 hasSearchedTransactionsByQuery={hasSearchedTransactionsByQuery}
               />
-              <div className='my-2'>
+              <div className='my-2 pt-4 text-sm'>
                 {!hasSearchedTransactionsByQuery ? (
-                  <p>No Transactions Found</p>
+                  <NoTransactionsPlug />
                 ) : (
                   <>
                     {!query ? (

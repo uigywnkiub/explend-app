@@ -174,7 +174,7 @@ export default function CreateTestTransactions({
                 withShift={false}
               />
             </span>
-            Create
+            Create test transactions
           </span>
         )}
       </Button>
