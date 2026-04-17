@@ -44,8 +44,8 @@ import Category from './category'
 const RESET_CATEGORIES_BTN_TEXT = 'Reset categories'
 
 const PLACEHOLDER = {
-  emoji: '➕',
-  name: 'Add new category',
+  emoji: '➕', // Emoji may be invisible in IDE.
+  name: 'New category',
   __isPlaceholder: true as const,
 } as TCategoriesItem
 
@@ -128,6 +128,8 @@ function Categories({
       if (oldTargetName === _newTargetName) {
         setEditingIndex(null)
         setNewTargetName('')
+        haptic.error()
+        toast.error('No changes detected.')
 
         return
       }
@@ -180,7 +182,7 @@ function Categories({
             items: [...updated[categoryIndex].items],
           }
           cat.items.splice(itemIndex, 1, {
-            emoji: '📝',
+            emoji: PLACEHOLDER.emoji,
             name: '',
             __isNew: true,
           })
@@ -334,7 +336,7 @@ function Categories({
 
       if (!itemToDelete || itemToDelete.__isPlaceholder) {
         haptic.error()
-        toast.error('Item not found or cannot delete placeholder.')
+        toast.error('Category not found or cannot delete placeholder.')
 
         return
       }
@@ -363,10 +365,10 @@ function Categories({
 
         if (isNoCategoryItems) {
           haptic.confirm()
-          toast.success('Item and subject deleted.')
+          toast.success('Category and subject deleted.')
         } else {
           haptic.confirm()
-          toast.success('Item deleted.')
+          toast.success('Category deleted.')
         }
       } catch (err) {
         if (isNoCategoryItems) {

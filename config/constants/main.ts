@@ -7,7 +7,7 @@ import { CURRENCY_CODE, CURRENCY_NAME, CURRENCY_SIGN } from './currencies'
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
 export const DEFAULT_CATEGORY: string = 'Unknown'
-export const DEFAULT_CATEGORY_EMOJI: string = '🤔' // Emoji may be invisible.
+export const DEFAULT_CATEGORY_EMOJI: string = '🤔' // Emoji may be invisible in IDE.
 export const DEFAULT_ICON_SIZE: number = 18
 export const DEFAULT_TIME_ZONE: string = 'Europe/Kiev'
 export const DEFAULT_LANG: string = 'en-US'

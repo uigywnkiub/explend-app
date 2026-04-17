@@ -737,6 +737,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                           >
                             <Button
                               isIconOnly
+                              variant='shadow'
                               size='lg'
                               onPress={() => [
                                 haptic(),
@@ -787,9 +788,9 @@ function TransactionForm({ currency, userCategories }: TProps) {
                         </p>
                       </div>
                       <Card shadow='none' className='bg-transparent'>
-                        <CardBody className='flex flex-col gap-4'>
+                        <CardBody className='flex flex-col gap-4 p-0'>
                           <AnimatePresence>
-                            <div className='flex flex-wrap items-center justify-start gap-2'>
+                            <div className='mt-4 flex flex-wrap items-center justify-start gap-2'>
                               {validImageSrcs.map((img, idx) => (
                                 <motion.div
                                   key={img}
@@ -1035,59 +1036,61 @@ function TransactionForm({ currency, userCategories }: TProps) {
           />
           <div className='mt-1.5 grid grid-cols-[1fr_auto] items-center gap-2'>
             <div className='flex flex-col gap-4 lg:flex-row'>
-              <Badge
-                isInvisible={!isCategoryItemNameAIValid || isLoadingAIData}
-                content={<AILogo asIcon />}
-                classNames={{
-                  badge:
-                    'right-0 border-0 bg-transparent cursor-pointer md:hover:opacity-hover',
-                }}
-              >
-                <Select
-                  isVirtualized={false}
-                  isDisabled={pending || isLoadingAIData}
-                  isLoading={isLoadingAIData}
-                  items={userCategories}
-                  defaultSelectedKeys={[DEFAULT_CATEGORY]}
-                  selectedKeys={category}
-                  onSelectionChange={(keys) => {
-                    haptic()
-                    setCategory(keys)
-                  }}
-                  name='category'
-                  label='Select a category'
-                  className='w-56'
+              <div className='w-56'>
+                <Badge
+                  isInvisible={!isCategoryItemNameAIValid || isLoadingAIData}
+                  content={<AILogo asIcon />}
                   classNames={{
-                    trigger:
-                      'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                    badge:
+                      'right-0 border-0 bg-transparent cursor-pointer md:hover:opacity-hover',
                   }}
                 >
-                  {userCategories.map((category, idx, arr) => (
-                    <SelectSection
-                      key={category.subject}
-                      showDivider={idx !== arr.length - 1}
-                      title={category.subject}
-                    >
-                      {category.items.map((item) => (
-                        <SelectItem
-                          key={item.name}
-                          endContent={
-                            item.name === DEFAULT_CATEGORY && (
-                              <InfoText
-                                text='Default'
-                                withAsterisk={false}
-                                withHover={false}
-                              />
-                            )
-                          }
-                        >
-                          {`${item.emoji} ${item.name}`}
-                        </SelectItem>
-                      ))}
-                    </SelectSection>
-                  ))}
-                </Select>
-              </Badge>
+                  <Select
+                    isVirtualized={false}
+                    isDisabled={pending || isLoadingAIData}
+                    isLoading={isLoadingAIData}
+                    items={userCategories}
+                    defaultSelectedKeys={[DEFAULT_CATEGORY]}
+                    selectedKeys={category}
+                    onSelectionChange={(keys) => {
+                      haptic()
+                      setCategory(keys)
+                    }}
+                    name='category'
+                    label='Select a category'
+                    className='w-56'
+                    classNames={{
+                      trigger:
+                        'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                    }}
+                  >
+                    {userCategories.map((category, idx, arr) => (
+                      <SelectSection
+                        key={category.subject}
+                        showDivider={idx !== arr.length - 1}
+                        title={category.subject}
+                      >
+                        {category.items.map((item) => (
+                          <SelectItem
+                            key={item.name}
+                            endContent={
+                              item.name === DEFAULT_CATEGORY && (
+                                <InfoText
+                                  text='Default'
+                                  withAsterisk={false}
+                                  withHover={false}
+                                />
+                              )
+                            }
+                          >
+                            {`${item.emoji} ${item.name}`}
+                          </SelectItem>
+                        ))}
+                      </SelectSection>
+                    ))}
+                  </Select>
+                </Badge>
+              </div>
               <DatePicker
                 isDisabled={pending || isLoadingAIData}
                 granularity='day'

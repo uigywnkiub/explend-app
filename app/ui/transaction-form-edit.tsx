@@ -279,7 +279,7 @@ function TransactionFormEdit({ transaction }: TProps) {
           }
         >
           <Card shadow='none' className='bg-transparent'>
-            <CardBody>
+            <CardBody className='p-0'>
               <form onSubmit={onSubmit}>
                 <Switch
                   isDisabled={isLoading}
@@ -356,66 +356,68 @@ function TransactionFormEdit({ transaction }: TProps) {
                 />
                 <div className='mt-1.5 grid grid-cols-[1fr_auto] items-center gap-2'>
                   <div className='flex flex-col gap-4 lg:flex-row'>
-                    <Badge
-                      content=''
-                      shape='rectangle'
-                      color='warning'
-                      variant='solid'
-                      size='sm'
-                      isDot
-                      placement='top-right'
-                      classNames={{
-                        // base: 'w-full',
-                        badge: 'right-1',
-                      }}
-                      isInvisible={
-                        !isTransactionWithChangedCategory || isCategorySelect
-                      }
-                    >
-                      <Select
-                        isVirtualized={false}
-                        isDisabled={isLoading}
-                        name='category'
-                        label='Select a category'
-                        items={userCategories}
-                        defaultSelectedKeys={category}
-                        selectedKeys={category}
-                        onSelectionChange={(keys) => {
-                          haptic()
-                          setCategory(keys)
-                        }}
-                        className='w-56'
+                    <div className='w-56'>
+                      <Badge
+                        content=''
+                        shape='rectangle'
+                        color='warning'
+                        variant='solid'
+                        size='sm'
+                        isDot
+                        placement='top-right'
                         classNames={{
-                          trigger:
-                            'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                          // base: 'w-full',
+                          badge: 'right-1',
                         }}
+                        isInvisible={
+                          !isTransactionWithChangedCategory || isCategorySelect
+                        }
                       >
-                        {userCategories.map((category, idx, arr) => (
-                          <SelectSection
-                            key={category.subject}
-                            showDivider={idx !== arr.length - 1}
-                            title={category.subject}
-                          >
-                            {category.items.map((item) => (
-                              <SelectItem
-                                key={item.name}
-                                endContent={
-                                  item.name === DEFAULT_CATEGORY && (
-                                    <InfoText
-                                      text='Default'
-                                      withAsterisk={false}
-                                      withHover={false}
-                                    />
-                                  )
-                                }
-                              >
-                                {`${item.emoji} ${item.name}`}
-                              </SelectItem>
-                            ))}
-                          </SelectSection>
-                        ))}
-                      </Select>
-                    </Badge>
+                        <Select
+                          isVirtualized={false}
+                          isDisabled={isLoading}
+                          name='category'
+                          label='Select a category'
+                          items={userCategories}
+                          defaultSelectedKeys={category}
+                          selectedKeys={category}
+                          onSelectionChange={(keys) => {
+                            haptic()
+                            setCategory(keys)
+                          }}
+                          className='w-56'
+                          classNames={{
+                            trigger:
+                              'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                          }}
+                        >
+                          {userCategories.map((category, idx, arr) => (
+                            <SelectSection
+                              key={category.subject}
+                              showDivider={idx !== arr.length - 1}
+                              title={category.subject}
+                            >
+                              {category.items.map((item) => (
+                                <SelectItem
+                                  key={item.name}
+                                  endContent={
+                                    item.name === DEFAULT_CATEGORY && (
+                                      <InfoText
+                                        text='Default'
+                                        withAsterisk={false}
+                                        withHover={false}
+                                      />
+                                    )
+                                  }
+                                >
+                                  {`${item.emoji} ${item.name}`}
+                                </SelectItem>
+                              ))}
+                            </SelectSection>
+                          ))}
+                        </Select>
+                      </Badge>
+                    </div>
                     <DatePicker
                       isDisabled={isLoading}
                       granularity='day'
@@ -493,9 +495,9 @@ function TransactionFormEdit({ transaction }: TProps) {
             </p>
           </div>
           <Card shadow='none' className='bg-transparent'>
-            <CardBody className='flex flex-col gap-4'>
+            <CardBody className='flex flex-col gap-4 p-0'>
               <AnimatePresence>
-                <div className='flex flex-wrap items-center justify-start gap-2'>
+                <div className='mt-4 flex flex-wrap items-center justify-start gap-2'>
                   {validImageSrcs.map((img, idx) => (
                     <motion.div
                       key={img}
