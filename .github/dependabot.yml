@@ -14,5 +14,6 @@ updates:
     ignore:
       - dependency-name: 'tailwind-merge'
       - dependency-name: 'recharts'
+      - dependency-name: '@internationalized/date'
         update-types:
           - 'version-update:semver-major'
