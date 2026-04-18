@@ -25,6 +25,9 @@
 - **Receipt Scanning**
   Upload receipts—Explend extracts key details and fills in your transactions automatically.
 
+- **CSV Import (Monobank)**
+  Import your transactions directly from a Monobank CSV statement.
+
 - **Attach Images**
   Users can attach images to transactions for better tracking and record-keeping.
 
