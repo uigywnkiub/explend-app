@@ -3,23 +3,29 @@ import type { Metadata } from 'next'
 import { Divider, Spacer } from '@heroui/react'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
-import { DEFAULT_SERVER_ACTION_BODY_SIZE_LIMIT } from '@/config/constants/main'
+import {
+  AI_NAME,
+  DEFAULT_SERVER_ACTION_BODY_SIZE_LIMIT,
+} from '@/config/constants/main'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
   getCachedAuthSession,
+  getCachedTransactions,
   getCountDocuments,
   getCurrency,
   getSalaryDay,
   getTransactionLimit,
   signOutAccount,
 } from '../lib/actions'
+import { getUserCategories } from '../lib/data'
 import { toLowerCase } from '../lib/helpers'
 import InfoText from '../ui/info-text'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
 import DownloadUploadTransactions from '../ui/settings/download-upload-transactions'
 import ExitAccount from '../ui/settings/exit-account'
+import ImportMonobankTransactions from '../ui/settings/import-monobank-transactions'
 import SalaryDay from '../ui/settings/salary-day'
 import Section from '../ui/settings/section'
 import SectionItem from '../ui/settings/section-item'
@@ -36,13 +42,21 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getCachedAuthSession()
   const userId = session?.user?.email
-  const [userTransactionLimit, transactionsCount, currency, userSalaryDay] =
-    await Promise.all([
-      getTransactionLimit(userId),
-      getCountDocuments(userId),
-      getCurrency(userId),
-      getSalaryDay(userId),
-    ])
+  const [
+    userTransactionLimit,
+    transactionsCount,
+    currency,
+    userSalaryDay,
+    { transactions },
+  ] = await Promise.all([
+    getTransactionLimit(userId),
+    getCountDocuments(userId),
+    getCurrency(userId),
+    getSalaryDay(userId),
+    getCachedTransactions(userId, 0, 1),
+  ])
+
+  const userCategories = getUserCategories(transactions)
 
   const content = (
     <div className='mx-auto max-w-3xl'>
@@ -212,6 +226,31 @@ export default async function Page() {
               <div className='max-w-md'>
                 <Spacer y={2} />
                 <DownloadUploadTransactions userId={userId} />
+              </div>
+            </>
+          </SectionItem>
+
+          <Divider className='my-4' />
+
+          <SectionItem
+            title='Import Monobank CSV'
+            subtitle='Import your transaction statement from a Monobank CSV export file.'
+          >
+            <>
+              <div className='my-2 flex flex-col gap-2'>
+                <InfoText
+                  text={`Description will be automatically categorized using ${AI_NAME.FULL} or an MCC code.`}
+                />
+                <InfoText text='After completion, review your imported transactions.' />
+              </div>
+              <div className='max-w-md'>
+                <Spacer y={2} />
+                <ImportMonobankTransactions
+                  userId={userId}
+                  currency={currency}
+                  userCategories={userCategories}
+                  userSalaryDay={userSalaryDay}
+                />
               </div>
             </>
           </SectionItem>

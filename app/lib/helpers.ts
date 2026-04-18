@@ -1,5 +1,6 @@
 import toast from 'react-hot-toast'
 
+import MCC_CATEGORY_MAP from '@/public/data/mcc-category-map.json'
 import config from '@/tailwind.config'
 import { CalendarDate } from '@internationalized/date'
 import { type ClassValue, clsx } from 'clsx'
@@ -31,6 +32,7 @@ import {
 } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
+import { getCategoryItemNameAI } from './actions'
 import type {
   TApproxCategory,
   TBrowserName,
@@ -601,4 +603,35 @@ export const readFileAsText = async (file: File): Promise<string> => {
     reader.onerror = () => reject(new Error('Failed to read file'))
     reader.readAsText(file)
   })
+}
+
+export async function resolveImportedCategory(
+  userCategories: TTransaction['categories'],
+  description: string,
+  mcc: number,
+): Promise<TTransaction['category']> {
+  try {
+    const aiCategory = await getCategoryItemNameAI(userCategories, description)
+    const categoryNames = getCategoryItemNames(userCategories)
+    // If AI returned Unknown skip to MCC.
+    if (
+      aiCategory &&
+      aiCategory !== DEFAULT_CATEGORY &&
+      categoryNames.includes(aiCategory)
+    ) {
+      return getCategoryWithEmoji(aiCategory, userCategories)
+    }
+  } catch {}
+
+  // MCC (Merchant Category Code).
+  const mccCategory =
+    MCC_CATEGORY_MAP[mcc as unknown as keyof typeof MCC_CATEGORY_MAP]
+  if (mccCategory) {
+    const matched = getCategoryWithEmoji(mccCategory, userCategories)
+    if (matched) {
+      return matched
+    }
+  }
+
+  return `${DEFAULT_CATEGORY_EMOJI} ${DEFAULT_CATEGORY}`
 }

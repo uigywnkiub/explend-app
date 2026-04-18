@@ -256,3 +256,11 @@ export type TGetChangelog = {
   msg: string
   date: string
 }
+
+export type TMonobankCsvRow = {
+  'Дата i час операції': string
+  'Деталі операції': string
+  'Сума в валюті картки (UAH)': string
+  Валюта: string
+  MCC: string
+}
