@@ -7,6 +7,7 @@ import { cookies } from 'next/headers'
 
 import { auth, signOut } from '@/auth'
 import { SignOutError } from '@auth/core/errors'
+import { parse } from 'csv-parse/sync'
 import { isObjectIdOrHexString } from 'mongoose'
 import { Resend } from 'resend'
 
@@ -36,6 +37,7 @@ import {
   formatObjectIdToString,
   getCategoryItemNames,
   getCategoryWithEmoji,
+  resolveImportedCategory,
 } from './helpers'
 import dbConnect from './mongodb'
 import type {
@@ -48,6 +50,7 @@ import type {
   TGetChangelog,
   TGetTransactions,
   TImportTransactions,
+  TMonobankCsvRow,
   TRawTransaction,
   TSession,
   TSubscriptions,
@@ -433,6 +436,134 @@ export async function importTransactions(
 
     return { count: result.length, skipped }
   } catch (err) {
+    throw err
+  }
+}
+
+export async function importTransactionsFromMonobankCsv(
+  userId: TUserId,
+  currency: TTransaction['currency'],
+  userCategories: TTransaction['categories'],
+  userSalaryDay: TTransaction['salaryDay'],
+  csvText: string,
+): Promise<TImportTransactions> {
+  if (!userId) {
+    throw new Error('User ID is required to create a transaction.')
+  }
+  if (!userCategories || userCategories.length === 0) {
+    throw new Error(
+      'At least one category is required to create a transaction.',
+    )
+  }
+
+  const validRows: {
+    row: TMonobankCsvRow
+    rawAmount: number
+    description: string
+    createdAt: Date
+  }[] = []
+
+  const rows: TMonobankCsvRow[] = parse(csvText, {
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+  })
+
+  let skipped = 0
+
+  for (const row of rows) {
+    const rawAmount = parseFloat(
+      row['Сума в валюті картки (UAH)']?.replace(/\s/g, '') || '',
+    )
+    const description = row['Деталі операції']?.trim()
+    const dateStr = row['Дата i час операції']?.trim()
+
+    if (isNaN(rawAmount) || !description || !dateStr) {
+      skipped++
+      continue
+    }
+
+    const [datePart, timePart] = dateStr.split(' ')
+    const [day, month, year] = datePart.split('.')
+    const createdAt = new Date(`${year}-${month}-${day}T${timePart}`)
+
+    if (isNaN(createdAt.getTime())) {
+      skipped++
+      continue
+    }
+
+    validRows.push({ row, rawAmount, description, createdAt })
+  }
+
+  const resolvedImportedCategories = await Promise.all(
+    validRows.map(({ row, description }) => {
+      return resolveImportedCategory(
+        userCategories,
+        description,
+        Number(row['MCC']),
+      )
+    }),
+  )
+
+  const transactions = validRows.map(
+    ({ rawAmount, description, createdAt }, i) => {
+      const isIncome = rawAmount > 0
+      const absAmount = Math.round(Math.abs(rawAmount))
+        .toString()
+        .replace(/\s/g, '')
+      const balance = rawAmount.toString()
+
+      return {
+        id: crypto.randomUUID(),
+        userId,
+        description,
+        amount: absAmount,
+        category: resolvedImportedCategories[i],
+        isIncome,
+        isSubscription: false,
+        isTest: false,
+        balance,
+        currency,
+        categories: userCategories,
+        salaryDay: userSalaryDay,
+        images: [],
+        createdAt,
+        updatedAt: createdAt,
+      }
+    },
+  )
+
+  // Deduplication
+  await dbConnect()
+  const existingDates = await TransactionModel.find(
+    {
+      userId,
+      createdAt: { $in: transactions.map((t) => t.createdAt) },
+    },
+    { description: 1, createdAt: 1, _id: 0 },
+  ).lean()
+  const existingSet = new Set(
+    existingDates.map((t) => `${t.description}__${t.createdAt.getTime()}`),
+  )
+  const newTransactions = transactions.filter(
+    (t) => !existingSet.has(`${t.description}__${t.createdAt.getTime()}`),
+  )
+
+  skipped += transactions.length - newTransactions.length
+
+  if (!newTransactions.length) return { count: 0, skipped }
+
+  const session = await TransactionModel.startSession()
+  try {
+    session.startTransaction()
+    await TransactionModel.insertMany(newTransactions, { session })
+    await session.commitTransaction()
+    session.endSession()
+
+    return { count: newTransactions.length, skipped }
+  } catch (err) {
+    await session.abortTransaction()
+    session.endSession()
     throw err
   }
 }
