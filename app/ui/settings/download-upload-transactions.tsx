@@ -179,7 +179,7 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
 
   return (
     <div className='flex flex-col items-start gap-4'>
-      <div className='mt-2.5 flex w-full items-center gap-4'>
+      <div className='flex w-full items-center gap-4'>
         <div className='flex-1'>
           <HoverableElement
             uKey='download-transactions'
