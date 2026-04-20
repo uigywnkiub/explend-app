@@ -25,7 +25,7 @@ import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
 import DownloadUploadTransactions from '../ui/settings/download-upload-transactions'
 import ExitAccount from '../ui/settings/exit-account'
-import ImportMonobankTransactions from '../ui/settings/import-monobank-transactions'
+import ImportBankTransactions from '../ui/settings/import-bank-transactions'
 import SalaryDay from '../ui/settings/salary-day'
 import Section from '../ui/settings/section'
 import SectionItem from '../ui/settings/section-item'
@@ -233,19 +233,23 @@ export default async function Page() {
           <Divider className='my-4' />
 
           <SectionItem
-            title='Import Monobank CSV'
-            subtitle='Import your transaction statement from a Monobank CSV export file.'
+            title='Import Bank Transactions'
+            subtitle='Import your transaction statement from a Monobank or Privat24 export file.'
           >
             <>
               <div className='my-2 flex flex-col gap-2'>
                 <InfoText
-                  text={`Category will be automatically categorized by transaction description using ${AI_NAME.FULL} or an MCC code.`}
+                  withDoubleAsterisk
+                  text='Currently supports bank statements in Ukrainian language.'
+                />
+                <InfoText
+                  text={`Categories will be automatically assigned by transaction description using ${AI_NAME.FULL} or an MCC code.`}
                 />
                 <InfoText text='After completion, review your imported transactions.' />
               </div>
               <div className='max-w-md'>
                 <Spacer y={2} />
-                <ImportMonobankTransactions
+                <ImportBankTransactions
                   userId={userId}
                   currency={currency}
                   userCategories={userCategories}
@@ -259,7 +263,7 @@ export default async function Page() {
 
           <SectionItem
             title='Delete Account'
-            subtitle='Removing your account will delete all your data.'
+            subtitle='Removing your account will delete all your data and sign out.'
           >
             <div className='max-w-md'>
               <Spacer y={2} />
