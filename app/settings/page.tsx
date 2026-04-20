@@ -239,7 +239,7 @@ export default async function Page() {
             <>
               <div className='my-2 flex flex-col gap-2'>
                 <InfoText
-                  text={`Description will be automatically categorized using ${AI_NAME.FULL} or an MCC code.`}
+                  text={`Category will be automatically categorized by transaction description using ${AI_NAME.FULL} or an MCC code.`}
                 />
                 <InfoText text='After completion, review your imported transactions.' />
               </div>
