@@ -1,5 +1,6 @@
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { getLocalTimeZone } from '@internationalized/date'
+import { parse } from 'csv-parse/sync'
 import {
   endOfDay,
   endOfMonth,
@@ -10,6 +11,7 @@ import {
   startOfToday,
   subMonths,
 } from 'date-fns'
+import * as XLSX from 'xlsx'
 
 import {
   formatPercentage,
@@ -18,12 +20,15 @@ import {
   toLowerCase,
 } from './helpers'
 import type {
+  TBankParsedRow,
   TCategories,
   TChartData,
   TExpenseReport,
   TForecastData,
   TForecastReport,
+  TImportTransactions,
   TIncomeReport,
+  TMonobankCsvRow,
   TTransaction,
   TTransactionType,
 } from './types'
@@ -411,4 +416,92 @@ export const getTransactionCountByCategory = (
       ? count + 1
       : count
   }, 0)
+}
+
+export const parseMonobankCsv = (
+  csvText: string,
+): {
+  rows: TBankParsedRow[]
+  skipped: TImportTransactions['skipped']
+} => {
+  const raw: TMonobankCsvRow[] = parse(csvText, {
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+  })
+
+  let skipped = 0
+  const rows: TBankParsedRow[] = []
+
+  for (const row of raw) {
+    const rawAmount = parseFloat(
+      row['Сума в валюті картки (UAH)']?.replace(/\s/g, '') || '',
+    )
+    const description = row['Деталі операції']?.trim()
+    const dateStr = row['Дата i час операції']?.trim()
+
+    if (isNaN(rawAmount) || !description || !dateStr) {
+      skipped++
+      continue
+    }
+
+    const [datePart, timePart] = dateStr.split(' ')
+    const [day, month, year] = datePart.split('.')
+    const createdAt = new Date(`${year}-${month}-${day}T${timePart}`)
+
+    if (isNaN(createdAt.getTime())) {
+      skipped++
+      continue
+    }
+
+    rows.push({ rawAmount, description, createdAt, mcc: Number(row['MCC']) })
+  }
+
+  return { rows, skipped }
+}
+
+export const parsePrivat24Xlsx = (
+  base64: string,
+): { rows: TBankParsedRow[]; skipped: TImportTransactions['skipped'] } => {
+  const buffer = Buffer.from(base64, 'base64')
+  const workbook = XLSX.read(buffer, { type: 'buffer' })
+  const sheet = workbook.Sheets[workbook.SheetNames[0]]
+
+  // Row 0 = title, row 1 = headers, data starts at row 2.
+  const raw: Record<string, string | number>[] = XLSX.utils.sheet_to_json(
+    sheet,
+    {
+      range: 1,
+      defval: '',
+    },
+  )
+
+  let skipped = 0
+  const rows: TBankParsedRow[] = []
+
+  for (const row of raw) {
+    const rawAmount = parseFloat(
+      String(row['Сума в валюті картки'])?.replace(/\s/g, '') || '',
+    )
+    const description = String(row['Опис операції'])?.trim()
+    const dateStr = String(row['Дата'])?.trim()
+
+    if (isNaN(rawAmount) || !description || !dateStr) {
+      skipped++
+      continue
+    }
+
+    const [datePart, timePart] = dateStr.split(' ')
+    const [day, month, year] = datePart.split('.')
+    const createdAt = new Date(`${year}-${month}-${day}T${timePart}`)
+
+    if (isNaN(createdAt.getTime())) {
+      skipped++
+      continue
+    }
+
+    rows.push({ rawAmount, description, createdAt })
+  }
+
+  return { rows, skipped }
 }

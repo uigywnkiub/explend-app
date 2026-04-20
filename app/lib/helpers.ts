@@ -35,6 +35,7 @@ import { ROUTE } from '@/config/constants/routes'
 import { getCategoryItemNameAI } from './actions'
 import type {
   TApproxCategory,
+  TBankParsedRow,
   TBrowserName,
   TCategoriesItem,
   TExpenseReport,
@@ -607,8 +608,8 @@ export const readFileAsText = async (file: File): Promise<string> => {
 
 export async function resolveImportedCategory(
   userCategories: TTransaction['categories'],
-  description: string,
-  mcc: number,
+  description: TBankParsedRow['description'],
+  mcc?: TBankParsedRow['mcc'],
 ): Promise<TTransaction['category']> {
   try {
     const aiCategory = await getCategoryItemNameAI(userCategories, description)
@@ -624,12 +625,14 @@ export async function resolveImportedCategory(
   } catch {}
 
   // MCC (Merchant Category Code).
-  const mccCategory =
-    MCC_CATEGORY_MAP[mcc as unknown as keyof typeof MCC_CATEGORY_MAP]
-  if (mccCategory) {
-    const matched = getCategoryWithEmoji(mccCategory, userCategories)
-    if (matched) {
-      return matched
+  if (mcc) {
+    const mccCategory =
+      MCC_CATEGORY_MAP[mcc as unknown as keyof typeof MCC_CATEGORY_MAP]
+    if (mccCategory) {
+      const matched = getCategoryWithEmoji(mccCategory, userCategories)
+      if (matched) {
+        return matched
+      }
     }
   }
 

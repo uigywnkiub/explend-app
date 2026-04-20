@@ -7,7 +7,6 @@ import { cookies } from 'next/headers'
 
 import { auth, signOut } from '@/auth'
 import { SignOutError } from '@auth/core/errors'
-import { parse } from 'csv-parse/sync'
 import { isObjectIdOrHexString } from 'mongoose'
 import { Resend } from 'resend'
 
@@ -32,6 +31,7 @@ import {
   ExpenseTipsAIModel,
   UploadReceiptAIModel,
 } from './ai'
+import { parseMonobankCsv, parsePrivat24Xlsx } from './data'
 import {
   capitalizeFirstLetter,
   formatObjectIdToString,
@@ -43,6 +43,7 @@ import dbConnect from './mongodb'
 import type {
   TBalance,
   TBalanceProjection,
+  TBank,
   TCategories,
   TCategoryLimits,
   TCookie,
@@ -50,7 +51,6 @@ import type {
   TGetChangelog,
   TGetTransactions,
   TImportTransactions,
-  TMonobankCsvRow,
   TRawTransaction,
   TSession,
   TSubscriptions,
@@ -440,12 +440,13 @@ export async function importTransactions(
   }
 }
 
-export async function importTransactionsFromMonobankCsv(
+export async function importBankTransactions(
   userId: TUserId,
   currency: TTransaction['currency'],
   userCategories: TTransaction['categories'],
   userSalaryDay: TTransaction['salaryDay'],
-  csvText: string,
+  bank: TBank,
+  payload: string, // csvText for Monobank, base64 for Privat24.
 ): Promise<TImportTransactions> {
   if (!userId) {
     throw new Error('User ID is required to create a transaction.')
@@ -456,90 +457,42 @@ export async function importTransactionsFromMonobankCsv(
     )
   }
 
-  const validRows: {
-    row: TMonobankCsvRow
-    rawAmount: number
-    description: string
-    createdAt: Date
-  }[] = []
+  const { rows: validRows, skipped: parseSkipped } =
+    bank === 'monobank' ? parseMonobankCsv(payload) : parsePrivat24Xlsx(payload)
 
-  const rows: TMonobankCsvRow[] = parse(csvText, {
-    columns: true,
-    skip_empty_lines: true,
-    trim: true,
-  })
+  let skipped = parseSkipped
 
-  let skipped = 0
-
-  for (const row of rows) {
-    const rawAmount = parseFloat(
-      row['Сума в валюті картки (UAH)']?.replace(/\s/g, '') || '',
-    )
-    const description = row['Деталі операції']?.trim()
-    const dateStr = row['Дата i час операції']?.trim()
-
-    if (isNaN(rawAmount) || !description || !dateStr) {
-      skipped++
-      continue
-    }
-
-    const [datePart, timePart] = dateStr.split(' ')
-    const [day, month, year] = datePart.split('.')
-    const createdAt = new Date(`${year}-${month}-${day}T${timePart}`)
-
-    if (isNaN(createdAt.getTime())) {
-      skipped++
-      continue
-    }
-
-    validRows.push({ row, rawAmount, description, createdAt })
-  }
-
-  const resolvedImportedCategories = await Promise.all(
-    validRows.map(({ row, description }) => {
-      return resolveImportedCategory(
-        userCategories,
-        description,
-        Number(row['MCC']),
-      )
-    }),
+  const resolvedCategories = await Promise.all(
+    validRows.map(({ description, mcc }) =>
+      resolveImportedCategory(userCategories, description, mcc),
+    ),
   )
 
-  const transactions = validRows.map(
-    ({ rawAmount, description, createdAt }, i) => {
-      const isIncome = rawAmount > 0
-      const absAmount = Math.round(Math.abs(rawAmount))
-        .toString()
-        .replace(/\s/g, '')
-      const balance = rawAmount.toString()
+  const transactions: Omit<
+    TTransaction,
+    'isEdited' | 'categoryLimits' | 'subscriptions' | 'transactionLimit'
+  >[] = validRows.map(({ rawAmount, description, createdAt }, i) => ({
+    id: crypto.randomUUID(),
+    userId,
+    description,
+    amount: Math.round(Math.abs(rawAmount)).toString().replace(/\s/g, ''),
+    category: resolvedCategories[i],
+    isIncome: rawAmount > 0,
+    isSubscription: false,
+    isTest: false,
+    balance: rawAmount.toString(),
+    currency,
+    categories: userCategories,
+    salaryDay: userSalaryDay,
+    images: [],
+    createdAt,
+    updatedAt: createdAt,
+  }))
 
-      return {
-        id: crypto.randomUUID(),
-        userId,
-        description,
-        amount: absAmount,
-        category: resolvedImportedCategories[i],
-        isIncome,
-        isSubscription: false,
-        isTest: false,
-        balance,
-        currency,
-        categories: userCategories,
-        salaryDay: userSalaryDay,
-        images: [],
-        createdAt,
-        updatedAt: createdAt,
-      }
-    },
-  )
-
-  // Deduplication
   await dbConnect()
+
   const existingDates = await TransactionModel.find(
-    {
-      userId,
-      createdAt: { $in: transactions.map((t) => t.createdAt) },
-    },
+    { userId, createdAt: { $in: transactions.map((t) => t.createdAt) } },
     { description: 1, createdAt: 1, _id: 0 },
   ).lean()
   const existingSet = new Set(

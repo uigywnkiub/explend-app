@@ -264,3 +264,12 @@ export type TMonobankCsvRow = {
   Валюта: string
   MCC: string
 }
+
+export type TBankParsedRow = {
+  rawAmount: number
+  description: string
+  createdAt: Date
+  mcc?: number
+}
+
+export type TBank = 'monobank' | 'privat24'
