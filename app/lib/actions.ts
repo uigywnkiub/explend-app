@@ -468,25 +468,26 @@ export async function importBankTransactions(
     ),
   )
 
-  const transactions = validRows.map(
-    ({ rawAmount, description, createdAt }, i) => ({
-      id: crypto.randomUUID(),
-      userId,
-      description,
-      amount: Math.round(Math.abs(rawAmount)).toString().replace(/\s/g, ''),
-      category: resolvedCategories[i],
-      isIncome: rawAmount > 0,
-      isSubscription: false,
-      isTest: false,
-      balance: rawAmount.toString(),
-      currency,
-      categories: userCategories,
-      salaryDay: userSalaryDay,
-      images: [],
-      createdAt,
-      updatedAt: createdAt,
-    }),
-  )
+  const transactions: Omit<
+    TTransaction,
+    'isEdited' | 'categoryLimits' | 'subscriptions' | 'transactionLimit'
+  >[] = validRows.map(({ rawAmount, description, createdAt }, i) => ({
+    id: crypto.randomUUID(),
+    userId,
+    description,
+    amount: Math.round(Math.abs(rawAmount)).toString().replace(/\s/g, ''),
+    category: resolvedCategories[i],
+    isIncome: rawAmount > 0,
+    isSubscription: false,
+    isTest: false,
+    balance: rawAmount.toString(),
+    currency,
+    categories: userCategories,
+    salaryDay: userSalaryDay,
+    images: [],
+    createdAt,
+    updatedAt: createdAt,
+  }))
 
   await dbConnect()
 
