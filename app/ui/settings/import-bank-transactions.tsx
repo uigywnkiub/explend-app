@@ -118,7 +118,7 @@ export default function ImportBankTransactions({
               alt={capitalizeFirstLetter('monobank' satisfies TBank)}
               className='size-4.5'
             />,
-            'Monobank CSV',
+            'Mono CSV',
           )}
         </div>
         <div className='flex-1'>

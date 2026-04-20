@@ -885,7 +885,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
           aria-label={accordionTitle}
           title={accordionTitle}
           classNames={{
-            title: 'text-center hover:opacity-hover ml-6',
+            title: 'text-center cursor-pointer hover:opacity-hover ml-6',
           }}
         >
           <Badge
