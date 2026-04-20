@@ -70,6 +70,8 @@ export type TSubscriptions = {
   description: TTransaction['description']
   amount: TTransaction['amount']
   note: string
+  autoRenew?: boolean
+  renewDay?: number
 }
 
 export type TRawTransaction = TTransaction & {

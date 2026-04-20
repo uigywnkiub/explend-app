@@ -14,13 +14,16 @@ import { useDebounce } from 'react-use'
 
 import {
   Button,
+  Checkbox,
   Divider,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Select,
   Selection,
+  SelectItem,
   Tooltip,
   useDisclosure,
 } from '@heroui/react'
@@ -168,6 +171,37 @@ export default function Subscriptions({
     )
   }, [isChangedCategoryName, subscriptionsData, tempCategoryName])
 
+  const [autoRenew, setAutoRenew] = useState(false)
+  const [renewDay, setRenewDay] = useState<number>(1)
+  // const [isLoadingCron, setIsLoadingCron] = useState(false)
+  // Day options 1–28 (safe for all months including February)
+  const DAY_OPTIONS = Array.from({ length: 28 }, (_, i) => i + 1)
+
+  // const onTestCron = async () => {
+  //   setIsLoadingCron(true)
+  //   try {
+  //     const res = await fetch('/api/cron/subscriptions', {
+  //       method: 'POST',
+  //       headers: {
+  //         Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}`,
+  //       },
+  //     })
+  //     const data = await res.json()
+  //     if (!res.ok) throw new Error(data.error ?? 'Cron failed')
+
+  //     const total = data.results.reduce(
+  //       (acc: number, r: { processed: number }) => acc + r.processed,
+  //       0,
+  //     )
+  //     toast.success(`Cron ran — ${total} transaction(s) created.`)
+  //     console.log('[cron test]', data)
+  //   } catch (err: any) {
+  //     toast.error(err.message ?? 'Cron request failed.')
+  //   } finally {
+  //     setIsLoadingCron(false)
+  //   }
+  // }
+
   const resetStates = () => {
     setCategory(new Set([]))
     setDescription('')
@@ -221,6 +255,8 @@ export default function Subscriptions({
       description: trimmedDescription,
       amount,
       note: trimmedNote,
+      autoRenew,
+      renewDay,
     })
     setIsLoadingCreate(true)
     try {
@@ -361,6 +397,19 @@ export default function Subscriptions({
 
   return (
     <>
+      {/* <Tooltip content='Test auto-renew cron' placement='bottom'>
+        <Button
+          isDisabled={!hasSubscriptions}
+          isLoading={isLoadingCron}
+          onPress={() => [haptic(), onTestCron()]}
+          color='secondary'
+          variant='flat'
+          className='min-w-4'
+        >
+          <PiArrowClockwise size={DEFAULT_ICON_SIZE} />
+        </Button>
+      </Tooltip> */}
+
       <div className='rounded-medium bg-content1 p-4 md:p-8'>
         <div className='flex items-center justify-between'>
           <h2>Subscriptions</h2>
@@ -442,6 +491,40 @@ export default function Subscriptions({
                         currency={currency}
                       />
                       <NoteInput note={note} onChangeNote={onChangeNote} />
+                      <Checkbox
+                        isSelected={autoRenew}
+                        onValueChange={setAutoRenew}
+                      >
+                        Auto-renew monthly
+                      </Checkbox>
+
+                      {/* Day picker — only shown when autoRenew is on */}
+                      {autoRenew && (
+                        <Select
+                          label='Renew on day'
+                          placeholder='Pick a day'
+                          selectedKeys={new Set([String(renewDay)])}
+                          onSelectionChange={(keys) => {
+                            const val = Number(Array.from(keys)[0])
+                            if (!isNaN(val)) setRenewDay(val)
+                          }}
+                        >
+                          {DAY_OPTIONS.map((d) => (
+                            <SelectItem
+                              key={String(d)}
+                              // value={String(d)}
+                            >
+                              {d === 1
+                                ? '1st'
+                                : d === 2
+                                  ? '2nd'
+                                  : d === 3
+                                    ? '3rd'
+                                    : `${d}th`}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      )}
                     </div>
                   </ModalBody>
                   <ModalFooter>
