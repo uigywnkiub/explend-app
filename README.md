@@ -7,6 +7,9 @@
 - **AI-Powered Smart Entry**
   Automatically complete transaction details (category, amount, type: income/expense) using Explend Intelligence based on your description.
 
+- **Bank Import (Monobank CSV / Privat24 XLSX)**
+  Import your transactions directly from a Monobank CSV or Privat24 XLSX statement.
+
 - **Detailed Monthly Reports**
   Generate monthly or custom-range reports with AI-driven insights into your spending habits, powered by advanced forecasting techniques including exponential smoothing, trend analysis, and intelligent outlier handling to deliver more accurate and stable financial predictions.
 
@@ -24,9 +27,6 @@
 
 - **Receipt Scanning**
   Upload receipts—Explend extracts key details and fills in your transactions automatically.
-
-- **CSV Import (Monobank)**
-  Import your transactions directly from a Monobank CSV statement.
 
 - **Attach Images**
   Users can attach images to transactions for better tracking and record-keeping.
