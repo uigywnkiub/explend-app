@@ -69,7 +69,7 @@ export type TSubscriptions = {
   category: TTransaction['category']
   description: TTransaction['description']
   amount: TTransaction['amount']
-  note: string
+  note?: string
   autoRenew?: boolean
   renewDay?: number
 }
