@@ -9,7 +9,7 @@ import { TSubscriptions, TTransaction } from '@/app/lib/types'
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Secs.
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
