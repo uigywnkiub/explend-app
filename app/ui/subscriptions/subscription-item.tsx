@@ -87,7 +87,7 @@ function SubscriptionItem({
 
   const checkIconClassName = isAddedSubscriptionInThisMonth
     ? 'fill-success'
-    : ''
+    : 'fill-default'
   const addedSubscriptionStr = 'added this month'
 
   return (
@@ -258,7 +258,7 @@ function SubscriptionItem({
         </div>
       </div>
       {Boolean(note) && (
-        <div className='text-default-500 mt-1 mr-auto w-4/5 text-left text-sm'>
+        <div className='text-default-500 mt-1 mr-auto w-4/5 pl-13.5 text-left text-sm md:pl-14.5'>
           <p>{note}</p>
         </div>
       )}

@@ -19,10 +19,19 @@ export async function GET(req: NextRequest) {
 
   const todayDay = new Date().getDate()
 
-  const users = await TransactionModel.find(
-    { 'subscriptions.autoRenew': true },
-    { userId: 1, currency: 1, categories: 1, salaryDay: 1, subscriptions: 1 },
-  ).lean()
+  const users = await TransactionModel.aggregate([
+    { $match: { 'subscriptions.autoRenew': true } },
+    {
+      $group: {
+        _id: '$userId',
+        userId: { $first: '$userId' },
+        currency: { $first: '$currency' },
+        categories: { $first: '$categories' },
+        salaryDay: { $first: '$salaryDay' },
+        subscriptions: { $first: '$subscriptions' },
+      },
+    },
+  ])
 
   const results: {
     userId: TTransaction['userId']
