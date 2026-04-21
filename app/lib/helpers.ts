@@ -42,6 +42,7 @@ import type {
   TGetTransactions,
   THTMLElement,
   TRawTransaction,
+  TSubscriptions,
   TTransaction,
 } from './types'
 
@@ -637,4 +638,14 @@ export async function resolveImportedCategory(
   }
 
   return `${DEFAULT_CATEGORY_EMOJI} ${DEFAULT_CATEGORY}`
+}
+
+export const getOrdinal = (
+  day: NonNullable<TSubscriptions['renewDay']>,
+): string => {
+  if (day === 1) return '1st'
+  if (day === 2) return '2nd'
+  if (day === 3) return '3rd'
+
+  return `${day}th`
 }

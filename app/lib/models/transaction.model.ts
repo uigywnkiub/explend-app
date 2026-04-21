@@ -61,12 +61,6 @@ const categoryLimitsSchema = new Schema<TCategoryLimits>(
   { _id: false },
 )
 
-// const subscriptionsSchema = new Schema<TSubscriptions>({
-//   category: { type: String, required: true },
-//   description: { type: String, required: true },
-//   amount: { type: String, required: true },
-//   note: { type: String, default: '' },
-// })
 const subscriptionsSchema = new Schema<TSubscriptions>({
   category: { type: String, required: true },
   description: { type: String, required: true },

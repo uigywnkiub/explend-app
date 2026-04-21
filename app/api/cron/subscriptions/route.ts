@@ -1,47 +1,44 @@
-// app/api/cron/subscriptions/route.ts
-// Vercel cron — runs daily at 08:00 UTC (configure in vercel.json)
-// Finds every subscription with autoRenew=true where renewDay === today's date,
-// then creates a transaction for each one.
-import { NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 import { createTransaction } from '@/app/lib/actions'
 import { createFormData } from '@/app/lib/helpers'
 import TransactionModel from '@/app/lib/models/transaction.model'
 import dbConnect from '@/app/lib/mongodb'
-import { TSubscriptions } from '@/app/lib/types'
+import { TSubscriptions, TTransaction } from '@/app/lib/types'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 60 // seconds
+export const maxDuration = 60 // Secs.
 
-export async function POST(request: Request) {
-  // Verify this is a legitimate Vercel cron call (or your own secret header)
-  const authHeader = request.headers.get('authorization')
+export async function POST(req: NextRequest) {
+  const authHeader = req.headers.get('authorization')
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   await dbConnect()
 
-  const todayDay = new Date().getDate() // 1–31
-  // console.log(todayDay)
+  const todayDay = new Date().getDate()
 
-  // Fetch all user documents that have at least one matching subscription
   const users = await TransactionModel.find(
     { 'subscriptions.autoRenew': true },
     { userId: 1, currency: 1, categories: 1, salaryDay: 1, subscriptions: 1 },
   ).lean()
-  // console.log(users)
 
-  const results: { userId: string; processed: number; errors: string[] }[] = []
+  const results: {
+    userId: TTransaction['userId']
+    processed: string
+    errors: string[]
+  }[] = []
 
   for (const user of users) {
-    const processed: number[] = []
+    const processed: string[] = []
     const errors: string[] = []
 
-    const eligibleSubs = (user.subscriptions ?? []).filter(
-      (s: TSubscriptions) =>
-        s.autoRenew === true && Number(s.renewDay) === todayDay,
-    )
+    const eligibleSubs: TTransaction['subscriptions'] = (
+      user.subscriptions || []
+    ).filter((s: TSubscriptions) => {
+      return s.autoRenew === true && Number(s.renewDay) === todayDay
+    })
 
     for (const sub of eligibleSubs) {
       try {
@@ -63,21 +60,23 @@ export async function POST(request: Request) {
 
         processed.push(sub._id)
       } catch (err: unknown) {
-        let message = 'unknown error'
-
+        let msg = 'unknown error'
         if (err instanceof Error) {
-          message = err.message
+          msg = err.message
         } else if (typeof err === 'string') {
-          message = err
+          msg = err
         }
 
-        errors.push(`sub ${sub._id}: ${message}`)
+        errors.push(`sub ${sub._id}: ${msg}`)
       }
     }
 
-    results.push({ userId: user.userId, processed: processed.length, errors })
+    results.push({
+      userId: user.userId,
+      processed: processed.length.toString(),
+      errors,
+    })
   }
-  // console.log(results)
 
   return NextResponse.json({
     ok: true,
