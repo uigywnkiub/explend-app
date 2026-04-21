@@ -66,6 +66,8 @@ const subscriptionsSchema = new Schema<TSubscriptions>({
   description: { type: String, required: true },
   amount: { type: String, required: true },
   note: { type: String, default: '' },
+  autoRenew: { type: Boolean, default: false },
+  renewDay: { type: Number, default: null, min: 1, max: 28 },
 })
 
 const transactionSchema = new Schema<TTransaction>(

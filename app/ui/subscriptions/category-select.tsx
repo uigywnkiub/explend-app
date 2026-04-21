@@ -26,7 +26,7 @@ type TProps = {
   changedCategoryNameWithEmoji?: string
 }
 
-function SelectInput({
+function CategorySelect({
   category,
   setCategory,
   categoryName,
@@ -111,4 +111,4 @@ function SelectInput({
   )
 }
 
-export default memo(SelectInput)
+export default memo(CategorySelect)

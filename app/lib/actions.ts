@@ -897,6 +897,8 @@ export async function editSubscription(
   description: TSubscriptions['description'],
   amount: TSubscriptions['amount'],
   note: TSubscriptions['note'],
+  autoRenew: TSubscriptions['autoRenew'],
+  renewDay: TSubscriptions['renewDay'],
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to edit subscriptions.')
@@ -923,6 +925,8 @@ export async function editSubscription(
           'subscriptions.$.description': description,
           'subscriptions.$.amount': amount,
           'subscriptions.$.note': note,
+          'subscriptions.$.autoRenew': autoRenew,
+          'subscriptions.$.renewDay': renewDay,
         },
       },
     )

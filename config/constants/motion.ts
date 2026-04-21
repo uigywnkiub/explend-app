@@ -49,6 +49,13 @@ export const MOTION_LIST = (idx: number) => {
   } satisfies MotionProps
 }
 
+export const MOTION_COLLAPSE = {
+  initial: { opacity: 0, height: 0 },
+  animate: { opacity: 1, height: 'auto' },
+  exit: { opacity: 0, height: 0 },
+  transition: SHARED_TRANSACTION.TRANSACTION_SPRING,
+} satisfies MotionProps
+
 // Comment the custom View Transition API function until all modern browsers support it.
 // export const slideInOut = () => {
 //   const duration = DIV.TRANSITION.duration * 1000

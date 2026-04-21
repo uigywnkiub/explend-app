@@ -10,6 +10,7 @@ import { haptic } from 'ios-haptics'
 import { DEFAULT_ICON_SIZE, DEFAULT_SALARY_DAY } from '@/config/constants/main'
 
 import { updateSalaryDay } from '@/app/lib/actions'
+import { getOrdinal } from '@/app/lib/helpers'
 import type { TGetTransactions, TTransaction, TUserId } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
@@ -20,6 +21,7 @@ const SALARY_DAYS = Array.from({ length: 31 }, (_, i) => {
   return {
     key: day,
     value: day,
+    label: getOrdinal(i + 1),
     icon: <PiCalendar size={DEFAULT_ICON_SIZE} />,
     hoverIcon: <PiCalendarFill size={DEFAULT_ICON_SIZE} />,
   }
@@ -78,7 +80,7 @@ function SalaryDay({ userId, transactionsCount, userSalaryDay }: TProps) {
               />
             }
           >
-            {day.value}
+            {day.label}
           </SelectItem>
         ))}
       </SelectSection>

@@ -14,6 +14,7 @@ import { useDebounce } from 'react-use'
 
 import {
   Button,
+  Checkbox,
   Divider,
   Modal,
   ModalBody,
@@ -55,9 +56,10 @@ import type { TSubscriptions, TTransaction, TUserId } from '@/app/lib/types'
 import AmountInput from '../amount-input'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
+import CategorySelect from './category-select'
 import DescriptionInput from './description-input'
 import NoteInput from './note-input'
-import SelectInput from './select-input'
+import RenewSelect from './renew-select'
 import SubscriptionItem from './subscription-item'
 
 export const enum DROPDOWN_KEY {
@@ -109,11 +111,15 @@ export default function Subscriptions({
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
   const [note, setNote] = useState('')
+  const [autoRenew, setAutoRenew] = useState(false)
+  const [renewDay, setRenewDay] = useState(1)
 
   const [tempCategoryName, setTempCategoryName] = useState('')
   const [tempDescription, setTempDescription] = useState('')
   const [tempAmount, setTempAmount] = useState('')
   const [tempNote, setTempNote] = useState('')
+  const [tempAutoRenew, setTempAutoRenew] = useState(false)
+  const [tempRenewDay, setTempRenewDay] = useState(1)
 
   const [isLoadingCreate, setIsLoadingCreate] = useState(false)
   const [isLoadingEdit, setIsLoadingEdit] = useState(false)
@@ -173,6 +179,8 @@ export default function Subscriptions({
     setDescription('')
     setAmount('')
     setNote('')
+    setAutoRenew(false)
+    setRenewDay(1)
   }
 
   const getCurrSubscription = (_id: TTransaction['id']) => {
@@ -221,6 +229,8 @@ export default function Subscriptions({
       description: trimmedDescription,
       amount,
       note: trimmedNote,
+      autoRenew,
+      renewDay,
     })
     setIsLoadingCreate(true)
     try {
@@ -271,13 +281,17 @@ export default function Subscriptions({
     description: TSubscriptions['description'],
     amount: TSubscriptions['amount'],
     note: TSubscriptions['note'],
+    autoRenew: TSubscriptions['autoRenew'],
+    renewDay: TSubscriptions['renewDay'],
     onCloseEditCallback: () => void,
   ) => {
     const hasNoChanges =
       categoryName === tempCategoryName &&
       description === tempDescription &&
       amount === tempAmount &&
-      note === tempNote
+      note === tempNote &&
+      autoRenew === tempAutoRenew &&
+      renewDay === tempRenewDay
     if (hasNoChanges) {
       haptic.error()
       toast.error('No changes detected.')
@@ -293,6 +307,8 @@ export default function Subscriptions({
         description,
         amount,
         note,
+        autoRenew,
+        renewDay,
       )
       haptic.confirm()
       toast.success('Subscription edited.')
@@ -423,7 +439,7 @@ export default function Subscriptions({
                   </ModalHeader>
                   <ModalBody>
                     <div className='flex flex-col gap-4'>
-                      <SelectInput
+                      <CategorySelect
                         category={category}
                         setCategory={setCategory}
                         categoryName={categoryName}
@@ -442,6 +458,19 @@ export default function Subscriptions({
                         currency={currency}
                       />
                       <NoteInput note={note} onChangeNote={onChangeNote} />
+                      <Checkbox
+                        size='sm'
+                        isSelected={autoRenew}
+                        onValueChange={setAutoRenew}
+                      >
+                        Auto-renew monthly
+                      </Checkbox>
+                      {autoRenew && (
+                        <RenewSelect
+                          renewDay={renewDay}
+                          onRenewDayChange={setRenewDay}
+                        />
+                      )}
                     </div>
                   </ModalBody>
                   <ModalFooter>
@@ -510,10 +539,14 @@ export default function Subscriptions({
                   setAmount(currSubscription.amount)
                   setSubscriptionId(currSubscription._id)
                   setNote(currSubscription.note)
+                  setAutoRenew(currSubscription.autoRenew || false)
+                  setRenewDay(currSubscription.renewDay || 1)
                   setTempCategoryName(currCategoryWithoutEmoji)
                   setTempDescription(currSubscription.description)
                   setTempAmount(currSubscription.amount)
                   setTempNote(currSubscription.note)
+                  setTempAutoRenew(currSubscription.autoRenew || false)
+                  setTempRenewDay(currSubscription.renewDay || 1)
 
                   if (key === DROPDOWN_KEY.ADD) {
                     onAddAsTransaction({
@@ -525,6 +558,8 @@ export default function Subscriptions({
                       amount: s.amount,
                       isSubscription: true,
                       note: s.note,
+                      autoRenew: s.autoRenew,
+                      renewDay: s.renewDay,
                     })
                   }
                   if (key === DROPDOWN_KEY.EDIT) onOpenEdit()
@@ -565,7 +600,7 @@ export default function Subscriptions({
               </ModalHeader>
               <ModalBody>
                 <div className='flex flex-col gap-4'>
-                  <SelectInput
+                  <CategorySelect
                     category={category}
                     setCategory={setCategory}
                     categoryName={categoryName}
@@ -587,6 +622,19 @@ export default function Subscriptions({
                     currency={currency}
                   />
                   <NoteInput note={note} onChangeNote={onChangeNote} />
+                  <Checkbox
+                    size='sm'
+                    isSelected={autoRenew}
+                    onValueChange={setAutoRenew}
+                  >
+                    Auto-renew monthly
+                  </Checkbox>
+                  {autoRenew && (
+                    <RenewSelect
+                      renewDay={renewDay}
+                      onRenewDayChange={setRenewDay}
+                    />
+                  )}
                 </div>
               </ModalBody>
               <ModalFooter>
@@ -612,6 +660,8 @@ export default function Subscriptions({
                       trimmedDescription,
                       amount,
                       trimmedNote,
+                      autoRenew,
+                      renewDay,
                       onCloseEdit,
                     )
                   }}
