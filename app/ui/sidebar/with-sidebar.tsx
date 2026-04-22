@@ -1,4 +1,5 @@
 import ChangelogWrapper from '../changelog-wrapper'
+import PushPermission from '../push-permission'
 import Footer from '../settings/footer'
 import Hamburger from './hamburger'
 import MaskAmountInfo from './mask-amount-info'
@@ -47,6 +48,7 @@ export default function WithSidebar({
       <Hamburger />
       <MaskAmountInfo />
       <ChangelogWrapper />
+      <PushPermission />
     </div>
   )
 }
