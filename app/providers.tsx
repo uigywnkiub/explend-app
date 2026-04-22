@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { DefaultToastOptions, Toaster } from 'react-hot-toast'
 
 import dynamic from 'next/dynamic'
@@ -18,6 +19,7 @@ import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { getResolvedToastCfg, TOAST_POSITION } from '@/config/constants/toast'
 
 import { getBooleanFromLocalStorage, userLocale } from './lib/helpers'
+import { registerPushSubscription } from './lib/push-subscription'
 
 const DynamicNext13ProgressBar = dynamic(
   () => import('next13-progressbar').then((e) => e.Next13ProgressBar),
@@ -37,6 +39,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const isAmountHidden = getBooleanFromLocalStorage(
     LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
   )
+
+  useEffect(() => {
+    registerPushSubscription()
+  }, [])
 
   return (
     <HeroUIProvider navigate={router.push} locale={userLocale}>
