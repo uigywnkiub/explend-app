@@ -7,26 +7,43 @@ function urlBase64ToUint8Array(base64String: string) {
 }
 
 export async function registerPushSubscription() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return
+  alert('1: push init started')
 
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    alert('2: not supported')
+
+    return
+  }
+
+  alert('3: requesting permission')
   const permission = await Notification.requestPermission()
+  alert(`4: permission: ${permission}`)
+
   if (permission !== 'granted') return
 
+  alert('5: waiting for SW')
   const reg = await navigator.serviceWorker.ready
+  alert('6: SW ready')
 
   const existing = await reg.pushManager.getSubscription()
+  alert(`7: existing: ${existing?.endpoint ?? 'none'}`)
+
   const subscription =
     existing ??
     (await reg.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(
-        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
       ),
     }))
 
-  await fetch('/api/push/subscribe', {
+  alert(`8: subscription endpoint: ${subscription.endpoint}`)
+
+  const res = await fetch('/api/push/subscribe', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(subscription),
   })
+
+  alert(`9: saved, status: ${res.status}`)
 }
