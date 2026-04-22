@@ -5,7 +5,7 @@ import webpush from 'web-push'
 import { ROUTE } from '@/config/constants/routes'
 
 import { createTransaction } from '@/app/lib/actions'
-import { createFormData } from '@/app/lib/helpers'
+import { createFormData, getEmojiFromCategory } from '@/app/lib/helpers'
 import PushSubscriptionModel from '@/app/lib/models/push-subscription.model'
 import TransactionModel from '@/app/lib/models/transaction.model'
 import dbConnect from '@/app/lib/mongodb'
@@ -112,8 +112,8 @@ export async function GET(req: NextRequest) {
               await webpush.sendNotification(
                 pushSub,
                 JSON.stringify({
-                  title: `${sub.category} Renewal`,
-                  body: `${sub.description} — ${sub.amount} ${user.currency.sign}`,
+                  title: `Subscription Renewal`,
+                  body: `${getEmojiFromCategory(sub.category)} ${sub.description} — ${sub.amount} ${user.currency.sign}`,
                   icon: '/icon.png',
                   url: ROUTE.SUBSCRIPTIONS,
                 }),
