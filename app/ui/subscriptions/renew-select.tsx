@@ -4,7 +4,7 @@ import { memo } from 'react'
 import { PiCalendar, PiCalendarFill } from 'react-icons/pi'
 
 import { Select, SelectItem, SelectSection } from '@heroui/react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
@@ -37,42 +37,40 @@ function RenewSelect({ renewDay, onRenewDayChange }: TProps) {
   const selectedKey = renewDay.toString()
 
   return (
-    <AnimatePresence>
-      <motion.div {...MOTION_COLLAPSE}>
-        <Select
-          isVirtualized={false}
-          label='Select a renewal day'
-          items={RENEW_DAYS}
-          disabledKeys={[selectedKey]}
-          defaultSelectedKeys={[selectedKey]}
-          onChange={(e) => {
-            haptic()
-            const val = Number(e.target.value)
-            if (!isNaN(val)) onRenewDayChange(val)
-          }}
-        >
-          <SelectSection title='Days of the month'>
-            {RENEW_DAYS.map((day) => (
-              <SelectItem
-                key={day.key}
-                startContent={
-                  <HoverableElement
-                    uKey={day.key + day.value}
-                    element={day.icon}
-                    hoveredElement={day.hoverIcon}
-                  />
-                }
-              >
-                {day.label}
-              </SelectItem>
-            ))}
-          </SelectSection>
-        </Select>
-        <div className='mt-2 flex flex-col gap-2'>
-          <InfoText text='Renewal appears in background once a day at ~ 00:00 UTC.' />
-        </div>
-      </motion.div>
-    </AnimatePresence>
+    <motion.div {...MOTION_COLLAPSE}>
+      <Select
+        isVirtualized={false}
+        label='Select a renewal day'
+        items={RENEW_DAYS}
+        disabledKeys={[selectedKey]}
+        defaultSelectedKeys={[selectedKey]}
+        onChange={(e) => {
+          haptic()
+          const val = Number(e.target.value)
+          if (!isNaN(val)) onRenewDayChange(val)
+        }}
+      >
+        <SelectSection title='Days of the month'>
+          {RENEW_DAYS.map((day) => (
+            <SelectItem
+              key={day.key}
+              startContent={
+                <HoverableElement
+                  uKey={day.key + day.value}
+                  element={day.icon}
+                  hoveredElement={day.hoverIcon}
+                />
+              }
+            >
+              {day.label}
+            </SelectItem>
+          ))}
+        </SelectSection>
+      </Select>
+      <div className='mt-2 flex flex-col gap-2'>
+        <InfoText text='Renewal appears in background once a day at ~ 00:00 UTC.' />
+      </div>
+    </motion.div>
   )
 }
 
