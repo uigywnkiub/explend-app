@@ -1,13 +1,16 @@
 'use client'
 
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
+import { Button } from '@heroui/react'
 
 import { registerPushSubscription } from '../lib/push'
 
 export default function RegisterPushSubscription() {
-  useEffect(() => {
-    registerPushSubscription()
-  }, [])
+  // useEffect(() => {
+  //   registerPushSubscription()
+  // }, [])
 
-  return null
+  return (
+    <Button onPress={registerPushSubscription}>Enable notifications 🔔</Button>
+  )
 }

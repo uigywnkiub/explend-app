@@ -21,6 +21,7 @@ import {
 import { getUserCategories } from '../lib/data'
 import { toLowerCase } from '../lib/helpers'
 import InfoText from '../ui/info-text'
+import RegisterPushSubscription from '../ui/register-push-subscription'
 import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
 import DownloadUploadTransactions from '../ui/settings/download-upload-transactions'
@@ -210,6 +211,7 @@ export default async function Page() {
         titleClassName='text-danger'
       >
         <>
+          <RegisterPushSubscription />
           <SectionItem
             title='Management Transactions'
             subtitle='Download all your transactions as JSON or upload a backup to restore missing data.'
@@ -229,9 +231,7 @@ export default async function Page() {
               </div>
             </>
           </SectionItem>
-
           <Divider className='my-4' />
-
           <SectionItem
             title='Import Bank Transactions'
             subtitle='Import your transaction statement from a Monobank or Privat24 export file.'
@@ -258,9 +258,7 @@ export default async function Page() {
               </div>
             </>
           </SectionItem>
-
           <Divider className='my-4' />
-
           <SectionItem
             title='Delete Account'
             subtitle='Removing your account will delete all your data and sign out.'
