@@ -3,7 +3,7 @@ import { model, models, Schema } from 'mongoose'
 const pushSubscriptionSchema = new Schema(
   {
     userId: { type: String, required: true, unique: true },
-    subscription: { type: Schema.Types.Mixed, required: true },
+    subscriptions: { type: [Schema.Types.Mixed], default: [] },
   },
   { timestamps: true },
 )

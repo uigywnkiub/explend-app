@@ -20,24 +20,29 @@ export async function POST(req: NextRequest) {
 
   await PushSubscriptionModel.updateOne(
     { userId: session.user.email },
-    { $set: { subscription } },
+    { $addToSet: { subscriptions: subscription } },
     { upsert: true },
   )
 
   return NextResponse.json({ ok: true })
 }
 
-export async function DELETE() {
+export async function DELETE(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.email) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const { endpoint } = await req.json()
+  if (!endpoint) {
+    return NextResponse.json({ error: 'Invalid endpoint' }, { status: 400 })
+  }
+
   await dbConnect()
 
-  await PushSubscriptionModel.updateMany(
+  await PushSubscriptionModel.updateOne(
     { userId: session.user.email },
-    { $unset: { pushSubscription: '' } },
+    { $pull: { subscriptions: { endpoint } } },
   )
 
   return NextResponse.json({ ok: true })

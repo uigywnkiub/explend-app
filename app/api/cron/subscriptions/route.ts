@@ -100,23 +100,25 @@ export async function GET(req: NextRequest) {
       try {
         const pushDoc = await PushSubscriptionModel.findOne({
           userId: user.userId,
-        }).lean<{ subscription: webpush.PushSubscription }>()
+        }).lean<{ subscriptions: webpush.PushSubscription[] }>()
 
-        if (pushDoc?.subscription) {
+        if (pushDoc?.subscriptions?.length) {
           const processedSubs = eligibleSubs.filter((s: TSubscriptions) =>
             processed.includes(s._id),
           )
 
           for (const sub of processedSubs) {
-            await webpush.sendNotification(
-              pushDoc.subscription,
-              JSON.stringify({
-                title: `${sub.category} Renewal`,
-                body: `${sub.description} — ${sub.amount} ${user.currency.sign}`,
-                icon: '/icon.png',
-                url: ROUTE.SUBSCRIPTIONS,
-              }),
-            )
+            for (const pushSub of pushDoc.subscriptions) {
+              await webpush.sendNotification(
+                pushSub,
+                JSON.stringify({
+                  title: `${sub.category} Renewal`,
+                  body: `${sub.description} — ${sub.amount} ${user.currency.sign}`,
+                  icon: '/icon.png',
+                  url: ROUTE.SUBSCRIPTIONS,
+                }),
+              )
+            }
           }
 
           notified = true
