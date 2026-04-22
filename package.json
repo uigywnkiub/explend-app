@@ -66,6 +66,7 @@
     "require-in-the-middle": "^8.0.1",
     "resend": "^6.12.2",
     "tailwind-merge": "^3.5.0",
+    "web-push": "^3.6.7",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
@@ -81,6 +82,7 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/react-highlight-words": "^0.20.1",
+    "@types/web-push": "^3.6.4",
     "@typescript-eslint/eslint-plugin": "^8.59.0",
     "@typescript-eslint/parser": "^8.59.0",
     "@vitejs/plugin-react": "^5.2.0",

@@ -49,6 +49,9 @@ next-env.d.ts
 /public/sw*
 /public/fallback-development*
 
+# Custom Worker
+/public/worker*
+
 # Localhost https 
 certificates
 

@@ -16,6 +16,8 @@ declare namespace NodeJS {
     NEXT_PUBLIC_SENTRY_DSN: string
     EXPLEND_APP_GITHUB_TOKEN: string
     CRON_SECRET: string
+    NEXT_PUBLIC_VAPID_PUBLIC_KEY: string
+    VAPID_PRIVATE_KEY: string
     AUTH_SECRET: string
     AUTH_GITHUB_ID: string
     AUTH_GITHUB_SECRET: string
