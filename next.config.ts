@@ -84,6 +84,7 @@ const nextConfig: NextConfig = {
 
 const withPWA = withPWAInit({
   dest: 'public',
+  customWorkerSrc: 'worker',
   cacheOnFrontEndNav: true,
   aggressiveFrontEndNavCaching: true,
   extendDefaultRuntimeCaching: true,

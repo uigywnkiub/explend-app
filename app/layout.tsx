@@ -21,6 +21,7 @@ import { siteMeta } from '@/config/site-meta'
 
 import './globals.css'
 import Providers from './providers'
+import RegisterPushSubscription from './ui/register-push-subscription'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -360,6 +361,7 @@ export default function RootLayout({
             <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID} />
           </>
         )}
+        <RegisterPushSubscription />
       </body>
     </html>
   )

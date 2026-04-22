@@ -465,12 +465,14 @@ export default function Subscriptions({
                       >
                         Auto-renew monthly
                       </Checkbox>
-                      {autoRenew && (
-                        <RenewSelect
-                          renewDay={renewDay}
-                          onRenewDayChange={setRenewDay}
-                        />
-                      )}
+                      <AnimatePresence>
+                        {autoRenew && (
+                          <RenewSelect
+                            renewDay={renewDay}
+                            onRenewDayChange={setRenewDay}
+                          />
+                        )}
+                      </AnimatePresence>
                     </div>
                   </ModalBody>
                   <ModalFooter>
@@ -629,12 +631,14 @@ export default function Subscriptions({
                   >
                     Auto-renew monthly
                   </Checkbox>
-                  {autoRenew && (
-                    <RenewSelect
-                      renewDay={renewDay}
-                      onRenewDayChange={setRenewDay}
-                    />
-                  )}
+                  <AnimatePresence>
+                    {autoRenew && (
+                      <RenewSelect
+                        renewDay={renewDay}
+                        onRenewDayChange={setRenewDay}
+                      />
+                    )}
+                  </AnimatePresence>
                 </div>
               </ModalBody>
               <ModalFooter>
