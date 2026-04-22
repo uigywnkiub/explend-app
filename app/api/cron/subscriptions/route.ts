@@ -16,8 +16,8 @@ export const maxDuration = 60 // Secs.
 
 webpush.setVapidDetails(
   `mailto:${process.env.RESEND_EMAIL}`,
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!,
+  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY,
 )
 
 export async function GET(req: NextRequest) {
