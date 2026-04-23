@@ -19,11 +19,11 @@
 - **Interactive Table**
   Sort transactions by any column, filter results by searching category, description, or type, with real-time totals displaying income, expenses, and net balance.
 
+- **Subscription Tracking**
+  Manage subscriptions and automatically renew them as recurring expense transactions with push notifications.
+
 - **Category Limits**
   Set and adjust monthly spending limits for specific categories.
-
-- **Subscription Tracking**
-  Manage subscriptions and log them as recurring expense transactions.
 
 - **Receipt Scanning**
   Upload receipts—Explend extracts key details and fills in your transactions automatically.

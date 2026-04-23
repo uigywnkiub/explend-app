@@ -1,6 +1,7 @@
 /* eslint-disable check-file/no-index */
 /// <reference lib="webworker" />
 import { APP_NAME } from '@/config/constants/main'
+import { ROUTE } from '@/config/constants/routes'
 
 export {}
 
@@ -13,12 +14,14 @@ self.addEventListener('push', (event) => {
     self.registration.showNotification(data.title || APP_NAME.SHORT, {
       body: data.body,
       icon: data.icon || '/icon.png',
-      data: { url: data.url || '/' },
+      data: { url: data.url || ROUTE.HOME },
     }),
   )
 })
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
-  event.waitUntil(self.clients.openWindow(event.notification.data?.url || '/'))
+  event.waitUntil(
+    self.clients.openWindow(event.notification.data?.url || ROUTE.HOME),
+  )
 })

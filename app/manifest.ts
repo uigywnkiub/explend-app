@@ -34,6 +34,7 @@ export default function manifest(): MetadataRoute.Manifest {
     orientation: 'portrait',
     background_color: CUSTOM_DARK_COLOR,
     theme_color: CUSTOM_DARK_COLOR,
+    prefer_related_applications: false,
     icons: [
       {
         src: '/icons/favicon.ico',
