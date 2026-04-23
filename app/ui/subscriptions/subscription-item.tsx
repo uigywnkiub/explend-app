@@ -101,7 +101,7 @@ function SubscriptionItem({
       className='rounded-medium bg-content1 relative flex flex-col items-center justify-between py-3'
     >
       <div className='flex w-full items-center justify-between'>
-        <div className='flex items-center gap-2 md:w-1/2'>
+        <div className='flex items-center gap-2'>
           <Tooltip content='Drag to reorder' placement='left'>
             <div
               onPointerDown={(e) => dragControls.start(e)}
@@ -258,7 +258,7 @@ function SubscriptionItem({
         </div>
       </div>
       {Boolean(note) && (
-        <div className='text-default-500 mt-1 mr-auto w-4/5 pl-13.5 text-left text-sm md:pl-14.5'>
+        <div className='text-default-500 mr-auto w-4/5 pl-13.5 text-left text-sm md:pl-14.5'>
           <p>{note}</p>
         </div>
       )}
