@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
+import * as Sentry from '@sentry/nextjs'
 import webpush from 'web-push'
 
 import { ROUTE } from '@/config/constants/routes'
@@ -97,18 +98,18 @@ export async function GET(req: NextRequest) {
     }
 
     if (processed.length > 0) {
-      try {
-        const pushDoc = await PushSubscriptionModel.findOne({
-          userId: user.userId,
-        }).lean<{ subscriptions: webpush.PushSubscription[] }>()
+      const pushDoc = await PushSubscriptionModel.findOne({
+        userId: user.userId,
+      }).lean<{ subscriptions: webpush.PushSubscription[] }>()
 
-        if (pushDoc?.subscriptions?.length) {
-          const processedSubs = eligibleSubs.filter((s: TSubscriptions) =>
-            processed.includes(s._id),
-          )
+      if (pushDoc?.subscriptions?.length) {
+        const processedSubs = eligibleSubs.filter((s: TSubscriptions) =>
+          processed.includes(s._id),
+        )
 
-          for (const sub of processedSubs) {
-            for (const pushSub of pushDoc.subscriptions) {
+        for (const sub of processedSubs) {
+          for (const pushSub of pushDoc.subscriptions) {
+            try {
               await webpush.sendNotification(
                 pushSub,
                 JSON.stringify({
@@ -118,12 +119,26 @@ export async function GET(req: NextRequest) {
                   url: ROUTE.SUBSCRIPTIONS,
                 }),
               )
+            } catch (err) {
+              if (
+                typeof err === 'object' &&
+                err !== null &&
+                'statusCode' in err &&
+                (err.statusCode === 410 || err.statusCode === 404)
+              ) {
+                await PushSubscriptionModel.updateOne(
+                  { userId: user.userId },
+                  { $pull: { subscriptions: { endpoint: pushSub.endpoint } } },
+                )
+              } else {
+                Sentry.captureException(err, { extra: { userId: user.userId } })
+              }
             }
           }
-
-          notified = true
         }
-      } catch {}
+
+        notified = true
+      }
     }
 
     results.push({

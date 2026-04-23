@@ -15,14 +15,23 @@ export async function registerPushSubscription() {
   const reg = await navigator.serviceWorker.ready
 
   const existing = await reg.pushManager.getSubscription()
-  const subscription =
-    existing ??
-    (await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(
-        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-      ),
-    }))
+
+  if (existing) {
+    await fetch('/api/push/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(existing),
+    })
+
+    return
+  }
+
+  const subscription = await reg.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array(
+      process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    ),
+  })
 
   await fetch('/api/push/subscribe', {
     method: 'POST',

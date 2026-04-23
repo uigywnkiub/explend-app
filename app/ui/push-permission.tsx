@@ -20,12 +20,12 @@ export default function PushPermission() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   useEffect(() => {
-    if (
-      'Notification' in window &&
-      Notification.permission === 'default' &&
-      'serviceWorker' in navigator
-    ) {
+    if (!('Notification' in window) || !('serviceWorker' in navigator)) return
+
+    if (Notification.permission === 'default') {
       onOpen()
+    } else if (Notification.permission === 'granted') {
+      void registerPushSubscription()
     }
   }, [onOpen])
 

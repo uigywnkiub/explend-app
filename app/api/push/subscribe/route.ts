@@ -18,11 +18,18 @@ export async function POST(req: NextRequest) {
 
   await dbConnect()
 
-  await PushSubscriptionModel.updateOne(
-    { userId: session.user.email },
-    { $addToSet: { subscriptions: subscription } },
-    { upsert: true },
-  )
+  const exists = await PushSubscriptionModel.findOne({
+    userId: session.user.email,
+    'subscriptions.endpoint': subscription.endpoint,
+  })
+
+  if (!exists) {
+    await PushSubscriptionModel.updateOne(
+      { userId: session.user.email },
+      { $push: { subscriptions: subscription } },
+      { upsert: true },
+    )
+  }
 
   return NextResponse.json({ ok: true })
 }
