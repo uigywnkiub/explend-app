@@ -39,6 +39,7 @@ import {
   getCategoryWithEmoji,
   resolveImportedCategory,
 } from './helpers'
+import PushSubscriptionModel from './models/push-subscription.model'
 import dbConnect from './mongodb'
 import type {
   TBalance,
@@ -708,6 +709,7 @@ export async function deleteAllTransactionsAndSignOut(
   try {
     await dbConnect()
     await TransactionModel.deleteMany({ userId })
+    await PushSubscriptionModel.deleteOne({ userId })
     await signOutAccount()
   } catch (err) {
     throw err
