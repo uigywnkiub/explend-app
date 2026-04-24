@@ -256,7 +256,6 @@ export type TImportTransactions = {
 export type TGetChangelog = {
   sha: string
   msg: string
-  date: string
 }
 
 export type TMonobankCsvRow = {

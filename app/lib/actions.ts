@@ -29,6 +29,7 @@ import TransactionModel from '@/app/lib/models/transaction.model'
 import {
   CompletionAIModel,
   ExpenseTipsAIModel,
+  TextAIModel,
   UploadReceiptAIModel,
 } from './ai'
 import { parseMonobankCsv, parsePrivat24Xlsx } from './data'
@@ -1107,6 +1108,25 @@ export async function getAnalyzedReceiptAI(file: Blob): Promise<string> {
   }
 }
 
+export async function formatChangelogMessageAI(
+  commitMsg: string,
+): Promise<string> {
+  if (!commitMsg) {
+    throw new Error('Commit message is required.')
+  }
+
+  try {
+    const prompt = `Rewrite this git commit message into a clean, user-facing changelog entry (1-3 short sentences). No quotes, no conventional commit prefixes (e.g. "feat:", "refactor:"). Focus on what changed for the user.\n\nCommit: "${commitMsg}"`
+
+    const content = await TextAIModel.generateContent(prompt)
+    const text = content.response.text().trim()
+
+    return text
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function getChangelog(): Promise<TGetChangelog> {
   try {
     const res = await fetch(
@@ -1123,9 +1143,8 @@ export async function getChangelog(): Promise<TGetChangelog> {
     const data = await res.json()
 
     return {
-      sha: data[0]?.sha,
-      msg: data[0]?.commit?.message?.split('\n')[0],
-      date: data[0]?.commit?.author?.date,
+      sha: data[0]?.sha?.slice(0, 7) || '',
+      msg: (await formatChangelogMessageAI(data[0]?.commit?.message)) || '',
     }
   } catch (err) {
     throw err

@@ -62,6 +62,15 @@ export const CompletionAIModel = genAI.getGenerativeModel({
   safetySettings,
 })
 
+export const TextAIModel = genAI.getGenerativeModel({
+  model: process.env.GEMINI_MODEL,
+  generationConfig: {
+    maxOutputTokens: 60,
+    temperature: 0.2,
+  },
+  safetySettings,
+})
+
 export const ExpenseTipsAIModel = genAI.getGenerativeModel({
   model: process.env.GEMINI_RICHER_MODEL,
   generationConfig: {
