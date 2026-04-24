@@ -5,11 +5,14 @@ import {
   endOfDay,
   endOfMonth,
   endOfToday,
+  endOfWeek,
   formatISO,
   isWithinInterval,
   startOfMonth,
   startOfToday,
+  startOfWeek,
   subMonths,
+  subWeeks,
 } from 'date-fns'
 import * as XLSX from 'xlsx'
 
@@ -504,4 +507,35 @@ export const parsePrivat24Xlsx = (
   }
 
   return { rows, skipped }
+}
+
+export function buildWeeklyReport(transactions: TTransaction[]) {
+  const lastWeekStart = startOfWeek(subWeeks(new Date(), 1), {
+    weekStartsOn: 1,
+  })
+  const lastWeekEnd = endOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 })
+
+  const lastWeek = filterTransactionsByDateRange(
+    transactions,
+    lastWeekStart,
+    lastWeekEnd,
+  )
+  const { income, expense } = filterTransactions(lastWeek)
+  const report = calculateMonthlyReportData(income, expense)
+
+  const biggestExpense = expense.length
+    ? expense.reduce(
+        (max, t) => (parseFloat(t.amount) > parseFloat(max.amount) ? t : max),
+        expense[0],
+      )
+    : null
+
+  return {
+    ...report,
+    biggestExpense: biggestExpense ?? null,
+    transactionCount: lastWeek.length,
+    weekStart: lastWeekStart,
+    weekEnd: lastWeekEnd,
+    currencySign: transactions[0]?.currency.sign ?? '',
+  }
 }

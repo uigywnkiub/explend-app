@@ -50,6 +50,8 @@ import type {
   TCategoryLimits,
   TCookie,
   TCurrency,
+  TExpenseReport,
+  TForecastData,
   TGetChangelog,
   TGetTransactions,
   TImportTransactions,
@@ -1149,4 +1151,40 @@ export async function getChangelog(): Promise<TGetChangelog> {
   } catch (err) {
     throw err
   }
+}
+
+export async function formatWeeklyReportAI(data: {
+  totalIncome: TForecastData['totalIncome']
+  totalExpense: TForecastData['totalExpense']
+  transactionCount: number
+  expenseReportData: TExpenseReport[]
+  biggestExpense: TTransaction | null
+  currencySign: TTransaction['currency']['sign']
+}): Promise<string> {
+  const {
+    totalIncome,
+    totalExpense,
+    transactionCount,
+    expenseReportData,
+    biggestExpense,
+    currencySign,
+  } = data
+
+  const topCategories = expenseReportData
+    .slice(0, 3)
+    .map((e) => `${e.category} (${e.percentage}%)`)
+    .join(', ')
+
+  const prompt = `Write a short, friendly weekly financial summary (2-3 sentences) for the PREVIOUS week based on this data:
+- Total income: ${totalIncome} ${currencySign}
+- Total expenses: ${totalExpense} ${currencySign}
+- Transactions: ${transactionCount}
+- Top expense categories: ${topCategories}
+${biggestExpense ? `- Biggest single expense: ${biggestExpense.category} — ${biggestExpense.amount} ${currencySign}` : ''}
+
+Start with "Last week". No bullet points. No markdown. Just plain text. Be concise and human. Format amounts with space as thousands separator (e.g. 1 000).`
+
+  const content = await TextAIModel.generateContent(prompt)
+
+  return content.response.text().trim()
 }
