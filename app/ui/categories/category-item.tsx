@@ -19,9 +19,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { haptic } from 'ios-haptics'
 
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
-import { MOTION_LIST } from '@/config/constants/motion'
+import { MOTION_COLLAPSE, MOTION_LIST } from '@/config/constants/motion'
 
-import { capitalizeFirstLetter, cn, toLowerCase } from '@/app/lib/helpers'
+import { capitalizeFirstLetter, toLowerCase } from '@/app/lib/helpers'
 import type {
   TCategories,
   TCategoriesItem,
@@ -242,12 +242,13 @@ function CategoryItem({
               </Tooltip>
             </div>
           </div>
-          <div className={cn(showEmojiPicker && '-mt-4')}>
-            <CustomEmojiPicker
-              showEmojiPicker={showEmojiPicker}
-              onEmojiClick={onEmojiClick}
-            />
-          </div>
+          <AnimatePresence>
+            {showEmojiPicker && (
+              <motion.div {...MOTION_COLLAPSE} className='-mt-4'>
+                <CustomEmojiPicker onEmojiClick={onEmojiClick} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       ) : (
         <div className='rounded-medium bg-content1 flex h-20 w-full items-center justify-between gap-2 p-2 text-left break-all md:p-4'>

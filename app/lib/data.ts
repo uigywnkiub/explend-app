@@ -25,6 +25,7 @@ import {
 import type {
   TBankParsedRow,
   TCategories,
+  TCategoriesItem,
   TChartData,
   TExpenseReport,
   TForecastData,
@@ -509,7 +510,7 @@ export const parsePrivat24Xlsx = (
   return { rows, skipped }
 }
 
-export function buildWeeklyReport(transactions: TTransaction[]) {
+export const buildWeeklyReport = (transactions: TTransaction[]) => {
   const lastWeekStart = startOfWeek(subWeeks(new Date(), 1), {
     weekStartsOn: 1,
   })
@@ -532,10 +533,29 @@ export function buildWeeklyReport(transactions: TTransaction[]) {
 
   return {
     ...report,
-    biggestExpense: biggestExpense ?? null,
+    biggestExpense: biggestExpense || null,
     transactionCount: lastWeek.length,
     weekStart: lastWeekStart,
     weekEnd: lastWeekEnd,
     currencySign: transactions[0]?.currency.sign ?? '',
   }
+}
+
+export const getUniqueCategoriesFromDefaults = (
+  categories: TCategories[],
+): TCategoriesItem[] => {
+  const defaultsCategories = new Set(
+    DEFAULT_CATEGORIES.flatMap((c) =>
+      c.items.map((i) => `${i.emoji}::${toLowerCase(i.name.trim())}`),
+    ),
+  )
+
+  return categories.flatMap((c) =>
+    c.items.filter(
+      (i) =>
+        !i.__isPlaceholder &&
+        i.name.trim() !== '' &&
+        !defaultsCategories.has(`${i.emoji}::${toLowerCase(i.name.trim())}`),
+    ),
+  )
 }

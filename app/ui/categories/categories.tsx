@@ -11,6 +11,7 @@ import {
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import {
   Button,
+  Chip,
   Modal,
   ModalBody,
   ModalContent,
@@ -24,8 +25,15 @@ import { haptic } from 'ios-haptics'
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { resetCategories, updateCategories } from '@/app/lib/actions'
-import { deepCloneCategories } from '@/app/lib/data'
-import { capitalizeFirstLetter, deepCompareArrays } from '@/app/lib/helpers'
+import {
+  deepCloneCategories,
+  getUniqueCategoriesFromDefaults,
+} from '@/app/lib/data'
+import {
+  capitalizeFirstLetter,
+  deepCompareArrays,
+  pluralize,
+} from '@/app/lib/helpers'
 import type {
   TCategories,
   TCategoriesItem,
@@ -272,7 +280,7 @@ function Categories({
           newCategoriesData,
         )
 
-        // remove __isNew flag locally so item becomes "real".
+        // Remove __isNew flag locally so item becomes "real".
         setCategories((prev) => {
           const copy = [...prev]
 
@@ -393,6 +401,11 @@ function Categories({
     return deepCompareArrays(cleanedCategories, DEFAULT_CATEGORIES)
   }, [categories])
 
+  const diffCategories = useMemo(
+    () => getUniqueCategoriesFromDefaults(categories),
+    [categories],
+  )
+
   const onResetCategories = useCallback(async () => {
     setIsLoading({ subject: false, item: false, reset: true })
     try {
@@ -506,6 +519,30 @@ function Categories({
                     reset all your current category data to default.
                   </span>
                 </p>
+                {diffCategories.length > 0 && (
+                  <div className='flex flex-col gap-2'>
+                    <p className='text-default-500 text-sm'>
+                      The following custom{' '}
+                      {pluralize(
+                        diffCategories.length,
+                        'category',
+                        'categories',
+                      )}{' '}
+                      will also be reset:
+                    </p>
+                    <div className='flex flex-wrap gap-2'>
+                      {diffCategories.map((item) => (
+                        <Chip
+                          key={`${item.emoji}-${item.name}`}
+                          variant='flat'
+                          color='warning'
+                        >
+                          {item.emoji} {item.name}
+                        </Chip>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <InfoText text='Once reset, you will need to manually update your previous transactions with previous categories to new default categories. You will see a badge on them.' />
               </ModalBody>
               <ModalFooter>

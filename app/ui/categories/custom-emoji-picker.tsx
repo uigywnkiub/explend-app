@@ -16,11 +16,10 @@ import { getFromLocalStorage, removeFromLocalStorage } from '@/app/lib/helpers'
 import type { TTheme } from '@/app/lib/types'
 
 type TProps = {
-  showEmojiPicker: boolean
   onEmojiClick: (emojiData: EmojiClickData) => void
 }
 
-function CustomEmojiPicker({ showEmojiPicker, onEmojiClick }: TProps) {
+function CustomEmojiPicker({ onEmojiClick }: TProps) {
   const { theme } = useTheme()
 
   useEffect(() => {
@@ -54,7 +53,7 @@ function CustomEmojiPicker({ showEmojiPicker, onEmojiClick }: TProps) {
     [onEmojiClick, theme],
   )
 
-  return <>{showEmojiPicker && emojiPicker}</>
+  return <>{emojiPicker}</>
 }
 
 export default memo(CustomEmojiPicker)
