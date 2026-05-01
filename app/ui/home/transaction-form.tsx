@@ -500,6 +500,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
   }
 
   const onExpandedChange = () => {
+    haptic()
     setIsExpanded((prev) => !prev)
   }
 

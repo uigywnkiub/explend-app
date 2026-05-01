@@ -53,6 +53,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
   ])
 
   const onExpandedChange = () => {
+    haptic()
     setIsExpanded((prev) => {
       const newState = !prev
       if (newState) {
