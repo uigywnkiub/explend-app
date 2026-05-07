@@ -45,6 +45,7 @@ import {
   getFirstAndLastTransactions,
 } from '@/app/lib/data'
 import {
+  cn,
   createSearchHrefWithKeyword,
   deepCompareArrays,
   formatDate,
@@ -132,7 +133,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
   const formattedDateRange = useMemo(() => {
     if (!startDate || !endDate) return ''
 
-    return `${formatDate(startDate, true)} - ${formatDate(endDate, true)}`
+    return `${formatDate(startDate, true)} – ${formatDate(endDate, true)}`
   }, [startDate, endDate])
 
   const isCurrMonthSelected = useMemo(
@@ -339,7 +340,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
 
   if (filteredTransactionsByDateRange.length === 0) {
     return (
-      <div className='rounded-medium bg-content1 p-4 md:p-8'>
+      <div className='rounded-medium bg-content1 p-4 shadow-xs md:p-8'>
         <div className='xs:flex-row xs:items-center xs:justify-between mb-6 flex flex-col items-start gap-3'>
           <MonthPicker
             selectedDate={selectedDate}
@@ -362,7 +363,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
 
   return (
     <>
-      <div className='rounded-medium bg-content1 relative p-4 md:p-8'>
+      <div className='rounded-medium bg-content1 relative p-4 shadow-xs md:p-8'>
         <div className='xs:flex-row xs:items-center xs:justify-between mb-6 flex flex-col items-start gap-3'>
           <MonthPicker
             selectedDate={selectedDate}
@@ -379,7 +380,10 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
         <div className='mb-3 flex-none items-end justify-between md:mb-6 md:flex'>
           <Link
             href={createSearchHrefWithKeyword(format(startDate, 'MMMM'))}
-            className='hover:opacity-hover'
+            className={cn(
+              'hover:opacity-hover',
+              showForecast && 'pointer-events-none cursor-text',
+            )}
           >
             <span className='text-default-500 mb-3 inline-block text-lg text-balance md:mb-0 md:text-xl'>
               {showForecast ? 'Next Month Forecast' : formattedDateRange}

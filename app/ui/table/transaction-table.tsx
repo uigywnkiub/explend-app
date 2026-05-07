@@ -151,7 +151,7 @@ export default function TransactionTable({ transactions }: TProps) {
     return filteredItems.toSorted((a, b) => {
       let first, second
 
-      // Use raw values for proper sorting
+      // Use raw values for proper sorting.
       if (sortDescriptor.column === COLUMN_KEY.AMOUNT) {
         first = a.rawAmount
         second = b.rawAmount
@@ -306,11 +306,15 @@ export default function TransactionTable({ transactions }: TProps) {
         setSortDescriptor(descriptor as TSortDescriptor)
       }
       sortIcon={SortIcon}
+      shadow='none'
+      classNames={{
+        wrapper: 'shadow-xs',
+      }}
     >
       <TableHeader columns={COLUMNS}>
         {(column) => (
           <TableColumn
-            width={column.key === COLUMN_KEY.CATEGORY ? 150 : undefined}
+            width={column.key === COLUMN_KEY.CATEGORY ? 180 : undefined}
             key={column.key}
             allowsSorting={column.allowsSorting}
           >

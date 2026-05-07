@@ -92,7 +92,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
   return (
     <Card
       className={cn(
-        'p-2',
+        'p-2 shadow-xs',
         isShowTotals && isTotalLoaded
           ? isPositiveBalance
             ? 'from-success/10 to-content1 bg-radial'

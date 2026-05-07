@@ -18,7 +18,7 @@ export default function SearchedTransactions({
 }: TProps) {
   return (
     <div className='flex flex-col justify-center gap-2 text-center'>
-      <p className='text-default-500 mt-2 md:mt-4'>Searched Totals</p>
+      <p className='text-default-500 mt-2 text-sm md:mt-4'>Searched Totals</p>
       <div className='flex flex-col flex-wrap justify-center'>
         <p>
           <PiArrowCircleUpFill className='fill-success mr-1 inline' />

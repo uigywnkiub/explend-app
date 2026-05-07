@@ -98,7 +98,10 @@ function CategoryItem({
   // }
 
   return (
-    <motion.li className='mb-3 flex items-center' {...MOTION_LIST(itemIndex)}>
+    <motion.li
+      className='mb-3 flex items-center shadow-xs'
+      {...MOTION_LIST(itemIndex)}
+    >
       {editingItemIndex &&
       editingItemIndex.categoryIndex === categoryIndex &&
       editingItemIndex.itemIndex === itemIndex ? (

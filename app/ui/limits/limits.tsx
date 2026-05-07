@@ -369,7 +369,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   }
 
   return (
-    <div className='rounded-medium bg-content1 p-4 md:p-8'>
+    <div className='rounded-medium bg-content1 p-4 shadow-xs md:p-8'>
       <div className='flex items-center justify-between'>
         <h2>Limits</h2>
         <div className='flex gap-2'>
