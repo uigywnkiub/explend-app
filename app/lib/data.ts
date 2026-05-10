@@ -14,7 +14,7 @@ import {
   subMonths,
   subWeeks,
 } from 'date-fns'
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
 
 import {
   formatPercentage,
@@ -392,7 +392,7 @@ export const getUserCategories = (
   return (
     transactions.find(
       (t) => Array.isArray(t.categories) && t.categories.length > 0,
-    )?.categories ?? DEFAULT_CATEGORIES
+    )?.categories || DEFAULT_CATEGORIES
   )
 }
 
@@ -464,35 +464,51 @@ export const parseMonobankCsv = (
   return { rows, skipped }
 }
 
-export const parsePrivat24Xlsx = (
+export const parsePrivat24Xlsx = async (
   base64: string,
-): { rows: TBankParsedRow[]; skipped: TImportTransactions['skipped'] } => {
-  const buffer = Buffer.from(base64, 'base64')
-  const workbook = XLSX.read(buffer, { type: 'buffer' })
-  const sheet = workbook.Sheets[workbook.SheetNames[0]]
+): Promise<{
+  rows: TBankParsedRow[]
+  skipped: TImportTransactions['skipped']
+}> => {
+  const nodeBuffer = Buffer.from(base64, 'base64')
+  const workbook = new ExcelJS.Workbook()
+  await workbook.xlsx.load(nodeBuffer as unknown as ArrayBuffer)
 
-  // Row 0 = title, row 1 = headers, data starts at row 2.
-  const raw: Record<string, string | number>[] = XLSX.utils.sheet_to_json(
-    sheet,
-    {
-      range: 1,
-      defval: '',
-    },
-  )
+  const sheet = workbook.worksheets[0]
+
+  // Build column index map from header row (row 2).
+  const headerRow = sheet.getRow(2)
+  const colIndex: Record<string, number> = {}
+  headerRow.eachCell((cell, colNumber) => {
+    colIndex[String(cell.value).trim()] = colNumber
+  })
+
+  const dateCol = colIndex['Дата']
+  const descCol = colIndex['Опис операції']
+  const amountCol = colIndex['Сума в валюті картки']
+
+  if (!dateCol || !descCol || !amountCol) {
+    throw new Error(
+      'Privat24 XLSX: unexpected format — required columns not found',
+    )
+  }
 
   let skipped = 0
   const rows: TBankParsedRow[] = []
 
-  for (const row of raw) {
+  sheet.eachRow((row, rowNumber) => {
+    if (rowNumber <= 2) return
+
     const rawAmount = parseFloat(
-      String(row['Сума в валюті картки'])?.replace(/\s/g, '') || '',
+      String(row.getCell(amountCol).value || '').replace(/\s/g, ''),
     )
-    const description = String(row['Опис операції'])?.trim()
-    const dateStr = String(row['Дата'])?.trim()
+    const description = String(row.getCell(descCol).value || '').trim()
+    const dateStr = String(row.getCell(dateCol).value || '').trim()
 
     if (isNaN(rawAmount) || !description || !dateStr) {
       skipped++
-      continue
+
+      return
     }
 
     const [datePart, timePart] = dateStr.split(' ')
@@ -501,11 +517,12 @@ export const parsePrivat24Xlsx = (
 
     if (isNaN(createdAt.getTime())) {
       skipped++
-      continue
+
+      return
     }
 
     rows.push({ rawAmount, description, createdAt })
-  }
+  })
 
   return { rows, skipped }
 }
@@ -537,7 +554,7 @@ export const buildWeeklyReport = (transactions: TTransaction[]) => {
     transactionCount: lastWeek.length,
     weekStart: lastWeekStart,
     weekEnd: lastWeekEnd,
-    currencySign: transactions[0]?.currency.sign ?? '',
+    currencySign: transactions[0]?.currency.sign || '',
   }
 }
 
