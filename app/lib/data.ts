@@ -507,6 +507,7 @@ export const parsePrivat24Xlsx = async (
 
     if (isNaN(rawAmount) || !description || !dateStr) {
       skipped++
+
       return
     }
 
@@ -516,6 +517,7 @@ export const parsePrivat24Xlsx = async (
 
     if (isNaN(createdAt.getTime())) {
       skipped++
+
       return
     }
 
