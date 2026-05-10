@@ -30,12 +30,12 @@
     "@google/generative-ai": "^0.24.1",
     "@heroui/react": "^2.8.10",
     "@internationalized/date": "3.12.0",
-    "@next/third-parties": "16.2.5",
-    "@sentry/nextjs": "^10.51.0",
-    "@tailwindcss/postcss": "^4.2.4",
+    "@next/third-parties": "16.2.6",
+    "@sentry/nextjs": "^10.52.0",
+    "@tailwindcss/postcss": "^4.3.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "@wrksz/themes": "^0.9.0",
+    "@wrksz/themes": "^0.9.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "clsx": "^2.1.1",
     "compressorjs": "^1.3.0",
@@ -52,7 +52,7 @@
     "ios-haptics": "^0.1.5",
     "mongoose": "^8.23.1",
     "mongoose-encryption-decryption": "^1.2.1",
-    "next": "16.2.5",
+    "next": "16.2.6",
     "next-auth": "5.0.0-beta.30",
     "next13-progressbar": "^1.2.2",
     "react": "19.2.6",
@@ -70,8 +70,8 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.5.3",
-    "@commitlint/config-conventional": "^20.5.3",
+    "@commitlint/cli": "^21.0.0",
+    "@commitlint/config-conventional": "^21.0.0",
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.39.4",
     "@svgr/webpack": "^8.1.0",
@@ -88,7 +88,7 @@
     "@vitejs/plugin-react": "^5.2.0",
     "@vitest/coverage-v8": "^4.1.5",
     "eslint": "^9.39.4",
-    "eslint-config-next": "16.2.5",
+    "eslint-config-next": "16.2.6",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-check-file": "^3.3.1",
     "eslint-plugin-import": "^2.32.0",
@@ -99,12 +99,12 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^9.1.7",
     "jsdom": "^28.1.0",
-    "knip": "^6.12.0",
-    "lint-staged": "^16.4.0",
+    "knip": "^6.12.2",
+    "lint-staged": "^17.0.4",
     "postcss": "^8.5.14",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "tailwindcss": "^4.2.4",
+    "tailwindcss": "^4.3.0",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.5",
@@ -160,7 +160,7 @@
     "Wealth Management"
   ],
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -178,5 +178,5 @@
       "@types/react-dom": "19.2.3"
     }
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@10.33.4"
 }
