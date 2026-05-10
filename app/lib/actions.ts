@@ -462,7 +462,9 @@ export async function importBankTransactions(
   }
 
   const { rows: validRows, skipped: parseSkipped } =
-    bank === 'monobank' ? parseMonobankCsv(payload) : parsePrivat24Xlsx(payload)
+    bank === 'monobank'
+      ? parseMonobankCsv(payload)
+      : await parsePrivat24Xlsx(payload)
 
   let skipped = parseSkipped
 
