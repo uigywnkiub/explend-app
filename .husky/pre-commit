@@ -5,4 +5,4 @@ export NVM_DIR="$HOME/.nvm"
 
 # nvm use 22
 
-pnpm typecheck && pnpm lint-staged
+pnpm typecheck && pnpm lint && pnpm lint-staged
