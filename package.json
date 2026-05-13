@@ -31,7 +31,7 @@
     "@heroui/react": "^2.8.10",
     "@internationalized/date": "3.12.0",
     "@next/third-parties": "16.2.6",
-    "@sentry/nextjs": "^10.52.0",
+    "@sentry/nextjs": "^10.53.1",
     "@tailwindcss/postcss": "^4.3.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
@@ -70,8 +70,8 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.0.0",
-    "@commitlint/config-conventional": "^21.0.0",
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.39.4",
     "@svgr/webpack": "^8.1.0",
@@ -99,7 +99,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^9.1.7",
     "jsdom": "^28.1.0",
-    "knip": "^6.12.2",
+    "knip": "^6.13.1",
     "lint-staged": "^17.0.4",
     "postcss": "^8.5.14",
     "prettier": "^3.8.3",
