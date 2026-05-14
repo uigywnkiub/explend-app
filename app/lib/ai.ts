@@ -48,9 +48,9 @@ const safetySettings = [
 // RPD: Requests per day
 // TPD: Tokens per day
 
-export const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+const GenerativeAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
-export const CompletionAIModel = genAI.getGenerativeModel({
+export const CompletionAIModel = GenerativeAI.getGenerativeModel({
   model: process.env.GEMINI_MODEL,
   // Docs https://ai.google.dev/api/generate-content#v1beta.GenerationConfig
   generationConfig: {
@@ -62,7 +62,7 @@ export const CompletionAIModel = genAI.getGenerativeModel({
   safetySettings,
 })
 
-export const TextAIModel = genAI.getGenerativeModel({
+export const TextAIModel = GenerativeAI.getGenerativeModel({
   model: process.env.GEMINI_MODEL,
   generationConfig: {
     maxOutputTokens: 60,
@@ -71,7 +71,7 @@ export const TextAIModel = genAI.getGenerativeModel({
   safetySettings,
 })
 
-export const ExpenseTipsAIModel = genAI.getGenerativeModel({
+export const ExpenseTipsAIModel = GenerativeAI.getGenerativeModel({
   model: process.env.GEMINI_RICHER_MODEL,
   generationConfig: {
     temperature: 2,
@@ -103,7 +103,7 @@ export const ExpenseTipsAIModel = genAI.getGenerativeModel({
   safetySettings,
 })
 
-export const UploadReceiptAIModel = genAI.getGenerativeModel({
+export const UploadReceiptAIModel = GenerativeAI.getGenerativeModel({
   model: process.env.GEMINI_RICHER_MODEL,
   generationConfig: {
     // Docs https://ai.google.dev/gemini-api/docs/json-mode?lang=node

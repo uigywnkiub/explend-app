@@ -9,7 +9,7 @@ import {
 
 import { APP_NAME, APP_TITLE } from '@/config/constants/main'
 
-export const runtime = 'nodejs'
+export const runtime = 'edge'
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
@@ -23,6 +23,7 @@ export async function GET(req: Request) {
       '../../fonts/FracktifSemiBold/DEMO-fracktif-semibold.otf',
       import.meta.url,
     ),
+    { cache: 'force-cache' },
   ).then((res) => res.arrayBuffer())
 
   return new ImageResponse(

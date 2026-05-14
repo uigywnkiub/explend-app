@@ -711,14 +711,13 @@ export async function deleteAllTransactionsAndSignOut(
   if (!userId) {
     throw new Error('User ID is required to delete all transactions.')
   }
-  try {
-    await dbConnect()
-    await TransactionModel.deleteMany({ userId })
-    await PushSubscriptionModel.deleteOne({ userId })
-    await signOutAccount()
-  } catch (err) {
-    throw err
-  }
+
+  await dbConnect()
+  await Promise.all([
+    TransactionModel.deleteMany({ userId }),
+    PushSubscriptionModel.deleteOne({ userId }),
+  ])
+  await signOutAccount()
 }
 
 export async function getCategoryLimits(

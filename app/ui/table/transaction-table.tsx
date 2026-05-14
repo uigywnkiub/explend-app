@@ -246,7 +246,7 @@ export default function TransactionTable({ transactions }: TProps) {
 
   const bottomContent = useMemo(() => {
     return (
-      <div className='flex flex-col gap-2 px-2 py-2'>
+      <div className='flex flex-col gap-2 p-2'>
         <div className='flex flex-col items-start justify-between gap-3 text-sm sm:flex-row sm:items-center'>
           <div className='flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-6'>
             <div className='flex items-center justify-between gap-2 sm:justify-start'>
