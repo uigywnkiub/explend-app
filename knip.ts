@@ -16,6 +16,7 @@ const config: KnipConfig = {
     // Libs are needed for nextjs 15 running dev mode with turbopack END,
     'eslint-config-next',
     '@heroui/shared-icons',
+    '@internationalized/date',
   ],
 }
 
