@@ -45,6 +45,7 @@ function TransactionList({
       <AnimatePresence>
         {Object.keys(groupedTransactionsByDate)?.map((date, idx) => {
           const { income, expense } = totalsTransactionsByDate[date]
+          const transactionsCount = groupedTransactionsByDate[date]?.length || 0
 
           const incomeIcon = <PiArrowCircleUpFill className='fill-success' />
           const expenseIcon = <PiArrowCircleDownFill className='fill-danger' />
@@ -56,7 +57,13 @@ function TransactionList({
               className={cn('mx-auto max-w-3xl', idx !== 0 && 'pt-4')}
               {...MOTION_LIST(idx)}
             >
-              <div className='flex items-center justify-between py-2'>
+              <div
+                className={cn(
+                  'bg-background/50 rounded-medium z-20 flex items-center justify-between px-2 py-2 backdrop-blur-xs backdrop-brightness-90',
+                  transactionsCount >= 4 && 'sticky top-10 md:static',
+                  transactionsCount >= 6 && 'md:sticky md:top-0',
+                )}
+              >
                 <InfoText
                   text={date}
                   withAsterisk={false}
