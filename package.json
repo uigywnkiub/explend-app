@@ -162,17 +162,5 @@
   "engines": {
     "node": "22.x"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@heroui/shared-utils",
-      "@sentry/cli",
-      "@vercel/speed-insights",
-      "bcrypt",
-      "esbuild",
-      "oxc-resolver",
-      "sharp",
-      "unrs-resolver"
-    ]
-  },
-  "packageManager": "pnpm@10.33.4"
+  "packageManager": "pnpm@11.8.0"
 }

@@ -1,0 +1,15 @@
+publicHoistPattern:
+  - '*@heroui/*'
+  - '*eslint*'
+  - '*prettier*'
+engineStrict: true
+allowBuilds:
+  '@heroui/shared-utils': true
+  '@sentry/cli': true
+  '@vercel/speed-insights': true
+  bcrypt: true
+  esbuild: true
+  oxc-resolver: true
+  sharp: true
+  unrs-resolver: true
+pmOnFail: download
