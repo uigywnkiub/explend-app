@@ -134,4 +134,6 @@ export default withSentryConfig(withPWA(nextConfig), {
       removeDebugLogging: true,
     },
   },
+
+  telemetry: false,
 })
