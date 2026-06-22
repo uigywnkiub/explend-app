@@ -13,3 +13,5 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 pmOnFail: download
+minimumReleaseAgeExclude:
+  - eslint-plugin-tailwindcss@4.0.3
