@@ -117,6 +117,8 @@ const transactionSchema = new Schema<TTransaction>(
     salaryDay: {
       type: Number,
       default: DEFAULT_SALARY_DAY,
+      min: 1,
+      max: 31,
     },
     isEdited: {
       type: Boolean,

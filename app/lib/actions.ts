@@ -204,7 +204,11 @@ export async function updateSalaryDay(
   if (!userId) {
     throw new Error('User ID is required to update salary day.')
   }
-  if (!salaryDay || salaryDay < 1 || salaryDay > 31) {
+  if (
+    salaryDay !== null &&
+    salaryDay !== undefined &&
+    (salaryDay < 1 || salaryDay > 31)
+  ) {
     throw new Error('Salary day must be a valid number between 1 and 31.')
   }
   try {
