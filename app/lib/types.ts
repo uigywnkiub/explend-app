@@ -136,11 +136,7 @@ export type TSelect = {
 export type TIcon = TNavLink['icon']
 
 export type TAuthProvider =
-  | 'github'
-  | 'google'
-  | 'spotify'
-  | 'dribbble'
-  | 'notion'
+  'github' | 'google' | 'spotify' | 'dribbble' | 'notion'
 
 export type TSignInButton = {
   provider: TAuthProvider
@@ -189,12 +185,7 @@ export type TCategoriesLoading = {
 }
 
 export type TBrowserName =
-  | 'Chrome'
-  | 'Safari'
-  | 'Edge'
-  | 'Opera'
-  | 'Firefox'
-  | 'Unknown'
+  'Chrome' | 'Safari' | 'Edge' | 'Opera' | 'Firefox' | 'Unknown'
 
 export type TApproxCategory = {
   subject: TTransaction['categories'][0]['subject'][0]
