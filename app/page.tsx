@@ -113,18 +113,28 @@ export default async function Page(props: {
     const queryTrimmed = query.trim()
     const queryLower = toLowerCase(queryTrimmed)
 
-    // Detect pattern: optional whitespace, '>' or '<', optional whitespace, then number (int or float).
-    const comparisonMatch = queryTrimmed.match(/^([<>])\s*(\d+(\.\d+)?)/)
+    // Matches one or more chained comparisons, e.g. ">1000", "<5000", ">1000<5000", ">=1000<=5000".
+    const isRangeQuery = /^([<>]=?\d+(\.\d+)?)+$/.test(queryTrimmed)
 
-    if (comparisonMatch) {
-      const operator = comparisonMatch[1]
-      const amount = parseFloat(comparisonMatch[2])
+    if (isRangeQuery) {
+      const comparisons = [...queryTrimmed.matchAll(/([<>]=?)(\d+(?:\.\d+)?)/g)]
+      const txAmount = Number(t.amount)
 
-      if (operator === '>') {
-        return Number(t.amount) >= amount
-      } else if (operator === '<') {
-        return Number(t.amount) <= amount
-      }
+      return comparisons.every(([, operator, amountStr]) => {
+        const amount = parseFloat(amountStr)
+        switch (operator) {
+          case '>':
+            return txAmount > amount
+          case '>=':
+            return txAmount >= amount
+          case '<':
+            return txAmount < amount
+          case '<=':
+            return txAmount <= amount
+          default:
+            return true
+        }
+      })
     }
 
     return (
