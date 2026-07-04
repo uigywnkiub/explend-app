@@ -31,6 +31,7 @@ import {
   DEFAULT_PAGINATION_PAGE_NUMBER,
   SEARCH_PARAM,
 } from '@/config/constants/navigation'
+import { AI_RETRY_DELAY_REGEXP } from '@/config/constants/regexp'
 import { ROUTE } from '@/config/constants/routes'
 
 import { getCategoryItemNameAI } from './actions'
@@ -660,7 +661,7 @@ export const getAIErrorMessage = (
     errorMessage.includes('429') || errorMessage.includes('Too Many Requests')
 
   if (isRateLimited) {
-    const retryMatch = errorMessage.match(/retry in ([\d.]+)s/i)
+    const retryMatch = errorMessage.match(AI_RETRY_DELAY_REGEXP)
     const retrySeconds = retryMatch
       ? Math.ceil(parseFloat(retryMatch[1]))
       : null
