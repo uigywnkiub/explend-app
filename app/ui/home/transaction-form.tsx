@@ -82,6 +82,7 @@ import {
   filterStrArrayByRegExp,
   findApproxCategoryByValue,
   formatAmount,
+  getAIErrorMessage,
   getBooleanFromLocalStorage,
   getCategoryItemNames,
   getFormattedAmountState,
@@ -261,8 +262,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
       const res = await toast.promise(getAnalyzedReceiptAI(compressedFile), {
         loading: 'Analyzing receipt...',
         success: 'Receipt analyzed.',
-        error: 'Failed to analyze receipt.',
+        error: (err) => {
+          return getAIErrorMessage(err, 'Failed to analyze receipt.')
+        },
       })
+
       const parsedRes: TReceipt[] = JSON.parse(res)
       const modifiedReceiptData = parsedRes.map((item) => ({
         ...item,
@@ -468,8 +472,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
           setIsTransactionTypeAIValid(true)
         }
       } catch (err) {
+        toast.error(getAIErrorMessage(err, 'Failed to analyze completions.'))
         resetAIRelatedStates()
-        throw err
       } finally {
         setIsLoadingAIData(false)
       }
@@ -973,7 +977,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
                 <Button
                   isIconOnly
                   onPress={() => [haptic(), onOpenImageModal()]}
-                  isDisabled={hasCurrOrPrevReceiptAIData}
+                  // isDisabled={hasCurrOrPrevReceiptAIData}
                   className='bg-transparent'
                 >
                   <HoverableElement

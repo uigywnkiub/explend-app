@@ -20,6 +20,7 @@ import defaultTheme from 'tailwindcss/defaultTheme'
 import { CURRENCY_CODE } from '@/config/constants/currencies'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import {
+  AI_NAME,
   DEFAULT_CATEGORY,
   DEFAULT_CATEGORY_EMOJI,
   DEFAULT_LANG,
@@ -648,4 +649,26 @@ export const getOrdinal = (
   if (day === 3) return '3rd'
 
   return `${day}th`
+}
+
+export const getAIErrorMessage = (
+  err: unknown,
+  fallbackMessage: string,
+): string => {
+  const errorMessage = err instanceof Error ? err.message : String(err)
+  const isRateLimited =
+    errorMessage.includes('429') || errorMessage.includes('Too Many Requests')
+
+  if (isRateLimited) {
+    const retryMatch = errorMessage.match(/retry in ([\d.]+)s/i)
+    const retrySeconds = retryMatch
+      ? Math.ceil(parseFloat(retryMatch[1]))
+      : null
+
+    return retrySeconds
+      ? `${AI_NAME.FULL} is busy. Please try again in ${retrySeconds}s.`
+      : `${AI_NAME.FULL} is busy right now, please try again shortly.`
+  }
+
+  return fallbackMessage
 }
