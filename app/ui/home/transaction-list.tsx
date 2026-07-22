@@ -59,7 +59,7 @@ function TransactionList({
             >
               <div
                 className={cn(
-                  'bg-background/50 rounded-medium z-20 flex items-center justify-between px-2 py-2 backdrop-blur-xs backdrop-brightness-90',
+                  'bg-background/50 rounded-medium z-20 flex items-center justify-between px-4 py-2 backdrop-blur-xs backdrop-brightness-90',
                   transactionsCount >= 4 && 'sticky top-10 md:static',
                   transactionsCount >= 6 && 'md:sticky md:top-0',
                 )}

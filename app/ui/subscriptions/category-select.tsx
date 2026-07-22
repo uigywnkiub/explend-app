@@ -81,11 +81,15 @@ function CategorySelect({
             innerWrapper: 'pl-1 text-default-500',
           }}
         >
-          {userCategories.map((category, idx, arr) => (
+          {userCategories.map((category) => (
             <SelectSection
               key={category.subject}
-              showDivider={idx !== arr.length - 1}
+              // showDivider={idx !== arr.length - 1}
               title={category.subject}
+              classNames={{
+                heading:
+                  'flex w-full sticky top-1 z-20 py-1.5 px-2 text-default-500 bg-background rounded-medium',
+              }}
             >
               {category.items.map((item) => (
                 <SelectItem
