@@ -23,6 +23,7 @@ import { EmojiClickData } from 'emoji-picker-react'
 import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
+import { ANCHOR_ROUTE } from '@/config/constants/routes'
 
 import { resetCategories, updateCategories } from '@/app/lib/actions'
 import {
@@ -490,7 +491,7 @@ function Categories({
         <InfoText text='Once editing, you will need to manually update your previous transactions with previous categories to new categories. You will see a badge on them.' />
         <InfoText text='The emoji picker may appear with a slight delay.' />
         <InfoText
-          id='hint-1'
+          id={ANCHOR_ROUTE.HINT1.slice(1)}
           text='1. The category subject does not affect the category data.'
           withAsterisk={false}
         />

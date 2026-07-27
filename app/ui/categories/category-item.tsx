@@ -12,6 +12,8 @@ import {
   PiTrashFill,
 } from 'react-icons/pi'
 
+import Link from 'next/link'
+
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { Button, Input, Tooltip } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
@@ -21,7 +23,11 @@ import { haptic } from 'ios-haptics'
 import { DEFAULT_CATEGORY, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { MOTION_COLLAPSE, MOTION_LIST } from '@/config/constants/motion'
 
-import { capitalizeFirstLetter, toLowerCase } from '@/app/lib/helpers'
+import {
+  capitalizeFirstLetter,
+  createSearchHrefWithKeyword,
+  toLowerCase,
+} from '@/app/lib/helpers'
 import type {
   TCategories,
   TCategoriesItem,
@@ -99,7 +105,7 @@ function CategoryItem({
 
   return (
     <motion.li
-      className='mb-3 flex items-center shadow-xs'
+      className='rounded-medium mb-3 flex items-center shadow-xs'
       {...MOTION_LIST(itemIndex)}
     >
       {editingItemIndex &&
@@ -270,9 +276,21 @@ function CategoryItem({
               </div>
             </Tooltip>
             <div className='truncate'>
-              {item.name}
-              {item.name === DEFAULT_CATEGORY && (
-                <InfoText text='Default category' withAsterisk={false} />
+              {!isDefaultCategory &&
+              toLowerCase(item.name) === toLowerCase(placeholderItemName) ? (
+                <p className='cursor-default'>{item.name}</p>
+              ) : (
+                <>
+                  <Link
+                    href={createSearchHrefWithKeyword(item.name)}
+                    className='hover:opacity-hover'
+                  >
+                    {item.name}
+                  </Link>
+                  {item.name === DEFAULT_CATEGORY && (
+                    <InfoText text='Default category' withAsterisk={false} />
+                  )}
+                </>
               )}
             </div>
           </div>

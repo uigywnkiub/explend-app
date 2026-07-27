@@ -15,3 +15,7 @@ export const enum ROUTE {
 }
 
 export const DISABLED_ROUTES: ROUTE[] = []
+
+export const enum ANCHOR_ROUTE {
+  HINT1 = '#hint1',
+}

@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import {
   PiArrowClockwise,
   PiArrowClockwiseFill,
@@ -16,6 +16,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
+import { MOTION_NUMBER } from '@/config/constants/motion'
+import { ANCHOR_ROUTE } from '@/config/constants/routes'
 
 import { capitalizeFirstLetter } from '@/app/lib/helpers'
 import {
@@ -93,6 +95,23 @@ function Category({
   //     inputRef.current?.blur()
   //   }
   // }
+
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  const [isStuck, setIsStuck] = useState(false)
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsStuck(!entry.isIntersecting),
+      { threshold: 0, rootMargin: '-1px 0px 0px 0px' },
+    )
+
+    observer.observe(sentinel)
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div className='mb-4 md:mb-8'>
@@ -193,33 +212,52 @@ function Category({
           </div>
         </div>
       ) : (
-        <div className='rounded-medium bg-background mb-3 flex h-[40px] items-center justify-between gap-2 px-2 md:gap-4 md:px-4'>
-          <h2 className='text-lg font-semibold md:text-xl'>
-            {category.subject}
-            <button className='ml-1 h-0' onClick={() => router.push('#hint-1')}>
-              <sup className='text-default-500 md:hover:text-foreground md:hover:opacity-hover cursor-pointer p-1 text-xs'>
-                1
-              </sup>
-            </button>
-          </h2>
-          <Tooltip content='Edit category subject' placement='bottom'>
-            <Button
-              onPress={() => [
-                haptic(),
-                onEditTargetClick(index, category.subject),
-              ]}
-              className='px-0 font-medium'
-            >
-              <HoverableElement
-                uKey={category.subject}
-                element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
-                hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
-                withShift={false}
-              />{' '}
-              Edit
-            </Button>
-          </Tooltip>
-        </div>
+        <>
+          <div ref={sentinelRef} className='h-0' />
+          <div className='rounded-medium bg-background/50 sticky top-0 z-10 mb-3 flex h-[40px] items-center justify-between gap-2 px-2 backdrop-blur-xs backdrop-brightness-90 md:gap-4 md:px-4'>
+            <h2 className='text-default-500'>
+              {category.subject}
+              <button
+                className='ml-1 h-0'
+                onClick={() => router.push(ANCHOR_ROUTE.HINT1)}
+              >
+                <sup className='text-default-500 md:hover:text-foreground md:hover:opacity-hover cursor-pointer p-1 text-xs'>
+                  1
+                </sup>
+              </button>
+            </h2>
+
+            {!isStuck && (
+              <AnimatePresence>
+                <motion.div
+                  initial={MOTION_NUMBER.INITIAL}
+                  animate={MOTION_NUMBER.ANIMATE(isStuck ? 0 : 1)}
+                  transition={MOTION_NUMBER.TRANSACTION_TWEEN}
+                >
+                  <Tooltip content='Edit category subject' placement='bottom'>
+                    <Button
+                      onPress={() => [
+                        haptic(),
+                        onEditTargetClick(index, category.subject),
+                      ]}
+                      className='px-0 font-medium'
+                    >
+                      <HoverableElement
+                        uKey={category.subject}
+                        element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
+                        hoveredElement={
+                          <PiNotePencilFill size={DEFAULT_ICON_SIZE} />
+                        }
+                        withShift={false}
+                      />{' '}
+                      Edit
+                    </Button>
+                  </Tooltip>
+                </motion.div>
+              </AnimatePresence>
+            )}
+          </div>
+        </>
       )}
       <ul className='list-inside list-disc'>
         <AnimatePresence>
