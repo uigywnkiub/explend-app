@@ -214,7 +214,7 @@ export default async function Page(props: {
                 ) : (
                   <>
                     {!query ? (
-                      <p>
+                      <p className='hover:text-foreground inline hover:cursor-none'>
                         Last{' '}
                         {pluralize(
                           transactions.length,
@@ -223,7 +223,7 @@ export default async function Page(props: {
                         )}
                       </p>
                     ) : (
-                      <p>
+                      <p className='hover:text-foreground inline hover:cursor-none'>
                         Found {countSearchedTransactionsByQuery}{' '}
                         {pluralize(
                           countSearchedTransactionsByQuery,
