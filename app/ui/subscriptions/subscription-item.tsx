@@ -7,6 +7,8 @@ import {
   PiNotePencilFill,
   PiPlus,
   PiPlusFill,
+  PiRepeat,
+  PiRepeatFill,
   PiTrash,
   PiTrashFill,
 } from 'react-icons/pi'
@@ -68,7 +70,7 @@ function SubscriptionItem({
 }: TProps) {
   const dragControls = useDragControls()
 
-  const { _id, category, description, amount, note } = s
+  const { _id, category, description, amount, note, autoRenew, renewDay } = s
 
   const isChangedCategoryName = changedCategoryNames.includes(
     getCategoryWithoutEmoji(category),
@@ -127,6 +129,31 @@ function SubscriptionItem({
                 {description}
               </Link>
             </Tooltip>
+            {autoRenew && (
+              <Tooltip
+                content={`Auto-renews monthly on day ${renewDay}`}
+                placement='bottom'
+              >
+                <div>
+                  <HoverableElement
+                    uKey={`renew-subscription-icon-${_id}`}
+                    element={
+                      <PiRepeat
+                        size={DEFAULT_ICON_SIZE}
+                        className='fill-primary'
+                      />
+                    }
+                    hoveredElement={
+                      <PiRepeatFill
+                        size={DEFAULT_ICON_SIZE}
+                        className='fill-primary'
+                      />
+                    }
+                    withShift={false}
+                  />
+                </div>
+              </Tooltip>
+            )}
             <Tooltip
               content={
                 isAddedSubscriptionInThisMonth
