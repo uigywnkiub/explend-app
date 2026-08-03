@@ -44,7 +44,8 @@ function DescriptionInput({
         autoComplete='off'
         type='text'
         name='description'
-        aria-label='description'
+        aria-label='Description'
+        maxLength={40}
         value={description}
         onChange={onChangeDescription}
         required

@@ -946,6 +946,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
             type='text'
             name='description'
             aria-label='Description'
+            maxLength={180}
             description={
               <div className='flex flex-wrap items-center gap-1'>
                 <div className='flex'>
