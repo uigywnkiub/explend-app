@@ -46,7 +46,7 @@
     "emoji-regex": "^10.6.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "exceljs": "^4.4.0",
-    "framer-motion": "^12.43.0",
+    "framer-motion": "^13.1.0",
     "get-user-locale": "^3.0.0",
     "heic2any": "^0.0.4",
     "import-in-the-middle": "^3.3.3",
