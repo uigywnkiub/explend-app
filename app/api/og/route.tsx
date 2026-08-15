@@ -6,6 +6,8 @@ import {
   DANGER_COLOR,
   SUCCESS_COLOR,
 } from '@/tailwind.config'
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
 
 import { APP_NAME, APP_TITLE } from '@/config/constants/main'
 
@@ -18,13 +20,14 @@ export async function GET(req: Request) {
   const title = hasTitle ? searchParams.get('title')?.slice(0, 100) : APP_TITLE
 
   const fontFamilyName = 'FracktifSemiBold'
-  const fontData = await fetch(
-    new URL(
-      '../../fonts/FracktifSemiBold/DEMO-fracktif-semibold.otf',
-      import.meta.url,
-    ),
-    { cache: 'force-cache' },
-  ).then((res) => res.arrayBuffer())
+  const fontPath = path.join(
+    process.cwd(),
+    'app',
+    'fonts',
+    'FracktifSemiBold',
+    'DEMO-fracktif-semibold.otf',
+  )
+  const fontData = await readFile(fontPath)
 
   return new ImageResponse(
     <div
