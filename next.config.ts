@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next'
 
 import withPWAInit from '@ducanh2912/next-pwa'
-import { withSentryConfig } from '@sentry/nextjs'
+import { withSentryConfig } from '@sentry/nextjs/config'
 import type { RuleSetRule } from 'webpack'
 
 import {
