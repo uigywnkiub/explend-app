@@ -40,6 +40,7 @@ import type {
   TBankParsedRow,
   TBrowserName,
   TCategoriesItem,
+  TChartData,
   TExpenseReport,
   TGetTransactions,
   THTMLElement,
@@ -89,6 +90,23 @@ export const getCategoryWithoutEmoji = (
 
   // Replace the emoji(s) at the beginning of the category with an empty string.
   return category.replace(regex, '').trim()
+}
+
+export const getCategoryMedalByAmount = (
+  chartData: TChartData[],
+  category: TTransaction['category'],
+) => {
+  const rankedCategories = [...chartData].sort((a, b) => b.expense - a.expense)
+
+  const categoryRank = rankedCategories.findIndex(
+    (item) => item.category === category,
+  )
+
+  if (categoryRank === 0) return '🥇'
+  if (categoryRank === 1) return '🥈'
+  if (categoryRank === 2) return '🥉'
+
+  return ''
 }
 
 export const getCategoryWithEmoji = (

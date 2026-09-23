@@ -8,6 +8,7 @@ import {
 } from '@/config/constants/main'
 
 import { calculateMonthlyReportData } from '../../app/lib/data'
+import { getCategoryMedalByAmount } from '../../app/lib/helpers'
 import type { TExpenseReport, TTransaction } from '../../app/lib/types'
 
 describe('calculateMonthlyReportData', () => {
@@ -82,5 +83,19 @@ describe('calculateMonthlyReportData', () => {
     const result = calculateMonthlyReportData([], expense)
     expect(result.totalIncome).toBe(0)
     expect(result.totalExpense).toBe(200)
+  })
+
+  it('adds medal emojis to the top three expense categories by amount', () => {
+    const chartData = [
+      { category: 'Food', income: 0, expense: 400 },
+      { category: 'Travel', income: 0, expense: 200 },
+      { category: 'Bills', income: 0, expense: 300 },
+      { category: 'Leisure', income: 0, expense: 50 },
+    ]
+
+    expect(getCategoryMedalByAmount(chartData, 'Food')).toBe('🥇')
+    expect(getCategoryMedalByAmount(chartData, 'Bills')).toBe('🥈')
+    expect(getCategoryMedalByAmount(chartData, 'Travel')).toBe('🥉')
+    expect(getCategoryMedalByAmount(chartData, 'Leisure')).toBe('')
   })
 })

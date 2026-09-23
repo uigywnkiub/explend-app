@@ -33,6 +33,7 @@ import {
   createSearchHrefWithKeyword,
   formatDate,
   getBooleanFromLocalStorage,
+  getCategoryMedalByAmount,
   getCategoryWithoutEmoji,
   getFormattedCurrency,
   pluralize,
@@ -116,6 +117,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
             dataKey={DATA_KEY.CATEGORY}
             tick={(props) => {
               const category = props.payload.value
+              const medal = getCategoryMedalByAmount(chartData, category)
 
               return (
                 <HeroUITooltip content='Search by category' placement='top'>
@@ -132,6 +134,7 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
                     }
                   >
                     {category}
+                    {medal ? ` ${medal}` : ''}
                   </text>
                 </HeroUITooltip>
               )
