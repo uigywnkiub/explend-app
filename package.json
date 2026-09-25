@@ -31,7 +31,7 @@
     "@heroui/react": "^2.8.10",
     "@internationalized/date": "3.12.0",
     "@next/third-parties": "16.3.6",
-    "@sentry/nextjs": "^10.75.1",
+    "@sentry/nextjs": "^10.75.3",
     "@tailwindcss/postcss": "^4.3.3",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
@@ -78,7 +78,7 @@
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
-    "@types/node": "^24.13.5",
+    "@types/node": "^24.13.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@types/react-highlight-words": "^0.20.1",
@@ -162,5 +162,5 @@
   "engines": {
     "node": "22.x"
   },
-  "packageManager": "pnpm@11.23.0"
+  "packageManager": "pnpm@12.6.0"
 }
