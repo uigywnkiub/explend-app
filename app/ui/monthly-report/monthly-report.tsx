@@ -42,6 +42,7 @@ import {
   calculateMonthlyReportData,
   filterTransactions,
   filterTransactionsByDateRange,
+  FORECAST_MONTHS_BACK,
   getFirstAndLastTransactions,
 } from '@/app/lib/data'
 import {
@@ -64,6 +65,7 @@ import type {
 import AILogo from '../ai-logo'
 import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
+import InfoText from '../info-text'
 import Magnetic from '../magnetic'
 import WarningText from '../warning-text'
 import MonthPicker from './month-picker'
@@ -385,9 +387,22 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
               showForecast && 'pointer-events-none cursor-text',
             )}
           >
-            <span className='text-default-500 mb-3 inline-block text-lg text-balance md:mb-0 md:text-xl'>
+            <span
+              className={cn(
+                'text-default-500 inline-block text-lg text-balance md:text-xl',
+                showForecast ? 'mb-0' : 'mb-3 md:mb-0',
+              )}
+            >
               {showForecast ? 'Next Month Forecast' : formattedDateRange}
             </span>
+            {showForecast && (
+              <div className='mb-3 md:mb-0'>
+                <InfoText
+                  withAsterisk={false}
+                  text={`Forecast based on the last ${FORECAST_MONTHS_BACK} months`}
+                />
+              </div>
+            )}
           </Link>
           <div className='flex gap-4 md:gap-8'>
             <div>
