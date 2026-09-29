@@ -16,7 +16,7 @@ import { APP_NAME, AUTHOR } from '@/config/constants/main'
 
 import type { TSocialLink } from '@/app/lib/types'
 
-import { HoverableElement } from '../hoverables'
+import { HoverableElement } from './hoverables'
 
 const socialLinks: TSocialLink[] = [
   {

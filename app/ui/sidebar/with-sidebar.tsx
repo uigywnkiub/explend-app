@@ -1,6 +1,6 @@
 import ChangelogWrapper from '../changelog-wrapper'
+import Footer from '../footer'
 import PushPermission from '../push-permission'
-import Footer from '../settings/footer'
 import Hamburger from './hamburger'
 import MaskAmountInfo from './mask-amount-info'
 import Navbar from './navbar'
