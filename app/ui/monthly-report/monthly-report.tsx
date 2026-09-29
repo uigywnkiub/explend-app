@@ -52,6 +52,7 @@ import {
   formatDate,
   getExpenseCategories,
   isValidArrayWithKeys,
+  pluralize,
   sortArrayByKeyByReferenceArray,
   toCalendarDate,
 } from '@/app/lib/helpers'
@@ -92,6 +93,10 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
 
   const [expenseTipsAIDataLocalStorageRaw, setExpenseTipsAIDataLocalStorage] =
     useLocalStorage(LOCAL_STORAGE_KEY.AI_EXPENSE_TIPS_DATA)
+  const [forecastMonthsBack = FORECAST_MONTHS_BACK] = useLocalStorage<number>(
+    LOCAL_STORAGE_KEY.FORECAST_MONTHS_BACK,
+    FORECAST_MONTHS_BACK,
+  )
   const isValidExpenseTipsAIDataLocalStorage = isValidArrayWithKeys(
     expenseTipsAIDataLocalStorageRaw,
     ['category', 'tip', 'savings'] satisfies readonly (keyof TExpenseAdvice)[],
@@ -170,7 +175,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
 
       return
     }
-    const data = calculateForecast(transactions)
+    const data = calculateForecast(transactions, forecastMonthsBack)
     if (data.expenseForecast.length === 0 && data.incomeForecast.length === 0) {
       haptic.error()
       toast.error('Not enough data to forecast.')
@@ -181,7 +186,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     setShowForecast(true)
     haptic.confirm()
     toast.success('Forecast generated.')
-  }, [showForecast, transactions])
+  }, [showForecast, transactions, forecastMonthsBack])
 
   const filteredTransactionsByDateRange = useMemo(
     () => filterTransactionsByDateRange(transactions, startDate, endDate),
@@ -399,7 +404,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
               <div className='mb-3 md:mb-0'>
                 <InfoText
                   withAsterisk={false}
-                  text={`Forecast based on the last ${FORECAST_MONTHS_BACK} months`}
+                  text={`Forecast based on the last ${forecastMonthsBack} ${pluralize(forecastMonthsBack, 'month', 'months')}`}
                 />
               </div>
             )}

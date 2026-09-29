@@ -25,6 +25,7 @@ import Currency from '../ui/settings/currency'
 import DeleteAccount from '../ui/settings/delete-account'
 import DownloadUploadTransactions from '../ui/settings/download-upload-transactions'
 import ExitAccount from '../ui/settings/exit-account'
+import ForecastMonthsBack from '../ui/settings/forecast-months-back'
 import ImportBankTransactions from '../ui/settings/import-bank-transactions'
 import LocalStorageSwitch from '../ui/settings/local-storage-switch'
 import SalaryDay from '../ui/settings/salary-day'
@@ -122,6 +123,18 @@ export default async function Page() {
               localStorageKey={LOCAL_STORAGE_KEY.IS_ENABLE_CHANGELOG}
             />
           </div>
+
+          <Divider className='my-4' />
+
+          <SectionItem
+            title='Forecast Months'
+            subtitle='Choose how many complete past months to use for the forecast.'
+          >
+            <div className='max-w-xs'>
+              <Spacer y={2} />
+              <ForecastMonthsBack />
+            </div>
+          </SectionItem>
 
           <Divider className='my-4' />
 
