@@ -2,6 +2,7 @@ import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { getLocalTimeZone } from '@internationalized/date'
 import { parse } from 'csv-parse/sync'
 import {
+  differenceInCalendarMonths,
   endOfDay,
   endOfMonth,
   endOfToday,
@@ -283,6 +284,15 @@ export const calculateForecast = (
 ): TForecastData => {
   const today = startOfToday()
   const currentMonthStart = startOfMonth(today)
+  const earliest = transactions.reduce<Date | null>((min, transaction) => {
+    const date = new Date(transaction.createdAt)
+
+    return !min || date < min ? date : min
+  }, null)
+  const availableMonths = earliest
+    ? differenceInCalendarMonths(currentMonthStart, startOfMonth(earliest))
+    : 0
+  const effectiveMonths = Math.min(monthsBack, availableMonths)
 
   // Gather data for each of the last N complete months (excludes current month).
   const monthlyData: {
@@ -290,7 +300,7 @@ export const calculateForecast = (
     incomeByCategory: Map<string, number>
   }[] = []
 
-  for (let i = 1; i <= monthsBack; i++) {
+  for (let i = 1; i <= effectiveMonths; i++) {
     const monthStart = startOfMonth(subMonths(currentMonthStart, i))
     const monthEnd = endOfMonth(monthStart)
     const startDate = toCalendarDate(monthStart).toDate(getLocalTimeZone())
@@ -331,7 +341,7 @@ export const calculateForecast = (
 
       // Skip categories that only appeared once with a trivial amount.
       const nonZeroCount = rawValues.filter((v) => v > 0).length
-      if (nonZeroCount === 0) continue
+      if (nonZeroCount < 2 && rawValues[0] === 0) continue
 
       // Dampen outliers before smoothing.
       const dampened = dampenOutliers(rawValues)
