@@ -133,15 +133,23 @@ function LimitItem({
             content={
               <div
                 className={cn(
-                  'from-secondary to-success flex justify-center gap-3 bg-linear-to-r bg-clip-text p-2 text-xs text-transparent',
+                  'flex justify-center gap-3 p-2 text-xs',
                   !isIncreasedAmountByCurrMonth &&
                     prevMonthAmount !== 0 &&
                     currMonthAmount !== 0 &&
-                    'flex-row-reverse bg-linear-to-l',
-                  isLimitOver && 'to-danger',
+                    'flex-row-reverse',
                 )}
               >
-                <div className={cn('flex flex-col items-center')}>
+                <div
+                  className={cn(
+                    'flex flex-col items-center',
+                    isIncreasedAmountByCurrMonth
+                      ? isLimitOver
+                        ? 'text-[color-mix(in_srgb,hsl(var(--heroui-secondary))_50%,hsl(var(--heroui-danger)))]'
+                        : 'text-[color-mix(in_srgb,hsl(var(--heroui-secondary))_50%,hsl(var(--heroui-success)))]'
+                      : 'text-[color-mix(in_srgb,hsl(var(--heroui-secondary))_50%,hsl(var(--heroui-default)))]',
+                  )}
+                >
                   <span className='text-default-500 pb-2'>Previous</span>
                   <span>{`${formatPercentage(prevMonthPercentage)} %`}</span>
                   <span>
@@ -149,19 +157,31 @@ function LimitItem({
                   </span>
                 </div>
                 <div className='bg-default w-px' />
-                <div className='flex flex-col items-center'>
+                <div
+                  className={cn(
+                    'flex flex-col items-center',
+                    currMonthAmount < prevMonthAmount
+                      ? 'text-success'
+                      : 'text-danger',
+                  )}
+                >
                   <span className='text-default-500 pb-2'>Trend</span>
                   <div className='flex flex-col items-center'>
                     <span>{isIncreasedAmountByCurrMonth ? '↑' : '↓'}</span>
                     <span>
                       {prevMonthAmount > 0
-                        ? `${formatPercentage(growthRate, true)} %`
+                        ? `${growthRate > 0 ? '+ ' : ''}${formatPercentage(growthRate, true)} %`
                         : '—'}
                     </span>
                   </div>
                 </div>
                 <div className='bg-default w-px' />
-                <div className={cn('flex flex-col items-center')}>
+                <div
+                  className={cn(
+                    'flex flex-col items-center',
+                    isLimitOver ? 'text-danger' : 'text-success',
+                  )}
+                >
                   <span className='text-default-500 pb-2'>Current</span>
                   <span>{`${formatPercentage(currMonthPercentage)} %`}</span>
                   <span>
