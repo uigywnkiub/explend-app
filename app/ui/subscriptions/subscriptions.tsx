@@ -5,6 +5,8 @@ import toast from 'react-hot-toast'
 import {
   PiArrowClockwise,
   PiArrowClockwiseFill,
+  PiArrowsDownUp,
+  PiArrowsDownUpFill,
   PiNotePencilFill,
   PiPlus,
   PiPlusFill,
@@ -127,6 +129,7 @@ export default function Subscriptions({
   const [isLoadingReset, setIsLoadingReset] = useState(false)
 
   const [isReorderSave, setIsReorderSave] = useState(false)
+  const [isReordering, setIsReordering] = useState(false)
   const [subscriptionsDataState, setSubscriptionsDataState] =
     useState<TSubscriptions[]>(subscriptionsData)
   useEffect(() => {
@@ -381,6 +384,36 @@ export default function Subscriptions({
         <div className='flex items-center justify-between'>
           <h2>Subscriptions</h2>
           <div className='flex gap-2'>
+            <Tooltip
+              content={
+                isReordering ? 'Done reordering' : 'Reorder subscriptions'
+              }
+              placement='bottom'
+            >
+              <Button
+                aria-label={
+                  isReordering ? 'Done reordering' : 'Reorder subscriptions'
+                }
+                aria-pressed={isReordering}
+                isDisabled={!hasSubscriptions}
+                onPress={() => {
+                  haptic()
+                  setIsReordering((current) => !current)
+                }}
+                color={isReordering ? 'primary' : 'default'}
+                variant='flat'
+                className='min-w-4'
+              >
+                <HoverableElement
+                  uKey='reorder'
+                  element={<PiArrowsDownUp size={DEFAULT_ICON_SIZE} />}
+                  hoveredElement={
+                    <PiArrowsDownUpFill size={DEFAULT_ICON_SIZE} />
+                  }
+                  withShift={false}
+                />
+              </Button>
+            </Tooltip>
             <Tooltip content='Reset all subscriptions' placement='bottom'>
               <Button
                 isDisabled={!hasSubscriptions}
@@ -518,6 +551,8 @@ export default function Subscriptions({
                 currency={currency}
                 userCategories={userCategories}
                 changedCategoryNames={changedCategoryNames}
+                reorderContainer={reorderContainer}
+                isReordering={isReordering}
                 subscriptionTransactionsByCurrMonth={
                   subscriptionTransactionsByCurrMonth
                 }

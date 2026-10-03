@@ -56,6 +56,19 @@ export const MOTION_COLLAPSE = {
   transition: SHARED_TRANSACTION.TRANSACTION_SPRING,
 } satisfies MotionProps
 
+export const MOTION_REORDER_HANDLE = {
+  initial: { opacity: 0, width: 0, x: -6, scale: 0.85 },
+  animate: { opacity: 1, width: 24, x: 0, scale: 1 },
+  exit: {
+    opacity: 0,
+    width: 0,
+    x: -6,
+    scale: 0.85,
+    transition: { type: 'tween', duration: 0.12, ease: 'easeIn' },
+  },
+  transition: { type: 'spring', stiffness: 400, damping: 32, mass: 0.6 },
+} satisfies MotionProps
+
 // Comment the custom View Transition API function until all modern browsers support it.
 // export const slideInOut = () => {
 //   const duration = DIV.TRANSITION.duration * 1000

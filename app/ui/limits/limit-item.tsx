@@ -19,14 +19,19 @@ import {
   DropdownTrigger,
   Tooltip,
 } from '@heroui/react'
-import { Reorder, useDragControls } from 'framer-motion'
+import {
+  AnimatePresence,
+  motion,
+  Reorder,
+  useDragControls,
+} from 'framer-motion'
 import { haptic } from 'ios-haptics'
 
 import {
   DEFAULT_CATEGORY_EMOJI,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
-import { MOTION_LIST } from '@/config/constants/motion'
+import { MOTION_LIST, MOTION_REORDER_HANDLE } from '@/config/constants/motion'
 
 import {
   createSearchHrefWithKeyword,
@@ -48,6 +53,7 @@ type TProps = {
   userCategories: TTransaction['categories']
   changedCategoryNames: string[]
   reorderContainer: React.RefObject<null>
+  isReordering: boolean
   onAction: (key: string, categoryName: string) => void
 }
 
@@ -58,6 +64,7 @@ function LimitItem({
   userCategories,
   changedCategoryNames,
   reorderContainer,
+  isReordering,
   onAction,
 }: TProps) {
   const dragControls = useDragControls()
@@ -97,14 +104,23 @@ function LimitItem({
       className='rounded-medium bg-content1 relative flex items-center justify-between py-3'
     >
       <div className='flex items-center text-balance md:w-1/2'>
-        <Tooltip content='Drag to reorder' placement='left'>
-          <div
-            onPointerDown={(e) => dragControls.start(e)}
-            className='mr-2 cursor-grab touch-none active:cursor-grabbing'
-          >
-            <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
-          </div>
-        </Tooltip>
+        <AnimatePresence>
+          {isReordering && (
+            <motion.div
+              {...MOTION_REORDER_HANDLE}
+              className='mr-2 flex shrink-0 items-center overflow-hidden'
+            >
+              <Tooltip content='Drag to reorder' placement='left'>
+                <div
+                  onPointerDown={(e) => dragControls.start(e)}
+                  className='flex h-6 w-6 cursor-grab touch-none items-center justify-center active:cursor-grabbing'
+                >
+                  <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
+                </div>
+              </Tooltip>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <p className='-mb-1.5 text-xl md:text-2xl'>
           {isChangedCategoryName
             ? DEFAULT_CATEGORY_EMOJI

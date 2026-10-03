@@ -25,14 +25,19 @@ import {
   DropdownTrigger,
   Tooltip,
 } from '@heroui/react'
-import { Reorder, useDragControls } from 'framer-motion'
+import {
+  AnimatePresence,
+  motion,
+  Reorder,
+  useDragControls,
+} from 'framer-motion'
 import { haptic } from 'ios-haptics'
 
 import {
   DEFAULT_CATEGORY_EMOJI,
   DEFAULT_ICON_SIZE,
 } from '@/config/constants/main'
-import { MOTION_LIST } from '@/config/constants/motion'
+import { MOTION_LIST, MOTION_REORDER_HANDLE } from '@/config/constants/motion'
 
 import {
   capitalizeFirstLetter,
@@ -55,6 +60,8 @@ type TProps = {
   currency: TTransaction['currency']
   userCategories: TTransaction['categories']
   changedCategoryNames: string[]
+  reorderContainer: React.RefObject<null>
+  isReordering: boolean
   subscriptionTransactionsByCurrMonth: TTransaction[]
   onAction: (key: string) => void
 }
@@ -65,6 +72,8 @@ function SubscriptionItem({
   currency,
   userCategories,
   changedCategoryNames,
+  reorderContainer,
+  isReordering,
   subscriptionTransactionsByCurrMonth,
   onAction,
 }: TProps) {
@@ -97,21 +106,30 @@ function SubscriptionItem({
       value={_id}
       dragListener={false}
       dragControls={dragControls}
+      dragConstraints={reorderContainer}
       dragElastic={0.1}
-      layout='position'
       {...MOTION_LIST(idx)}
       className='rounded-medium bg-content1 relative flex flex-col items-center justify-between py-3'
     >
       <div className='flex w-full items-center justify-between'>
         <div className='flex items-center gap-2'>
-          <Tooltip content='Drag to reorder' placement='left'>
-            <div
-              onPointerDown={(e) => dragControls.start(e)}
-              className='cursor-grab touch-none active:cursor-grabbing'
-            >
-              <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
-            </div>
-          </Tooltip>
+          <AnimatePresence>
+            {isReordering && (
+              <motion.div
+                {...MOTION_REORDER_HANDLE}
+                className='flex shrink-0 items-center overflow-hidden'
+              >
+                <Tooltip content='Drag to reorder' placement='left'>
+                  <div
+                    onPointerDown={(e) => dragControls.start(e)}
+                    className='flex h-6 w-6 cursor-grab touch-none items-center justify-center active:cursor-grabbing'
+                  >
+                    <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
+                  </div>
+                </Tooltip>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <Tooltip
             content={getCategoryWithoutEmoji(category)}
             placement='bottom'
@@ -120,66 +138,73 @@ function SubscriptionItem({
               {categoryEmoji}
             </p>
           </Tooltip>
-          <div className='flex items-center gap-2'>
-            <Tooltip content='Search by description' placement='bottom'>
-              <Link
-                href={createSearchHrefWithKeyword(description)}
-                className='hover:opacity-hover'
-              >
-                {description}
-              </Link>
-            </Tooltip>
-            {autoRenew && (
+          <div className='flex min-w-0 flex-col items-start gap-1'>
+            <div className='flex items-center gap-2'>
+              <Tooltip content='Search by description' placement='bottom'>
+                <Link
+                  href={createSearchHrefWithKeyword(description)}
+                  className='hover:opacity-hover'
+                >
+                  {description}
+                </Link>
+              </Tooltip>
+              {autoRenew && (
+                <Tooltip
+                  content={`Auto-renews monthly on day ${renewDay}`}
+                  placement='bottom'
+                >
+                  <div>
+                    <HoverableElement
+                      uKey={`renew-subscription-icon-${_id}`}
+                      element={
+                        <PiRepeat
+                          size={DEFAULT_ICON_SIZE}
+                          className='fill-primary'
+                        />
+                      }
+                      hoveredElement={
+                        <PiRepeatFill
+                          size={DEFAULT_ICON_SIZE}
+                          className='fill-primary'
+                        />
+                      }
+                      withShift={false}
+                    />
+                  </div>
+                </Tooltip>
+              )}
               <Tooltip
-                content={`Auto-renews monthly on day ${renewDay}`}
+                content={
+                  isAddedSubscriptionInThisMonth
+                    ? capitalizeFirstLetter(addedSubscriptionStr)
+                    : 'Ready to add'
+                }
                 placement='bottom'
               >
-                <div>
+                <div className='pr-2'>
                   <HoverableElement
-                    uKey={`renew-subscription-icon-${_id}`}
+                    uKey='check-subscription-icon'
                     element={
-                      <PiRepeat
+                      <PiCheckCircle
                         size={DEFAULT_ICON_SIZE}
-                        className='fill-primary'
+                        className={checkIconClassName}
                       />
                     }
                     hoveredElement={
-                      <PiRepeatFill
+                      <PiCheckCircleFill
                         size={DEFAULT_ICON_SIZE}
-                        className='fill-primary'
+                        className={checkIconClassName}
                       />
                     }
-                    withShift={false}
                   />
                 </div>
               </Tooltip>
+            </div>
+            {Boolean(note) && (
+              <p className='text-default-500 max-w-full text-left text-sm'>
+                {note}
+              </p>
             )}
-            <Tooltip
-              content={
-                isAddedSubscriptionInThisMonth
-                  ? capitalizeFirstLetter(addedSubscriptionStr)
-                  : 'Ready to add'
-              }
-              placement='bottom'
-            >
-              <div className='pr-2'>
-                <HoverableElement
-                  uKey='check-subscription-icon'
-                  element={
-                    <PiCheckCircle
-                      size={DEFAULT_ICON_SIZE}
-                      className={checkIconClassName}
-                    />
-                  }
-                  hoveredElement={
-                    <PiCheckCircleFill
-                      size={DEFAULT_ICON_SIZE}
-                      className={checkIconClassName}
-                    />
-                  }
-                />
-              </div>
-            </Tooltip>
           </div>
         </div>
         <div className='flex items-center gap-2'>
@@ -284,11 +309,6 @@ function SubscriptionItem({
           </Dropdown>
         </div>
       </div>
-      {Boolean(note) && (
-        <div className='text-default-500 mr-auto w-4/5 pl-13.5 text-left text-sm md:pl-14.5'>
-          <p>{note}</p>
-        </div>
-      )}
     </Reorder.Item>
   )
 }

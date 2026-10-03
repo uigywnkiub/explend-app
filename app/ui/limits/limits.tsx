@@ -5,6 +5,8 @@ import toast from 'react-hot-toast'
 import {
   PiArrowClockwise,
   PiArrowClockwiseFill,
+  PiArrowsDownUp,
+  PiArrowsDownUpFill,
   PiNotePencilFill,
   PiPlus,
   PiPlusFill,
@@ -108,6 +110,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   const [isLoadingReset, setIsLoadingReset] = useState(false)
   const [isLoadingAddLimit, setIsLoadingAddLimit] = useState(false)
   const [isReorderLimitSave, setIsReorderLimitSave] = useState(false)
+  const [isReordering, setIsReordering] = useState(false)
 
   const reorderContainer = useRef(null)
 
@@ -373,6 +376,29 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
       <div className='flex items-center justify-between'>
         <h2>Limits</h2>
         <div className='flex gap-2'>
+          <Tooltip
+            content={isReordering ? 'Done reordering' : 'Reorder limits'}
+            placement='bottom'
+          >
+            <Button
+              aria-label={isReordering ? 'Done reordering' : 'Reorder limits'}
+              aria-pressed={isReordering}
+              onPress={() => {
+                haptic()
+                setIsReordering((current) => !current)
+              }}
+              color={isReordering ? 'primary' : 'default'}
+              variant='flat'
+              className='min-w-4 font-medium'
+            >
+              <HoverableElement
+                uKey='reorder'
+                element={<PiArrowsDownUp size={DEFAULT_ICON_SIZE} />}
+                hoveredElement={<PiArrowsDownUpFill size={DEFAULT_ICON_SIZE} />}
+                withShift={false}
+              />
+            </Button>
+          </Tooltip>
           <Tooltip content='Reset all limits' placement='bottom'>
             <Button
               isDisabled={isNoUserLimitsData}
@@ -560,6 +586,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
               userCategories={userCategories}
               changedCategoryNames={changedCategoryNames}
               reorderContainer={reorderContainer}
+              isReordering={isReordering}
               onAction={(key, categoryName) => {
                 if (key === DROPDOWN_KEY.EDIT) {
                   const prevLimitAmount = getLimitAmount(categoryName)
