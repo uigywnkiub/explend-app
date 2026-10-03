@@ -103,7 +103,7 @@ function LimitItem({
       {...MOTION_LIST(idx)}
       className='rounded-medium bg-content1 relative flex items-center justify-between py-3'
     >
-      <div className='flex items-center text-balance md:w-1/2'>
+      <div className='flex items-center text-balance md:w-8/12'>
         <AnimatePresence>
           {isReordering && (
             <motion.div
@@ -208,17 +208,17 @@ function LimitItem({
             }
             placement='bottom'
           >
-            <div className='bg-default absolute -mt-0.5 h-[5px] w-[30%] rounded-full md:relative md:w-full'>
+            <div className='bg-default xs:w-2/4 absolute -mt-0.5 h-1.5 w-1/3 rounded-full sm:w-2/3 md:relative md:w-full'>
               <div
                 className={cn(
-                  'bg-secondary/50 absolute h-[5px] rounded-full',
+                  'bg-secondary/50 absolute h-1.5 rounded-full',
                   isIncreasedAmountByCurrMonth && 'z-10',
                 )}
                 style={{ width: `${prevMonthPercentage}%` }}
               />
               <div
                 className={cn(
-                  'absolute h-[5px] rounded-full',
+                  'absolute h-1.5 rounded-full',
                   isLimitOver ? 'bg-danger' : 'bg-success',
                 )}
                 style={{ width: `${currMonthPercentage}%` }}
