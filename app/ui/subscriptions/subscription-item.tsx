@@ -112,7 +112,7 @@ function SubscriptionItem({
       className='rounded-medium bg-content1 relative flex flex-col items-center justify-between py-3'
     >
       <div className='flex w-full items-center justify-between'>
-        <div className='flex items-center gap-2'>
+        <div className='flex min-w-0 items-center gap-2'>
           <AnimatePresence>
             {isReordering && (
               <motion.div
@@ -138,8 +138,8 @@ function SubscriptionItem({
               {categoryEmoji}
             </p>
           </Tooltip>
-          <div className='flex min-w-0 flex-col items-start gap-1'>
-            <div className='flex items-center gap-2'>
+          <div className='flex min-w-0 flex-1 flex-col items-start gap-1'>
+            <div className='flex w-full flex-wrap items-center gap-2'>
               <Tooltip content='Search by description' placement='bottom'>
                 <Link
                   href={createSearchHrefWithKeyword(description)}
