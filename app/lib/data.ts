@@ -2,12 +2,16 @@ import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { getLocalTimeZone } from '@internationalized/date'
 import { parse } from 'csv-parse/sync'
 import {
+  addDays,
   differenceInCalendarMonths,
+  eachDayOfInterval,
   endOfDay,
   endOfMonth,
   endOfToday,
   endOfWeek,
+  format,
   formatISO,
+  getDay,
   isWithinInterval,
   startOfMonth,
   startOfToday,
@@ -18,6 +22,7 @@ import {
 import ExcelJS from 'exceljs'
 
 import {
+  formatAmount,
   formatPercentage,
   getCategoryWithoutEmoji,
   toCalendarDate,
@@ -36,6 +41,7 @@ import type {
   TMonobankCsvRow,
   TTransaction,
   TTransactionType,
+  TWeeklySpendData,
 } from './types'
 
 export const calculateTotalAmount = (transactions: TTransaction[]) => {
@@ -162,6 +168,83 @@ export const filterTransactionsByDateRange = (
       end: endOfDay(endDate),
     })
   })
+}
+
+export const getWeeklySpendData = (
+  transactions: TTransaction[],
+): TWeeklySpendData => {
+  const today = startOfToday()
+  const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 })
+  const previousWeekStart = subWeeks(currentWeekStart, 1)
+  const currentWeekDayIndex = (getDay(today) + 6) % 7
+  const previousWeekEnd = endOfDay(
+    addDays(previousWeekStart, currentWeekDayIndex),
+  )
+  const currentWeekTransactions = filterTransactionsByDateRange(
+    transactions,
+    currentWeekStart,
+    today,
+  ).filter((transaction) => !transaction.isIncome)
+  const dailySpend = new Map<string, number>()
+
+  currentWeekTransactions.forEach((transaction) => {
+    const date = format(new Date(transaction.createdAt), 'EEE')
+    const amount = Number(formatAmount(transaction.amount))
+
+    dailySpend.set(date, (dailySpend.get(date) || 0) + amount)
+  })
+
+  const previousWeekTransactions = filterTransactionsByDateRange(
+    transactions,
+    previousWeekStart,
+    previousWeekEnd,
+  )
+  const previousWeekDailySpend = new Map<string, number>()
+  previousWeekTransactions
+    .filter((transaction) => !transaction.isIncome)
+    .forEach((transaction) => {
+      const day = format(new Date(transaction.createdAt), 'EEE')
+      const amount = Number(formatAmount(transaction.amount))
+
+      previousWeekDailySpend.set(
+        day,
+        (previousWeekDailySpend.get(day) || 0) + amount,
+      )
+    })
+  const previousWeekSpend = previousWeekTransactions.length
+    ? calculateTotalAmount(
+        previousWeekTransactions.filter((transaction) => !transaction.isIncome),
+      )
+    : null
+  let currentWeekSpend = 0
+  let previousWeekCumulativeSpend = 0
+  const chartData = eachDayOfInterval({
+    start: currentWeekStart,
+    end: endOfWeek(currentWeekStart, { weekStartsOn: 1 }),
+  }).map((date) => {
+    const day = format(date, 'EEE')
+    const dayIndex = (getDay(date) + 6) % 7
+    if (dayIndex <= currentWeekDayIndex) {
+      currentWeekSpend += dailySpend.get(day) || 0
+      previousWeekCumulativeSpend += previousWeekDailySpend.get(day) || 0
+    }
+
+    return {
+      day,
+      dateLabel: format(date, 'EEE, MMM d'),
+      cumulativeSpend:
+        dayIndex <= currentWeekDayIndex ? currentWeekSpend : null,
+      previousWeekCumulativeSpend:
+        dayIndex <= currentWeekDayIndex ? previousWeekCumulativeSpend : null,
+    }
+  })
+
+  return {
+    currentWeekSpend,
+    previousWeekSpend,
+    currentDay: format(today, 'EEE'),
+    chartData,
+  }
 }
 
 export const getTransactionsByCurrMonth = (transactions: TTransaction[]) => {

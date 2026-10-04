@@ -119,6 +119,18 @@ export type TChartData = {
   expense: TTotals['expense']
 }
 
+export type TWeeklySpendData = {
+  currentWeekSpend: number
+  previousWeekSpend: number | null
+  currentDay: string
+  chartData: {
+    day: string
+    dateLabel: string
+    cumulativeSpend: number | null
+    previousWeekCumulativeSpend: number | null
+  }[]
+}
+
 export type TNavLink = {
   title: NAV_TITLE
   url: ROUTE

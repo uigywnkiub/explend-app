@@ -1,28 +1,48 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
+import {
+  PiArrowCircleDownFill,
+  PiArrowCircleUpFill,
+  PiCheckCircle,
+  PiCheckCircleFill,
+  PiWarningCircle,
+  PiWarningCircleFill,
+} from 'react-icons/pi'
 
+import {
+  Area,
+  AreaChart,
+  Tooltip as ChartTooltip,
+  ReferenceDot,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from 'recharts'
+
+import { DEFAULT_COLOR } from '@/tailwind.config'
 import { Card, CardHeader, Tooltip } from '@heroui/react'
 import { motion } from 'framer-motion'
 import { haptic } from 'ios-haptics'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
-import { DEFAULT_TIME_ZONE } from '@/config/constants/main'
+import { DEFAULT_ICON_SIZE, DEFAULT_TIME_ZONE } from '@/config/constants/main'
 import { DIV } from '@/config/constants/motion'
 
 import { getAllTransactions } from '../lib/actions'
-import { getTransactionsTotals } from '../lib/data'
+import { getTransactionsTotals, getWeeklySpendData } from '../lib/data'
 import {
   cn,
   getBooleanFromLocalStorage,
+  getFormattedCurrency,
   getGreeting,
   setInLocalStorage,
 } from '../lib/helpers'
-import type { TTransaction, TUser } from '../lib/types'
+import type { TTransaction, TUser, TWeeklySpendData } from '../lib/types'
 import Loading from '../loading'
 import AnimatedGreeting from './animated-greeting'
 import AnimatedNumber from './animated-number'
+import { HoverableElement } from './hoverables'
 
 type TProps = {
   user: TUser | undefined
@@ -30,6 +50,8 @@ type TProps = {
   currency: TTransaction['currency']
   hasTransactions: boolean
 }
+
+const SPEND_CHART_COLOR = 'hsl(var(--heroui-primary))'
 
 function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
   const [isShowTotals, setIsChangeInfo] = useState(false)
@@ -41,6 +63,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
     income: 0,
     expense: 0,
   })
+  const [weeklySpend, setWeeklySpend] = useState<TWeeklySpendData | null>(null)
 
   const userId = user?.email
   const isTotalLoaded = Boolean(total.income) || Boolean(total.expense)
@@ -65,11 +88,17 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
         income: getTransactionsTotals(transactions).income,
         expense: getTransactionsTotals(transactions).expense,
       })
+      try {
+        setWeeklySpend(getWeeklySpendData(transactions))
+      } catch {
+        setWeeklySpend(null)
+      }
     } catch (err) {
       setTotal({
         income: 0,
         expense: 0,
       })
+      setWeeklySpend(null)
       throw err
     } finally {
       setIsLoading(false)
@@ -174,6 +203,219 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
             )}
           </div>
         </Tooltip>
+        {isShowTotals && isTotalLoaded && weeklySpend && (
+          <div className='w-full px-2 md:px-4'>
+            <div className='flex items-center justify-between gap-3'>
+              <div className='text-left'>
+                <p className='text-default-500 text-sm'>
+                  Current spend this week
+                </p>
+                <p className='text-lg leading-tight font-semibold'>
+                  {getFormattedCurrency(weeklySpend.currentWeekSpend)}{' '}
+                  {currency.sign}
+                </p>
+              </div>
+              <div
+                className={cn(
+                  'flex max-w-48 items-center gap-1.5 text-xs',
+                  weeklySpend.previousWeekSpend === null
+                    ? 'text-default-500'
+                    : weeklySpend.previousWeekSpend >=
+                        weeklySpend.currentWeekSpend
+                      ? 'text-success'
+                      : 'text-danger',
+                )}
+              >
+                {weeklySpend.previousWeekSpend !== null &&
+                  (weeklySpend.previousWeekSpend >=
+                  weeklySpend.currentWeekSpend ? (
+                    <HoverableElement
+                      uKey='weekly-spend-check'
+                      element={
+                        <PiCheckCircle
+                          size={DEFAULT_ICON_SIZE}
+                          className='fill-success'
+                        />
+                      }
+                      hoveredElement={
+                        <PiCheckCircleFill
+                          size={DEFAULT_ICON_SIZE}
+                          className='fill-success'
+                        />
+                      }
+                      withShift={false}
+                    />
+                  ) : (
+                    <HoverableElement
+                      uKey='weekly-spend-warning'
+                      element={
+                        <PiWarningCircle
+                          size={DEFAULT_ICON_SIZE}
+                          className='fill-danger'
+                        />
+                      }
+                      hoveredElement={
+                        <PiWarningCircleFill
+                          size={DEFAULT_ICON_SIZE}
+                          className='fill-danger'
+                        />
+                      }
+                      withShift={false}
+                    />
+                  ))}
+                <span className='text-default-500'>
+                  {weeklySpend.previousWeekSpend === null
+                    ? 'No previous week data'
+                    : weeklySpend.previousWeekSpend ===
+                        weeklySpend.currentWeekSpend
+                      ? 'Same as last week'
+                      : `${getFormattedCurrency(
+                          Math.abs(
+                            weeklySpend.previousWeekSpend -
+                              weeklySpend.currentWeekSpend,
+                          ),
+                        )} ${currency.sign} ${weeklySpend.previousWeekSpend > weeklySpend.currentWeekSpend ? 'below' : 'above'} last week`}
+                </span>
+              </div>
+            </div>
+            <div className='text-default-500 -mt-1 flex justify-end gap-3 text-xs'>
+              <span className='flex items-center gap-1'>
+                <span
+                  className='h-0.5 w-4'
+                  style={{ backgroundColor: SPEND_CHART_COLOR }}
+                />
+                This week
+              </span>
+              {weeklySpend.previousWeekSpend !== null && (
+                <span className='flex items-center gap-1'>
+                  <span
+                    className='w-4'
+                    style={{ borderTop: `2px dashed ${DEFAULT_COLOR}` }}
+                  />
+                  Last week
+                </span>
+              )}
+            </div>
+            <div
+              className='h-28 w-full'
+              role='img'
+              aria-label={`Current week spending: ${getFormattedCurrency(weeklySpend.currentWeekSpend)} ${currency.sign}${weeklySpend.previousWeekSpend !== null ? `, previous week ${getFormattedCurrency(weeklySpend.previousWeekSpend)} ${currency.sign}` : ''}`}
+            >
+              <ResponsiveContainer width='100%' height='100%'>
+                <AreaChart
+                  data={weeklySpend.chartData}
+                  margin={{ top: 16, right: 6, bottom: 6, left: 6 }}
+                >
+                  <defs>
+                    <linearGradient
+                      id='balance-spend-gradient'
+                      x1='0'
+                      y1='0'
+                      x2='0'
+                      y2='1'
+                    >
+                      <stop
+                        offset='0%'
+                        stopColor={SPEND_CHART_COLOR}
+                        stopOpacity={0.18}
+                      />
+                      <stop
+                        offset='100%'
+                        stopColor={SPEND_CHART_COLOR}
+                        stopOpacity={0.04}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <YAxis
+                    hide
+                    domain={[
+                      0,
+                      Math.max(
+                        weeklySpend.currentWeekSpend,
+                        weeklySpend.previousWeekSpend || 0,
+                      ) * 1.05 || 1,
+                    ]}
+                  />
+                  <XAxis dataKey='day' hide />
+                  <ChartTooltip
+                    content={({ active, payload }) => {
+                      if (!active || !payload?.length) return null
+
+                      return (
+                        <div className='rounded-medium bg-background/90 p-1.5 drop-shadow-md'>
+                          <p className='mb-1 text-xs font-medium'>
+                            {payload[0]?.payload.dateLabel}
+                          </p>
+                          {payload.map((item, index) => {
+                            if (item.value === undefined || item.value === null)
+                              return null
+
+                            const isCurrentWeek =
+                              item.dataKey === 'cumulativeSpend'
+                            const color = isCurrentWeek
+                              ? SPEND_CHART_COLOR
+                              : DEFAULT_COLOR
+
+                            return (
+                              <p key={index} className='text-xs leading-4'>
+                                <span
+                                  className='mr-1 inline-block size-2 rounded-full'
+                                  style={{ backgroundColor: color }}
+                                />
+                                <span className='text-default-500'>
+                                  {item.name}:{' '}
+                                </span>
+                                <span className='font-semibold'>
+                                  {getFormattedCurrency(Number(item.value))}{' '}
+                                  {currency.sign}
+                                </span>
+                              </p>
+                            )
+                          })}
+                        </div>
+                      )
+                    }}
+                  />
+                  {weeklySpend.previousWeekSpend !== null && (
+                    <Area
+                      type='monotone'
+                      dataKey='previousWeekCumulativeSpend'
+                      name='Last week'
+                      stroke={DEFAULT_COLOR}
+                      strokeDasharray='5 4'
+                      strokeWidth={2}
+                      fill='none'
+                      dot={false}
+                    />
+                  )}
+                  <Area
+                    type='monotone'
+                    dataKey='cumulativeSpend'
+                    name='This week'
+                    stroke={SPEND_CHART_COLOR}
+                    strokeWidth={3}
+                    fill='url(#balance-spend-gradient)'
+                    dot={false}
+                    activeDot={{
+                      r: 4,
+                      fill: 'white',
+                      stroke: SPEND_CHART_COLOR,
+                    }}
+                  />
+                  <ReferenceDot
+                    x={weeklySpend.currentDay}
+                    y={weeklySpend.currentWeekSpend}
+                    r={4}
+                    fill='white'
+                    stroke={SPEND_CHART_COLOR}
+                    strokeWidth={3}
+                    isFront
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
       </CardHeader>
     </Card>
   )
