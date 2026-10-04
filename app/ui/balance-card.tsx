@@ -13,6 +13,7 @@ import {
 import {
   Area,
   AreaChart,
+  CartesianGrid,
   Tooltip as ChartTooltip,
   ReferenceDot,
   ResponsiveContainer,
@@ -20,7 +21,6 @@ import {
   YAxis,
 } from 'recharts'
 
-import { DEFAULT_COLOR } from '@/tailwind.config'
 import { Card, CardHeader, Tooltip } from '@heroui/react'
 import { motion } from 'framer-motion'
 import { haptic } from 'ios-haptics'
@@ -51,7 +51,8 @@ type TProps = {
   hasTransactions: boolean
 }
 
-const SPEND_CHART_COLOR = 'hsl(var(--heroui-primary))'
+const SPEND_CHART_COLOR = 'hsl(var(--heroui-primary-400))'
+const CHART_MUTED_COLOR = 'hsl(var(--heroui-default-400))'
 
 function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
   const [isShowTotals, setIsChangeInfo] = useState(false)
@@ -204,8 +205,8 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
           </div>
         </Tooltip>
         {isShowTotals && isTotalLoaded && weeklySpend && (
-          <div className='w-full px-2 md:px-4'>
-            <div className='flex items-center justify-between gap-3'>
+          <div className='w-full min-w-0 self-stretch'>
+            <div className='flex items-center justify-between gap-3 px-2 md:px-4'>
               <div className='text-left'>
                 <p className='text-default-500 text-sm'>
                   Current spend this week
@@ -278,7 +279,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                 </span>
               </div>
             </div>
-            <div className='text-default-500 -mt-1 flex justify-end gap-3 text-xs'>
+            <div className='text-default-500 -mt-1 flex justify-end gap-3 px-2 text-xs md:px-4'>
               <span className='flex items-center gap-1'>
                 <span
                   className='h-0.5 w-4'
@@ -290,21 +291,25 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                 <span className='flex items-center gap-1'>
                   <span
                     className='w-4'
-                    style={{ borderTop: `2px dashed ${DEFAULT_COLOR}` }}
+                    style={{ borderTop: `2px dashed ${CHART_MUTED_COLOR}` }}
                   />
                   Last week
                 </span>
               )}
             </div>
             <div
-              className='h-28 w-full'
+              className='h-40 w-full min-w-0'
               role='img'
               aria-label={`Current week spending: ${getFormattedCurrency(weeklySpend.currentWeekSpend)} ${currency.sign}${weeklySpend.previousWeekSpend !== null ? `, previous week ${getFormattedCurrency(weeklySpend.previousWeekSpend)} ${currency.sign}` : ''}`}
             >
-              <ResponsiveContainer width='100%' height='100%'>
+              <ResponsiveContainer
+                width='100%'
+                height='100%'
+                className='w-full min-w-0'
+              >
                 <AreaChart
                   data={weeklySpend.chartData}
-                  margin={{ top: 16, right: 6, bottom: 6, left: 6 }}
+                  margin={{ top: 20, right: 16, bottom: -10, left: 2 }}
                 >
                   <defs>
                     <linearGradient
@@ -326,8 +331,20 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                       />
                     </linearGradient>
                   </defs>
+                  <CartesianGrid
+                    vertical={false}
+                    stroke={CHART_MUTED_COLOR}
+                    strokeOpacity={0.2}
+                  />
                   <YAxis
-                    hide
+                    width={56}
+                    tickCount={4}
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: CHART_MUTED_COLOR }}
+                    tickFormatter={(value) =>
+                      `${getFormattedCurrency(Math.round(Number(value)))} ${currency.sign}`
+                    }
                     domain={[
                       0,
                       Math.max(
@@ -336,7 +353,14 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                       ) * 1.05 || 1,
                     ]}
                   />
-                  <XAxis dataKey='day' hide />
+                  <XAxis
+                    dataKey='dateLabel'
+                    axisLine={false}
+                    tickLine={false}
+                    minTickGap={8}
+                    interval='preserveStartEnd'
+                    tick={{ fontSize: 10, fill: CHART_MUTED_COLOR }}
+                  />
                   <ChartTooltip
                     content={({ active, payload }) => {
                       if (!active || !payload?.length) return null
@@ -344,7 +368,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                       return (
                         <div className='rounded-medium bg-background/90 p-1.5 drop-shadow-md'>
                           <p className='mb-1 text-xs font-medium'>
-                            {payload[0]?.payload.dateLabel}
+                            {payload[0]?.payload.tooltipDateLabel}
                           </p>
                           {payload.map((item, index) => {
                             if (item.value === undefined || item.value === null)
@@ -354,7 +378,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                               item.dataKey === 'cumulativeSpend'
                             const color = isCurrentWeek
                               ? SPEND_CHART_COLOR
-                              : DEFAULT_COLOR
+                              : CHART_MUTED_COLOR
 
                             return (
                               <p key={index} className='text-xs leading-4'>
@@ -381,7 +405,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                       type='monotone'
                       dataKey='previousWeekCumulativeSpend'
                       name='Last week'
-                      stroke={DEFAULT_COLOR}
+                      stroke={CHART_MUTED_COLOR}
                       strokeDasharray='5 4'
                       strokeWidth={2}
                       fill='none'

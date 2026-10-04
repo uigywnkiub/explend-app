@@ -126,6 +126,7 @@ export type TWeeklySpendData = {
   chartData: {
     day: string
     dateLabel: string
+    tooltipDateLabel: string
     cumulativeSpend: number | null
     previousWeekCumulativeSpend: number | null
   }[]

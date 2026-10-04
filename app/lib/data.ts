@@ -231,7 +231,8 @@ export const getWeeklySpendData = (
 
     return {
       day,
-      dateLabel: format(date, 'EEE, MMM d'),
+      dateLabel: format(date, 'MMM d'),
+      tooltipDateLabel: format(date, 'EEE, MMM d'),
       cumulativeSpend:
         dayIndex <= currentWeekDayIndex ? currentWeekSpend : null,
       previousWeekCumulativeSpend:
