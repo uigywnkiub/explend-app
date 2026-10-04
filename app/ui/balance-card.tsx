@@ -50,14 +50,24 @@ type TProps = {
   balance: TTransaction['balance']
   currency: TTransaction['currency']
   hasTransactions: boolean
+  transactionCount: number
 }
 
 const SPEND_CHART_COLOR = 'hsl(var(--heroui-primary-400))'
 const CHART_MUTED_COLOR = 'hsl(var(--heroui-default-400))'
 
-function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
+function BalanceCard({
+  user,
+  balance,
+  currency,
+  hasTransactions,
+  transactionCount,
+}: TProps) {
   const [isShowTotals, setIsChangeInfo] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [loadedTransactionCount, setLoadedTransactionCount] = useState<
+    number | null
+  >(null)
   const [total, setTotal] = useState<{
     income: number
     expense: number
@@ -95,6 +105,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
       } catch {
         setWeeklySpend(null)
       }
+      setLoadedTransactionCount(transactionCount)
     } catch (err) {
       setTotal({
         income: 0,
@@ -105,13 +116,13 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
     } finally {
       setIsLoading(false)
     }
-  }, [userId])
+  }, [transactionCount, userId])
 
   useEffect(() => {
-    if (isShowTotals && !isTotalLoaded) {
+    if (isShowTotals && loadedTransactionCount !== transactionCount) {
       getTotal()
     }
-  }, [getTotal, isShowTotals, isTotalLoaded])
+  }, [getTotal, isShowTotals, loadedTransactionCount, transactionCount])
 
   useEffect(() => {
     setInLocalStorage(
@@ -223,96 +234,108 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
             onPointerDown={(event) => event.stopPropagation()}
             onClick={(event) => event.stopPropagation()}
           >
-            <div className='flex items-center justify-between gap-3 px-2 md:px-4'>
-              <div className='cursor-text text-left select-text'>
-                <p className='text-default-500 text-sm'>
+            <div className='grid grid-cols-2 items-start gap-3 px-2 md:px-4'>
+              <div className='min-w-0 text-left select-text'>
+                <p className='text-default-500 cursor-text text-sm'>
                   Current spend this week
                 </p>
-                <p className='text-lg leading-tight font-semibold'>
-                  {getFormattedCurrency(weeklySpend.currentWeekSpend)}{' '}
+                <p className='mt-2 cursor-text text-lg leading-tight font-semibold'>
+                  <AnimatedNumber value={weeklySpend.currentWeekSpend} />{' '}
                   {currency.sign}
                 </p>
               </div>
-              <div
-                className={cn(
-                  'flex max-w-48 cursor-text items-center gap-1.5 text-xs select-text',
-                  weeklySpend.previousWeekSpend === null
-                    ? 'text-default-500'
-                    : weeklySpend.previousWeekSpend >=
-                        weeklySpend.currentWeekSpend
-                      ? 'text-success'
-                      : 'text-danger',
-                )}
-              >
-                {weeklySpend.previousWeekSpend !== null &&
-                  (weeklySpend.previousWeekSpend >=
-                  weeklySpend.currentWeekSpend ? (
-                    <HoverableElement
-                      uKey='weekly-spend-check'
-                      element={
-                        <PiCheckCircle
-                          size={DEFAULT_ICON_SIZE}
-                          className='fill-success'
-                        />
-                      }
-                      hoveredElement={
-                        <PiCheckCircleFill
-                          size={DEFAULT_ICON_SIZE}
-                          className='fill-success'
-                        />
-                      }
-                      withShift={false}
-                    />
-                  ) : (
-                    <HoverableElement
-                      uKey='weekly-spend-warning'
-                      element={
-                        <PiWarningCircle
-                          size={DEFAULT_ICON_SIZE}
-                          className='fill-danger'
-                        />
-                      }
-                      hoveredElement={
-                        <PiWarningCircleFill
-                          size={DEFAULT_ICON_SIZE}
-                          className='fill-danger'
-                        />
-                      }
-                      withShift={false}
-                    />
-                  ))}
-                <span className='text-default-500'>
-                  {weeklySpend.previousWeekSpend === null
-                    ? 'No previous week data'
-                    : weeklySpend.previousWeekSpend ===
-                        weeklySpend.currentWeekSpend
-                      ? 'Same as last week'
-                      : `${getFormattedCurrency(
-                          Math.abs(
+              <div className='flex min-w-0 cursor-default flex-col items-end text-right'>
+                <div
+                  className={cn(
+                    'flex w-full max-w-48 cursor-text items-center justify-end gap-1.5 text-right text-xs select-text',
+                    weeklySpend.previousWeekSpend === null
+                      ? 'text-default-500'
+                      : weeklySpend.previousWeekSpend >=
+                          weeklySpend.currentWeekSpend
+                        ? 'text-success'
+                        : 'text-danger',
+                  )}
+                >
+                  {weeklySpend.previousWeekSpend !== null &&
+                    (weeklySpend.previousWeekSpend >=
+                    weeklySpend.currentWeekSpend ? (
+                      <HoverableElement
+                        uKey='weekly-spend-check'
+                        element={
+                          <PiCheckCircle
+                            size={DEFAULT_ICON_SIZE}
+                            className='fill-success cursor-default'
+                          />
+                        }
+                        hoveredElement={
+                          <PiCheckCircleFill
+                            size={DEFAULT_ICON_SIZE}
+                            className='fill-success cursor-default'
+                          />
+                        }
+                        withShift={false}
+                      />
+                    ) : (
+                      <HoverableElement
+                        uKey='weekly-spend-warning'
+                        element={
+                          <PiWarningCircle
+                            size={DEFAULT_ICON_SIZE}
+                            className='fill-danger cursor-default'
+                          />
+                        }
+                        hoveredElement={
+                          <PiWarningCircleFill
+                            size={DEFAULT_ICON_SIZE}
+                            className='fill-danger cursor-default'
+                          />
+                        }
+                        withShift={false}
+                      />
+                    ))}
+                  <span className='text-default-500'>
+                    {weeklySpend.previousWeekSpend === null ? (
+                      'No previous week data'
+                    ) : weeklySpend.previousWeekSpend ===
+                      weeklySpend.currentWeekSpend ? (
+                      'Same as last week'
+                    ) : (
+                      <>
+                        <AnimatedNumber
+                          value={Math.abs(
                             weeklySpend.previousWeekSpend -
                               weeklySpend.currentWeekSpend,
-                          ),
-                        )} ${currency.sign} ${weeklySpend.previousWeekSpend > weeklySpend.currentWeekSpend ? 'below' : 'above'} last week`}
-                </span>
+                          )}
+                        />{' '}
+                        {currency.sign}{' '}
+                        {weeklySpend.previousWeekSpend >
+                        weeklySpend.currentWeekSpend
+                          ? 'below'
+                          : 'above'}{' '}
+                        last week
+                      </>
+                    )}
+                  </span>
+                </div>
+                <div className='text-default-500 mt-3 flex flex-wrap items-center justify-end gap-3 text-xs select-text'>
+                  {weeklySpend.previousWeekSpend !== null && (
+                    <span className='inline-flex cursor-text items-center gap-1'>
+                      <span
+                        className='w-4'
+                        style={{ borderTop: `2px dashed ${CHART_MUTED_COLOR}` }}
+                      />
+                      Last week
+                    </span>
+                  )}
+                  <span className='inline-flex cursor-text items-center gap-1'>
+                    <span
+                      className='h-0.5 w-4'
+                      style={{ backgroundColor: SPEND_CHART_COLOR }}
+                    />
+                    This week
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className='text-default-500 -mt-1 flex cursor-text justify-end gap-3 px-2 text-xs select-text md:px-4'>
-              {weeklySpend.previousWeekSpend !== null && (
-                <span className='flex items-center gap-1'>
-                  <span
-                    className='w-4'
-                    style={{ borderTop: `2px dashed ${CHART_MUTED_COLOR}` }}
-                  />
-                  Last week
-                </span>
-              )}
-              <span className='flex items-center gap-1'>
-                <span
-                  className='h-0.5 w-4'
-                  style={{ backgroundColor: SPEND_CHART_COLOR }}
-                />
-                This week
-              </span>
             </div>
             <div
               className='h-40 w-full min-w-0'
@@ -358,10 +381,22 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                     tickCount={4}
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 10, fill: CHART_MUTED_COLOR }}
-                    tickFormatter={(value) =>
-                      `${getFormattedCurrency(Math.round(Number(value)))} ${currency.sign}`
-                    }
+                    tick={({ x, y, payload }) => (
+                      <text
+                        x={x}
+                        y={y}
+                        dy={3}
+                        textAnchor='end'
+                        fill={CHART_MUTED_COLOR}
+                        fontSize={10}
+                      >
+                        <AnimatedNumber
+                          value={Number(payload.value)}
+                          as='tspan'
+                        />{' '}
+                        {currency.sign}
+                      </text>
+                    )}
                     domain={[
                       0,
                       Math.max(
@@ -383,7 +418,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                       if (!active || !payload?.length) return null
 
                       return (
-                        <div className='rounded-medium bg-background/90 p-1.5 text-left drop-shadow-md'>
+                        <div className='rounded-medium bg-background/90 p-1.5 text-left drop-shadow-md md:p-3'>
                           <p className='mb-1 text-xs font-medium'>
                             {payload[0]?.payload.tooltipDateLabel}
                           </p>

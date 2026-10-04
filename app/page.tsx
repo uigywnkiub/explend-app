@@ -191,6 +191,7 @@ export default async function Page(props: {
           balance={balance}
           currency={currency}
           hasTransactions={totalEntries > 0}
+          transactionCount={totalEntries}
         />
         <form action={createTransactionWithExtraData} className='mt-4'>
           <TransactionForm
