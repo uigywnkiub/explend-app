@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import {
   PiArrowCircleDownFill,
   PiArrowCircleUpFill,
+  PiCaretDown,
   PiCheckCircle,
   PiCheckCircleFill,
   PiWarningCircle,
@@ -123,6 +124,8 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
     <Card
       className={cn(
         'p-2 shadow-xs',
+        hasTransactions &&
+          'rounded-medium focus-visible:ring-primary cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         isShowTotals && isTotalLoaded
           ? isPositiveBalance
             ? 'from-success/10 to-content1 bg-radial'
@@ -131,6 +134,11 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
         isShowTotals && isTotalLoaded && isAmountHidden && 'bg-default/50',
       )}
       shadow='none'
+      isPressable={hasTransactions}
+      allowTextSelectionOnPress
+      aria-expanded={isShowTotals}
+      aria-label={isShowTotals ? 'Hide Details' : 'Show Details'}
+      onPress={onChangeInfo}
     >
       <div className='pointer-events-none absolute -inset-px opacity-0' />
       <CardHeader className='flex flex-col items-center justify-between gap-4 px-2 md:px-4'>
@@ -138,14 +146,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
           content={isShowTotals ? 'Totals' : 'Balance'}
           placement='bottom'
         >
-          <div
-            role='button'
-            className={cn(
-              'text-center text-xl',
-              hasTransactions && 'cursor-pointer',
-            )}
-            onClick={onChangeInfo}
-          >
+          <div className='text-center text-xl'>
             <AnimatedGreeting message={greetingMsg} />
             {isShowTotals ? (
               <>
@@ -202,12 +203,28 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                 {currency.code}
               </motion.p>
             )}
+            {hasTransactions && (
+              <span className='text-primary-500 mt-1 inline-flex items-center gap-1 text-xs font-medium'>
+                {isShowTotals ? 'Hide Details' : 'Show Details'}
+                <motion.span
+                  animate={{ rotate: isShowTotals ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  aria-hidden='true'
+                >
+                  <PiCaretDown size={14} />
+                </motion.span>
+              </span>
+            )}
           </div>
         </Tooltip>
         {isShowTotals && isTotalLoaded && weeklySpend && (
-          <div className='w-full min-w-0 self-stretch'>
+          <div
+            className='w-full min-w-0 self-stretch'
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className='flex items-center justify-between gap-3 px-2 md:px-4'>
-              <div className='text-left'>
+              <div className='cursor-text text-left select-text'>
                 <p className='text-default-500 text-sm'>
                   Current spend this week
                 </p>
@@ -218,7 +235,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
               </div>
               <div
                 className={cn(
-                  'flex max-w-48 items-center gap-1.5 text-xs',
+                  'flex max-w-48 cursor-text items-center gap-1.5 text-xs select-text',
                   weeklySpend.previousWeekSpend === null
                     ? 'text-default-500'
                     : weeklySpend.previousWeekSpend >=
@@ -279,14 +296,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                 </span>
               </div>
             </div>
-            <div className='text-default-500 -mt-1 flex justify-end gap-3 px-2 text-xs md:px-4'>
-              <span className='flex items-center gap-1'>
-                <span
-                  className='h-0.5 w-4'
-                  style={{ backgroundColor: SPEND_CHART_COLOR }}
-                />
-                This week
-              </span>
+            <div className='text-default-500 -mt-1 flex cursor-text justify-end gap-3 px-2 text-xs select-text md:px-4'>
               {weeklySpend.previousWeekSpend !== null && (
                 <span className='flex items-center gap-1'>
                   <span
@@ -296,6 +306,13 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                   Last week
                 </span>
               )}
+              <span className='flex items-center gap-1'>
+                <span
+                  className='h-0.5 w-4'
+                  style={{ backgroundColor: SPEND_CHART_COLOR }}
+                />
+                This week
+              </span>
             </div>
             <div
               className='h-40 w-full min-w-0'
@@ -366,7 +383,7 @@ function BalanceCard({ user, balance, currency, hasTransactions }: TProps) {
                       if (!active || !payload?.length) return null
 
                       return (
-                        <div className='rounded-medium bg-background/90 p-1.5 drop-shadow-md'>
+                        <div className='rounded-medium bg-background/90 p-1.5 text-left drop-shadow-md'>
                           <p className='mb-1 text-xs font-medium'>
                             {payload[0]?.payload.tooltipDateLabel}
                           </p>
