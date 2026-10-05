@@ -41,7 +41,7 @@ export default function PullToRefresh() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [isPulling, setIsPulling] = useState(false)
   const isRefreshingRef = useRef(false)
-  const hasReachedThresholdRef = useRef(false)
+  const hasStartedPullRef = useRef(false)
   const animationFrameRef = useRef<number | null>(null)
   const pendingPullDistanceRef = useRef(0)
   const startRef = useRef<{
@@ -56,13 +56,13 @@ export default function PullToRefresh() {
     const resetPull = () => {
       startRef.current = null
       distanceRef.current = 0
-      hasReachedThresholdRef.current = false
+      hasStartedPullRef.current = false
       setPullThreshold(0)
       setIsPulling(false)
       setPullDistance(0)
 
       if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current)
+        hasStartedPullRef.current = false
         animationFrameRef.current = null
       }
     }
@@ -90,7 +90,7 @@ export default function PullToRefresh() {
       }
       setPullThreshold(startRef.current.threshold)
       distanceRef.current = 0
-      hasReachedThresholdRef.current = false
+      hasStartedPullRef.current = false
     }
 
     const onTouchMove = (event: TouchEvent) => {
@@ -116,15 +116,12 @@ export default function PullToRefresh() {
 
       event.preventDefault()
       distanceRef.current = deltaY
-      const progress = Math.min(deltaY / start.threshold, 1)
       pendingPullDistanceRef.current = Math.min(deltaY, start.threshold)
       setIsPulling(true)
 
-      if (progress >= 1 && !hasReachedThresholdRef.current) {
-        hasReachedThresholdRef.current = true
+      if (!hasStartedPullRef.current) {
+        hasStartedPullRef.current = true
         haptic()
-      } else if (progress < 1) {
-        hasReachedThresholdRef.current = false
       }
 
       if (animationFrameRef.current === null) {
@@ -136,15 +133,19 @@ export default function PullToRefresh() {
     }
 
     const onTouchEnd = () => {
-      if (
-        startRef.current &&
-        distanceRef.current >= startRef.current.threshold &&
-        !isRefreshingRef.current
-      ) {
+      const start = startRef.current
+      const didPull = Boolean(start && distanceRef.current > 0)
+      const didReachThreshold = Boolean(
+        start && distanceRef.current >= start.threshold,
+      )
+
+      if (didReachThreshold && !isRefreshingRef.current) {
         haptic.confirm()
         isRefreshingRef.current = true
         setIsRefreshing(true)
         window.setTimeout(() => window.location.reload(), 220)
+      } else if (didPull && !isRefreshingRef.current) {
+        haptic.error()
       }
 
       resetPull()
