@@ -90,7 +90,7 @@ export default function PullToRefresh() {
         x: touch.clientX,
         y: touch.clientY,
         containers,
-        threshold: Math.round(window.innerHeight * 0.3),
+        threshold: Math.round(window.innerHeight * 0.1),
       }
       setPullThreshold(startRef.current.threshold)
       distanceRef.current = 0
