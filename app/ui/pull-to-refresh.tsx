@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { motion } from 'framer-motion'
-import { haptic } from 'ios-haptics'
 
 const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 8
 
@@ -42,7 +41,6 @@ export default function PullToRefresh() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [isPulling, setIsPulling] = useState(false)
   const isRefreshingRef = useRef(false)
-  const didPullRef = useRef(false)
   const animationFrameRef = useRef<number | null>(null)
   const pendingPullDistanceRef = useRef(0)
   const startRef = useRef<{
@@ -51,14 +49,12 @@ export default function PullToRefresh() {
     containers: HTMLElement[]
     threshold: number
   } | null>(null)
-  const distanceRef = useRef(0)
   const maxPullDistanceRef = useRef(0)
   const pullThresholdRef = useRef(0)
 
   useEffect(() => {
     const resetPull = () => {
       startRef.current = null
-      distanceRef.current = 0
       setPullThreshold(0)
       setIsPulling(false)
       setPullDistance(0)
@@ -75,12 +71,10 @@ export default function PullToRefresh() {
 
       if (event.touches.length !== 1) {
         resetPull()
-        didPullRef.current = false
 
         return
       }
 
-      didPullRef.current = false
       maxPullDistanceRef.current = 0
 
       const containers = getScrollContainers(event.target)
@@ -88,11 +82,10 @@ export default function PullToRefresh() {
         x: touch.clientX,
         y: touch.clientY,
         containers,
-        threshold: Math.round(window.innerHeight * 0.2),
+        threshold: Math.round(window.innerHeight * 0.05),
       }
       setPullThreshold(startRef.current.threshold)
       pullThresholdRef.current = startRef.current.threshold
-      distanceRef.current = 0
     }
 
     const onTouchMove = (event: TouchEvent) => {
@@ -118,8 +111,6 @@ export default function PullToRefresh() {
       }
 
       event.preventDefault()
-      didPullRef.current = true
-      distanceRef.current = deltaY
       maxPullDistanceRef.current = Math.max(maxPullDistanceRef.current, deltaY)
       pendingPullDistanceRef.current = Math.min(deltaY, start.threshold)
       setIsPulling(true)
@@ -141,33 +132,16 @@ export default function PullToRefresh() {
       if (progress >= 1 && !isRefreshingRef.current) {
         isRefreshingRef.current = true
         setIsRefreshing(true)
-        haptic.confirm()
-      } else if (progress >= 0.1 && !isRefreshingRef.current) {
-        haptic.error()
+        window.setTimeout(() => window.location.reload(), 220)
       }
 
       resetPull()
-      didPullRef.current = false
       maxPullDistanceRef.current = 0
       pullThresholdRef.current = 0
     }
 
     const onTouchCancel = () => {
-      const start = startRef.current
-      const distance = distanceRef.current
-      const didPull = didPullRef.current
-
-      if (
-        didPull &&
-        start &&
-        distance < start.threshold &&
-        !isRefreshingRef.current
-      ) {
-        haptic.error()
-      }
-
       resetPull()
-      didPullRef.current = false
       maxPullDistanceRef.current = 0
       pullThresholdRef.current = 0
     }
