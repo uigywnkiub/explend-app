@@ -53,6 +53,7 @@ export default function PullToRefresh() {
   } | null>(null)
   const distanceRef = useRef(0)
   const maxPullDistanceRef = useRef(0)
+  const pullThresholdRef = useRef(0)
 
   useEffect(() => {
     const resetPull = () => {
@@ -69,6 +70,9 @@ export default function PullToRefresh() {
     }
 
     const onTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0]
+      pullThresholdRef.current = 0
+
       if (event.touches.length !== 1) {
         resetPull()
         didPullRef.current = false
@@ -76,7 +80,6 @@ export default function PullToRefresh() {
         return
       }
 
-      const touch = event.touches[0]
       didPullRef.current = false
       maxPullDistanceRef.current = 0
 
@@ -94,14 +97,16 @@ export default function PullToRefresh() {
         threshold: Math.round(window.innerHeight * 0.2),
       }
       setPullThreshold(startRef.current.threshold)
+      pullThresholdRef.current = startRef.current.threshold
       distanceRef.current = 0
     }
 
     const onTouchMove = (event: TouchEvent) => {
-      if (event.touches.length !== 1 || isRefreshingRef.current) return
-
       const touch = event.touches[0]
       const start = startRef.current
+
+      if (event.touches.length !== 1 || isRefreshingRef.current) return
+
       if (!start) return
       const deltaY = touch.clientY - start.y
       const deltaX = touch.clientX - start.x
@@ -136,7 +141,8 @@ export default function PullToRefresh() {
     const onTouchEnd = () => {
       const start = startRef.current
       const maxPullDistance = maxPullDistanceRef.current
-      const progress = start ? maxPullDistance / start.threshold : 0
+      const threshold = start?.threshold ?? pullThresholdRef.current
+      const progress = threshold > 0 ? maxPullDistance / threshold : 0
 
       if (progress >= 1 && !isRefreshingRef.current) {
         haptic.confirm()
@@ -150,6 +156,7 @@ export default function PullToRefresh() {
       resetPull()
       didPullRef.current = false
       maxPullDistanceRef.current = 0
+      pullThresholdRef.current = 0
     }
 
     const onTouchCancel = () => {
@@ -169,6 +176,7 @@ export default function PullToRefresh() {
       resetPull()
       didPullRef.current = false
       maxPullDistanceRef.current = 0
+      pullThresholdRef.current = 0
     }
 
     document.addEventListener('touchstart', onTouchStart, {
