@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 
+import { motion } from 'framer-motion'
 import { haptic } from 'ios-haptics'
 
 const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 8
@@ -78,7 +79,7 @@ export default function PullToRefresh() {
       const touch = event.touches[0]
       didPullRef.current = false
 
-      if (touch.clientY > window.innerHeight * 0.1) {
+      if (touch.clientY > window.innerHeight * 0.3) {
         resetPull()
 
         return
@@ -217,12 +218,22 @@ export default function PullToRefresh() {
   }, [isPulling, pullProgress])
 
   return (
-    <div
+    <motion.div
       aria-live='polite'
-      className={`bg-content1 shadow-medium fixed left-1/2 z-100 flex w-max items-center rounded-full py-2 pr-4 pl-9 text-sm transition-[opacity,transform] ease-out ${isPulling ? 'duration-0' : 'duration-200'} ${isVisible ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+      className={`bg-content1 shadow-medium fixed left-1/2 z-100 flex w-max -translate-x-1/2 items-center rounded-full py-2 pr-4 pl-9 text-sm ${isVisible ? '' : 'pointer-events-none'}`}
+      initial={{ opacity: 0, y: 0 }}
+      animate={{ opacity: isVisible ? 1 : 0, y: pullDistance }}
+      transition={{
+        y: {
+          type: 'spring',
+          stiffness: isPulling ? 750 : 450,
+          damping: isPulling ? 65 : 38,
+          mass: 0.45,
+        },
+        opacity: { duration: 0.15, ease: 'easeOut' },
+      }}
       style={{
         top: 'max(0.75rem, env(safe-area-inset-top))',
-        transform: `translate(-50%, ${pullDistance}px)`,
         zIndex: 2147483647,
       }}
       role='status'
@@ -241,16 +252,24 @@ export default function PullToRefresh() {
           strokeOpacity='0.2'
           strokeWidth='2'
         />
-        <circle
+        <motion.circle
           cx='10'
           cy='10'
           r='8'
           fill='none'
           stroke='currentColor'
           strokeDasharray={CIRCLE_CIRCUMFERENCE}
-          strokeDashoffset={CIRCLE_CIRCUMFERENCE * (1 - circleProgress)}
+          animate={{
+            strokeDashoffset: CIRCLE_CIRCUMFERENCE * (1 - circleProgress),
+          }}
           strokeLinecap='round'
           strokeWidth='2'
+          transition={{
+            type: 'spring',
+            stiffness: 360,
+            damping: 30,
+            mass: 0.4,
+          }}
         />
       </svg>
       <span className='text-center'>
@@ -260,6 +279,6 @@ export default function PullToRefresh() {
             ? 'Release to refresh'
             : 'Pull to refresh'}
       </span>
-    </div>
+    </motion.div>
   )
 }
