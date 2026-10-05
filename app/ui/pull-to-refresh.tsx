@@ -44,7 +44,6 @@ export default function PullToRefresh() {
   const hasStartedHapticRef = useRef(false)
   const animationFrameRef = useRef<number | null>(null)
   const pendingPullDistanceRef = useRef(0)
-  const hapticStartRef = useRef<{ x: number; y: number } | null>(null)
   const startRef = useRef<{
     x: number
     y: number
@@ -70,14 +69,12 @@ export default function PullToRefresh() {
     const onTouchStart = (event: TouchEvent) => {
       if (event.touches.length !== 1) {
         resetPull()
-        hapticStartRef.current = null
         hasStartedHapticRef.current = false
 
         return
       }
 
       const touch = event.touches[0]
-      hapticStartRef.current = { x: touch.clientX, y: touch.clientY }
       hasStartedHapticRef.current = false
 
       if (touch.clientY > window.innerHeight * 0.1) {
@@ -101,20 +98,6 @@ export default function PullToRefresh() {
       if (event.touches.length !== 1 || isRefreshingRef.current) return
 
       const touch = event.touches[0]
-      const hapticStart = hapticStartRef.current
-      if (hapticStart) {
-        const deltaY = touch.clientY - hapticStart.y
-        const deltaX = touch.clientX - hapticStart.x
-        if (
-          deltaY > 0 &&
-          Math.abs(deltaY) >= Math.abs(deltaX) &&
-          !hasStartedHapticRef.current
-        ) {
-          hasStartedHapticRef.current = true
-          haptic()
-        }
-      }
-
       const start = startRef.current
       if (!start) return
       const deltaY = touch.clientY - start.y
@@ -136,6 +119,11 @@ export default function PullToRefresh() {
       distanceRef.current = deltaY
       pendingPullDistanceRef.current = Math.min(deltaY, start.threshold)
       setIsPulling(true)
+
+      if (!hasStartedHapticRef.current) {
+        hasStartedHapticRef.current = true
+        haptic()
+      }
 
       if (animationFrameRef.current === null) {
         animationFrameRef.current = requestAnimationFrame(() => {
@@ -162,14 +150,12 @@ export default function PullToRefresh() {
       }
 
       resetPull()
-      hapticStartRef.current = null
       hasStartedHapticRef.current = false
     }
 
     const onTouchCancel = () => {
       if (hasStartedHapticRef.current) haptic.error()
       resetPull()
-      hapticStartRef.current = null
       hasStartedHapticRef.current = false
     }
 
