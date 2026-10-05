@@ -52,9 +52,11 @@ export default function PullToRefresh() {
     threshold: number
   } | null>(null)
   const distanceRef = useRef(0)
+  const maxPullDistanceRef = useRef(0)
 
   useEffect(() => {
     const resetPull = () => {
+      startRef.current = null
       distanceRef.current = 0
       setPullThreshold(0)
       setIsPulling(false)
@@ -76,6 +78,7 @@ export default function PullToRefresh() {
 
       const touch = event.touches[0]
       didPullRef.current = false
+      maxPullDistanceRef.current = 0
 
       if (touch.clientY > window.innerHeight * 0.1) {
         resetPull()
@@ -118,6 +121,7 @@ export default function PullToRefresh() {
       event.preventDefault()
       didPullRef.current = true
       distanceRef.current = deltaY
+      maxPullDistanceRef.current = Math.max(maxPullDistanceRef.current, deltaY)
       pendingPullDistanceRef.current = Math.min(deltaY, start.threshold)
       setIsPulling(true)
 
@@ -131,8 +135,8 @@ export default function PullToRefresh() {
 
     const onTouchEnd = () => {
       const start = startRef.current
-      const distance = distanceRef.current
-      const progress = start ? distance / start.threshold : 0
+      const maxPullDistance = maxPullDistanceRef.current
+      const progress = start ? maxPullDistance / start.threshold : 0
 
       if (progress >= 1 && !isRefreshingRef.current) {
         haptic.confirm()
@@ -145,6 +149,7 @@ export default function PullToRefresh() {
 
       resetPull()
       didPullRef.current = false
+      maxPullDistanceRef.current = 0
     }
 
     const onTouchCancel = () => {
@@ -163,6 +168,7 @@ export default function PullToRefresh() {
 
       resetPull()
       didPullRef.current = false
+      maxPullDistanceRef.current = 0
     }
 
     document.addEventListener('touchstart', onTouchStart, {
