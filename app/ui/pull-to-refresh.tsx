@@ -49,12 +49,13 @@ export default function PullToRefresh() {
     containers: HTMLElement[]
     threshold: number
   } | null>(null)
-  const maxPullDistanceRef = useRef(0)
+  const distanceRef = useRef(0)
   const pullThresholdRef = useRef(0)
 
   useEffect(() => {
     const resetPull = () => {
       startRef.current = null
+      distanceRef.current = 0
       setPullThreshold(0)
       setIsPulling(false)
       setPullDistance(0)
@@ -75,7 +76,7 @@ export default function PullToRefresh() {
         return
       }
 
-      maxPullDistanceRef.current = 0
+      distanceRef.current = 0
 
       if (touch.clientY > window.innerHeight * 0.05) {
         resetPull()
@@ -117,7 +118,7 @@ export default function PullToRefresh() {
       }
 
       event.preventDefault()
-      maxPullDistanceRef.current = Math.max(maxPullDistanceRef.current, deltaY)
+      distanceRef.current = deltaY
       pendingPullDistanceRef.current = Math.min(deltaY, start.threshold)
       setIsPulling(true)
 
@@ -131,9 +132,9 @@ export default function PullToRefresh() {
 
     const onTouchEnd = () => {
       const start = startRef.current
-      const maxPullDistance = maxPullDistanceRef.current
+      const distance = distanceRef.current
       const threshold = start?.threshold ?? pullThresholdRef.current
-      const progress = threshold > 0 ? maxPullDistance / threshold : 0
+      const progress = threshold > 0 ? distance / threshold : 0
 
       if (progress >= 1 && !isRefreshingRef.current) {
         isRefreshingRef.current = true
@@ -142,13 +143,11 @@ export default function PullToRefresh() {
       }
 
       resetPull()
-      maxPullDistanceRef.current = 0
       pullThresholdRef.current = 0
     }
 
     const onTouchCancel = () => {
       resetPull()
-      maxPullDistanceRef.current = 0
       pullThresholdRef.current = 0
     }
 
