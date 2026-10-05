@@ -187,7 +187,7 @@ export default function PullToRefresh() {
   return (
     <motion.div
       aria-live='polite'
-      className={`bg-content1 shadow-medium fixed left-1/2 z-100 flex w-max -translate-x-1/2 items-center rounded-full py-2 pr-4 pl-9 text-sm ${isVisible ? '' : 'pointer-events-none'}`}
+      className={`bg-content1 shadow-medium rounded-medium fixed left-1/2 z-100 flex w-max -translate-x-1/2 items-center py-2 pr-4 pl-9 text-sm ${isVisible ? '' : 'pointer-events-none'}`}
       initial={{ opacity: 0, y: 0 }}
       animate={{ opacity: isVisible ? 1 : 0, y: pullDistance }}
       transition={{
