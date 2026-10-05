@@ -43,7 +43,6 @@ export default function PullToRefresh() {
   const [isPulling, setIsPulling] = useState(false)
   const isRefreshingRef = useRef(false)
   const didPullRef = useRef(false)
-  const reachedThresholdRef = useRef(false)
   const animationFrameRef = useRef<number | null>(null)
   const pendingPullDistanceRef = useRef(0)
   const startRef = useRef<{
@@ -90,11 +89,10 @@ export default function PullToRefresh() {
         x: touch.clientX,
         y: touch.clientY,
         containers,
-        threshold: Math.round(window.innerHeight * 0.1),
+        threshold: Math.round(window.innerHeight * 0.2),
       }
       setPullThreshold(startRef.current.threshold)
       distanceRef.current = 0
-      reachedThresholdRef.current = false
     }
 
     const onTouchMove = (event: TouchEvent) => {
@@ -141,6 +139,7 @@ export default function PullToRefresh() {
       )
 
       if (didReachThreshold && !isRefreshingRef.current) {
+        haptic.confirm()
         isRefreshingRef.current = true
         setIsRefreshing(true)
         window.setTimeout(() => window.location.reload(), 220)
@@ -155,7 +154,6 @@ export default function PullToRefresh() {
 
       resetPull()
       didPullRef.current = false
-      reachedThresholdRef.current = false
     }
 
     const onTouchCancel = () => {
@@ -174,7 +172,6 @@ export default function PullToRefresh() {
 
       resetPull()
       didPullRef.current = false
-      reachedThresholdRef.current = false
     }
 
     document.addEventListener('touchstart', onTouchStart, {
@@ -209,13 +206,6 @@ export default function PullToRefresh() {
   const pullProgress =
     pullThreshold > 0 ? Math.min(pullDistance / pullThreshold, 1) : 0
   const circleProgress = isRefreshing ? 0.28 : pullProgress
-
-  useEffect(() => {
-    if (isPulling && pullProgress >= 1 && !reachedThresholdRef.current) {
-      reachedThresholdRef.current = true
-      haptic.confirm()
-    }
-  }, [isPulling, pullProgress])
 
   return (
     <motion.div
