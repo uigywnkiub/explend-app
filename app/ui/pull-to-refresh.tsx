@@ -141,10 +141,7 @@ export default function PullToRefresh() {
       if (progress >= 1 && !isRefreshingRef.current) {
         isRefreshingRef.current = true
         setIsRefreshing(true)
-        window.setTimeout(() => {
-          haptic.confirm()
-          window.location.reload()
-        }, 220)
+        haptic.confirm()
       } else if (progress >= 0.1 && !isRefreshingRef.current) {
         haptic.error()
       }
@@ -252,6 +249,9 @@ export default function PullToRefresh() {
           strokeDasharray={CIRCLE_CIRCUMFERENCE}
           animate={{
             strokeDashoffset: CIRCLE_CIRCUMFERENCE * (1 - circleProgress),
+          }}
+          onAnimationComplete={() => {
+            if (isRefreshingRef.current) window.location.reload()
           }}
           strokeLinecap='round'
           strokeWidth='2'
