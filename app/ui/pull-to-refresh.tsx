@@ -83,12 +83,6 @@ export default function PullToRefresh() {
       didPullRef.current = false
       maxPullDistanceRef.current = 0
 
-      if (touch.clientY > window.innerHeight * 0.1) {
-        resetPull()
-
-        return
-      }
-
       const containers = getScrollContainers(event.target)
       startRef.current = {
         x: touch.clientX,
@@ -145,10 +139,12 @@ export default function PullToRefresh() {
       const progress = threshold > 0 ? maxPullDistance / threshold : 0
 
       if (progress >= 1 && !isRefreshingRef.current) {
-        haptic.confirm()
         isRefreshingRef.current = true
         setIsRefreshing(true)
-        window.setTimeout(() => window.location.reload(), 220)
+        window.setTimeout(() => {
+          haptic.confirm()
+          window.location.reload()
+        }, 220)
       } else if (progress >= 0.1 && !isRefreshingRef.current) {
         haptic.error()
       }
