@@ -224,9 +224,6 @@ export default function PullToRefresh() {
           animate={{
             strokeDashoffset: CIRCLE_CIRCUMFERENCE * (1 - circleProgress),
           }}
-          onAnimationComplete={() => {
-            if (isRefreshingRef.current) window.location.reload()
-          }}
           strokeLinecap='round'
           strokeWidth='2'
           transition={{
