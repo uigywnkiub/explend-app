@@ -132,19 +132,15 @@ export default function PullToRefresh() {
     const onTouchEnd = () => {
       const start = startRef.current
       const distance = distanceRef.current
-      const didPull = didPullRef.current
+      const progress = start ? distance / start.threshold : 0
 
-      if (didPull && start && !isRefreshingRef.current) {
-        const pullRatio = distance / start.threshold
-
-        if (pullRatio >= 1) {
-          haptic.confirm()
-          isRefreshingRef.current = true
-          setIsRefreshing(true)
-          window.setTimeout(() => window.location.reload(), 220)
-        } else if (pullRatio >= 0.1) {
-          haptic.error()
-        }
+      if (progress >= 1 && !isRefreshingRef.current) {
+        haptic.confirm()
+        isRefreshingRef.current = true
+        setIsRefreshing(true)
+        window.setTimeout(() => window.location.reload(), 220)
+      } else if (progress >= 0.1 && !isRefreshingRef.current) {
+        haptic.error()
       }
 
       resetPull()
