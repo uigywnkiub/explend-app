@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-import { useRouter } from 'next/navigation'
-
 import { haptic } from 'ios-haptics'
 
 const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 8
@@ -38,7 +36,6 @@ function getScrollContainers(target: EventTarget | null): HTMLElement[] {
 }
 
 export default function PullToRefresh() {
-  const router = useRouter()
   const [pullDistance, setPullDistance] = useState(0)
   const [pullThreshold, setPullThreshold] = useState(0)
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -54,7 +51,6 @@ export default function PullToRefresh() {
     threshold: number
   } | null>(null)
   const distanceRef = useRef(0)
-  const refreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     const resetPull = () => {
@@ -72,20 +68,19 @@ export default function PullToRefresh() {
     }
 
     const onTouchStart = (event: TouchEvent) => {
-      if (
-        event.touches.length !== 1 ||
-        (event.target instanceof Element &&
-          (event.target.closest('[role="complementary"]') ||
-            event.target.closest(
-              'input, textarea, select, [contenteditable="true"]',
-            )))
-      ) {
+      if (event.touches.length !== 1) {
         resetPull()
 
         return
       }
 
       const touch = event.touches[0]
+      if (touch.clientY > window.innerHeight * 0.1) {
+        resetPull()
+
+        return
+      }
+
       const containers = getScrollContainers(event.target)
       startRef.current = {
         x: touch.clientX,
@@ -149,12 +144,7 @@ export default function PullToRefresh() {
         haptic.confirm()
         isRefreshingRef.current = true
         setIsRefreshing(true)
-        router.refresh()
-        refreshTimeoutRef.current = setTimeout(() => {
-          isRefreshingRef.current = false
-          setIsRefreshing(false)
-          refreshTimeoutRef.current = null
-        }, 1200)
+        window.setTimeout(() => window.location.reload(), 220)
       }
 
       resetPull()
@@ -173,9 +163,8 @@ export default function PullToRefresh() {
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current)
       }
-      if (refreshTimeoutRef.current) clearTimeout(refreshTimeoutRef.current)
     }
-  }, [router])
+  }, [])
 
   const isVisible = pullDistance > 8 || isRefreshing
   const pullProgress =
