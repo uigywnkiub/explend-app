@@ -79,7 +79,7 @@ export default function PullToRefresh() {
       const touch = event.touches[0]
       didPullRef.current = false
 
-      if (touch.clientY > window.innerHeight * 0.3) {
+      if (touch.clientY > window.innerHeight * 0.1) {
         resetPull()
 
         return
