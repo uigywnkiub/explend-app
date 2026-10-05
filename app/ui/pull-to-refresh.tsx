@@ -158,6 +158,19 @@ export default function PullToRefresh() {
     }
 
     const onTouchCancel = () => {
+      const start = startRef.current
+      const distance = distanceRef.current
+      const didPull = didPullRef.current
+
+      if (
+        didPull &&
+        start &&
+        distance < start.threshold &&
+        !isRefreshingRef.current
+      ) {
+        haptic.error()
+      }
+
       resetPull()
       didPullRef.current = false
       reachedThresholdRef.current = false
