@@ -77,12 +77,18 @@ export default function PullToRefresh() {
 
       maxPullDistanceRef.current = 0
 
+      if (touch.clientY > window.innerHeight * 0.05) {
+        resetPull()
+
+        return
+      }
+
       const containers = getScrollContainers(event.target)
       startRef.current = {
         x: touch.clientX,
         y: touch.clientY,
         containers,
-        threshold: Math.round(window.innerHeight * 0.05),
+        threshold: Math.round(window.innerHeight * 0.2),
       }
       setPullThreshold(startRef.current.threshold)
       pullThresholdRef.current = startRef.current.threshold
