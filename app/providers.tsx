@@ -20,6 +20,7 @@ import { getResolvedToastCfg, TOAST_POSITION } from '@/config/constants/toast'
 
 import { getBooleanFromLocalStorage, userLocale } from './lib/helpers'
 import { registerPushSubscription } from './lib/push-subscription'
+import PullToRefresh from './ui/pull-to-refresh'
 
 const DynamicNext13ProgressBar = dynamic(
   () => import('next13-progressbar').then((e) => e.Next13ProgressBar),
@@ -50,6 +51,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         position={TOAST_POSITION}
         toastOptions={getResolvedToastCfg(theme) as DefaultToastOptions}
       />
+      <PullToRefresh />
       {children}
       <DynamicNext13ProgressBar
         height='3px'
