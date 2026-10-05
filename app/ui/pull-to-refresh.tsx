@@ -41,9 +41,10 @@ export default function PullToRefresh() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [isPulling, setIsPulling] = useState(false)
   const isRefreshingRef = useRef(false)
-  const hasStartedPullRef = useRef(false)
+  const hasStartedHapticRef = useRef(false)
   const animationFrameRef = useRef<number | null>(null)
   const pendingPullDistanceRef = useRef(0)
+  const hapticStartRef = useRef<{ x: number; y: number } | null>(null)
   const startRef = useRef<{
     x: number
     y: number
@@ -56,7 +57,6 @@ export default function PullToRefresh() {
     const resetPull = () => {
       startRef.current = null
       distanceRef.current = 0
-      hasStartedPullRef.current = false
       setPullThreshold(0)
       setIsPulling(false)
       setPullDistance(0)
@@ -70,11 +70,16 @@ export default function PullToRefresh() {
     const onTouchStart = (event: TouchEvent) => {
       if (event.touches.length !== 1) {
         resetPull()
+        hapticStartRef.current = null
+        hasStartedHapticRef.current = false
 
         return
       }
 
       const touch = event.touches[0]
+      hapticStartRef.current = { x: touch.clientX, y: touch.clientY }
+      hasStartedHapticRef.current = false
+
       if (touch.clientY > window.innerHeight * 0.1) {
         resetPull()
 
@@ -90,15 +95,28 @@ export default function PullToRefresh() {
       }
       setPullThreshold(startRef.current.threshold)
       distanceRef.current = 0
-      hasStartedPullRef.current = false
     }
 
     const onTouchMove = (event: TouchEvent) => {
-      const start = startRef.current
-      if (!start || event.touches.length !== 1 || isRefreshingRef.current)
-        return
+      if (event.touches.length !== 1 || isRefreshingRef.current) return
 
       const touch = event.touches[0]
+      const hapticStart = hapticStartRef.current
+      if (hapticStart) {
+        const deltaY = touch.clientY - hapticStart.y
+        const deltaX = touch.clientX - hapticStart.x
+        if (
+          deltaY > 0 &&
+          Math.abs(deltaY) >= Math.abs(deltaX) &&
+          !hasStartedHapticRef.current
+        ) {
+          hasStartedHapticRef.current = true
+          haptic()
+        }
+      }
+
+      const start = startRef.current
+      if (!start) return
       const deltaY = touch.clientY - start.y
       const deltaX = touch.clientX - start.x
 
@@ -119,11 +137,6 @@ export default function PullToRefresh() {
       pendingPullDistanceRef.current = Math.min(deltaY, start.threshold)
       setIsPulling(true)
 
-      if (!hasStartedPullRef.current) {
-        hasStartedPullRef.current = true
-        haptic()
-      }
-
       if (animationFrameRef.current === null) {
         animationFrameRef.current = requestAnimationFrame(() => {
           setPullDistance(pendingPullDistanceRef.current)
@@ -134,26 +147,30 @@ export default function PullToRefresh() {
 
     const onTouchEnd = () => {
       const start = startRef.current
-      const didPull = Boolean(start && distanceRef.current > 0)
       const didReachThreshold = Boolean(
         start && distanceRef.current >= start.threshold,
       )
+      const didStartHaptic = hasStartedHapticRef.current
 
       if (didReachThreshold && !isRefreshingRef.current) {
         haptic.confirm()
         isRefreshingRef.current = true
         setIsRefreshing(true)
         window.setTimeout(() => window.location.reload(), 220)
-      } else if (didPull && !isRefreshingRef.current) {
+      } else if (didStartHaptic && !isRefreshingRef.current) {
         haptic.error()
       }
 
       resetPull()
+      hapticStartRef.current = null
+      hasStartedHapticRef.current = false
     }
 
     const onTouchCancel = () => {
-      if (hasStartedPullRef.current) haptic.error()
+      if (hasStartedHapticRef.current) haptic.error()
       resetPull()
+      hapticStartRef.current = null
+      hasStartedHapticRef.current = false
     }
 
     window.addEventListener('touchstart', onTouchStart, { passive: true })
