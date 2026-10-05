@@ -62,7 +62,7 @@ export default function PullToRefresh() {
       setPullDistance(0)
 
       if (animationFrameRef.current !== null) {
-        hasStartedPullRef.current = false
+        cancelAnimationFrame(animationFrameRef.current)
         animationFrameRef.current = null
       }
     }
@@ -151,16 +151,21 @@ export default function PullToRefresh() {
       resetPull()
     }
 
+    const onTouchCancel = () => {
+      if (hasStartedPullRef.current) haptic.error()
+      resetPull()
+    }
+
     window.addEventListener('touchstart', onTouchStart, { passive: true })
     window.addEventListener('touchmove', onTouchMove, { passive: false })
     window.addEventListener('touchend', onTouchEnd, { passive: true })
-    window.addEventListener('touchcancel', resetPull, { passive: true })
+    window.addEventListener('touchcancel', onTouchCancel, { passive: true })
 
     return () => {
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchmove', onTouchMove)
       window.removeEventListener('touchend', onTouchEnd)
-      window.removeEventListener('touchcancel', resetPull)
+      window.removeEventListener('touchcancel', onTouchCancel)
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current)
       }
