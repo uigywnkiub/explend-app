@@ -123,11 +123,6 @@ export default function PullToRefresh() {
       pendingPullDistanceRef.current = Math.min(deltaY, start.threshold)
       setIsPulling(true)
 
-      if (deltaY >= start.threshold && !reachedThresholdRef.current) {
-        reachedThresholdRef.current = true
-        haptic.confirm()
-      }
-
       if (animationFrameRef.current === null) {
         animationFrameRef.current = requestAnimationFrame(() => {
           setPullDistance(pendingPullDistanceRef.current)
@@ -148,7 +143,12 @@ export default function PullToRefresh() {
         isRefreshingRef.current = true
         setIsRefreshing(true)
         window.setTimeout(() => window.location.reload(), 220)
-      } else if (distance > 0 && !isRefreshingRef.current) {
+      } else if (
+        didPull &&
+        start &&
+        distance < start.threshold &&
+        !isRefreshingRef.current
+      ) {
         haptic.error()
       }
 
@@ -195,6 +195,13 @@ export default function PullToRefresh() {
   const pullProgress =
     pullThreshold > 0 ? Math.min(pullDistance / pullThreshold, 1) : 0
   const circleProgress = isRefreshing ? 0.28 : pullProgress
+
+  useEffect(() => {
+    if (isPulling && pullProgress >= 1 && !reachedThresholdRef.current) {
+      reachedThresholdRef.current = true
+      haptic.confirm()
+    }
+  }, [isPulling, pullProgress])
 
   return (
     <div
