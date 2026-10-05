@@ -173,16 +173,28 @@ export default function PullToRefresh() {
       hasStartedHapticRef.current = false
     }
 
-    window.addEventListener('touchstart', onTouchStart, { passive: true })
-    window.addEventListener('touchmove', onTouchMove, { passive: false })
-    window.addEventListener('touchend', onTouchEnd, { passive: true })
-    window.addEventListener('touchcancel', onTouchCancel, { passive: true })
+    document.addEventListener('touchstart', onTouchStart, {
+      capture: true,
+      passive: true,
+    })
+    document.addEventListener('touchmove', onTouchMove, {
+      capture: true,
+      passive: false,
+    })
+    document.addEventListener('touchend', onTouchEnd, {
+      capture: true,
+      passive: true,
+    })
+    document.addEventListener('touchcancel', onTouchCancel, {
+      capture: true,
+      passive: true,
+    })
 
     return () => {
-      window.removeEventListener('touchstart', onTouchStart)
-      window.removeEventListener('touchmove', onTouchMove)
-      window.removeEventListener('touchend', onTouchEnd)
-      window.removeEventListener('touchcancel', onTouchCancel)
+      document.removeEventListener('touchstart', onTouchStart, true)
+      document.removeEventListener('touchmove', onTouchMove, true)
+      document.removeEventListener('touchend', onTouchEnd, true)
+      document.removeEventListener('touchcancel', onTouchCancel, true)
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current)
       }
