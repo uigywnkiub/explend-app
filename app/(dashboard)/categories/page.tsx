@@ -8,11 +8,11 @@ import {
   getAuthSession,
   getCachedUserCategories,
   getCountDocuments,
-} from '../lib/actions'
-import { getUserCategories } from '../lib/data'
-import Categories from '../ui/categories/categories'
-import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
+} from '../../lib/actions'
+import { getUserCategories } from '../../lib/data'
+import Categories from '../../ui/categories/categories'
+import NoTransactionsPlug from '../../ui/no-transactions-plug'
+import WithSidebarContent from '../../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.CATEGORIES,

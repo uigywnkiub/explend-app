@@ -3,14 +3,12 @@ import Link from 'next/link'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import WithSidebar from '../ui/sidebar/with-sidebar'
-
 export const metadata: Metadata = {
   title: NAV_TITLE.ISSUE,
 }
 
 export default function Page() {
-  const content = (
+  return (
     <>
       <h1 className='mb-4 text-center text-2xl font-semibold md:mb-8'>
         {NAV_TITLE.ISSUE}
@@ -30,6 +28,4 @@ export default function Page() {
       </div>
     </>
   )
-
-  return <WithSidebar contentNearby={content} />
 }

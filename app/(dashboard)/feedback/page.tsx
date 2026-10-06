@@ -5,10 +5,10 @@ import { COOKIE_CONFETTI, COOKIE_FEEDBACK } from '@/config/constants/cookies'
 import { APP_NAME } from '@/config/constants/main'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import { sendFeedback } from '../lib/actions'
-import ConfettiRain from '../ui/feedback/confetti-rain'
-import Feedback from '../ui/feedback/feedback'
-import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
+import { sendFeedback } from '../../lib/actions'
+import ConfettiRain from '../../ui/feedback/confetti-rain'
+import Feedback from '../../ui/feedback/feedback'
+import WithSidebarContent from '../../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.FEEDBACK,

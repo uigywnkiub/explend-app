@@ -7,10 +7,10 @@ import {
   getCurrency,
   getMonthlyReportTransactions,
   getSalaryDay,
-} from '../lib/actions'
-import MonthlyReport from '../ui/monthly-report/monthly-report'
-import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
+} from '../../lib/actions'
+import MonthlyReport from '../../ui/monthly-report/monthly-report'
+import NoTransactionsPlug from '../../ui/no-transactions-plug'
+import WithSidebarContent from '../../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.MONTHLY_REPORT,

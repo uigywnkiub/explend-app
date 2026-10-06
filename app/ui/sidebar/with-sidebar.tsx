@@ -32,9 +32,26 @@ export default function WithSidebar({
             </nav>
             <nav className={linkWrapper} aria-label='Bottom left menu'>
               <Navbar linksGroup='bottom' />
-              <Suspense fallback={<div className='h-8 w-full' />}>
-                <User />
-              </Suspense>
+              <div className='h-14 w-full shrink-0'>
+                <Suspense
+                  fallback={
+                    <div
+                      aria-hidden='true'
+                      className='flex h-full w-full items-center gap-3'
+                    >
+                      <div className='bg-default-200 h-10 w-10 shrink-0 animate-pulse rounded-full' />
+                      <div className='flex flex-1 flex-col gap-2'>
+                        <div className='bg-default-200 h-3 w-2/5 animate-pulse rounded' />
+                        <div className='bg-default-200 h-3 w-3/4 animate-pulse rounded' />
+                      </div>
+                    </div>
+                  }
+                >
+                  <div className='flex h-full w-full items-center'>
+                    <User />
+                  </div>
+                </Suspense>
+              </div>
             </nav>
           </div>
         </aside>

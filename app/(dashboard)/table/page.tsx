@@ -6,11 +6,11 @@ import {
   getAuthSession,
   getCurrency,
   getTableTransactions,
-} from '../lib/actions'
-import { cn } from '../lib/helpers'
-import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
-import TransactionTable from '../ui/table/transaction-table'
+} from '../../lib/actions'
+import { cn } from '../../lib/helpers'
+import NoTransactionsPlug from '../../ui/no-transactions-plug'
+import WithSidebarContent from '../../ui/sidebar/with-sidebar-content'
+import TransactionTable from '../../ui/table/transaction-table'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.TABLE,

@@ -34,8 +34,10 @@ function UserProfileInfo({ user, withoutPopover }: TProps) {
           src: user?.image || '',
         }}
         classNames={{
-          name: 'text-md md:text-sm',
-          description: 'text-sm md:text-tiny',
+          base: 'h-12 w-full items-center gap-3',
+          wrapper: 'min-w-0 flex-1 overflow-hidden',
+          name: 'text-md truncate md:text-sm',
+          description: 'text-sm truncate md:text-tiny',
         }}
       />
     )
@@ -46,7 +48,7 @@ function UserProfileInfo({ user, withoutPopover }: TProps) {
   return (
     <Popover>
       <PopoverTrigger>
-        <div className='cursor-pointer'>
+        <div className='flex h-12 w-full cursor-pointer items-center'>
           <User
             name={user?.name}
             description={user?.email}
@@ -59,8 +61,10 @@ function UserProfileInfo({ user, withoutPopover }: TProps) {
               src: user?.image || '',
             }}
             classNames={{
-              name: 'text-md md:text-sm',
-              description: 'text-sm md:text-tiny',
+              base: 'h-12 w-full items-center gap-3',
+              wrapper: 'min-w-0 flex-1 overflow-hidden',
+              name: 'text-md truncate md:text-sm',
+              description: 'text-sm truncate md:text-tiny',
             }}
           />
         </div>

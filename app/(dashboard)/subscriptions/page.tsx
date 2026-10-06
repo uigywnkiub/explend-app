@@ -9,11 +9,11 @@ import {
   getCurrency,
   getSubscriptions,
   getSubscriptionTransactions,
-} from '../lib/actions'
-import { getUserCategories } from '../lib/data'
-import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
-import Subscriptions from '../ui/subscriptions/subscriptions'
+} from '../../lib/actions'
+import { getUserCategories } from '../../lib/data'
+import NoTransactionsPlug from '../../ui/no-transactions-plug'
+import WithSidebarContent from '../../ui/sidebar/with-sidebar-content'
+import Subscriptions from '../../ui/subscriptions/subscriptions'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.SUBSCRIPTIONS,

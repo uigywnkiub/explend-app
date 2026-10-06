@@ -6,10 +6,10 @@ import {
   getAuthSession,
   getCachedCurrency,
   getCountDocuments,
-} from '../lib/actions'
-import Chart from '../ui/chart/chart'
-import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
+} from '../../lib/actions'
+import Chart from '../../ui/chart/chart'
+import NoTransactionsPlug from '../../ui/no-transactions-plug'
+import WithSidebarContent from '../../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.CHART,

@@ -15,29 +15,29 @@ import {
   getCachedTransactionLimit,
   getCachedTransactions,
   getCachedUserCategories,
-} from './lib/actions'
-import { getUserCategories } from './lib/data'
+} from '../lib/actions'
+import { getUserCategories } from '../lib/data'
 import {
   formatDate,
   getCategoryWithoutEmoji,
   pluralize,
   toLowerCase,
-} from './lib/helpers'
+} from '../lib/helpers'
 import type {
   TGroupedTransactions,
   TTotalsTransaction,
   TTransaction,
-} from './lib/types'
-import BalanceCardSection from './ui/home/balance-card-section'
-import CreateTestTransactions from './ui/home/create-test-transactions'
-import DeleteTestTransactions from './ui/home/delete-test-transactions'
-import Search from './ui/home/search'
-import SearchedTransactions from './ui/home/searched-transactions'
-import TransactionForm from './ui/home/transaction-form'
-import TransactionList from './ui/home/transaction-list'
-import NoTransactionsPlug from './ui/no-transactions-plug'
-import PaginationList from './ui/pagination/pagination-list'
-import WithSidebarContent from './ui/sidebar/with-sidebar-content'
+} from '../lib/types'
+import BalanceCardSection from '../ui/home/balance-card-section'
+import CreateTestTransactions from '../ui/home/create-test-transactions'
+import DeleteTestTransactions from '../ui/home/delete-test-transactions'
+import Search from '../ui/home/search'
+import SearchedTransactions from '../ui/home/searched-transactions'
+import TransactionForm from '../ui/home/transaction-form'
+import TransactionList from '../ui/home/transaction-list'
+import NoTransactionsPlug from '../ui/no-transactions-plug'
+import PaginationList from '../ui/pagination/pagination-list'
+import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: `${NAV_TITLE.HOME} | ${siteMeta.title}`,

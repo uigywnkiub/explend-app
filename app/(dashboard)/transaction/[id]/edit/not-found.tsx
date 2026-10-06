@@ -5,7 +5,6 @@ import { ROUTE } from '@/config/constants/routes'
 import ClientButton from '@/app/ui/client-button'
 import InfoText from '@/app/ui/info-text'
 import Logo from '@/app/ui/logo'
-import WithSidebar from '@/app/ui/sidebar/with-sidebar'
 
 export default function NotFound() {
   const content = (
@@ -27,5 +26,5 @@ export default function NotFound() {
     </main>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
 }

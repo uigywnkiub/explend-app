@@ -9,11 +9,11 @@ import {
   getCountDocuments,
   getCurrency,
   getRecentTransactionsForLimits,
-} from '../lib/actions'
-import { getUserCategories } from '../lib/data'
-import Limits from '../ui/limits/limits'
-import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
+} from '../../lib/actions'
+import { getUserCategories } from '../../lib/data'
+import Limits from '../../ui/limits/limits'
+import NoTransactionsPlug from '../../ui/no-transactions-plug'
+import WithSidebarContent from '../../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.LIMITS,
