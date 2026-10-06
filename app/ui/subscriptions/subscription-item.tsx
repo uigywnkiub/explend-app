@@ -232,6 +232,7 @@ function SubscriptionItem({
                 <Button
                   variant='light'
                   isIconOnly
+                  aria-label='Open subscription actions'
                   size='md'
                   className='md:size-10'
                   onPress={haptic}

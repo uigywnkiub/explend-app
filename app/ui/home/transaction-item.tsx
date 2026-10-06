@@ -201,6 +201,7 @@ Time: ${formatTime(t.createdAt)}`
                 <Button
                   variant='light'
                   isIconOnly
+                  aria-label='Open transaction actions'
                   size='md'
                   className='md:size-12'
                   onPress={haptic}

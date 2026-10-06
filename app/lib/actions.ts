@@ -665,13 +665,9 @@ export async function getRecentTransactionsForLimits(
     return TransactionModel.find({
       userId,
       createdAt: { $gte: startDate, $lt: endDate },
-    }).lean<TTransaction[]>({
-      transform: (doc) => {
-        if (!doc) return
-        delete doc._id
-        delete doc.__v
-      },
     })
+      .select('amount isIncome category createdAt -_id')
+      .lean<TTransaction[]>()
   } catch (err) {
     throw err
   }

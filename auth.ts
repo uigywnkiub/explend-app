@@ -9,9 +9,7 @@ import { APP_LOCALHOST_URL, APP_URL, IS_PROD } from './config/constants/main'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    GitHub({
-      issuer: 'https://github.com/login/oauth',
-    }),
+    GitHub,
     Google,
     Spotify,
     Dribbble({ scope: 'public' }),

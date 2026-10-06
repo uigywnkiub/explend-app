@@ -147,8 +147,14 @@ function BalanceCard({
       shadow='none'
       isPressable={hasTransactions}
       allowTextSelectionOnPress
-      aria-expanded={isShowTotals}
-      aria-label={isShowTotals ? 'Hide Details' : 'Show Details'}
+      aria-expanded={hasTransactions ? isShowTotals : undefined}
+      aria-label={
+        hasTransactions
+          ? isShowTotals
+            ? 'Hide Details'
+            : 'Show Details'
+          : undefined
+      }
       onPress={onChangeInfo}
     >
       <div className='pointer-events-none absolute -inset-px opacity-0' />
@@ -212,6 +218,7 @@ function BalanceCard({
               >
                 {isBalanceLoading ? (
                   <span
+                    role='status'
                     aria-label='Loading balance'
                     className='bg-default-200 inline-block h-6 w-32 animate-pulse rounded align-middle'
                   />

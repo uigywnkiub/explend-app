@@ -255,6 +255,7 @@ function LimitItem({
             <Button
               variant='light'
               isIconOnly
+              aria-label={`Open actions for ${categoryName}`}
               size='md'
               className='z-0 md:size-10'
               onPress={haptic}
