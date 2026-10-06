@@ -12,7 +12,6 @@ import {
   getUserPushSubscriptions,
 } from '@/app/lib/actions'
 import { buildWeeklyReport } from '@/app/lib/data'
-import PushSubscriptionModel from '@/app/lib/models/push-subscription.model'
 import UserSettingsModel from '@/app/lib/models/user-settings.model'
 import dbConnect from '@/app/lib/mongodb'
 import { TTransaction } from '@/app/lib/types'
@@ -34,15 +33,9 @@ export async function GET(req: NextRequest) {
 
   await dbConnect()
 
-  const [settingsUserIds, legacyUserIds] = await Promise.all([
-    UserSettingsModel.distinct('userId', {
-      'pushSubscriptions.0': { $exists: true },
-    }),
-    PushSubscriptionModel.distinct('userId', {
-      'subscriptions.0': { $exists: true },
-    }),
-  ])
-  const userIds = [...new Set([...settingsUserIds, ...legacyUserIds])]
+  const userIds = await UserSettingsModel.distinct('userId', {
+    'pushSubscriptions.0': { $exists: true },
+  })
 
   if (!userIds.length) {
     return NextResponse.json({ ok: true, notified: false })
@@ -103,10 +96,6 @@ export async function GET(req: NextRequest) {
                   pushSubscriptions: { endpoint: pushSub.endpoint },
                 },
               },
-            )
-            await PushSubscriptionModel.updateOne(
-              { userId },
-              { $pull: { subscriptions: { endpoint: pushSub.endpoint } } },
             )
           } else {
             Sentry.captureException(err, { extra: { userId } })

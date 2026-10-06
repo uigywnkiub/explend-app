@@ -14,7 +14,6 @@ import {
   getUserSettingsCategories,
 } from '@/app/lib/actions'
 import { createFormData, getEmojiFromCategory } from '@/app/lib/helpers'
-import PushSubscriptionModel from '@/app/lib/models/push-subscription.model'
 import TransactionModel from '@/app/lib/models/transaction.model'
 import UserSettingsModel from '@/app/lib/models/user-settings.model'
 import dbConnect from '@/app/lib/mongodb'
@@ -126,10 +125,6 @@ export async function GET(req: NextRequest) {
                       pushSubscriptions: { endpoint: pushSub.endpoint },
                     },
                   },
-                )
-                await PushSubscriptionModel.updateOne(
-                  { userId },
-                  { $pull: { subscriptions: { endpoint: pushSub.endpoint } } },
                 )
               } else {
                 Sentry.captureException(err, { extra: { userId } })

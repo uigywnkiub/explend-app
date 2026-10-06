@@ -2,7 +2,6 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 import { auth } from '@/auth'
 
-import PushSubscriptionModel from '@/app/lib/models/push-subscription.model'
 import UserSettingsModel from '@/app/lib/models/user-settings.model'
 import dbConnect from '@/app/lib/mongodb'
 
@@ -19,18 +18,12 @@ export async function POST(req: NextRequest) {
 
   await dbConnect()
 
-  const [existsInSettings, existsInLegacySettings] = await Promise.all([
-    UserSettingsModel.findOne({
-      userId: session.user.email,
-      'pushSubscriptions.endpoint': subscription.endpoint,
-    }),
-    PushSubscriptionModel.findOne({
-      userId: session.user.email,
-      'subscriptions.endpoint': subscription.endpoint,
-    }),
-  ])
+  const existsInSettings = await UserSettingsModel.findOne({
+    userId: session.user.email,
+    'pushSubscriptions.endpoint': subscription.endpoint,
+  })
 
-  if (!existsInSettings && !existsInLegacySettings) {
+  if (!existsInSettings) {
     await UserSettingsModel.updateOne(
       { userId: session.user.email },
       { $push: { pushSubscriptions: subscription } },
@@ -57,10 +50,6 @@ export async function DELETE(req: NextRequest) {
   await UserSettingsModel.updateOne(
     { userId: session.user.email },
     { $pull: { pushSubscriptions: { endpoint } } },
-  )
-  await PushSubscriptionModel.updateOne(
-    { userId: session.user.email },
-    { $pull: { subscriptions: { endpoint } } },
   )
 
   return NextResponse.json({ ok: true })

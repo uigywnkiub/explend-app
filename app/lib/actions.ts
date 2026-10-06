@@ -24,7 +24,6 @@ import {
 import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
-import PushSubscriptionModel from '@/app/lib/models/push-subscription.model'
 import TransactionModel from '@/app/lib/models/transaction.model'
 import UserSettingsModel from '@/app/lib/models/user-settings.model'
 
@@ -435,21 +434,8 @@ export async function getUserPushSubscriptions(
     const userSettings = await UserSettingsModel.findOne({ userId })
       .select('pushSubscriptions -_id')
       .lean<{ pushSubscriptions: TPushSubscription[] }>()
-    const legacySubscriptions = await PushSubscriptionModel.findOne({ userId })
-      .select('subscriptions -_id')
-      .lean<{ subscriptions: TPushSubscription[] }>()
 
-    const pushSubscriptions = userSettings?.pushSubscriptions || []
-    const endpoints = new Set(
-      pushSubscriptions.map((subscription) => subscription.endpoint),
-    )
-
-    return [
-      ...pushSubscriptions,
-      ...(legacySubscriptions?.subscriptions || []).filter(
-        (subscription) => !endpoints.has(subscription.endpoint),
-      ),
-    ]
+    return userSettings?.pushSubscriptions || []
   } catch (err) {
     throw err
   }
@@ -946,7 +932,6 @@ export async function deleteAllTransactionsAndSignOut(
   await dbConnect()
   await Promise.all([
     TransactionModel.deleteMany({ userId }),
-    PushSubscriptionModel.deleteOne({ userId }),
     UserSettingsModel.deleteOne({ userId }),
   ])
   await signOutAccount()
