@@ -529,6 +529,23 @@ export async function getAllTransactions(
 }
 export const getCachedAllTransactions = cache(getAllTransactions)
 
+export async function getMonthlyReportTransactions(
+  userId: TUserId,
+): Promise<TTransaction[]> {
+  if (!userId) {
+    throw new Error('User ID is required to get monthly report transactions.')
+  }
+  try {
+    await dbConnect()
+
+    return TransactionModel.find({ userId })
+      .select('amount isIncome category createdAt -_id')
+      .lean<TTransaction[]>()
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function getTransactionsWithChangedCategoryIds(
   userId: TUserId,
   categories: TCategories[],
