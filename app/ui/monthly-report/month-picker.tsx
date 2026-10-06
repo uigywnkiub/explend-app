@@ -44,7 +44,7 @@ function MonthPicker({
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
     () => dateRange && onDateSelection(dateRange),
-    300,
+    500,
     [dateRange],
   )
 

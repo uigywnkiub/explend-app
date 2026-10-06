@@ -65,7 +65,7 @@ export default async function Page(props: {
       const limit = userTransactionLimit || DEFAULT_TRANSACTION_LIMIT
       const offset = (page - 1) * limit
 
-      return getCachedTransactions(userId, offset, limit)
+      return getCachedTransactions(userId, offset, limit, Boolean(query))
     },
   )
   const [

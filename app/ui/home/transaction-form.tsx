@@ -608,7 +608,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
       resumeToastShownRef.current = true // Set flag to true after the toast is shown.
     },
-    300,
+    500,
     [isExpanded],
   )
 

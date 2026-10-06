@@ -465,14 +465,21 @@ export async function getTransactions(
   userId: TUserId,
   offset: number = 0,
   limit: number = DEFAULT_TRANSACTION_LIMIT,
+  isSearch: boolean = false,
 ): Promise<TGetTransactions> {
   if (!userId) {
     throw new Error('User ID is required to get transactions.')
   }
   try {
     await dbConnect()
+    const transactionsQuery = TransactionModel.find({ userId })
+    if (isSearch) {
+      transactionsQuery.select(
+        'id userId category images description amount isIncome isEdited isSubscription isTest createdAt -_id',
+      )
+    }
     const [transactions, totalEntries] = await Promise.all([
-      TransactionModel.find({ userId })
+      transactionsQuery
         .skip(offset)
         .limit(limit)
         .sort({ createdAt: 'desc' })
@@ -503,6 +510,28 @@ export async function getAllTransactions(
   try {
     await dbConnect()
 
+    return TransactionModel.find({ userId }).lean<TTransaction[]>({
+      transform: (doc) => {
+        if (!doc) return
+        delete doc._id
+        delete doc.__v
+      },
+    })
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedAllTransactions = cache(getAllTransactions)
+
+export async function getChartTransactions(
+  userId: TUserId,
+): Promise<TTransaction[]> {
+  if (!userId) {
+    throw new Error('User ID is required to get chart transactions.')
+  }
+  try {
+    await dbConnect()
+
     return TransactionModel.find({ userId })
       .select('category amount isIncome createdAt -_id')
       .lean<TTransaction[]>({
@@ -515,7 +544,7 @@ export async function getAllTransactions(
     throw err
   }
 }
-export const getCachedAllTransactions = cache(getAllTransactions)
+export const getCachedChartTransactions = cache(getChartTransactions)
 
 export async function getMonthlyReportTransactions(
   userId: TUserId,

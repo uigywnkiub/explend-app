@@ -48,7 +48,7 @@ export default function Search({ hasSearchedTransactionsByQuery }: TProps) {
   }
 
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
-  const [isReady, cancel] = useDebounce(() => onSearchChange(searchTerm), 300, [
+  const [isReady, cancel] = useDebounce(() => onSearchChange(searchTerm), 500, [
     searchTerm,
   ])
 

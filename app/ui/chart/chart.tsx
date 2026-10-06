@@ -1,6 +1,6 @@
 import {
-  getCachedAllTransactions,
   getCachedAuthSession,
+  getCachedChartTransactions,
   getCachedCurrency,
 } from '@/app/lib/actions'
 
@@ -10,7 +10,7 @@ async function Chart() {
   const session = await getCachedAuthSession()
   const userId = session?.user?.email
   const [transactionsRaw, currency] = await Promise.all([
-    getCachedAllTransactions(userId),
+    getCachedChartTransactions(userId),
     getCachedCurrency(userId),
   ])
 
