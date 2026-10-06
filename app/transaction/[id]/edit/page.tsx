@@ -9,7 +9,7 @@ import {
 } from '@/app/lib/actions'
 import { getUserCategories } from '@/app/lib/data'
 
-import WithSidebar from '@/app/ui/sidebar/with-sidebar'
+import WithSidebarContent from '@/app/ui/sidebar/with-sidebar-content'
 import TransactionFormEdit from '@/app/ui/transaction-form-edit'
 
 const PAGE_TITLE = 'Edit Transaction'
@@ -18,7 +18,9 @@ export const metadata: Metadata = {
   title: PAGE_TITLE,
 }
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
+async function EditTransactionPageContent(props: {
+  params: Promise<{ id: string }>
+}) {
   const params = await props.params
   const { id } = params
   const session = await getAuthSession()
@@ -47,5 +49,13 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     </main>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
+}
+
+export default function Page(props: { params: Promise<{ id: string }> }) {
+  return (
+    <WithSidebarContent title={PAGE_TITLE}>
+      <EditTransactionPageContent {...props} />
+    </WithSidebarContent>
+  )
 }

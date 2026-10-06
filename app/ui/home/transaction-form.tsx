@@ -69,10 +69,10 @@ import { URL_REGEXP } from '@/config/constants/regexp'
 import { getResolvedToastCfg, TOAST_DURATION } from '@/config/constants/toast'
 
 import {
+  getAmountAI,
   getAnalyzedReceiptAI,
-  getCachedAmountAI,
-  getCachedCategoryItemAI,
-  getCachedTransactionTypeAI,
+  getCategoryItemNameAI,
+  getTransactionTypeAI,
 } from '@/app/lib/actions'
 
 import {
@@ -454,11 +454,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
       try {
         const [categoryItemNameAI, amountAI, transactionTypeAI] =
           await Promise.all([
-            getCachedCategoryItemAI(categories, userPrompt),
+            getCategoryItemNameAI(categories, userPrompt),
             !hasReceiptAIData
-              ? getCachedAmountAI(currency.code, userPrompt)
+              ? getAmountAI(currency.code, userPrompt)
               : Promise.resolve(''),
-            getCachedTransactionTypeAI(userPrompt),
+            getTransactionTypeAI(userPrompt),
           ])
 
         setCategoryItemNameAI(categoryItemNameAI)

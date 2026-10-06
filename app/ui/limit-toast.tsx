@@ -10,7 +10,7 @@ import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { TOAST_DURATION } from '@/config/constants/toast'
 
 import {
-  getCachedAuthSession,
+  getAuthSession,
   getCategoryLimits,
   getRecentTransactionsForLimits,
 } from '@/app/lib/actions'
@@ -47,7 +47,7 @@ export default function LimitToast({ triggerBy, userCategories }: TProps) {
     if (!selectedCategoryName) return
 
     try {
-      const session = await getCachedAuthSession()
+      const session = await getAuthSession()
       const userId = session?.user?.email
       const [limitsRaw, transactions] = await Promise.all([
         getCategoryLimits(userId),

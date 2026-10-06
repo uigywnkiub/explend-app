@@ -1,12 +1,9 @@
 'use server'
 
-import { cache } from 'react'
-
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { cookies } from 'next/headers'
 
 import { auth, signOut } from '@/auth'
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { SignOutError } from '@auth/core/errors'
 import { Resend } from 'resend'
 
@@ -15,10 +12,6 @@ import {
   APP_NAME,
   DEFAULT_CATEGORY,
   DEFAULT_CATEGORY_EMOJI,
-  DEFAULT_CURRENCY_CODE,
-  DEFAULT_CURRENCY_NAME,
-  DEFAULT_CURRENCY_SIGN,
-  DEFAULT_SALARY_DAY,
   RESEND_API_KEY,
   RESEND_EMAIL,
 } from '@/config/constants/main'
@@ -34,6 +27,26 @@ import {
   TextAIModel,
   UploadReceiptAIModel,
 } from './ai'
+import {
+  getCachedBalanceCardData,
+  getCachedBalanceData,
+  getCachedCategoryLimitsData,
+  getCachedChartTransactionsData,
+  getCachedCountDocumentsData,
+  getCachedCurrencyData,
+  getCachedMonthlyReportTransactionsData,
+  getCachedRecentTransactionsForLimitsData,
+  getCachedSalaryDayData,
+  getCachedSubscriptionsData,
+  getCachedSubscriptionTransactionsData,
+  getCachedTableTransactionsData,
+  getCachedTransactionLimitData,
+  getCachedTransactionsData,
+  getCachedTransactionsWithChangedCategoryIdsData,
+  getCachedUserCategoriesData,
+  getUserSettingsCacheTag,
+  getUserTransactionsCacheTag,
+} from './cached-queries'
 import { parseMonobankCsv, parsePrivat24Xlsx } from './data'
 import {
   capitalizeFirstLetter,
@@ -43,8 +56,6 @@ import {
 } from './helpers'
 import dbConnect from './mongodb'
 import type {
-  TBalance,
-  TBalanceProjection,
   TBank,
   TCategories,
   TCategoryLimits,
@@ -73,7 +84,13 @@ export const getAuthSession = async (): Promise<TSession> => {
     throw err
   }
 }
-export const getCachedAuthSession = cache(getAuthSession)
+function revalidateUserTransactions(userId: TUserId) {
+  revalidateTag(getUserTransactionsCacheTag(userId), { expire: 0 })
+}
+
+function revalidateUserSettings(userId: TUserId) {
+  revalidateTag(getUserSettingsCacheTag(userId), { expire: 0 })
+}
 
 export async function signOutAccount(): Promise<void> {
   try {
@@ -89,121 +106,31 @@ export async function signOutAccount(): Promise<void> {
 export async function getBalance(
   userId: TUserId,
 ): Promise<TTransaction['balance']> {
-  if (!userId) {
-    throw new Error('User ID is required to fetch balance.')
-  }
-  try {
-    await dbConnect()
-    const transactions = await TransactionModel.find({ userId }, [
-      'amount',
-      'isIncome',
-    ] as TBalanceProjection).lean<TBalance[]>({
-      transform: (doc) => {
-        if (doc) delete doc._id
-      },
-    })
-    const balance = transactions.reduce((acc, t) => {
-      const amount = parseFloat(t.amount)
-
-      return t.isIncome ? acc + amount : acc - amount
-    }, 0)
-
-    return balance.toString()
-  } catch (err) {
-    throw err
-  }
+  return getCachedBalanceData(userId)
 }
-export const getCachedBalance = cache(getBalance)
+export const getCachedBalance = async (userId: TUserId) =>
+  getCachedBalanceData(userId)
 
 export async function getBalanceCardData(userId: TUserId): Promise<{
   total: { income: number; expense: number }
   weeklyTransactions: Pick<TTransaction, 'amount' | 'isIncome' | 'createdAt'>[]
 }> {
-  if (!userId) {
-    throw new Error('User ID is required to get balance card data.')
-  }
-  try {
-    await dbConnect()
-    const now = new Date()
-    const utcWeekStart = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-    )
-    const daysSinceMonday = (utcWeekStart.getUTCDay() + 6) % 7
-    utcWeekStart.setUTCDate(utcWeekStart.getUTCDate() - daysSinceMonday)
-    const startDate = new Date(utcWeekStart)
-    startDate.setUTCDate(startDate.getUTCDate() - 9)
-    const endDate = new Date(utcWeekStart)
-    endDate.setUTCDate(endDate.getUTCDate() + 8)
-
-    const [totalTransactions, weeklyTransactions] = await Promise.all([
-      TransactionModel.find({ userId })
-        .select('amount isIncome -_id')
-        .lean<Pick<TTransaction, 'amount' | 'isIncome'>[]>(),
-      TransactionModel.find({
-        userId,
-        createdAt: { $gte: startDate, $lt: endDate },
-      })
-        .select('amount isIncome createdAt -_id')
-        .lean<Pick<TTransaction, 'amount' | 'isIncome' | 'createdAt'>[]>(),
-    ])
-    const total = totalTransactions.reduce(
-      (totals, transaction) => {
-        const amount = parseFloat(transaction.amount)
-        if (transaction.isIncome) totals.income += amount
-        else totals.expense += amount
-
-        return totals
-      },
-      { income: 0, expense: 0 },
-    )
-
-    return { total, weeklyTransactions }
-  } catch (err) {
-    throw err
-  }
+  return getCachedBalanceCardData(userId)
 }
 
 export async function getTransactionLimit(
   userId: TUserId,
 ): Promise<TUserSettings['transactionLimit']> {
-  if (!userId) {
-    throw new Error('User ID is required to fetch transaction limit.')
-  }
-  try {
-    await dbConnect()
-    const userSettings = await UserSettingsModel.findOne({ userId })
-      .select('transactionLimit -_id')
-      .lean<{ transactionLimit: TUserSettings['transactionLimit'] }>()
-
-    return userSettings?.transactionLimit
-  } catch (err) {
-    throw err
-  }
+  return getCachedTransactionLimitData(userId)
 }
-export const getCachedTransactionLimit = cache(getTransactionLimit)
+export const getCachedTransactionLimit = async (userId: TUserId) =>
+  getCachedTransactionLimitData(userId)
 
 export async function getCurrency(userId: TUserId): Promise<TCurrency> {
-  if (!userId) {
-    throw new Error('User ID is required to fetch currency.')
-  }
-  try {
-    await dbConnect()
-    const userSettings = await UserSettingsModel.findOne({ userId })
-      .select('currency -_id')
-      .lean<{ currency: TCurrency }>()
-
-    return (
-      userSettings?.currency || {
-        name: DEFAULT_CURRENCY_NAME,
-        code: DEFAULT_CURRENCY_CODE,
-        sign: DEFAULT_CURRENCY_SIGN,
-      }
-    )
-  } catch (err) {
-    throw err
-  }
+  return getCachedCurrencyData(userId)
 }
-export const getCachedCurrency = cache(getCurrency)
+export const getCachedCurrency = async (userId: TUserId) =>
+  getCachedCurrencyData(userId)
 
 export async function updateCurrency(
   userId: TUserId,
@@ -222,6 +149,7 @@ export async function updateCurrency(
       { $set: { currency } },
       { upsert: true, setDefaultsOnInsert: false },
     )
+    revalidateUserSettings(userId)
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -245,6 +173,7 @@ export async function updateTransactionLimit(
       { $set: { transactionLimit } },
       { upsert: true },
     )
+    revalidateUserSettings(userId)
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -272,6 +201,7 @@ export async function updateSalaryDay(
       { $set: { salaryDay } },
       { upsert: true },
     )
+    revalidateUserSettings(userId)
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -339,6 +269,7 @@ export async function createTransaction(
       await TransactionModel.create([createPayload], { session })
       await session.commitTransaction()
       session.endSession()
+      revalidateUserTransactions(userId)
       revalidatePath(ROUTE.HOME)
     } catch (err) {
       await session.abortTransaction()
@@ -393,37 +324,18 @@ export async function sendFeedback(formData: FormData) {
 export async function getCountDocuments(
   userId: TUserId,
 ): Promise<TGetTransactions['totalEntries']> {
-  if (!userId) {
-    throw new Error('User ID is required to fetch count documents.')
-  }
-  try {
-    await dbConnect()
-
-    return await TransactionModel.countDocuments({ userId })
-  } catch (err) {
-    throw err
-  }
+  return getCachedCountDocumentsData(userId)
 }
-export const getCachedCountDocuments = cache(getCountDocuments)
+export const getCachedCountDocuments = async (userId: TUserId) =>
+  getCachedCountDocumentsData(userId)
 
 export async function getUserSettingsCategories(
   userId: TUserId,
 ): Promise<TCategories[]> {
-  if (!userId) {
-    throw new Error('User ID is required to fetch user categories.')
-  }
-  try {
-    await dbConnect()
-    const userSettings = await UserSettingsModel.findOne({ userId })
-      .select('categories -_id')
-      .lean<{ categories: TCategories[] }>()
-
-    return userSettings?.categories || DEFAULT_CATEGORIES
-  } catch (err) {
-    throw err
-  }
+  return getCachedUserCategoriesData(userId)
 }
-export const getCachedUserCategories = cache(getUserSettingsCategories)
+export const getCachedUserCategories = async (userId: TUserId) =>
+  getCachedUserCategoriesData(userId)
 
 export async function getUserPushSubscriptions(
   userId: TUserId,
@@ -457,6 +369,7 @@ export async function updateUserCategories(
       { $set: { categories } },
       { upsert: true },
     )
+    revalidateUserSettings(userId)
   } catch (err) {
     throw err
   }
@@ -468,39 +381,14 @@ export async function getTransactions(
   limit: number = DEFAULT_TRANSACTION_LIMIT,
   isSearch: boolean = false,
 ): Promise<TGetTransactions> {
-  if (!userId) {
-    throw new Error('User ID is required to get transactions.')
-  }
-  try {
-    await dbConnect()
-    const transactionsQuery = TransactionModel.find({ userId })
-    if (isSearch) {
-      transactionsQuery.select(
-        'id userId category images description amount isIncome isEdited isSubscription isTest createdAt -_id',
-      )
-    }
-    const [transactions, totalEntries] = await Promise.all([
-      transactionsQuery
-        .skip(offset)
-        .limit(limit)
-        .sort({ createdAt: 'desc' })
-        .lean<TTransaction[]>({
-          transform: (doc) => {
-            if (!doc) return
-            delete doc._id
-            delete doc.__v
-          },
-        }),
-      getCountDocuments(userId),
-    ])
-    const totalPages = Math.ceil(totalEntries / limit)
-
-    return { transactions, totalEntries, totalPages }
-  } catch (err) {
-    throw err
-  }
+  return getCachedTransactionsData(userId, offset, limit, isSearch)
 }
-export const getCachedTransactions = cache(getTransactions)
+export const getCachedTransactions = async (
+  userId: TUserId,
+  offset: number = 0,
+  limit: number = DEFAULT_TRANSACTION_LIMIT,
+  isSearch: boolean = false,
+) => getCachedTransactionsData(userId, offset, limit, isSearch)
 
 export async function getAllTransactions(
   userId: TUserId,
@@ -522,155 +410,44 @@ export async function getAllTransactions(
     throw err
   }
 }
-export const getCachedAllTransactions = cache(getAllTransactions)
 
 export async function getTableTransactions(
   userId: TUserId,
 ): Promise<TTableTransaction[]> {
-  if (!userId) {
-    throw new Error('User ID is required to get table transactions.')
-  }
-  try {
-    await dbConnect()
-
-    return TransactionModel.aggregate<TTableTransaction>([
-      { $match: { userId } },
-      {
-        $project: {
-          _id: 0,
-          id: 1,
-          category: 1,
-          description: 1,
-          amount: 1,
-          isIncome: 1,
-          createdAt: 1,
-          imagesCount: { $size: { $ifNull: ['$images', []] } },
-        },
-      },
-    ])
-  } catch (err) {
-    throw err
-  }
+  return getCachedTableTransactionsData(userId)
 }
 
 export async function getChartTransactions(
   userId: TUserId,
 ): Promise<TTransaction[]> {
-  if (!userId) {
-    throw new Error('User ID is required to get chart transactions.')
-  }
-  try {
-    await dbConnect()
-
-    return TransactionModel.find({ userId })
-      .select('category amount isIncome createdAt -_id')
-      .lean<TTransaction[]>({
-        transform: (doc) => {
-          if (!doc) return
-          delete doc.__v
-        },
-      })
-  } catch (err) {
-    throw err
-  }
+  return getCachedChartTransactionsData(userId)
 }
-export const getCachedChartTransactions = cache(getChartTransactions)
+export const getCachedChartTransactions = async (userId: TUserId) =>
+  getCachedChartTransactionsData(userId)
 
 export async function getMonthlyReportTransactions(
   userId: TUserId,
 ): Promise<TTransaction[]> {
-  if (!userId) {
-    throw new Error('User ID is required to get monthly report transactions.')
-  }
-  try {
-    await dbConnect()
-
-    return TransactionModel.find({ userId })
-      .select('amount isIncome category createdAt -_id')
-      .lean<TTransaction[]>()
-  } catch (err) {
-    throw err
-  }
+  return getCachedMonthlyReportTransactionsData(userId)
 }
 
 export async function getTransactionsWithChangedCategoryIds(
   userId: TUserId,
   categories: TCategories[],
 ): Promise<TTransaction['id'][]> {
-  if (!userId) {
-    throw new Error(
-      'User ID is required to get transactions with changed categories.',
-    )
-  }
-  try {
-    await dbConnect()
-    const categoryNames = categories.flatMap((category) =>
-      category.items.map((item) => `${item.emoji} ${item.name}`),
-    )
-    const transactions = await TransactionModel.find({
-      userId,
-      category: { $nin: categoryNames },
-    })
-      .select('id -_id')
-      .lean<{ id: TTransaction['id'] }[]>()
-
-    return transactions.map((transaction) => transaction.id)
-  } catch (err) {
-    throw err
-  }
+  return getCachedTransactionsWithChangedCategoryIdsData(userId, categories)
 }
 
 export async function getSubscriptionTransactions(
   userId: TUserId,
 ): Promise<TTransaction[]> {
-  if (!userId) {
-    throw new Error('User ID is required to get subscription transactions.')
-  }
-  try {
-    await dbConnect()
-
-    return TransactionModel.find({ userId, isSubscription: true }).lean<
-      TTransaction[]
-    >({
-      transform: (doc) => {
-        if (!doc) return
-        delete doc._id
-        delete doc.__v
-      },
-    })
-  } catch (err) {
-    throw err
-  }
+  return getCachedSubscriptionTransactionsData(userId)
 }
 
 export async function getRecentTransactionsForLimits(
   userId: TUserId,
 ): Promise<TTransaction[]> {
-  if (!userId) {
-    throw new Error('User ID is required to get transactions for limits.')
-  }
-  try {
-    await dbConnect()
-    const now = new Date()
-    const monthStart = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1),
-    )
-    const startDate = new Date(monthStart)
-    startDate.setUTCMonth(startDate.getUTCMonth() - 2)
-    startDate.setUTCDate(startDate.getUTCDate() - 2)
-    const endDate = new Date(monthStart)
-    endDate.setUTCMonth(endDate.getUTCMonth() + 1)
-    endDate.setUTCDate(endDate.getUTCDate() + 2)
-
-    return TransactionModel.find({
-      userId,
-      createdAt: { $gte: startDate, $lt: endDate },
-    })
-      .select('amount isIncome category createdAt -_id')
-      .lean<TTransaction[]>()
-  } catch (err) {
-    throw err
-  }
+  return getCachedRecentTransactionsForLimitsData(userId)
 }
 
 export async function importTransactions(
@@ -701,6 +478,7 @@ export async function importTransactions(
       newTransactions.map((transaction) => ({ ...transaction, userId })),
       { ordered: false },
     )
+    revalidateUserTransactions(userId)
 
     return { count: result.length, skipped }
   } catch (err) {
@@ -776,6 +554,7 @@ export async function importBankTransactions(
     await TransactionModel.insertMany(newTransactions, { session })
     await session.commitTransaction()
     session.endSession()
+    revalidateUserTransactions(userId)
 
     return { count: newTransactions.length, skipped }
   } catch (err) {
@@ -827,6 +606,9 @@ export async function editTransactionById(
       const newCreatedAt = newTransactionData.createdAt
         ? new Date(newTransactionData.createdAt)
         : null
+      const existingTransaction = await TransactionModel.findOne({ id })
+        .select('userId -_id')
+        .lean<{ userId: TUserId }>()
       await TransactionModel.updateOne({ id }, updateFields, { session })
       if (newCreatedAt) {
         await TransactionModel.collection.updateOne(
@@ -837,6 +619,9 @@ export async function editTransactionById(
       }
       await session.commitTransaction()
       session.endSession()
+      if (existingTransaction) {
+        revalidateUserTransactions(existingTransaction.userId)
+      }
       revalidatePath(ROUTE.HOME)
     } catch (err) {
       await session.abortTransaction()
@@ -919,7 +704,11 @@ export async function deleteTransaction(id: TTransaction['id']): Promise<void> {
   }
   try {
     await dbConnect()
+    const transaction = await TransactionModel.findOne({ id })
+      .select('userId -_id')
+      .lean<{ userId: TUserId }>()
     await TransactionModel.deleteOne({ id })
+    if (transaction) revalidateUserTransactions(transaction.userId)
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -933,6 +722,7 @@ export async function deleteTestTransactions(userId: TUserId): Promise<void> {
   try {
     await dbConnect()
     await TransactionModel.deleteMany({ userId, isTest: true })
+    revalidateUserTransactions(userId)
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -977,45 +767,24 @@ export async function deleteAllTransactionsAndSignOut(
     TransactionModel.deleteMany({ userId }),
     UserSettingsModel.deleteOne({ userId }),
   ])
+  revalidateUserTransactions(userId)
+  revalidateUserSettings(userId)
   await signOutAccount()
 }
 
 export async function getCategoryLimits(
   userId: TUserId,
 ): Promise<TCategoryLimits[]> {
-  if (!userId) {
-    throw new Error('User ID is required to get category limits.')
-  }
-  try {
-    await dbConnect()
-    const userSettings = await UserSettingsModel.findOne({ userId })
-      .select('categoryLimits -_id')
-      .lean<{ categoryLimits: TCategoryLimits[] }>()
-
-    return userSettings?.categoryLimits || []
-  } catch (err) {
-    throw err
-  }
+  return getCachedCategoryLimitsData(userId)
 }
 
 export async function getSalaryDay(
   userId: TUserId,
 ): Promise<TUserSettings['salaryDay']> {
-  if (!userId) {
-    throw new Error('User ID is required to get salary day.')
-  }
-  try {
-    await dbConnect()
-    const userSettings = await UserSettingsModel.findOne({ userId })
-      .select('salaryDay -_id')
-      .lean<{ salaryDay: TUserSettings['salaryDay'] }>()
-
-    return userSettings ? userSettings.salaryDay : DEFAULT_SALARY_DAY
-  } catch (err) {
-    throw err
-  }
+  return getCachedSalaryDayData(userId)
 }
-export const getCachedSalaryDay = cache(getSalaryDay)
+export const getCachedSalaryDay = async (userId: TUserId) =>
+  getCachedSalaryDayData(userId)
 
 export async function addLimit(
   userId: TUserId,
@@ -1034,6 +803,7 @@ export async function addLimit(
       { $set: { categoryLimits } },
       { upsert: true, setDefaultsOnInsert: false },
     )
+    revalidateUserSettings(userId)
     revalidatePath(ROUTE.LIMITS)
   } catch (err) {
     throw err
@@ -1061,6 +831,7 @@ export async function deleteLimit(
       { $set: { categoryLimits: updatedCategoryLimits } },
       { upsert: true, setDefaultsOnInsert: false },
     )
+    revalidateUserSettings(userId)
     revalidatePath(ROUTE.LIMITS)
   } catch (err) {
     throw err
@@ -1101,6 +872,7 @@ export async function editLimit(
       { $set: { categoryLimits: updatedCategoryLimits } },
       { upsert: true, setDefaultsOnInsert: false },
     )
+    revalidateUserSettings(userId)
     revalidatePath(ROUTE.LIMITS)
   } catch (err) {
     throw err
@@ -1124,6 +896,7 @@ export async function addSubscription(
       { $set: { subscriptions } },
       { upsert: true, setDefaultsOnInsert: false },
     )
+    revalidateUserSettings(userId)
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
     throw err
@@ -1133,23 +906,7 @@ export async function addSubscription(
 export async function getSubscriptions(
   userId: TUserId,
 ): Promise<TSubscriptions[]> {
-  if (!userId) {
-    throw new Error('User ID is required to get subscriptions.')
-  }
-  try {
-    await dbConnect()
-    const userSettings = await UserSettingsModel.findOne({ userId })
-      .select('subscriptions -_id')
-      .lean<{ subscriptions: TSubscriptions[] }>()
-    const subscriptions = userSettings?.subscriptions || []
-
-    return subscriptions.map((subscription) => ({
-      ...subscription,
-      _id: String(subscription._id),
-    }))
-  } catch (err) {
-    throw err
-  }
+  return getCachedSubscriptionsData(userId)
 }
 
 export async function editSubscription(
@@ -1201,6 +958,7 @@ export async function editSubscription(
       },
       { upsert: true, setDefaultsOnInsert: false },
     )
+    revalidateUserSettings(userId)
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
     throw err
@@ -1231,6 +989,7 @@ export async function deleteSubscription(
       },
       { upsert: true, setDefaultsOnInsert: false },
     )
+    revalidateUserSettings(userId)
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
     throw err
@@ -1248,6 +1007,7 @@ export async function resetAllSubscriptions(userId: TUserId): Promise<void> {
       { $set: { subscriptions: [] } },
       { upsert: true, setDefaultsOnInsert: false },
     )
+    revalidateUserSettings(userId)
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
     throw err
@@ -1275,7 +1035,6 @@ export async function getCategoryItemNameAI(
     throw err
   }
 }
-export const getCachedCategoryItemAI = cache(getCategoryItemNameAI)
 
 export async function getAmountAI(
   currencyCode: TCurrency['code'],
@@ -1296,7 +1055,6 @@ export async function getAmountAI(
     throw err
   }
 }
-export const getCachedAmountAI = cache(getAmountAI)
 
 export async function getTransactionTypeAI(
   userPrompt: string,
@@ -1316,7 +1074,6 @@ export async function getTransactionTypeAI(
     throw err
   }
 }
-export const getCachedTransactionTypeAI = cache(getTransactionTypeAI)
 
 export async function getExpenseTipsAI(
   categories: string[],
@@ -1353,7 +1110,6 @@ Requirements:
     throw err
   }
 }
-export const getCachedExpenseTipsAI = cache(getExpenseTipsAI)
 
 export async function getAnalyzedReceiptAI(file: Blob): Promise<string> {
   if (!file) {

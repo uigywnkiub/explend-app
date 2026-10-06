@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import {
   PiBugBeetle,
   PiBugBeetleFill,
@@ -109,6 +110,15 @@ type TProps = {
 function Navbar({ linksGroup, withLogo }: TProps) {
   const isMd = useMedia(getBreakpointWidth('md'), true)
   const pathname = usePathname()
+
+  useEffect(() => {
+    const sidebarToggle = document.getElementById('sidebar-toggle')
+
+    if (sidebarToggle instanceof HTMLInputElement) {
+      sidebarToggle.checked = false
+    }
+  }, [pathname])
+
   const navLinks: TNavLink[] = (
     linksGroup === 'top' ? topNavLinks : bottomNavLinks
   ).filter(({ url }) => !DISABLED_ROUTES.includes(url))

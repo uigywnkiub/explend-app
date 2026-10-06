@@ -9,14 +9,14 @@ import {
 } from '../lib/actions'
 import { cn } from '../lib/helpers'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebar from '../ui/sidebar/with-sidebar'
+import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
 import TransactionTable from '../ui/table/transaction-table'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.TABLE,
 }
 
-export default async function Page() {
+async function TablePageContent() {
   const session = await getAuthSession()
   const userId = session?.user?.email
   const [transactions, currency] = await Promise.all([
@@ -44,5 +44,13 @@ export default async function Page() {
     </>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
+}
+
+export default function Page() {
+  return (
+    <WithSidebarContent title={NAV_TITLE.TABLE}>
+      <TablePageContent />
+    </WithSidebarContent>
+  )
 }

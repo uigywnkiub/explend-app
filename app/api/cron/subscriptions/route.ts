@@ -17,7 +17,6 @@ import UserSettingsModel from '@/app/lib/models/user-settings.model'
 import dbConnect from '@/app/lib/mongodb'
 import { TTransaction } from '@/app/lib/types'
 
-export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Secs.
 
 webpush.setVapidDetails(

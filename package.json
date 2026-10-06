@@ -55,7 +55,6 @@
     "mongoose-encryption-decryption": "^1.2.1",
     "next": "16.3.8",
     "next-auth": "5.0.0-beta.32",
-    "next13-progressbar": "^1.2.2",
     "react": "19.3.0",
     "react-confetti": "^6.4.0",
     "react-dom": "19.3.0",

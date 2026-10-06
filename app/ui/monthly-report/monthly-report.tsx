@@ -36,7 +36,7 @@ import { haptic } from 'ios-haptics'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
-import { getCachedExpenseTipsAI } from '@/app/lib/actions'
+import { getExpenseTipsAI } from '@/app/lib/actions'
 import {
   calculateForecast,
   calculateMonthlyReportData,
@@ -112,8 +112,10 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
   const { canAttempt, registerAttempt } = useAttemptTracker(
     LOCAL_STORAGE_KEY.ATTEMPT_AI_EXPENSE_TIPS,
   )
-  const { firstTransaction: minTransaction, lastTransaction: maxTransaction } =
-    useMemo(() => getFirstAndLastTransactions(transactions), [transactions])
+  const { firstTransaction: minTransaction } = useMemo(
+    () => getFirstAndLastTransactions(transactions),
+    [transactions],
+  )
 
   const minTransactionCalendarDate = minTransaction
     ? toCalendarDate(minTransaction.createdAt)
@@ -150,6 +152,18 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
       selectedDate.start.compare(startOfMonthCalendarDate) === 0 &&
       selectedDate.end.compare(endOfMonthCalendarDate) === 0,
     [selectedDate, startOfMonthCalendarDate, endOfMonthCalendarDate],
+  )
+  const hasCurrentMonthTransactions = useMemo(
+    () =>
+      transactions.some((transaction) => {
+        const transactionDate = toCalendarDate(transaction.createdAt)
+
+        return (
+          transactionDate.year === startOfMonthCalendarDate.year &&
+          transactionDate.month === startOfMonthCalendarDate.month
+        )
+      }),
+    [transactions, startOfMonthCalendarDate],
   )
 
   const onDateSelection = useCallback(
@@ -246,7 +260,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     }
     setIsLoadingTips(true)
     try {
-      const res = await getCachedExpenseTipsAI(expenseCategories, currency)
+      const res = await getExpenseTipsAI(expenseCategories, currency)
       const parsedRes = JSON.parse(res)
       setTipsDataAI(parsedRes)
       setExpenseTipsAIDataLocalStorage(parsedRes)
@@ -326,10 +340,17 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
   const forecastButton = useMemo(
     () => (
       <Tooltip
-        content={showForecast ? 'Hide forecast' : 'Forecast next month'}
+        content={
+          !hasCurrentMonthTransactions && !showForecast
+            ? 'Add a transaction this month to generate a forecast'
+            : showForecast
+              ? 'Hide forecast'
+              : 'Forecast next month'
+        }
         placement='bottom'
       >
         <Button
+          isDisabled={!hasCurrentMonthTransactions && !showForecast}
           onPress={() => [haptic(), onToggleForecast()]}
           color={showForecast ? 'primary' : 'default'}
           variant='flat'
@@ -344,7 +365,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
         </Button>
       </Tooltip>
     ),
-    [showForecast, onToggleForecast],
+    [hasCurrentMonthTransactions, showForecast, onToggleForecast],
   )
 
   if (filteredTransactionsByDateRange.length === 0) {
@@ -355,7 +376,6 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             selectedDate={selectedDate}
             onDateSelection={onDateSelection}
             minTransaction={minTransaction}
-            maxTransaction={maxTransaction}
             userSalaryDay={userSalaryDay}
           />
           <div className='flex gap-2'>
@@ -378,7 +398,6 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             selectedDate={selectedDate}
             onDateSelection={onDateSelection}
             minTransaction={minTransaction}
-            maxTransaction={maxTransaction}
             userSalaryDay={userSalaryDay}
           />
           <div className='flex gap-2'>

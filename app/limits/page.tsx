@@ -13,13 +13,13 @@ import {
 import { getUserCategories } from '../lib/data'
 import Limits from '../ui/limits/limits'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebar from '../ui/sidebar/with-sidebar'
+import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.LIMITS,
 }
 
-export default async function Page() {
+async function LimitsPageContent() {
   const session = await getAuthSession()
   const userId = session?.user?.email
   const [
@@ -58,5 +58,13 @@ export default async function Page() {
     </>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
+}
+
+export default function Page() {
+  return (
+    <WithSidebarContent title={NAV_TITLE.LIMITS}>
+      <LimitsPageContent />
+    </WithSidebarContent>
+  )
 }

@@ -10,7 +10,7 @@ import {
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
-  getCachedAuthSession,
+  getAuthSession,
   getCachedUserCategories,
   getCountDocuments,
   getCurrency,
@@ -34,14 +34,14 @@ import SectionItem from '../ui/settings/section-item'
 import ThemeSwitcher from '../ui/settings/theme-switcher'
 import TransactionLimit from '../ui/settings/transaction-limit'
 import User from '../ui/sidebar/user'
-import WithSidebar from '../ui/sidebar/with-sidebar'
+import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.SETTINGS,
 }
 
-export default async function Page() {
-  const session = await getCachedAuthSession()
+async function SettingsPageContent() {
+  const session = await getAuthSession()
   const userId = session?.user?.email
   const [
     userTransactionLimit,
@@ -281,5 +281,13 @@ export default async function Page() {
     </div>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
+}
+
+export default function Page() {
+  return (
+    <WithSidebarContent title={NAV_TITLE.SETTINGS}>
+      <SettingsPageContent />
+    </WithSidebarContent>
+  )
 }
