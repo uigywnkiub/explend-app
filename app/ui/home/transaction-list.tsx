@@ -25,7 +25,7 @@ import InfoText from '../info-text'
 type TProps = {
   groupedTransactionsByDate: TGroupedTransactions
   totalsTransactionsByDate: TTotalsTransaction
-  transactionsWithChangedCategory: TTransaction[]
+  transactionsWithChangedCategoryIds: TTransaction['id'][]
   currency: TCurrency
   userCategories: TCategories[]
 }
@@ -33,16 +33,14 @@ type TProps = {
 function TransactionList({
   groupedTransactionsByDate,
   totalsTransactionsByDate,
-  transactionsWithChangedCategory,
+  transactionsWithChangedCategoryIds,
   currency,
   userCategories,
 }: TProps) {
   const searchParams = useSearchParams()
   const query = searchParams.get(SEARCH_PARAM.QUERY)?.toString() || ''
 
-  const changedCategoryIds = new Set(
-    transactionsWithChangedCategory.map((t) => t.id),
-  )
+  const changedCategoryIds = new Set(transactionsWithChangedCategoryIds)
 
   return (
     <>

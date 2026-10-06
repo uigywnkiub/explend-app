@@ -11,7 +11,6 @@ import { siteMeta } from '@/config/site-meta'
 
 import {
   createTransaction,
-  getCachedAllTransactions,
   getCachedAuthSession,
   getCachedBalance,
   getCachedCurrency,
@@ -19,11 +18,9 @@ import {
   getCachedTransactionLimit,
   getCachedTransactions,
   getCachedUserCategories,
+  getTransactionsWithChangedCategoryIds,
 } from './lib/actions'
-import {
-  getTransactionsWithChangedCategory,
-  getUserCategories,
-} from './lib/data'
+import { getUserCategories } from './lib/data'
 import {
   formatDate,
   getCategoryWithoutEmoji,
@@ -90,10 +87,8 @@ export default async function Page(props: {
     userSalaryDay,
   )
 
-  const transactionsWithChangedCategory = getTransactionsWithChangedCategory(
-    await getCachedAllTransactions(userId),
-    userCategories,
-  )
+  const transactionsWithChangedCategory =
+    await getTransactionsWithChangedCategoryIds(userId, userCategories)
   const countTransactionsWithChangedCategory =
     transactionsWithChangedCategory.length
 
@@ -243,7 +238,7 @@ export default async function Page(props: {
       <TransactionList
         groupedTransactionsByDate={groupedTransactionsByDate}
         totalsTransactionsByDate={totalsTransactionsByDate}
-        transactionsWithChangedCategory={transactionsWithChangedCategory}
+        transactionsWithChangedCategoryIds={transactionsWithChangedCategory}
         currency={currency}
         userCategories={userCategories}
       />

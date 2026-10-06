@@ -3,12 +3,13 @@ import type { Metadata } from 'next'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
-  getAllTransactions,
   getAuthSession,
   getCachedUserCategories,
+  getCountDocuments,
   getCurrency,
   getSalaryDay,
   getSubscriptions,
+  getSubscriptionTransactions,
 } from '../lib/actions'
 import { getUserCategories } from '../lib/data'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
@@ -23,13 +24,15 @@ export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
   const [
-    transactions,
+    transactionsCount,
+    subscriptionTransactions,
     userSubscriptions,
     currency,
     userSalaryDay,
     userCategoriesFromSettings,
   ] = await Promise.all([
-    getAllTransactions(userId),
+    getCountDocuments(userId),
+    getSubscriptionTransactions(userId),
     getSubscriptions(userId),
     getCurrency(userId),
     getSalaryDay(userId),
@@ -43,7 +46,7 @@ export default async function Page() {
         {NAV_TITLE.SUBSCRIPTIONS}
       </h1>
       <div className='mx-auto max-w-3xl'>
-        {transactions.length === 0 ? (
+        {transactionsCount === 0 ? (
           <NoTransactionsPlug />
         ) : (
           <Subscriptions
@@ -52,7 +55,7 @@ export default async function Page() {
             subscriptionsData={userSubscriptions}
             userCategories={userCategories}
             userSalaryDay={userSalaryDay}
-            transactions={transactions}
+            transactions={subscriptionTransactions}
           />
         )}
       </div>

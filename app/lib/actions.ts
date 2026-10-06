@@ -481,6 +481,90 @@ export async function getAllTransactions(
 }
 export const getCachedAllTransactions = cache(getAllTransactions)
 
+export async function getTransactionsWithChangedCategoryIds(
+  userId: TUserId,
+  categories: TCategories[],
+): Promise<TTransaction['id'][]> {
+  if (!userId) {
+    throw new Error(
+      'User ID is required to get transactions with changed categories.',
+    )
+  }
+  try {
+    await dbConnect()
+    const categoryNames = categories.flatMap((category) =>
+      category.items.map((item) => `${item.emoji} ${item.name}`),
+    )
+    const transactions = await TransactionModel.find({
+      userId,
+      category: { $nin: categoryNames },
+    })
+      .select('id -_id')
+      .lean<{ id: TTransaction['id'] }[]>()
+
+    return transactions.map((transaction) => transaction.id)
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getSubscriptionTransactions(
+  userId: TUserId,
+): Promise<TTransaction[]> {
+  if (!userId) {
+    throw new Error('User ID is required to get subscription transactions.')
+  }
+  try {
+    await dbConnect()
+
+    return TransactionModel.find({ userId, isSubscription: true }).lean<
+      TTransaction[]
+    >({
+      transform: (doc) => {
+        if (!doc) return
+        delete doc._id
+        delete doc.__v
+      },
+    })
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getRecentTransactionsForLimits(
+  userId: TUserId,
+): Promise<TTransaction[]> {
+  if (!userId) {
+    throw new Error('User ID is required to get transactions for limits.')
+  }
+  try {
+    await dbConnect()
+    const now = new Date()
+    const monthStart = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1),
+    )
+    const startDate = new Date(monthStart)
+    startDate.setUTCMonth(startDate.getUTCMonth() - 2)
+    startDate.setUTCDate(startDate.getUTCDate() - 2)
+    const endDate = new Date(monthStart)
+    endDate.setUTCMonth(endDate.getUTCMonth() + 1)
+    endDate.setUTCDate(endDate.getUTCDate() + 2)
+
+    return TransactionModel.find({
+      userId,
+      createdAt: { $gte: startDate, $lt: endDate },
+    }).lean<TTransaction[]>({
+      transform: (doc) => {
+        if (!doc) return
+        delete doc._id
+        delete doc.__v
+      },
+    })
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function importTransactions(
   userId: TUserId,
   transactions: Partial<TTransaction>[],
