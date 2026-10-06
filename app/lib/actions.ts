@@ -438,7 +438,6 @@ export async function getTransactions(
     await dbConnect()
     const [transactions, totalEntries] = await Promise.all([
       TransactionModel.find({ userId })
-        .select('-categories -categoryLimits -subscriptions -currency')
         .skip(offset)
         .limit(limit)
         .sort({ createdAt: 'desc' })
@@ -469,15 +468,13 @@ export async function getAllTransactions(
   try {
     await dbConnect()
 
-    return TransactionModel.find({ userId })
-      .select('-categories -categoryLimits -subscriptions -currency')
-      .lean<TTransaction[]>({
-        transform: (doc) => {
-          if (!doc) return
-          delete doc._id
-          delete doc.__v
-        },
-      })
+    return TransactionModel.find({ userId }).lean<TTransaction[]>({
+      transform: (doc) => {
+        if (!doc) return
+        delete doc._id
+        delete doc.__v
+      },
+    })
   } catch (err) {
     throw err
   }
@@ -774,15 +771,15 @@ export async function findTransactionById(
   }
   try {
     await dbConnect()
-    const transaction = await TransactionModel.findOne({ id })
-      .select('-categories -categoryLimits -subscriptions -currency')
-      .lean<TTransaction>({
-        transform: (doc) => {
-          if (!doc) return
-          delete doc._id
-          delete doc.__v
-        },
-      })
+    const transaction = await TransactionModel.findOne({
+      id,
+    }).lean<TTransaction>({
+      transform: (doc) => {
+        if (!doc) return
+        delete doc._id
+        delete doc.__v
+      },
+    })
 
     return transaction
   } catch (err) {
