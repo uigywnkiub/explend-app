@@ -224,6 +224,7 @@ export default function PullToRefresh() {
           cy='10'
           r='8'
           fill='none'
+          initial={{ strokeDashoffset: CIRCLE_CIRCUMFERENCE }}
           stroke='currentColor'
           strokeDasharray={CIRCLE_CIRCUMFERENCE}
           animate={{
