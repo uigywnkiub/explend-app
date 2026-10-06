@@ -52,6 +52,10 @@ next-env.d.ts
 # Custom Worker
 /public/worker*
 
+# One-time database migrations
+/scripts/migrate-categories.mjs
+/scripts/cleanup-categories.mjs
+
 # Localhost https 
 certificates
 
