@@ -56,6 +56,7 @@ type TProps = {
   currency: TCurrency
   hasTransactions: boolean
   transactionCount: number
+  isBalanceLoading?: boolean
 }
 
 const SPEND_CHART_COLOR = 'hsl(var(--heroui-primary-400))'
@@ -67,6 +68,7 @@ function BalanceCard({
   currency,
   hasTransactions,
   transactionCount,
+  isBalanceLoading = false,
 }: TProps) {
   const [isShowTotals, setIsChangeInfo] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -208,8 +210,17 @@ function BalanceCard({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ ...DIV.TRANSITION_SPRING }}
               >
-                <AnimatedNumber value={balance} isFormattedBalance />{' '}
-                {currency.code}
+                {isBalanceLoading ? (
+                  <span
+                    aria-label='Loading balance'
+                    className='bg-default-200 inline-block h-6 w-32 animate-pulse rounded align-middle'
+                  />
+                ) : (
+                  <>
+                    <AnimatedNumber value={balance} isFormattedBalance />{' '}
+                    {currency.code}
+                  </>
+                )}
               </motion.p>
             )}
             {hasTransactions && (

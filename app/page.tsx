@@ -1,5 +1,3 @@
-import { PiWarningOctagonFill } from 'react-icons/pi'
-
 import { Metadata } from 'next'
 
 import {
@@ -18,7 +16,6 @@ import {
   getCachedTransactionLimit,
   getCachedTransactions,
   getCachedUserCategories,
-  getTransactionsWithChangedCategoryIds,
 } from './lib/actions'
 import { getUserCategories } from './lib/data'
 import {
@@ -32,7 +29,7 @@ import type {
   TTotalsTransaction,
   TTransaction,
 } from './lib/types'
-import BalanceCard from './ui/balance-card'
+import BalanceCardSection from './ui/home/balance-card-section'
 import CreateTestTransactions from './ui/home/create-test-transactions'
 import DeleteTestTransactions from './ui/home/delete-test-transactions'
 import Search from './ui/home/search'
@@ -60,25 +57,34 @@ export default async function Page(props: {
   const userId = session?.user?.email
   const query = searchParams?.[SEARCH_PARAM.QUERY] || ''
   const page = Number(searchParams?.[SEARCH_PARAM.PAGE]) || 1
-  const userTransactionLimit = query
-    ? Infinity
-    : await getCachedTransactionLimit(userId)
-  const limit = userTransactionLimit || DEFAULT_TRANSACTION_LIMIT
-  const offset = (page - 1) * limit
+  const balancePromise = getCachedBalance(userId)
+  const userTransactionLimitPromise = query
+    ? Promise.resolve(Infinity)
+    : getCachedTransactionLimit(userId)
+  const transactionsPromise = userTransactionLimitPromise.then(
+    (userTransactionLimit) => {
+      const limit = userTransactionLimit || DEFAULT_TRANSACTION_LIMIT
+      const offset = (page - 1) * limit
+
+      return getCachedTransactions(userId, offset, limit)
+    },
+  )
   const [
-    balance,
+    userTransactionLimit,
     currency,
     userSalaryDay,
-    { transactions, totalEntries, totalPages },
+    transactionData,
     userCategoriesFromSettings,
   ] = await Promise.all([
-    getCachedBalance(userId),
+    userTransactionLimitPromise,
     getCachedCurrency(userId),
     getCachedSalaryDay(userId),
-    getCachedTransactions(userId, offset, limit),
+    transactionsPromise,
     getCachedUserCategories(userId),
   ])
+  const { transactions, totalEntries, totalPages } = transactionData
   const userCategories = getUserCategories(userCategoriesFromSettings)
+  const limit = userTransactionLimit || DEFAULT_TRANSACTION_LIMIT
 
   const createTransactionWithExtraData = createTransaction.bind(
     null,
@@ -86,11 +92,6 @@ export default async function Page(props: {
     userCategories,
     userSalaryDay,
   )
-
-  const transactionsWithChangedCategory =
-    await getTransactionsWithChangedCategoryIds(userId, userCategories)
-  const countTransactionsWithChangedCategory =
-    transactionsWithChangedCategory.length
 
   const hasTestTransactions = transactions.some((t) => t.isTest)
 
@@ -171,9 +172,9 @@ export default async function Page(props: {
         {NAV_TITLE.HOME}
       </h1>
       <div className='mx-auto flex flex-col gap-y-0'>
-        <BalanceCard
+        <BalanceCardSection
           user={session?.user}
-          balance={balance}
+          balancePromise={balancePromise}
           currency={currency}
           hasTransactions={totalEntries > 0}
           transactionCount={totalEntries}
@@ -238,7 +239,7 @@ export default async function Page(props: {
       <TransactionList
         groupedTransactionsByDate={groupedTransactionsByDate}
         totalsTransactionsByDate={totalsTransactionsByDate}
-        transactionsWithChangedCategoryIds={transactionsWithChangedCategory}
+        userId={userId}
         currency={currency}
         userCategories={userCategories}
       />
@@ -265,12 +266,6 @@ export default async function Page(props: {
               searchedTransactionsByQuery={searchedTransactionsByQuery}
             />
           )
-        )}
-        {countTransactionsWithChangedCategory > 0 && (
-          <p className='text-warning mt-4 text-center text-sm'>
-            <PiWarningOctagonFill className='inline animate-pulse' />{' '}
-            {`You have ${countTransactionsWithChangedCategory} ${pluralize(countTransactionsWithChangedCategory, 'transaction', 'transactions')} with the old category.`}
-          </p>
         )}
       </div>
     </div>
