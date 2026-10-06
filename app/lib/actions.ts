@@ -58,6 +58,7 @@ import type {
   TPushSubscription,
   TSession,
   TSubscriptions,
+  TTableTransaction,
   TTransaction,
   TUserId,
   TUserSettings,
@@ -522,6 +523,35 @@ export async function getAllTransactions(
   }
 }
 export const getCachedAllTransactions = cache(getAllTransactions)
+
+export async function getTableTransactions(
+  userId: TUserId,
+): Promise<TTableTransaction[]> {
+  if (!userId) {
+    throw new Error('User ID is required to get table transactions.')
+  }
+  try {
+    await dbConnect()
+
+    return TransactionModel.aggregate<TTableTransaction>([
+      { $match: { userId } },
+      {
+        $project: {
+          _id: 0,
+          id: 1,
+          category: 1,
+          description: 1,
+          amount: 1,
+          isIncome: 1,
+          createdAt: 1,
+          imagesCount: { $size: { $ifNull: ['$images', []] } },
+        },
+      },
+    ])
+  } catch (err) {
+    throw err
+  }
+}
 
 export async function getChartTransactions(
   userId: TUserId,

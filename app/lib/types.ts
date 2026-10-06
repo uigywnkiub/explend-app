@@ -53,6 +53,13 @@ export type TTransaction = {
   updatedAt: Date
 }
 
+export type TTableTransaction = Pick<
+  TTransaction,
+  'id' | 'category' | 'description' | 'amount' | 'isIncome' | 'createdAt'
+> & {
+  imagesCount: number
+}
+
 export type TCategoryLimits = {
   categoryName: TTransaction['category']
   limitAmount: TTransaction['amount']

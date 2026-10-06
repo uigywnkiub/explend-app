@@ -2,7 +2,11 @@ import type { Metadata } from 'next'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import { getAllTransactions, getAuthSession, getCurrency } from '../lib/actions'
+import {
+  getAuthSession,
+  getCurrency,
+  getTableTransactions,
+} from '../lib/actions'
 import { cn } from '../lib/helpers'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
 import WithSidebar from '../ui/sidebar/with-sidebar'
@@ -16,7 +20,7 @@ export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
   const [transactions, currency] = await Promise.all([
-    getAllTransactions(userId),
+    getTableTransactions(userId),
     getCurrency(userId),
   ])
 
