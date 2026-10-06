@@ -1,8 +1,6 @@
 import { model, models, Schema } from 'mongoose'
 import { mongooseEncryptionDecryption } from 'mongoose-encryption-decryption'
 
-import { DEFAULT_SALARY_DAY } from '@/config/constants/main'
-
 import type {
   TCategories,
   TCategoriesItem,
@@ -83,16 +81,6 @@ const transactionSchema = new Schema<TTransaction>(
     balance: {
       type: String,
       required: true,
-    },
-    transactionLimit: {
-      type: Number,
-      default: null,
-    },
-    salaryDay: {
-      type: Number,
-      default: DEFAULT_SALARY_DAY,
-      min: 1,
-      max: 31,
     },
     isEdited: {
       type: Boolean,

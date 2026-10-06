@@ -23,14 +23,12 @@ type TProps = {
   userId: TUserId
   currency: TCurrency
   userCategories: TCategories[]
-  userSalaryDay: TTransaction['salaryDay']
 }
 
 export default function CreateTestTransactions({
   userId,
   currency,
   userCategories,
-  userSalaryDay,
 }: TProps) {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -125,12 +123,7 @@ export default function CreateTestTransactions({
             id: toastCreatingId,
           },
         )
-        await createTransaction(
-          userId,
-          userCategories,
-          userSalaryDay,
-          testTransactions[i],
-        )
+        await createTransaction(userId, userCategories, testTransactions[i])
       }
       toast.dismiss(toastCreatingId)
       haptic.confirm()

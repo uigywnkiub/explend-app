@@ -262,7 +262,6 @@ export default async function Page() {
                 <ImportBankTransactions
                   userId={userId}
                   userCategories={userCategories}
-                  userSalaryDay={userSalaryDay}
                 />
               </div>
             </>

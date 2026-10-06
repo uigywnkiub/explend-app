@@ -46,8 +46,6 @@ export type TTransaction = {
   amount: string
   isIncome: boolean
   balance: string
-  transactionLimit: number | null | undefined
-  salaryDay: number | null | undefined
   isEdited: boolean
   isSubscription: boolean
   isTest: boolean
@@ -77,6 +75,8 @@ export type TUserSettings = {
   subscriptions?: TSubscriptions[]
   currency?: TCurrency
   pushSubscriptions?: TPushSubscription[]
+  transactionLimit?: number | null
+  salaryDay?: number | null
   createdAt: Date
   updatedAt: Date
 }

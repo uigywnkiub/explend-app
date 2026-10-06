@@ -7,7 +7,6 @@ import {
   getCachedUserCategories,
   getCountDocuments,
   getCurrency,
-  getSalaryDay,
   getSubscriptions,
   getSubscriptionTransactions,
 } from '../lib/actions'
@@ -28,14 +27,12 @@ export default async function Page() {
     subscriptionTransactions,
     userSubscriptions,
     currency,
-    userSalaryDay,
     userCategoriesFromSettings,
   ] = await Promise.all([
     getCountDocuments(userId),
     getSubscriptionTransactions(userId),
     getSubscriptions(userId),
     getCurrency(userId),
-    getSalaryDay(userId),
     getCachedUserCategories(userId),
   ])
   const userCategories = getUserCategories(userCategoriesFromSettings)
@@ -54,7 +51,6 @@ export default async function Page() {
             currency={currency}
             subscriptionsData={userSubscriptions}
             userCategories={userCategories}
-            userSalaryDay={userSalaryDay}
             transactions={subscriptionTransactions}
           />
         )}

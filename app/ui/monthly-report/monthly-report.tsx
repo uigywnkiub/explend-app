@@ -62,6 +62,7 @@ import type {
   TExpenseAdvice,
   TForecastData,
   TTransaction,
+  TUserSettings,
 } from '@/app/lib/types'
 
 import AILogo from '../ai-logo'
@@ -83,7 +84,7 @@ const REFRESH_TIPS_BTN_TEXT = 'Refresh tips'
 type TProps = {
   transactions: TTransaction[]
   currency: TCurrency
-  userSalaryDay: TTransaction['salaryDay']
+  userSalaryDay: TUserSettings['salaryDay']
 }
 
 function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {

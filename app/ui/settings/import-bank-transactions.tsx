@@ -8,24 +8,16 @@ import { haptic } from 'ios-haptics'
 
 import { importBankTransactions } from '@/app/lib/actions'
 import { capitalizeFirstLetter, pluralize } from '@/app/lib/helpers'
-import {
-  TBank,
-  TCategories,
-  TIcon,
-  TTransaction,
-  TUserId,
-} from '@/app/lib/types'
+import { TBank, TCategories, TIcon, TUserId } from '@/app/lib/types'
 
 type TProps = {
   userId: TUserId
   userCategories: TCategories[]
-  userSalaryDay: TTransaction['salaryDay']
 }
 
 export default function ImportBankTransactions({
   userId,
   userCategories,
-  userSalaryDay,
 }: TProps) {
   const monoRef = useRef<HTMLInputElement>(null)
   const privatRef = useRef<HTMLInputElement>(null)
@@ -62,13 +54,7 @@ export default function ImportBankTransactions({
         : Buffer.from(await file.arrayBuffer()).toString('base64')
 
       const result = await toast.promise(
-        importBankTransactions(
-          userId,
-          userCategories,
-          userSalaryDay,
-          bank,
-          payload,
-        ),
+        importBankTransactions(userId, userCategories, bank, payload),
         {
           loading: 'Importing transactions...',
           success: (res) =>

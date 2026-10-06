@@ -1,4 +1,4 @@
-export const DEFAULT_TRANSACTION_LIMIT: number = 30
+export const DEFAULT_TRANSACTION_LIMIT: number = 20
 
 export const NAV_ICON_SIZE: number = 24
 export const enum NAV_TITLE {

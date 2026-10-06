@@ -12,7 +12,6 @@ import {
   getCachedAuthSession,
   getCachedBalance,
   getCachedCurrency,
-  getCachedSalaryDay,
   getCachedTransactionLimit,
   getCachedTransactions,
   getCachedUserCategories,
@@ -72,13 +71,11 @@ export default async function Page(props: {
   const [
     userTransactionLimit,
     currency,
-    userSalaryDay,
     transactionData,
     userCategoriesFromSettings,
   ] = await Promise.all([
     userTransactionLimitPromise,
     getCachedCurrency(userId),
-    getCachedSalaryDay(userId),
     transactionsPromise,
     getCachedUserCategories(userId),
   ])
@@ -90,7 +87,6 @@ export default async function Page(props: {
     null,
     userId,
     userCategories,
-    userSalaryDay,
   )
 
   const hasTestTransactions = transactions.some((t) => t.isTest)
@@ -232,7 +228,6 @@ export default async function Page(props: {
             userId={userId}
             currency={currency}
             userCategories={userCategories}
-            userSalaryDay={userSalaryDay}
           />
         </div>
       )}

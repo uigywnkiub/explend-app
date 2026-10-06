@@ -8,7 +8,6 @@ import { ROUTE } from '@/config/constants/routes'
 import {
   createTransaction,
   getCurrency,
-  getSalaryDay,
   getSubscriptions,
   getUserPushSubscriptions,
   getUserSettingsCategories,
@@ -53,11 +52,10 @@ export async function GET(req: NextRequest) {
     const errors: string[] = []
     let notified = false
 
-    const [subscriptions, userCategories, userSalaryDay, currency, pushSubs] =
+    const [subscriptions, userCategories, currency, pushSubs] =
       await Promise.all([
         getSubscriptions(userId),
         getUserSettingsCategories(userId),
-        getSalaryDay(userId),
         getCurrency(userId),
         getUserPushSubscriptions(userId),
       ])
@@ -75,7 +73,7 @@ export async function GET(req: NextRequest) {
           isSubscription: true,
         })
 
-        await createTransaction(userId, userCategories, userSalaryDay, formData)
+        await createTransaction(userId, userCategories, formData)
 
         processed.push(sub._id)
       } catch (err) {

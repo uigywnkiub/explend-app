@@ -1,6 +1,8 @@
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { model, models, Schema } from 'mongoose'
 
+import { DEFAULT_SALARY_DAY } from '@/config/constants/main'
+
 import type { TUserSettings } from '../types'
 import {
   categoriesSchema,
@@ -24,6 +26,13 @@ const userSettingsSchema = new Schema<TUserSettings>(
     subscriptions: { type: [subscriptionsSchema] },
     currency: { type: currencySchema },
     pushSubscriptions: { type: [Schema.Types.Mixed] },
+    transactionLimit: { type: Number, default: null },
+    salaryDay: {
+      type: Number,
+      default: DEFAULT_SALARY_DAY,
+      min: 1,
+      max: 31,
+    },
   },
   { timestamps: true },
 )

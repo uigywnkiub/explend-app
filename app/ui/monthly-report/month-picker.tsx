@@ -6,14 +6,14 @@ import { getDaysInMonth } from 'date-fns'
 import { haptic } from 'ios-haptics'
 
 import { toCalendarDate } from '@/app/lib/helpers'
-import type { TMinMaxTransactionByDate, TTransaction } from '@/app/lib/types'
+import type { TMinMaxTransactionByDate, TUserSettings } from '@/app/lib/types'
 
 type TProps = {
   selectedDate: RangeValue<DateValue>
   onDateSelection: (dateRange: RangeValue<DateValue>) => void
   minTransaction: TMinMaxTransactionByDate['minTransaction']
   maxTransaction: TMinMaxTransactionByDate['maxTransaction']
-  userSalaryDay: TTransaction['salaryDay']
+  userSalaryDay: TUserSettings['salaryDay']
 }
 
 function MonthPicker({

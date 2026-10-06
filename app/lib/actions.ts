@@ -18,6 +18,7 @@ import {
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_NAME,
   DEFAULT_CURRENCY_SIGN,
+  DEFAULT_SALARY_DAY,
   RESEND_API_KEY,
   RESEND_EMAIL,
 } from '@/config/constants/main'
@@ -59,6 +60,7 @@ import type {
   TSubscriptions,
   TTransaction,
   TUserId,
+  TUserSettings,
 } from './types'
 
 export const getAuthSession = async (): Promise<TSession> => {
@@ -162,18 +164,17 @@ export async function getBalanceCardData(userId: TUserId): Promise<{
 
 export async function getTransactionLimit(
   userId: TUserId,
-): Promise<TTransaction['transactionLimit']> {
+): Promise<TUserSettings['transactionLimit']> {
   if (!userId) {
     throw new Error('User ID is required to fetch transaction limit.')
   }
   try {
     await dbConnect()
-    const transaction = await TransactionModel.findOne(
-      { userId },
-      { transactionLimit: 1, _id: 0 },
-    ).lean<{ transactionLimit: TTransaction['transactionLimit'] }>()
+    const userSettings = await UserSettingsModel.findOne({ userId })
+      .select('transactionLimit -_id')
+      .lean<{ transactionLimit: TUserSettings['transactionLimit'] }>()
 
-    return transaction?.transactionLimit
+    return userSettings?.transactionLimit
   } catch (err) {
     throw err
   }
@@ -228,7 +229,7 @@ export async function updateCurrency(
 
 export async function updateTransactionLimit(
   userId: TUserId,
-  transactionLimit: TTransaction['transactionLimit'],
+  transactionLimit: TUserSettings['transactionLimit'],
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to update transactions limit.')
@@ -238,7 +239,11 @@ export async function updateTransactionLimit(
   }
   try {
     await dbConnect()
-    await TransactionModel.updateMany({ userId }, { transactionLimit })
+    await UserSettingsModel.updateOne(
+      { userId },
+      { $set: { transactionLimit } },
+      { upsert: true },
+    )
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -247,7 +252,7 @@ export async function updateTransactionLimit(
 
 export async function updateSalaryDay(
   userId: TUserId,
-  salaryDay: TTransaction['salaryDay'],
+  salaryDay: TUserSettings['salaryDay'],
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to update salary day.')
@@ -261,7 +266,11 @@ export async function updateSalaryDay(
   }
   try {
     await dbConnect()
-    await TransactionModel.updateMany({ userId }, { salaryDay })
+    await UserSettingsModel.updateOne(
+      { userId },
+      { $set: { salaryDay } },
+      { upsert: true },
+    )
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -271,7 +280,6 @@ export async function updateSalaryDay(
 export async function createTransaction(
   userId: TUserId,
   userCategories: TCategories[],
-  userSalaryDay: TTransaction['salaryDay'],
   formData: FormData,
 ): Promise<void> {
   if (!userId) {
@@ -285,7 +293,7 @@ export async function createTransaction(
   try {
     const newTransaction: Omit<
       TTransaction,
-      'createdAt' | 'updatedAt' | 'transactionLimit' | 'isEdited'
+      'createdAt' | 'updatedAt' | 'isEdited'
     > = {
       id: crypto.randomUUID(),
       userId,
@@ -302,7 +310,6 @@ export async function createTransaction(
         'true') as TTransaction['isSubscription'],
       isTest: (formData.get('isTest') === 'true') as TTransaction['isTest'],
       balance: '0' as TTransaction['balance'],
-      salaryDay: userSalaryDay,
       images: JSON.parse(
         formData.get('images')?.toString() || '[]',
       ) as TTransaction['images'],
@@ -648,7 +655,6 @@ export async function importTransactions(
 export async function importBankTransactions(
   userId: TUserId,
   userCategories: TCategories[],
-  userSalaryDay: TTransaction['salaryDay'],
   bank: TBank,
   payload: string, // csvText for Monobank, base64 for Privat24.
 ): Promise<TImportTransactions> {
@@ -674,8 +680,8 @@ export async function importBankTransactions(
     ),
   )
 
-  const transactions: Omit<TTransaction, 'isEdited' | 'transactionLimit'>[] =
-    validRows.map(({ rawAmount, description, createdAt }, i) => ({
+  const transactions: Omit<TTransaction, 'isEdited'>[] = validRows.map(
+    ({ rawAmount, description, createdAt }, i) => ({
       id: crypto.randomUUID(),
       userId,
       description,
@@ -685,11 +691,11 @@ export async function importBankTransactions(
       isSubscription: false,
       isTest: false,
       balance: rawAmount.toString(),
-      salaryDay: userSalaryDay,
       images: [],
       createdAt,
       updatedAt: createdAt,
-    }))
+    }),
+  )
 
   await dbConnect()
 
@@ -938,18 +944,17 @@ export async function getCategoryLimits(
 
 export async function getSalaryDay(
   userId: TUserId,
-): Promise<TTransaction['salaryDay']> {
+): Promise<TUserSettings['salaryDay']> {
   if (!userId) {
     throw new Error('User ID is required to get salary day.')
   }
   try {
     await dbConnect()
-    const transaction = await TransactionModel.findOne(
-      { userId },
-      { salaryDay: 1, _id: 0 },
-    ).lean<{ salaryDay: TTransaction['salaryDay'] }>()
+    const userSettings = await UserSettingsModel.findOne({ userId })
+      .select('salaryDay -_id')
+      .lean<{ salaryDay: TUserSettings['salaryDay'] }>()
 
-    return transaction?.salaryDay
+    return userSettings ? userSettings.salaryDay : DEFAULT_SALARY_DAY
   } catch (err) {
     throw err
   }
