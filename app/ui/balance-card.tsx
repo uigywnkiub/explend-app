@@ -30,8 +30,8 @@ import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_ICON_SIZE, DEFAULT_TIME_ZONE } from '@/config/constants/main'
 import { DIV } from '@/config/constants/motion'
 
-import { getAllTransactions } from '../lib/actions'
-import { getTransactionsTotals, getWeeklySpendData } from '../lib/data'
+import { getBalanceCardData } from '../lib/actions'
+import { getWeeklySpendData } from '../lib/data'
 import {
   cn,
   getBooleanFromLocalStorage,
@@ -39,7 +39,12 @@ import {
   getGreeting,
   setInLocalStorage,
 } from '../lib/helpers'
-import type { TTransaction, TUser, TWeeklySpendData } from '../lib/types'
+import type {
+  TCurrency,
+  TTransaction,
+  TUser,
+  TWeeklySpendData,
+} from '../lib/types'
 import Loading from '../loading'
 import AnimatedGreeting from './animated-greeting'
 import AnimatedNumber from './animated-number'
@@ -48,9 +53,10 @@ import { HoverableElement } from './hoverables'
 type TProps = {
   user: TUser | undefined
   balance: TTransaction['balance']
-  currency: TTransaction['currency']
+  currency: TCurrency
   hasTransactions: boolean
   transactionCount: number
+  isBalanceLoading?: boolean
 }
 
 const SPEND_CHART_COLOR = 'hsl(var(--heroui-primary-400))'
@@ -62,6 +68,7 @@ function BalanceCard({
   currency,
   hasTransactions,
   transactionCount,
+  isBalanceLoading = false,
 }: TProps) {
   const [isShowTotals, setIsChangeInfo] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -95,16 +102,9 @@ function BalanceCard({
   const getTotal = useCallback(async () => {
     setIsLoading(true)
     try {
-      const transactions = await getAllTransactions(userId)
-      setTotal({
-        income: getTransactionsTotals(transactions).income,
-        expense: getTransactionsTotals(transactions).expense,
-      })
-      try {
-        setWeeklySpend(getWeeklySpendData(transactions))
-      } catch {
-        setWeeklySpend(null)
-      }
+      const { total, weeklyTransactions } = await getBalanceCardData(userId)
+      setTotal(total)
+      setWeeklySpend(getWeeklySpendData(weeklyTransactions))
       setLoadedTransactionCount(transactionCount)
     } catch (err) {
       setTotal({
@@ -147,8 +147,14 @@ function BalanceCard({
       shadow='none'
       isPressable={hasTransactions}
       allowTextSelectionOnPress
-      aria-expanded={isShowTotals}
-      aria-label={isShowTotals ? 'Hide Details' : 'Show Details'}
+      aria-expanded={hasTransactions ? isShowTotals : undefined}
+      aria-label={
+        hasTransactions
+          ? isShowTotals
+            ? 'Hide Details'
+            : 'Show Details'
+          : undefined
+      }
       onPress={onChangeInfo}
     >
       <div className='pointer-events-none absolute -inset-px opacity-0' />
@@ -210,8 +216,18 @@ function BalanceCard({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ ...DIV.TRANSITION_SPRING }}
               >
-                <AnimatedNumber value={balance} isFormattedBalance />{' '}
-                {currency.code}
+                {isBalanceLoading ? (
+                  <span
+                    role='status'
+                    aria-label='Loading balance'
+                    className='bg-default-200 inline-block h-6 w-32 animate-pulse rounded align-middle'
+                  />
+                ) : (
+                  <>
+                    <AnimatedNumber value={balance} isFormattedBalance />{' '}
+                    {currency.code}
+                  </>
+                )}
               </motion.p>
             )}
             {hasTransactions && (

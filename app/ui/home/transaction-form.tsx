@@ -93,7 +93,13 @@ import {
   setInLocalStorage,
   uniqueArray,
 } from '../../lib/helpers'
-import type { TReceipt, TReceiptState, TTransaction } from '../../lib/types'
+import type {
+  TCategories,
+  TCurrency,
+  TReceipt,
+  TReceiptState,
+  TTransaction,
+} from '../../lib/types'
 import AILogo from '../ai-logo'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
@@ -106,8 +112,8 @@ const TAB_KEY = {
 }
 
 type TProps = {
-  currency: TTransaction['currency']
-  userCategories: TTransaction['categories']
+  currency: TCurrency
+  userCategories: TCategories[]
 }
 
 function TransactionForm({ currency, userCategories }: TProps) {
@@ -433,7 +439,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
   const getCompletionAIData = useCallback(
     async (
-      categories: TTransaction['categories'],
+      categories: TCategories[],
       userPrompt: string,
     ): Promise<UseDebounceReturn | undefined> => {
       if (!trimmedDescription) {
@@ -602,7 +608,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
       resumeToastShownRef.current = true // Set flag to true after the toast is shown.
     },
-    300,
+    500,
     [isExpanded],
   )
 
@@ -876,7 +882,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
         </Modal>
       </>
 
-      <LimitToast triggerBy={categoryName} />
+      <LimitToast triggerBy={categoryName} userCategories={userCategories} />
       <Accordion
         isCompact
         // hideIndicator

@@ -1,8 +1,4 @@
-import { PiWarningOctagonFill } from 'react-icons/pi'
-
 import { Metadata } from 'next'
-
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 
 import {
   DEFAULT_TRANSACTION_LIMIT,
@@ -13,19 +9,14 @@ import { siteMeta } from '@/config/site-meta'
 
 import {
   createTransaction,
-  getCachedAllTransactions,
   getCachedAuthSession,
   getCachedBalance,
   getCachedCurrency,
-  getCachedSalaryDay,
   getCachedTransactionLimit,
   getCachedTransactions,
-  resetCategories,
+  getCachedUserCategories,
 } from './lib/actions'
-import {
-  getTransactionsWithChangedCategory,
-  getUserCategories,
-} from './lib/data'
+import { getUserCategories } from './lib/data'
 import {
   formatDate,
   getCategoryWithoutEmoji,
@@ -37,8 +28,7 @@ import type {
   TTotalsTransaction,
   TTransaction,
 } from './lib/types'
-import BalanceCard from './ui/balance-card'
-import ClientRouterRefresh from './ui/client-router-refresh'
+import BalanceCardSection from './ui/home/balance-card-section'
 import CreateTestTransactions from './ui/home/create-test-transactions'
 import DeleteTestTransactions from './ui/home/delete-test-transactions'
 import Search from './ui/home/search'
@@ -66,46 +56,38 @@ export default async function Page(props: {
   const userId = session?.user?.email
   const query = searchParams?.[SEARCH_PARAM.QUERY] || ''
   const page = Number(searchParams?.[SEARCH_PARAM.PAGE]) || 1
-  const userTransactionLimit = query
-    ? Infinity
-    : await getCachedTransactionLimit(userId)
-  const limit = userTransactionLimit || DEFAULT_TRANSACTION_LIMIT
-  const offset = (page - 1) * limit
-  const [
-    balance,
-    currency,
-    userSalaryDay,
-    { transactions, totalEntries, totalPages },
-  ] = await Promise.all([
-    getCachedBalance(userId),
-    getCachedCurrency(userId),
-    getCachedSalaryDay(userId),
-    getCachedTransactions(userId, offset, limit),
-  ])
+  const balancePromise = getCachedBalance(userId)
+  const userTransactionLimitPromise = query
+    ? Promise.resolve(Infinity)
+    : getCachedTransactionLimit(userId)
+  const transactionsPromise = userTransactionLimitPromise.then(
+    (userTransactionLimit) => {
+      const limit = userTransactionLimit || DEFAULT_TRANSACTION_LIMIT
+      const offset = (page - 1) * limit
 
-  const allHaveCategories = transactions.every(
-    (t) => Array.isArray(t.categories) && t.categories.length > 0,
+      return getCachedTransactions(userId, offset, limit, Boolean(query))
+    },
   )
-  if (!allHaveCategories) {
-    await resetCategories(userId, DEFAULT_CATEGORIES, false)
-
-    return <ClientRouterRefresh loadingText='Refreshing categories...' />
-  }
-  const userCategories = getUserCategories(transactions)
+  const [
+    userTransactionLimit,
+    currency,
+    transactionData,
+    userCategoriesFromSettings,
+  ] = await Promise.all([
+    userTransactionLimitPromise,
+    getCachedCurrency(userId),
+    transactionsPromise,
+    getCachedUserCategories(userId),
+  ])
+  const { transactions, totalEntries, totalPages } = transactionData
+  const userCategories = getUserCategories(userCategoriesFromSettings)
+  const limit = userTransactionLimit || DEFAULT_TRANSACTION_LIMIT
 
   const createTransactionWithExtraData = createTransaction.bind(
     null,
     userId,
-    currency,
     userCategories,
-    userSalaryDay,
   )
-
-  const transactionsWithChangedCategory = getTransactionsWithChangedCategory(
-    await getCachedAllTransactions(userId),
-  )
-  const countTransactionsWithChangedCategory =
-    transactionsWithChangedCategory.length
 
   const hasTestTransactions = transactions.some((t) => t.isTest)
 
@@ -186,9 +168,9 @@ export default async function Page(props: {
         {NAV_TITLE.HOME}
       </h1>
       <div className='mx-auto flex flex-col gap-y-0'>
-        <BalanceCard
+        <BalanceCardSection
           user={session?.user}
-          balance={balance}
+          balancePromise={balancePromise}
           currency={currency}
           hasTransactions={totalEntries > 0}
           transactionCount={totalEntries}
@@ -246,15 +228,15 @@ export default async function Page(props: {
             userId={userId}
             currency={currency}
             userCategories={userCategories}
-            userSalaryDay={userSalaryDay}
           />
         </div>
       )}
       <TransactionList
         groupedTransactionsByDate={groupedTransactionsByDate}
         totalsTransactionsByDate={totalsTransactionsByDate}
-        transactionsWithChangedCategory={transactionsWithChangedCategory}
+        userId={userId}
         currency={currency}
+        userCategories={userCategories}
       />
       <div className='mx-auto mt-4'>
         {!query ? (
@@ -279,12 +261,6 @@ export default async function Page(props: {
               searchedTransactionsByQuery={searchedTransactionsByQuery}
             />
           )
-        )}
-        {countTransactionsWithChangedCategory > 0 && (
-          <p className='text-warning mt-4 text-center text-sm'>
-            <PiWarningOctagonFill className='inline animate-pulse' />{' '}
-            {`You have ${countTransactionsWithChangedCategory} ${pluralize(countTransactionsWithChangedCategory, 'transaction', 'transactions')} with the old category.`}
-          </p>
         )}
       </div>
     </div>

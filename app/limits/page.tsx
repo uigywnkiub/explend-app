@@ -2,7 +2,14 @@ import type { Metadata } from 'next'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import { getAllTransactions, getAuthSession, getCurrency } from '../lib/actions'
+import {
+  getAuthSession,
+  getCachedUserCategories,
+  getCategoryLimits,
+  getCountDocuments,
+  getCurrency,
+  getRecentTransactionsForLimits,
+} from '../lib/actions'
 import { getUserCategories } from '../lib/data'
 import Limits from '../ui/limits/limits'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
@@ -15,11 +22,20 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const [transactions, currency] = await Promise.all([
-    getAllTransactions(userId),
+  const [
+    transactionsCount,
+    transactions,
+    currency,
+    categoryLimits,
+    userCategoriesFromSettings,
+  ] = await Promise.all([
+    getCountDocuments(userId),
+    getRecentTransactionsForLimits(userId),
     getCurrency(userId),
+    getCategoryLimits(userId),
+    getCachedUserCategories(userId),
   ])
-  const userCategories = getUserCategories(transactions)
+  const userCategories = getUserCategories(userCategoriesFromSettings)
 
   const content = (
     <>
@@ -27,12 +43,13 @@ export default async function Page() {
         {NAV_TITLE.LIMITS}
       </h1>
       <div className='mx-auto max-w-3xl text-center'>
-        {transactions.length === 0 ? (
+        {transactionsCount === 0 ? (
           <NoTransactionsPlug />
         ) : (
           <Limits
             userId={userId}
             currency={currency}
+            categoryLimits={categoryLimits}
             transactions={transactions}
             userCategories={userCategories}
           />

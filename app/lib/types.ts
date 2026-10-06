@@ -41,22 +41,23 @@ export type TTransaction = {
   id: string
   userId: string
   category: string
-  categories: TCategories[]
-  categoryLimits: TCategoryLimits[] | undefined
-  subscriptions: TSubscriptions[] | []
   images: string[] | undefined
   description: string
   amount: string
   isIncome: boolean
   balance: string
-  currency: TCurrency
-  transactionLimit: number | null | undefined
-  salaryDay: number | null | undefined
   isEdited: boolean
   isSubscription: boolean
   isTest: boolean
   createdAt: Date
   updatedAt: Date
+}
+
+export type TTableTransaction = Pick<
+  TTransaction,
+  'id' | 'category' | 'description' | 'amount' | 'isIncome' | 'createdAt'
+> & {
+  imagesCount: number
 }
 
 export type TCategoryLimits = {
@@ -72,6 +73,25 @@ export type TSubscriptions = {
   note?: string
   autoRenew?: boolean
   renewDay?: number
+}
+
+export type TUserSettings = {
+  userId: string
+  categories: TCategories[]
+  categoryLimits?: TCategoryLimits[]
+  subscriptions?: TSubscriptions[]
+  currency?: TCurrency
+  pushSubscriptions?: TPushSubscription[]
+  transactionLimit?: number | null
+  salaryDay?: number | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type TPushSubscription = {
+  endpoint: string
+  expirationTime?: number | null
+  keys: { p256dh: string; auth: string }
 }
 
 export type TRawTransaction = TTransaction & {
@@ -201,8 +221,8 @@ export type TBrowserName =
   'Chrome' | 'Safari' | 'Edge' | 'Opera' | 'Firefox' | 'Unknown'
 
 export type TApproxCategory = {
-  subject: TTransaction['categories'][0]['subject'][0]
-  item: TTransaction['categories'][0]['items'][0]
+  subject: TCategories['subject']
+  item: TCategoriesItem
   itemIndex: number
 }
 

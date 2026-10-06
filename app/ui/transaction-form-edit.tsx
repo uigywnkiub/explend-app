@@ -55,7 +55,7 @@ import {
   setInLocalStorage,
   uniqueArray,
 } from '../lib/helpers'
-import type { TTheme, TTransaction } from '../lib/types'
+import type { TCategories, TCurrency, TTheme, TTransaction } from '../lib/types'
 import Loading from '../loading'
 import InfoText from './info-text'
 import LimitToast from './limit-toast'
@@ -67,9 +67,15 @@ const TAB_KEY = {
 
 type TProps = {
   transaction: TTransaction
+  userCategories: TCategories[]
+  currency: TCurrency
 }
 
-function TransactionFormEdit({ transaction }: TProps) {
+function TransactionFormEdit({
+  transaction,
+  userCategories,
+  currency,
+}: TProps) {
   const router = useRouter()
   const { theme } = useTheme()
   const [isLoading, setIsLoading] = useState(false)
@@ -84,7 +90,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     return new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getDate())
   })
   const isTransactionWithChangedCategory = Boolean(
-    getTransactionsWithChangedCategory([transaction]).length,
+    getTransactionsWithChangedCategory([transaction], userCategories).length,
   )
   const [category, setCategory] = useState<Selection>(
     new Set(
@@ -115,10 +121,8 @@ function TransactionFormEdit({ transaction }: TProps) {
     return () =>
       removeFromLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
   }, [categoryName])
-  const userCategories = transaction.categories
   const categoryWithEmoji = getCategoryWithEmoji(categoryName, userCategories)
   const prevCategory = transaction.category
-  const currency = transaction.currency
   const isEdited = transaction.isEdited
   const transactionId = transaction.id
 
@@ -181,7 +185,6 @@ function TransactionFormEdit({ transaction }: TProps) {
       | 'description'
       | 'amount'
       | 'category'
-      | 'currency'
       | 'images'
       | 'createdAt'
     > = {
@@ -190,7 +193,6 @@ function TransactionFormEdit({ transaction }: TProps) {
       description: capitalizeFirstLetter(description),
       amount,
       category: categoryWithEmoji,
-      currency,
       images: validImageSrcs,
       createdAt: (() => {
         if (!date) return transaction.createdAt
@@ -262,7 +264,7 @@ function TransactionFormEdit({ transaction }: TProps) {
 
   return (
     <>
-      <LimitToast triggerBy={categoryName} />
+      <LimitToast triggerBy={categoryName} userCategories={userCategories} />
       <Tabs
         aria-label='Edit Transaction'
         fullWidth
@@ -348,7 +350,7 @@ function TransactionFormEdit({ transaction }: TProps) {
                                 : 'text-default-500',
                             )}
                           >
-                            {transaction.currency.sign}
+                            {currency.sign}
                           </span>
                         </div>
                       }

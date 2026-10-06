@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 import { auth } from '@/auth'
 
-import PushSubscriptionModel from '@/app/lib/models/push-subscription.model'
+import UserSettingsModel from '@/app/lib/models/user-settings.model'
 import dbConnect from '@/app/lib/mongodb'
 
 export async function POST(req: NextRequest) {
@@ -18,16 +18,16 @@ export async function POST(req: NextRequest) {
 
   await dbConnect()
 
-  const exists = await PushSubscriptionModel.findOne({
+  const existsInSettings = await UserSettingsModel.findOne({
     userId: session.user.email,
-    'subscriptions.endpoint': subscription.endpoint,
+    'pushSubscriptions.endpoint': subscription.endpoint,
   })
 
-  if (!exists) {
-    await PushSubscriptionModel.updateOne(
+  if (!existsInSettings) {
+    await UserSettingsModel.updateOne(
       { userId: session.user.email },
-      { $push: { subscriptions: subscription } },
-      { upsert: true },
+      { $push: { pushSubscriptions: subscription } },
+      { upsert: true, setDefaultsOnInsert: false },
     )
   }
 
@@ -47,9 +47,9 @@ export async function DELETE(req: NextRequest) {
 
   await dbConnect()
 
-  await PushSubscriptionModel.updateOne(
+  await UserSettingsModel.updateOne(
     { userId: session.user.email },
-    { $pull: { subscriptions: { endpoint } } },
+    { $pull: { pushSubscriptions: { endpoint } } },
   )
 
   return NextResponse.json({ ok: true })

@@ -3,9 +3,9 @@ import type { Metadata } from 'next'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
-  getAllTransactions,
   getAuthSession,
   getCurrency,
+  getMonthlyReportTransactions,
   getSalaryDay,
 } from '../lib/actions'
 import MonthlyReport from '../ui/monthly-report/monthly-report'
@@ -27,7 +27,7 @@ export default async function Page() {
   // getCachedCurrency(userId)
   // Caching data for a child server component END
   const [transactions, currency, userSalaryDay] = await Promise.all([
-    getAllTransactions(userId),
+    getMonthlyReportTransactions(userId),
     getCurrency(userId),
     getSalaryDay(userId),
   ])

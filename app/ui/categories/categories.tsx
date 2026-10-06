@@ -41,7 +41,6 @@ import type {
   TCategoriesLoading,
   TEditingItemIndex,
   TIcon,
-  TTransaction,
   TUserId,
 } from '@/app/lib/types'
 
@@ -60,7 +59,7 @@ const PLACEHOLDER = {
 
 type TProps = {
   userId: TUserId
-  userCategories: TTransaction['categories']
+  userCategories: TCategories[]
   areCategoriesLengthMismatch: boolean
 }
 

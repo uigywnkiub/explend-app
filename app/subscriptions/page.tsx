@@ -3,11 +3,12 @@ import type { Metadata } from 'next'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
-  getAllTransactions,
   getAuthSession,
+  getCachedUserCategories,
+  getCountDocuments,
   getCurrency,
-  getSalaryDay,
   getSubscriptions,
+  getSubscriptionTransactions,
 } from '../lib/actions'
 import { getUserCategories } from '../lib/data'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
@@ -21,14 +22,20 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const [transactions, userSubscriptions, currency, userSalaryDay] =
-    await Promise.all([
-      getAllTransactions(userId),
-      getSubscriptions(userId),
-      getCurrency(userId),
-      getSalaryDay(userId),
-    ])
-  const userCategories = getUserCategories(transactions)
+  const [
+    transactionsCount,
+    subscriptionTransactions,
+    userSubscriptions,
+    currency,
+    userCategoriesFromSettings,
+  ] = await Promise.all([
+    getCountDocuments(userId),
+    getSubscriptionTransactions(userId),
+    getSubscriptions(userId),
+    getCurrency(userId),
+    getCachedUserCategories(userId),
+  ])
+  const userCategories = getUserCategories(userCategoriesFromSettings)
 
   const content = (
     <>
@@ -36,7 +43,7 @@ export default async function Page() {
         {NAV_TITLE.SUBSCRIPTIONS}
       </h1>
       <div className='mx-auto max-w-3xl'>
-        {transactions.length === 0 ? (
+        {transactionsCount === 0 ? (
           <NoTransactionsPlug />
         ) : (
           <Subscriptions
@@ -44,8 +51,7 @@ export default async function Page() {
             currency={currency}
             subscriptionsData={userSubscriptions}
             userCategories={userCategories}
-            userSalaryDay={userSalaryDay}
-            transactions={transactions}
+            transactions={subscriptionTransactions}
           />
         )}
       </div>

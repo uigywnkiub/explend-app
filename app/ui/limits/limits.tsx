@@ -56,7 +56,9 @@ import {
 } from '@/app/lib/helpers'
 import type {
   TCalculatedLimits,
+  TCategories,
   TCategoryLimits,
+  TCurrency,
   TTransaction,
   TUserId,
 } from '@/app/lib/types'
@@ -79,12 +81,19 @@ export const enum DROPDOWN_KEY {
 
 type TProps = {
   userId: TUserId
-  currency: TTransaction['currency']
+  currency: TCurrency
+  categoryLimits: TCategoryLimits[]
   transactions: TTransaction[]
-  userCategories: TTransaction['categories']
+  userCategories: TCategories[]
 }
 
-function Limits({ userId, currency, transactions, userCategories }: TProps) {
+function Limits({
+  userId,
+  currency,
+  categoryLimits,
+  transactions,
+  userCategories,
+}: TProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const {
     isOpen: isOpenReset,
@@ -136,13 +145,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   const totalsByCategoryCurrMonth = useMemo(() => {
     return calculateTotalsByCategory(currMonthExpense, true)
   }, [currMonthExpense])
-  const userLimitsData = useMemo(() => {
-    const [_userLimitsData] = transactions
-      .map((t) => t.categoryLimits)
-      .filter(Boolean)
-
-    return _userLimitsData || []
-  }, [transactions])
+  const userLimitsData = categoryLimits
 
   const changedCategoryNames = userLimitsData
     .map((e) => e.categoryName)
@@ -187,12 +190,7 @@ function Limits({ userId, currency, transactions, userCategories }: TProps) {
   }, [calculatedLimitsData])
 
   const disabledCategories = [
-    ...new Set(
-      transactions
-        .map((t) => t.categoryLimits)
-        .filter(Boolean)
-        .flatMap((c) => c!.map((k) => k.categoryName)),
-    ),
+    ...new Set(categoryLimits.map((limit) => limit.categoryName)),
   ]
 
   const getLimitAmount = (categoryName: TCategoryLimits['categoryName']) => {

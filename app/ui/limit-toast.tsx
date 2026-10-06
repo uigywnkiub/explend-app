@@ -10,14 +10,13 @@ import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { TOAST_DURATION } from '@/config/constants/toast'
 
 import {
-  getAllTransactions,
   getCachedAuthSession,
   getCategoryLimits,
+  getRecentTransactionsForLimits,
 } from '@/app/lib/actions'
 import {
   calculateTotalsByCategory,
   getTransactionsByCurrMonth,
-  getUserCategories,
 } from '@/app/lib/data'
 import {
   formatAmount,
@@ -26,13 +25,14 @@ import {
   getFromLocalStorage,
 } from '@/app/lib/helpers'
 
-import type { TCategoryLimits } from '../lib/types'
+import type { TCategories, TCategoryLimits } from '../lib/types'
 
 type TProps = {
   readonly triggerBy: unknown
+  readonly userCategories: TCategories[]
 }
 
-export default function LimitToast({ triggerBy }: TProps) {
+export default function LimitToast({ triggerBy, userCategories }: TProps) {
   const [toastItems, setToastItems] = useState<
     TCategoryLimits['categoryName'][]
   >([])
@@ -51,10 +51,8 @@ export default function LimitToast({ triggerBy }: TProps) {
       const userId = session?.user?.email
       const [limitsRaw, transactions] = await Promise.all([
         getCategoryLimits(userId),
-        getAllTransactions(userId),
+        getRecentTransactionsForLimits(userId),
       ])
-
-      const userCategories = getUserCategories(transactions)
 
       const totals = calculateTotalsByCategory(
         getTransactionsByCurrMonth(transactions),
@@ -119,7 +117,7 @@ export default function LimitToast({ triggerBy }: TProps) {
   }
 
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
-  const [isReady, cancel] = useDebounce(() => init(), 300, [triggerBy])
+  const [isReady, cancel] = useDebounce(() => init(), 500, [triggerBy])
 
   useEffect(() => {
     if (!isReady()) cancel()

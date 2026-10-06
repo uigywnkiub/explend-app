@@ -41,10 +41,13 @@ import type {
   TMonobankCsvRow,
   TTransaction,
   TTransactionType,
+  TUserSettings,
   TWeeklySpendData,
 } from './types'
 
-export const calculateTotalAmount = (transactions: TTransaction[]) => {
+export const calculateTotalAmount = (
+  transactions: Pick<TTransaction, 'amount'>[],
+) => {
   return transactions.reduce(
     (total, { amount }) => total + parseFloat(amount),
     0,
@@ -155,11 +158,13 @@ export const calculateMonthlyReportData = (
   return { totalIncome, totalExpense, expenseReportData, incomeReportData }
 }
 
-export const filterTransactionsByDateRange = (
-  transactions: TTransaction[],
+export const filterTransactionsByDateRange = <
+  T extends Pick<TTransaction, 'createdAt'>,
+>(
+  transactions: T[],
   startDate: Date,
   endDate: Date,
-): TTransaction[] => {
+): T[] => {
   return transactions.filter((t) => {
     const transactionDate = formatISO(t.createdAt)
 
@@ -171,7 +176,7 @@ export const filterTransactionsByDateRange = (
 }
 
 export const getWeeklySpendData = (
-  transactions: TTransaction[],
+  transactions: Pick<TTransaction, 'amount' | 'isIncome' | 'createdAt'>[],
 ): TWeeklySpendData => {
   const today = startOfToday()
   const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 })
@@ -465,11 +470,12 @@ export const calculateForecast = (
 
 export const getTransactionsWithChangedCategory = (
   transactions: TTransaction[],
+  categories: TCategories[] = DEFAULT_CATEGORIES,
 ): TTransaction[] => {
   return transactions.filter((t) => {
-    // This will throw an error on previous user transactions without a categories array. Catch and handle this approach achieves by resetCategories function uses before the current function.
+    // Avoid showing a user error page when category data is malformed.
     try {
-      return !t.categories.some((category) => {
+      return !categories.some((category) => {
         return category.items.some(
           (item) => `${item.emoji} ${item.name}` === t.category,
         )
@@ -481,13 +487,22 @@ export const getTransactionsWithChangedCategory = (
 }
 
 export const getUserCategories = (
-  transactions: TTransaction[],
+  categories?: TCategories[] | TUserSettings | null,
 ): TCategories[] => {
-  return (
-    transactions.find(
-      (t) => Array.isArray(t.categories) && t.categories.length > 0,
-    )?.categories || DEFAULT_CATEGORIES
-  )
+  if (Array.isArray(categories) && categories.length > 0) {
+    return categories
+  }
+
+  if (
+    categories &&
+    'categories' in categories &&
+    Array.isArray(categories.categories) &&
+    categories.categories.length > 0
+  ) {
+    return categories.categories
+  }
+
+  return DEFAULT_CATEGORIES
 }
 
 export const deepCloneCategories = (
@@ -621,7 +636,10 @@ export const parsePrivat24Xlsx = async (
   return { rows, skipped }
 }
 
-export const buildWeeklyReport = (transactions: TTransaction[]) => {
+export const buildWeeklyReport = (
+  transactions: TTransaction[],
+  currencySign: string,
+) => {
   const lastWeekStart = startOfWeek(subWeeks(new Date(), 1), {
     weekStartsOn: 1,
   })
@@ -648,7 +666,7 @@ export const buildWeeklyReport = (transactions: TTransaction[]) => {
     transactionCount: lastWeek.length,
     weekStart: lastWeekStart,
     weekEnd: lastWeekEnd,
-    currencySign: transactions[0]?.currency.sign || '',
+    currencySign,
   }
 }
 

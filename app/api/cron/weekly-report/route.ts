@@ -5,9 +5,14 @@ import webpush from 'web-push'
 
 import { ROUTE } from '@/config/constants/routes'
 
-import { formatWeeklyReportAI, getAllTransactions } from '@/app/lib/actions'
+import {
+  formatWeeklyReportAI,
+  getAllTransactions,
+  getCurrency,
+  getUserPushSubscriptions,
+} from '@/app/lib/actions'
 import { buildWeeklyReport } from '@/app/lib/data'
-import PushSubscriptionModel from '@/app/lib/models/push-subscription.model'
+import UserSettingsModel from '@/app/lib/models/user-settings.model'
 import dbConnect from '@/app/lib/mongodb'
 import { TTransaction } from '@/app/lib/types'
 
@@ -28,11 +33,11 @@ export async function GET(req: NextRequest) {
 
   await dbConnect()
 
-  const pushDocs = await PushSubscriptionModel.find({
-    'subscriptions.0': { $exists: true },
-  }).lean<{ userId: string; subscriptions: webpush.PushSubscription[] }[]>()
+  const userIds = await UserSettingsModel.distinct('userId', {
+    'pushSubscriptions.0': { $exists: true },
+  })
 
-  if (!pushDocs.length) {
+  if (!userIds.length) {
     return NextResponse.json({ ok: true, notified: false })
   }
 
@@ -42,18 +47,21 @@ export async function GET(req: NextRequest) {
     error?: string
   }[] = []
 
-  for (const { userId, subscriptions } of pushDocs) {
+  for (const userId of userIds) {
     try {
-      const transactions = await getAllTransactions(userId)
+      const [transactions, currency, pushSubscriptions] = await Promise.all([
+        getAllTransactions(userId),
+        getCurrency(userId),
+        getUserPushSubscriptions(userId),
+      ])
+      const currencySign = currency.sign
       const {
         totalIncome,
         totalExpense,
         expenseReportData,
         transactionCount,
         biggestExpense,
-      } = buildWeeklyReport(transactions)
-
-      const currencySign = transactions[0]?.currency.sign ?? ''
+      } = buildWeeklyReport(transactions, currencySign)
 
       const aiBody = await formatWeeklyReportAI({
         totalIncome,
@@ -71,7 +79,7 @@ export async function GET(req: NextRequest) {
         url: ROUTE.MONTHLY_REPORT,
       })
 
-      for (const pushSub of subscriptions) {
+      for (const pushSub of pushSubscriptions) {
         try {
           await webpush.sendNotification(pushSub, payload)
         } catch (err) {
@@ -81,9 +89,13 @@ export async function GET(req: NextRequest) {
             'statusCode' in err &&
             (err.statusCode === 410 || err.statusCode === 404)
           ) {
-            await PushSubscriptionModel.updateOne(
+            await UserSettingsModel.updateOne(
               { userId },
-              { $pull: { subscriptions: { endpoint: pushSub.endpoint } } },
+              {
+                $pull: {
+                  pushSubscriptions: { endpoint: pushSub.endpoint },
+                },
+              },
             )
           } else {
             Sentry.captureException(err, { extra: { userId } })

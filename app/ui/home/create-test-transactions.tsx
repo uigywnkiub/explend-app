@@ -11,21 +11,24 @@ import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { createTransaction } from '../../lib/actions'
 import { cn, createFormData } from '../../lib/helpers'
-import type { TTransaction, TUserId } from '../../lib/types'
+import type {
+  TCategories,
+  TCurrency,
+  TTransaction,
+  TUserId,
+} from '../../lib/types'
 import { HoverableElement } from '../hoverables'
 
 type TProps = {
   userId: TUserId
-  currency: TTransaction['currency']
-  userCategories: TTransaction['categories']
-  userSalaryDay: TTransaction['salaryDay']
+  currency: TCurrency
+  userCategories: TCategories[]
 }
 
 export default function CreateTestTransactions({
   userId,
   currency,
   userCategories,
-  userSalaryDay,
 }: TProps) {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -120,13 +123,7 @@ export default function CreateTestTransactions({
             id: toastCreatingId,
           },
         )
-        await createTransaction(
-          userId,
-          currency,
-          userCategories,
-          userSalaryDay,
-          testTransactions[i],
-        )
+        await createTransaction(userId, userCategories, testTransactions[i])
       }
       toast.dismiss(toastCreatingId)
       haptic.confirm()

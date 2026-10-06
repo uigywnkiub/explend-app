@@ -1,7 +1,13 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { findTransactionById, getAuthSession } from '@/app/lib/actions'
+import {
+  findTransactionById,
+  getAuthSession,
+  getCachedUserCategories,
+  getCurrency,
+} from '@/app/lib/actions'
+import { getUserCategories } from '@/app/lib/data'
 
 import WithSidebar from '@/app/ui/sidebar/with-sidebar'
 import TransactionFormEdit from '@/app/ui/transaction-form-edit'
@@ -15,11 +21,13 @@ export const metadata: Metadata = {
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params
   const { id } = params
-  const [transaction, session] = await Promise.all([
-    findTransactionById(id),
-    getAuthSession(),
-  ])
+  const session = await getAuthSession()
   const userId = session?.user?.email
+  const [transaction, categoriesFromSettings, currency] = await Promise.all([
+    findTransactionById(id),
+    getCachedUserCategories(userId),
+    getCurrency(userId),
+  ])
   const isCurrentUser = userId === transaction?.userId
 
   if (!transaction || !isCurrentUser) {
@@ -31,7 +39,11 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       <h1 className='mb-4 text-center text-2xl font-semibold md:mb-8'>
         {PAGE_TITLE}
       </h1>
-      <TransactionFormEdit transaction={transaction} />
+      <TransactionFormEdit
+        transaction={transaction}
+        userCategories={getUserCategories(categoriesFromSettings)}
+        currency={currency}
+      />
     </main>
   )
 

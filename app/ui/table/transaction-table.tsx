@@ -30,14 +30,15 @@ import {
   toLowerCase,
   toUpperCase,
 } from '../../lib/helpers'
-import { TTransaction } from '../../lib/types'
+import { TCurrency, TTableTransaction, TTransaction } from '../../lib/types'
 import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
 import NoTransactionsPlug from '../no-transactions-plug'
 
 type TProps = {
-  transactions: TTransaction[]
+  transactions: TTableTransaction[]
+  currency: TCurrency
 }
 
 const enum TRANSACTION_TYPE {
@@ -53,9 +54,10 @@ type TTableItem = {
   type: TRANSACTION_TYPE
   date: string
   rawAmount: number
-  rawDate: TTransaction['createdAt']
+  rawDate: TTableTransaction['createdAt']
   isIncome: TTransaction['isIncome']
-  currencySign: TTransaction['currency']['sign']
+  currencySign: TCurrency['sign']
+  imagesCount: number
 }
 
 const enum COLUMN_KEY {
@@ -69,7 +71,12 @@ const enum COLUMN_KEY {
 const COLUMNS: {
   key: keyof Omit<
     TTableItem,
-    'key' | 'rawAmount' | 'rawDate' | 'isIncome' | 'currencySign'
+    | 'key'
+    | 'rawAmount'
+    | 'rawDate'
+    | 'isIncome'
+    | 'currencySign'
+    | 'imagesCount'
   >
   label: string
   allowsSorting?: boolean
@@ -106,7 +113,7 @@ type TSortDescriptor = {
   direction: 'ascending' | 'descending'
 }
 
-export default function TransactionTable({ transactions }: TProps) {
+export default function TransactionTable({ transactions, currency }: TProps) {
   const [filterValue, setFilterValue] = useState('')
   const [sortDescriptor, setSortDescriptor] = useState<TSortDescriptor>({
     column: COLUMN_KEY.DATE,
@@ -121,15 +128,16 @@ export default function TransactionTable({ transactions }: TProps) {
         key: t.id,
         category: t.category,
         description: t.description,
-        amount: `${getFormattedCurrency(t.amount)} ${t.currency.sign}`,
+        amount: `${getFormattedCurrency(t.amount)} ${currency.sign}`,
         type: t.isIncome ? TRANSACTION_TYPE.INCOME : TRANSACTION_TYPE.EXPENSE,
         date: formatDate(t.createdAt),
         rawAmount: parseFloat(t.amount),
         rawDate: t.createdAt,
         isIncome: t.isIncome,
-        currencySign: t.currency.sign,
+        currencySign: currency.sign,
+        imagesCount: t.imagesCount,
       })),
-    [transactions],
+    [transactions, currency],
   )
 
   const filteredItems = useMemo(() => {
@@ -343,7 +351,12 @@ export default function TransactionTable({ transactions }: TProps) {
               // Only access display properties (exclude raw values)
               const displayKey = columnKey as keyof Omit<
                 TTableItem,
-                'key' | 'rawAmount' | 'rawDate' | 'isIncome' | 'currencySign'
+                | 'key'
+                | 'rawAmount'
+                | 'rawDate'
+                | 'isIncome'
+                | 'currencySign'
+                | 'imagesCount'
               >
               const cellValue = item[displayKey]
 
@@ -370,10 +383,6 @@ export default function TransactionTable({ transactions }: TProps) {
                 const tooltipLengthStr = 30
                 const cellValue = item[displayKey]
 
-                const originalTransaction = transactions.find(
-                  (tx) => tx.id === item.key,
-                )
-
                 return (
                   <TableCell>
                     <Tooltip
@@ -390,17 +399,12 @@ export default function TransactionTable({ transactions }: TProps) {
                       >
                         <div>
                           {cellValue}
-                          {originalTransaction?.images &&
-                            originalTransaction.images.length > 0 && (
-                              <span className='text-secondary-700 pl-1 text-xs font-medium text-wrap italic'>
-                                with{' '}
-                                {pluralize(
-                                  originalTransaction.images.length,
-                                  'image',
-                                  'images',
-                                )}
-                              </span>
-                            )}
+                          {item.imagesCount > 0 && (
+                            <span className='text-secondary-700 pl-1 text-xs font-medium text-wrap italic'>
+                              with{' '}
+                              {pluralize(item.imagesCount, 'image', 'images')}
+                            </span>
+                          )}
                         </div>
                       </Link>
                     </Tooltip>

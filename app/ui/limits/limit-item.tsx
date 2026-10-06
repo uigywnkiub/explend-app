@@ -40,7 +40,7 @@ import {
   getEmojiFromCategory,
   getFormattedCurrency,
 } from '@/app/lib/helpers'
-import { TCalculatedLimits, TTransaction } from '@/app/lib/types'
+import { TCalculatedLimits, TCategories, TCurrency } from '@/app/lib/types'
 
 import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
@@ -49,8 +49,8 @@ import { DROPDOWN_KEY } from './limits'
 type TProps = {
   data: TCalculatedLimits
   idx: number
-  currency: TTransaction['currency']
-  userCategories: TTransaction['categories']
+  currency: TCurrency
+  userCategories: TCategories[]
   changedCategoryNames: string[]
   reorderContainer: React.RefObject<null>
   isReordering: boolean
@@ -255,6 +255,7 @@ function LimitItem({
             <Button
               variant='light'
               isIconOnly
+              aria-label={`Open actions for ${categoryName}`}
               size='md'
               className='z-0 md:size-10'
               onPress={haptic}

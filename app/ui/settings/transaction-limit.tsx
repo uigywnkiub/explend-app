@@ -17,8 +17,8 @@ import { updateTransactionLimit } from '@/app/lib/actions'
 import {
   TGetTransactions,
   TSelect,
-  TTransaction,
   TUserId,
+  TUserSettings,
 } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
@@ -37,8 +37,8 @@ const LIMITS: TSelect[] = [
     hoverIcon: <PiListMagnifyingGlassFill size={DEFAULT_ICON_SIZE} />,
   },
   {
-    key: DEFAULT_TRANSACTION_LIMIT.toString(),
-    value: DEFAULT_TRANSACTION_LIMIT.toString(),
+    key: '30',
+    value: '30',
     icon: <PiListMagnifyingGlass size={DEFAULT_ICON_SIZE} />,
     hoverIcon: <PiListMagnifyingGlassFill size={DEFAULT_ICON_SIZE} />,
   },
@@ -58,7 +58,7 @@ const LIMITS: TSelect[] = [
 
 type TProps = {
   userId: TUserId
-  userTransactionLimit: TTransaction['transactionLimit']
+  userTransactionLimit: TUserSettings['transactionLimit']
   transactionsCount: TGetTransactions['totalEntries']
 }
 

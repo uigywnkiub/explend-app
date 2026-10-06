@@ -12,7 +12,7 @@ import { haptic } from 'ios-haptics'
 import { DEFAULT_CATEGORY } from '@/config/constants/main'
 
 import { cn } from '@/app/lib/helpers'
-import type { TTransaction } from '@/app/lib/types'
+import type { TCategories } from '@/app/lib/types'
 
 import InfoText from '../info-text'
 
@@ -20,7 +20,7 @@ type TProps = {
   category: Selection
   setCategory: React.Dispatch<React.SetStateAction<Selection>>
   categoryName: string
-  userCategories: TTransaction['categories']
+  userCategories: TCategories[]
   isCategoryNameInvalid?: boolean
   isChangedCategoryName?: boolean
   changedCategoryNameWithEmoji?: string

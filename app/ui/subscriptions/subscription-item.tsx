@@ -48,7 +48,12 @@ import {
   getEmojiFromCategory,
   toLowerCase,
 } from '@/app/lib/helpers'
-import { TSubscriptions, TTransaction } from '@/app/lib/types'
+import {
+  TCategories,
+  TCurrency,
+  TSubscriptions,
+  TTransaction,
+} from '@/app/lib/types'
 
 import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
@@ -57,8 +62,8 @@ import { DROPDOWN_KEY } from './subscriptions'
 type TProps = {
   s: TSubscriptions
   idx: number
-  currency: TTransaction['currency']
-  userCategories: TTransaction['categories']
+  currency: TCurrency
+  userCategories: TCategories[]
   changedCategoryNames: string[]
   reorderContainer: React.RefObject<null>
   isReordering: boolean
@@ -227,6 +232,7 @@ function SubscriptionItem({
                 <Button
                   variant='light'
                   isIconOnly
+                  aria-label='Open subscription actions'
                   size='md'
                   className='md:size-10'
                   onPress={haptic}

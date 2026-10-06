@@ -38,7 +38,7 @@ import {
   getFormattedCurrency,
   pluralize,
 } from '@/app/lib/helpers'
-import type { TTransaction, TTransactionType } from '@/app/lib/types'
+import type { TCurrency, TTransaction, TTransactionType } from '@/app/lib/types'
 
 import NoTransactionsPlug from '../no-transactions-plug'
 import CustomLegend from './custom-legend'
@@ -52,7 +52,7 @@ const DATA_KEY = {
 
 type TProps = {
   transactionsRaw: TTransaction[]
-  currency: TTransaction['currency']
+  currency: TCurrency
 }
 
 function RadarChart({ transactionsRaw, currency }: TProps) {

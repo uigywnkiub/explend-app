@@ -53,7 +53,13 @@ import {
   getFormattedAmountState,
   pluralize,
 } from '@/app/lib/helpers'
-import type { TSubscriptions, TTransaction, TUserId } from '@/app/lib/types'
+import type {
+  TCategories,
+  TCurrency,
+  TSubscriptions,
+  TTransaction,
+  TUserId,
+} from '@/app/lib/types'
 
 import AmountInput from '../amount-input'
 import { HoverableElement } from '../hoverables'
@@ -72,10 +78,9 @@ export const enum DROPDOWN_KEY {
 
 type TProps = {
   userId: TUserId
-  currency: TTransaction['currency']
-  subscriptionsData: TTransaction['subscriptions']
-  userCategories: TTransaction['categories']
-  userSalaryDay: TTransaction['salaryDay']
+  currency: TCurrency
+  subscriptionsData: TSubscriptions[]
+  userCategories: TCategories[]
   transactions: TTransaction[]
 }
 
@@ -84,7 +89,6 @@ export default function Subscriptions({
   currency,
   subscriptionsData,
   userCategories,
-  userSalaryDay,
   transactions,
 }: TProps) {
   const {
@@ -259,13 +263,7 @@ export default function Subscriptions({
     try {
       const newSubscription = createFormData(subscriptionData)
       await toast.promise(
-        createTransaction(
-          userId,
-          currency,
-          userCategories,
-          userSalaryDay,
-          newSubscription,
-        ),
+        createTransaction(userId, userCategories, newSubscription),
         {
           loading: 'Processing as transaction...',
           success: 'Transaction added.',
