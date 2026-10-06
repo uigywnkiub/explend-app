@@ -14,7 +14,6 @@ import {
   getUserSettingsCategories,
 } from '@/app/lib/actions'
 import { createFormData, getEmojiFromCategory } from '@/app/lib/helpers'
-import TransactionModel from '@/app/lib/models/transaction.model'
 import UserSettingsModel from '@/app/lib/models/user-settings.model'
 import dbConnect from '@/app/lib/mongodb'
 import { TTransaction } from '@/app/lib/types'
@@ -38,11 +37,9 @@ export async function GET(req: NextRequest) {
 
   const todayDay = new Date().getDate()
 
-  const [settingsUserIds, legacyUserIds] = await Promise.all([
-    UserSettingsModel.distinct('userId', { 'subscriptions.autoRenew': true }),
-    TransactionModel.distinct('userId', { 'subscriptions.autoRenew': true }),
-  ])
-  const userIds = [...new Set([...settingsUserIds, ...legacyUserIds])]
+  const userIds = await UserSettingsModel.distinct('userId', {
+    'subscriptions.autoRenew': true,
+  })
 
   const results: {
     userId: TTransaction['userId']

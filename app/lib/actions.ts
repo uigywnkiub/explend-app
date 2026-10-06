@@ -189,15 +189,9 @@ export async function getCurrency(userId: TUserId): Promise<TCurrency> {
     const userSettings = await UserSettingsModel.findOne({ userId })
       .select('currency -_id')
       .lean<{ currency: TCurrency }>()
-    if (userSettings?.currency) return userSettings.currency
-
-    const transaction = await TransactionModel.findOne(
-      { userId },
-      { currency: 1, _id: 0 },
-    ).lean<{ currency: TCurrency }>()
 
     return (
-      transaction?.currency || {
+      userSettings?.currency || {
         name: DEFAULT_CURRENCY_NAME,
         code: DEFAULT_CURRENCY_CODE,
         sign: DEFAULT_CURRENCY_SIGN,
@@ -641,20 +635,7 @@ export async function importTransactions(
     }
 
     const result = await TransactionModel.insertMany(
-      newTransactions.map((t) => {
-        const transaction = { ...t, userId } as Partial<TTransaction> & {
-          categories?: TCategories[]
-          categoryLimits?: TCategoryLimits[]
-          subscriptions?: TSubscriptions[]
-          currency?: TCurrency
-        }
-        delete transaction.categories
-        delete transaction.categoryLimits
-        delete transaction.subscriptions
-        delete transaction.currency
-
-        return transaction
-      }),
+      newTransactions.map((transaction) => ({ ...transaction, userId })),
       { ordered: false },
     )
 
@@ -948,14 +929,8 @@ export async function getCategoryLimits(
     const userSettings = await UserSettingsModel.findOne({ userId })
       .select('categoryLimits -_id')
       .lean<{ categoryLimits: TCategoryLimits[] }>()
-    if (userSettings?.categoryLimits) return userSettings.categoryLimits
 
-    const transaction = await TransactionModel.findOne(
-      { userId },
-      { categoryLimits: 1, _id: 0 },
-    ).lean<{ categoryLimits: TCategoryLimits[] }>()
-
-    return transaction?.categoryLimits || []
+    return userSettings?.categoryLimits || []
   } catch (err) {
     throw err
   }
@@ -1105,14 +1080,7 @@ export async function getSubscriptions(
     const userSettings = await UserSettingsModel.findOne({ userId })
       .select('subscriptions -_id')
       .lean<{ subscriptions: TSubscriptions[] }>()
-    const transaction = userSettings?.subscriptions
-      ? null
-      : await TransactionModel.findOne(
-          { userId },
-          { subscriptions: 1, _id: 0 },
-        ).lean<{ subscriptions: TSubscriptions[] }>()
-    const subscriptions =
-      userSettings?.subscriptions ?? transaction?.subscriptions ?? []
+    const subscriptions = userSettings?.subscriptions || []
 
     return subscriptions.map((subscription) => ({
       ...subscription,
