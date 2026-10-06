@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from 'react'
 import { useDebounce } from 'react-use'
 
 import { DateRangePicker, DateValue, RangeValue } from '@heroui/react'
-import { getDaysInMonth } from 'date-fns'
+import { endOfMonth } from 'date-fns'
 import { haptic } from 'ios-haptics'
 
 import { toCalendarDate } from '@/app/lib/helpers'
@@ -12,7 +12,6 @@ type TProps = {
   selectedDate: RangeValue<DateValue>
   onDateSelection: (dateRange: RangeValue<DateValue>) => void
   minTransaction: TMinMaxTransactionByDate['minTransaction']
-  maxTransaction: TMinMaxTransactionByDate['maxTransaction']
   userSalaryDay: TUserSettings['salaryDay']
 }
 
@@ -20,26 +19,16 @@ function MonthPicker({
   selectedDate,
   onDateSelection,
   minTransaction,
-  maxTransaction,
   userSalaryDay,
 }: TProps) {
   const [dateRange, setDateRange] = useState<RangeValue<DateValue> | null>(
     selectedDate,
   )
 
-  const daysInMonth = getDaysInMonth(new Date())
-  const maxTransactionDayOfMonth = maxTransaction?.createdAt
-    ? toCalendarDate(maxTransaction.createdAt).day
-    : 1
-
   const minTransactionValue = minTransaction
     ? toCalendarDate(minTransaction.createdAt)
     : null
-  const maxTransactionValue = maxTransaction
-    ? toCalendarDate(maxTransaction.createdAt).add({
-        days: daysInMonth - maxTransactionDayOfMonth,
-      })
-    : null
+  const maxTransactionValue = toCalendarDate(endOfMonth(new Date()))
 
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
   const [isReady, cancel] = useDebounce(
