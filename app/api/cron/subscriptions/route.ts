@@ -5,7 +5,7 @@ import webpush from 'web-push'
 
 import { ROUTE } from '@/config/constants/routes'
 
-import { createTransaction } from '@/app/lib/actions'
+import { createTransaction, getUserSettingsCategories } from '@/app/lib/actions'
 import { createFormData, getEmojiFromCategory } from '@/app/lib/helpers'
 import PushSubscriptionModel from '@/app/lib/models/push-subscription.model'
 import TransactionModel from '@/app/lib/models/transaction.model'
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 
   const users: Pick<
     TTransaction,
-    'userId' | 'currency' | 'categories' | 'salaryDay' | 'subscriptions'
+    'userId' | 'currency' | 'salaryDay' | 'subscriptions'
   >[] = await TransactionModel.aggregate([
     { $match: { 'subscriptions.autoRenew': true } },
     {
@@ -41,7 +41,6 @@ export async function GET(req: NextRequest) {
         _id: '$userId',
         userId: { $first: '$userId' },
         currency: { $first: '$currency' },
-        categories: { $first: '$categories' },
         salaryDay: { $first: '$salaryDay' },
         subscriptions: { $first: '$subscriptions' },
       },
@@ -65,6 +64,7 @@ export async function GET(req: NextRequest) {
     ).filter((s: TSubscriptions) => {
       return s.autoRenew === true && Number(s.renewDay) === todayDay
     })
+    const userCategories = await getUserSettingsCategories(user.userId)
 
     for (const sub of eligibleSubs) {
       try {
@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
         await createTransaction(
           user.userId,
           user.currency,
-          user.categories,
+          userCategories,
           user.salaryDay,
           formData,
         )

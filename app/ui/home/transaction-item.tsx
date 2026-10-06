@@ -48,7 +48,7 @@ import {
   omit,
   pluralize,
 } from '../../lib/helpers'
-import type { TTransaction } from '../../lib/types'
+import type { TCategories, TTransaction } from '../../lib/types'
 import HighlighterText from '../highlighter-text'
 import { HoverableElement } from '../hoverables'
 import CategoryWithImage from './category-with-images'
@@ -62,9 +62,10 @@ const enum DROPDOWN_KEY {
 
 type TProps = TTransaction & {
   hasCategoryChanged: boolean
+  userCategories: TCategories[]
 }
 
-function TransactionItem({ hasCategoryChanged, ...t }: TProps) {
+function TransactionItem({ hasCategoryChanged, userCategories, ...t }: TProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const query = searchParams.get(SEARCH_PARAM.QUERY)?.toString() || ''
@@ -107,7 +108,6 @@ Time: ${formatTime(t.createdAt)}`
       const {
         userId,
         currency,
-        categories,
         // eslint-disable-next-line unused-imports/no-unused-vars
         images,
         salaryDay,
@@ -117,7 +117,7 @@ Time: ${formatTime(t.createdAt)}`
         createTransaction(
           userId,
           currency,
-          categories,
+          userCategories,
           salaryDay,
           createFormData(restT),
         ),

@@ -41,7 +41,6 @@ export type TTransaction = {
   id: string
   userId: string
   category: string
-  categories: TCategories[]
   categoryLimits: TCategoryLimits[] | undefined
   subscriptions: TSubscriptions[] | []
   images: string[] | undefined
@@ -72,6 +71,13 @@ export type TSubscriptions = {
   note?: string
   autoRenew?: boolean
   renewDay?: number
+}
+
+export type TUserSettings = {
+  userId: string
+  categories: TCategories[]
+  createdAt: Date
+  updatedAt: Date
 }
 
 export type TRawTransaction = TTransaction & {
@@ -201,8 +207,8 @@ export type TBrowserName =
   'Chrome' | 'Safari' | 'Edge' | 'Opera' | 'Firefox' | 'Unknown'
 
 export type TApproxCategory = {
-  subject: TTransaction['categories'][0]['subject'][0]
-  item: TTransaction['categories'][0]['items'][0]
+  subject: TCategories['subject']
+  item: TCategoriesItem
   itemIndex: number
 }
 

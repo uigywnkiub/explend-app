@@ -56,6 +56,7 @@ import {
 } from '@/app/lib/helpers'
 import type {
   TCalculatedLimits,
+  TCategories,
   TCategoryLimits,
   TTransaction,
   TUserId,
@@ -81,7 +82,7 @@ type TProps = {
   userId: TUserId
   currency: TTransaction['currency']
   transactions: TTransaction[]
-  userCategories: TTransaction['categories']
+  userCategories: TCategories[]
 }
 
 function Limits({ userId, currency, transactions, userCategories }: TProps) {

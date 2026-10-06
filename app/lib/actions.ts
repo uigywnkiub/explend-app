@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 
 import { auth, signOut } from '@/auth'
+import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { SignOutError } from '@auth/core/errors'
 import { isObjectIdOrHexString } from 'mongoose'
 import { Resend } from 'resend'
@@ -25,6 +26,7 @@ import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
 import TransactionModel from '@/app/lib/models/transaction.model'
+import UserSettingsModel from '@/app/lib/models/user-settings.model'
 
 import {
   CompletionAIModel,
@@ -223,7 +225,7 @@ export async function updateSalaryDay(
 export async function createTransaction(
   userId: TUserId,
   currency: TTransaction['currency'],
-  userCategories: TTransaction['categories'],
+  userCategories: TCategories[],
   userSalaryDay: TTransaction['salaryDay'],
   formData: FormData,
 ): Promise<void> {
@@ -261,7 +263,6 @@ export async function createTransaction(
       isTest: (formData.get('isTest') === 'true') as TTransaction['isTest'],
       balance: '0' as TTransaction['balance'],
       currency,
-      categories: userCategories,
       salaryDay: userSalaryDay,
       images: JSON.parse(
         formData.get('images')?.toString() || '[]',
@@ -358,6 +359,44 @@ export async function getCountDocuments(
 }
 export const getCachedCountDocuments = cache(getCountDocuments)
 
+export async function getUserSettingsCategories(
+  userId: TUserId,
+): Promise<TCategories[]> {
+  if (!userId) {
+    throw new Error('User ID is required to fetch user categories.')
+  }
+  try {
+    await dbConnect()
+    const userSettings = await UserSettingsModel.findOne({ userId })
+      .select('categories -_id')
+      .lean<{ categories: TCategories[] }>()
+
+    return userSettings?.categories || DEFAULT_CATEGORIES
+  } catch (err) {
+    throw err
+  }
+}
+export const getCachedUserCategories = cache(getUserSettingsCategories)
+
+export async function updateUserCategories(
+  userId: TUserId,
+  categories: TCategories[],
+): Promise<void> {
+  if (!userId) {
+    throw new Error('User ID is required to update categories.')
+  }
+  try {
+    await dbConnect()
+    await UserSettingsModel.updateOne(
+      { userId },
+      { $set: { categories } },
+      { upsert: true },
+    )
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function getTransactions(
   userId: TUserId,
   offset: number = 0,
@@ -370,6 +409,7 @@ export async function getTransactions(
     await dbConnect()
     const [transactions, totalEntries] = await Promise.all([
       TransactionModel.find({ userId })
+        .select('-categories')
         .skip(offset)
         .limit(limit)
         .sort({ createdAt: 'desc' })
@@ -400,13 +440,15 @@ export async function getAllTransactions(
   try {
     await dbConnect()
 
-    return TransactionModel.find({ userId }).lean<TTransaction[]>({
-      transform: (doc) => {
-        if (!doc) return
-        delete doc._id
-        delete doc.__v
-      },
-    })
+    return TransactionModel.find({ userId })
+      .select('-categories')
+      .lean<TTransaction[]>({
+        transform: (doc) => {
+          if (!doc) return
+          delete doc._id
+          delete doc.__v
+        },
+      })
   } catch (err) {
     throw err
   }
@@ -438,7 +480,14 @@ export async function importTransactions(
     }
 
     const result = await TransactionModel.insertMany(
-      newTransactions.map((t) => ({ ...t, userId })),
+      newTransactions.map((t) => {
+        const transaction = { ...t, userId } as Partial<TTransaction> & {
+          categories?: TCategories[]
+        }
+        delete transaction.categories
+
+        return transaction
+      }),
       { ordered: false },
     )
 
@@ -451,7 +500,7 @@ export async function importTransactions(
 export async function importBankTransactions(
   userId: TUserId,
   currency: TTransaction['currency'],
-  userCategories: TTransaction['categories'],
+  userCategories: TCategories[],
   userSalaryDay: TTransaction['salaryDay'],
   bank: TBank,
   payload: string, // csvText for Monobank, base64 for Privat24.
@@ -492,7 +541,6 @@ export async function importBankTransactions(
     isTest: false,
     balance: rawAmount.toString(),
     currency,
-    categories: userCategories,
     salaryDay: userSalaryDay,
     images: [],
     createdAt,
@@ -614,11 +662,12 @@ export async function updateCategories(
 
   try {
     await dbConnect()
+    const userCategories = await getUserSettingsCategories(userId)
     // If the category's items are empty, delete the category.
     if (updatedCategories.items && updatedCategories.items.length === 0) {
-      await TransactionModel.updateMany(
-        { userId },
-        { $pull: { categories: { subject: subjectName } } },
+      await updateUserCategories(
+        userId,
+        userCategories.filter((category) => category.subject !== subjectName),
       )
     } else {
       // Otherwise, update the subject and/or items
@@ -629,9 +678,13 @@ export async function updateCategories(
       if (updatedCategories.items) {
         newCategories.items = updatedCategories.items
       }
-      await TransactionModel.updateMany(
-        { userId, 'categories.subject': subjectName },
-        { $set: { 'categories.$': newCategories } },
+      await updateUserCategories(
+        userId,
+        userCategories.map((category) =>
+          category.subject === subjectName
+            ? { ...category, ...newCategories }
+            : category,
+        ),
       )
     }
     revalidatePath(ROUTE.CATEGORIES)
@@ -642,7 +695,7 @@ export async function updateCategories(
 
 export async function resetCategories(
   userId: TUserId,
-  categories: TTransaction['categories'],
+  categories: TCategories[],
   withPathRevalidate: boolean = true,
 ): Promise<void> {
   if (!userId) {
@@ -650,7 +703,7 @@ export async function resetCategories(
   }
   try {
     await dbConnect()
-    await TransactionModel.updateMany({ userId }, { categories })
+    await updateUserCategories(userId, categories)
     if (withPathRevalidate) revalidatePath(ROUTE.CATEGORIES)
   } catch (err) {
     throw err
@@ -693,15 +746,15 @@ export async function findTransactionById(
   }
   try {
     await dbConnect()
-    const transaction = await TransactionModel.findOne({
-      id,
-    }).lean<TTransaction>({
-      transform: (doc) => {
-        if (!doc) return
-        delete doc._id
-        delete doc.__v
-      },
-    })
+    const transaction = await TransactionModel.findOne({ id })
+      .select('-categories')
+      .lean<TTransaction>({
+        transform: (doc) => {
+          if (!doc) return
+          delete doc._id
+          delete doc.__v
+        },
+      })
 
     return transaction
   } catch (err) {
@@ -720,6 +773,7 @@ export async function deleteAllTransactionsAndSignOut(
   await Promise.all([
     TransactionModel.deleteMany({ userId }),
     PushSubscriptionModel.deleteOne({ userId }),
+    UserSettingsModel.deleteOne({ userId }),
   ])
   await signOutAccount()
 }
@@ -985,7 +1039,7 @@ export async function resetAllSubscriptions(userId: TUserId): Promise<void> {
 }
 
 export async function getCategoryItemNameAI(
-  categories: TTransaction['categories'],
+  categories: TCategories[],
   userPrompt: string,
 ): Promise<string> {
   if (!categories || !userPrompt) {

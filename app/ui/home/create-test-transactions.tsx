@@ -11,13 +11,13 @@ import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { createTransaction } from '../../lib/actions'
 import { cn, createFormData } from '../../lib/helpers'
-import type { TTransaction, TUserId } from '../../lib/types'
+import type { TCategories, TTransaction, TUserId } from '../../lib/types'
 import { HoverableElement } from '../hoverables'
 
 type TProps = {
   userId: TUserId
   currency: TTransaction['currency']
-  userCategories: TTransaction['categories']
+  userCategories: TCategories[]
   userSalaryDay: TTransaction['salaryDay']
 }
 

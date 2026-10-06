@@ -55,7 +55,7 @@ import {
   setInLocalStorage,
   uniqueArray,
 } from '../lib/helpers'
-import type { TTheme, TTransaction } from '../lib/types'
+import type { TCategories, TTheme, TTransaction } from '../lib/types'
 import Loading from '../loading'
 import InfoText from './info-text'
 import LimitToast from './limit-toast'
@@ -67,9 +67,10 @@ const TAB_KEY = {
 
 type TProps = {
   transaction: TTransaction
+  userCategories: TCategories[]
 }
 
-function TransactionFormEdit({ transaction }: TProps) {
+function TransactionFormEdit({ transaction, userCategories }: TProps) {
   const router = useRouter()
   const { theme } = useTheme()
   const [isLoading, setIsLoading] = useState(false)
@@ -84,7 +85,7 @@ function TransactionFormEdit({ transaction }: TProps) {
     return new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getDate())
   })
   const isTransactionWithChangedCategory = Boolean(
-    getTransactionsWithChangedCategory([transaction]).length,
+    getTransactionsWithChangedCategory([transaction], userCategories).length,
   )
   const [category, setCategory] = useState<Selection>(
     new Set(
@@ -115,7 +116,6 @@ function TransactionFormEdit({ transaction }: TProps) {
     return () =>
       removeFromLocalStorage(LOCAL_STORAGE_KEY.SELECTED_CATEGORY_NAME)
   }, [categoryName])
-  const userCategories = transaction.categories
   const categoryWithEmoji = getCategoryWithEmoji(categoryName, userCategories)
   const prevCategory = transaction.category
   const currency = transaction.currency
@@ -262,7 +262,7 @@ function TransactionFormEdit({ transaction }: TProps) {
 
   return (
     <>
-      <LimitToast triggerBy={categoryName} />
+      <LimitToast triggerBy={categoryName} userCategories={userCategories} />
       <Tabs
         aria-label='Edit Transaction'
         fullWidth

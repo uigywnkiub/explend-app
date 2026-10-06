@@ -2,8 +2,6 @@ import { PiWarningOctagonFill } from 'react-icons/pi'
 
 import { Metadata } from 'next'
 
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
-
 import {
   DEFAULT_TRANSACTION_LIMIT,
   NAV_TITLE,
@@ -20,7 +18,7 @@ import {
   getCachedSalaryDay,
   getCachedTransactionLimit,
   getCachedTransactions,
-  resetCategories,
+  getCachedUserCategories,
 } from './lib/actions'
 import {
   getTransactionsWithChangedCategory,
@@ -38,7 +36,6 @@ import type {
   TTransaction,
 } from './lib/types'
 import BalanceCard from './ui/balance-card'
-import ClientRouterRefresh from './ui/client-router-refresh'
 import CreateTestTransactions from './ui/home/create-test-transactions'
 import DeleteTestTransactions from './ui/home/delete-test-transactions'
 import Search from './ui/home/search'
@@ -76,22 +73,15 @@ export default async function Page(props: {
     currency,
     userSalaryDay,
     { transactions, totalEntries, totalPages },
+    userCategoriesFromSettings,
   ] = await Promise.all([
     getCachedBalance(userId),
     getCachedCurrency(userId),
     getCachedSalaryDay(userId),
     getCachedTransactions(userId, offset, limit),
+    getCachedUserCategories(userId),
   ])
-
-  const allHaveCategories = transactions.every(
-    (t) => Array.isArray(t.categories) && t.categories.length > 0,
-  )
-  if (!allHaveCategories) {
-    await resetCategories(userId, DEFAULT_CATEGORIES, false)
-
-    return <ClientRouterRefresh loadingText='Refreshing categories...' />
-  }
-  const userCategories = getUserCategories(transactions)
+  const userCategories = getUserCategories(userCategoriesFromSettings)
 
   const createTransactionWithExtraData = createTransaction.bind(
     null,
@@ -103,6 +93,7 @@ export default async function Page(props: {
 
   const transactionsWithChangedCategory = getTransactionsWithChangedCategory(
     await getCachedAllTransactions(userId),
+    userCategories,
   )
   const countTransactionsWithChangedCategory =
     transactionsWithChangedCategory.length
@@ -255,6 +246,7 @@ export default async function Page(props: {
         totalsTransactionsByDate={totalsTransactionsByDate}
         transactionsWithChangedCategory={transactionsWithChangedCategory}
         currency={currency}
+        userCategories={userCategories}
       />
       <div className='mx-auto mt-4'>
         {!query ? (

@@ -2,7 +2,12 @@ import type { Metadata } from 'next'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import { getAllTransactions, getAuthSession, getCurrency } from '../lib/actions'
+import {
+  getAllTransactions,
+  getAuthSession,
+  getCachedUserCategories,
+  getCurrency,
+} from '../lib/actions'
 import { getUserCategories } from '../lib/data'
 import Limits from '../ui/limits/limits'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
@@ -15,11 +20,13 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const [transactions, currency] = await Promise.all([
-    getAllTransactions(userId),
-    getCurrency(userId),
-  ])
-  const userCategories = getUserCategories(transactions)
+  const [transactions, currency, userCategoriesFromSettings] =
+    await Promise.all([
+      getAllTransactions(userId),
+      getCurrency(userId),
+      getCachedUserCategories(userId),
+    ])
+  const userCategories = getUserCategories(userCategoriesFromSettings)
 
   const content = (
     <>

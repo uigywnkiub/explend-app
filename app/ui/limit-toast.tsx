@@ -17,7 +17,6 @@ import {
 import {
   calculateTotalsByCategory,
   getTransactionsByCurrMonth,
-  getUserCategories,
 } from '@/app/lib/data'
 import {
   formatAmount,
@@ -26,13 +25,14 @@ import {
   getFromLocalStorage,
 } from '@/app/lib/helpers'
 
-import type { TCategoryLimits } from '../lib/types'
+import type { TCategories, TCategoryLimits } from '../lib/types'
 
 type TProps = {
   readonly triggerBy: unknown
+  readonly userCategories: TCategories[]
 }
 
-export default function LimitToast({ triggerBy }: TProps) {
+export default function LimitToast({ triggerBy, userCategories }: TProps) {
   const [toastItems, setToastItems] = useState<
     TCategoryLimits['categoryName'][]
   >([])
@@ -53,8 +53,6 @@ export default function LimitToast({ triggerBy }: TProps) {
         getCategoryLimits(userId),
         getAllTransactions(userId),
       ])
-
-      const userCategories = getUserCategories(transactions)
 
       const totals = calculateTotalsByCategory(
         getTransactionsByCurrMonth(transactions),

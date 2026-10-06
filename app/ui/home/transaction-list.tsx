@@ -13,6 +13,7 @@ import TransactionItem from '@/app/ui/home/transaction-item'
 
 import { cn } from '../../lib/helpers'
 import type {
+  TCategories,
   TGroupedTransactions,
   TTotalsTransaction,
   TTransaction,
@@ -25,6 +26,7 @@ type TProps = {
   totalsTransactionsByDate: TTotalsTransaction
   transactionsWithChangedCategory: TTransaction[]
   currency: TTransaction['currency']
+  userCategories: TCategories[]
 }
 
 function TransactionList({
@@ -32,6 +34,7 @@ function TransactionList({
   totalsTransactionsByDate,
   transactionsWithChangedCategory,
   currency,
+  userCategories,
 }: TProps) {
   const searchParams = useSearchParams()
   const query = searchParams.get(SEARCH_PARAM.QUERY)?.toString() || ''
@@ -98,6 +101,7 @@ function TransactionList({
                       >
                         <TransactionItem
                           hasCategoryChanged={hasCategoryChanged}
+                          userCategories={userCategories}
                           {...t}
                         />
                       </motion.li>

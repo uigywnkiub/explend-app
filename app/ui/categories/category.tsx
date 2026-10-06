@@ -25,14 +25,13 @@ import {
   TCategoriesItem,
   TCategoriesLoading,
   TEditingItemIndex,
-  TTransaction,
 } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
 import CategoryItem from './category-item'
 
 type TProps = {
-  category: TTransaction['categories'][number]
+  category: TCategories
   index: number
   editingIndex: number | null
   newTargetName: string

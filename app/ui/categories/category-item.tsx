@@ -33,7 +33,6 @@ import type {
   TCategoriesItem,
   TCategoriesLoading,
   TEditingItemIndex,
-  TTransaction,
 } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
@@ -41,7 +40,7 @@ import InfoText from '../info-text'
 import CustomEmojiPicker from './custom-emoji-picker'
 
 type TProps = {
-  item: TTransaction['categories'][number]['items'][number]
+  item: TCategoriesItem
   categoryIndex: number
   itemIndex: number
   onEditItemClick: (

@@ -39,6 +39,7 @@ import type {
   TApproxCategory,
   TBankParsedRow,
   TBrowserName,
+  TCategories,
   TCategoriesItem,
   TChartData,
   TExpenseReport,
@@ -111,7 +112,7 @@ export const getCategoryMedalByAmount = (
 
 export const getCategoryWithEmoji = (
   category: FormDataEntryValue | null | undefined,
-  categories: TTransaction['categories'],
+  categories: TCategories[],
 ): TTransaction['category'] => {
   if (!category || typeof category !== 'string') {
     return `${DEFAULT_CATEGORY_EMOJI} ${DEFAULT_CATEGORY}`
@@ -390,9 +391,7 @@ export const getBrowserName = (userAgent: string | null): TBrowserName => {
   }
 }
 
-export const getCategoryItemNames = (
-  categories: TTransaction['categories'],
-) => {
+export const getCategoryItemNames = (categories: TCategories[]) => {
   if (!categories) return []
 
   return categories
@@ -402,7 +401,7 @@ export const getCategoryItemNames = (
 
 export const findApproxCategoryByValue = (
   value: string,
-  categories: TTransaction['categories'],
+  categories: TCategories[],
 ): TApproxCategory | null => {
   if (!value || !categories) return null
 
@@ -503,7 +502,7 @@ export const formatObjectIdToString = (
 }
 
 export const getCategoriesMap = (
-  categories: TTransaction['categories'],
+  categories: TCategories[],
 ): Map<string, TCategoriesItem> => {
   return new Map(
     categories.flatMap((category) =>
@@ -628,7 +627,7 @@ export const readFileAsText = async (file: File): Promise<string> => {
 }
 
 export async function resolveImportedCategory(
-  userCategories: TTransaction['categories'],
+  userCategories: TCategories[],
   description: TBankParsedRow['description'],
   mcc?: TBankParsedRow['mcc'],
 ): Promise<TTransaction['category']> {

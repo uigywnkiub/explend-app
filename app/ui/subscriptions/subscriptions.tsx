@@ -53,7 +53,12 @@ import {
   getFormattedAmountState,
   pluralize,
 } from '@/app/lib/helpers'
-import type { TSubscriptions, TTransaction, TUserId } from '@/app/lib/types'
+import type {
+  TCategories,
+  TSubscriptions,
+  TTransaction,
+  TUserId,
+} from '@/app/lib/types'
 
 import AmountInput from '../amount-input'
 import { HoverableElement } from '../hoverables'
@@ -74,7 +79,7 @@ type TProps = {
   userId: TUserId
   currency: TTransaction['currency']
   subscriptionsData: TTransaction['subscriptions']
-  userCategories: TTransaction['categories']
+  userCategories: TCategories[]
   userSalaryDay: TTransaction['salaryDay']
   transactions: TTransaction[]
 }

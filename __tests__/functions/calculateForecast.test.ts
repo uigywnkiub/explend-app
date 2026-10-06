@@ -30,7 +30,6 @@ const buildTransaction = (
   },
 ): TTransaction => ({
   userId: 'user1@test.com',
-  categories: [],
   categoryLimits: undefined,
   subscriptions: [],
   images: [],

@@ -11,7 +11,7 @@ import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
   getCachedAuthSession,
-  getCachedTransactions,
+  getCachedUserCategories,
   getCountDocuments,
   getCurrency,
   getSalaryDay,
@@ -48,16 +48,15 @@ export default async function Page() {
     transactionsCount,
     currency,
     userSalaryDay,
-    { transactions },
+    userCategoriesFromSettings,
   ] = await Promise.all([
     getTransactionLimit(userId),
     getCountDocuments(userId),
     getCurrency(userId),
     getSalaryDay(userId),
-    getCachedTransactions(userId, 0, 1),
+    getCachedUserCategories(userId),
   ])
-
-  const userCategories = getUserCategories(transactions)
+  const userCategories = getUserCategories(userCategoriesFromSettings)
 
   const content = (
     <div className='mx-auto max-w-3xl'>

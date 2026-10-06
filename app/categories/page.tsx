@@ -4,7 +4,11 @@ import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 
 import { NAV_TITLE } from '@/config/constants/navigation'
 
-import { getAllTransactions, getAuthSession } from '../lib/actions'
+import {
+  getAllTransactions,
+  getAuthSession,
+  getCachedUserCategories,
+} from '../lib/actions'
 import { getUserCategories } from '../lib/data'
 import Categories from '../ui/categories/categories'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
@@ -17,8 +21,11 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const transactions = await getAllTransactions(userId)
-  const userCategories = getUserCategories(transactions)
+  const [transactions, userCategoriesFromSettings] = await Promise.all([
+    getAllTransactions(userId),
+    getCachedUserCategories(userId),
+  ])
+  const userCategories = getUserCategories(userCategoriesFromSettings)
   const areCategoriesLengthMismatch =
     userCategories.length !== DEFAULT_CATEGORIES.length
 

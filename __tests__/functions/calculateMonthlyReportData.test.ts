@@ -30,7 +30,6 @@ describe('calculateMonthlyReportData', () => {
     },
     createdAt: new Date(),
     updatedAt: new Date(),
-    categories: [],
     categoryLimits: undefined,
     subscriptions: [],
     images: [],

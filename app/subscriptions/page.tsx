@@ -5,6 +5,7 @@ import { NAV_TITLE } from '@/config/constants/navigation'
 import {
   getAllTransactions,
   getAuthSession,
+  getCachedUserCategories,
   getCurrency,
   getSalaryDay,
   getSubscriptions,
@@ -21,14 +22,20 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const [transactions, userSubscriptions, currency, userSalaryDay] =
-    await Promise.all([
-      getAllTransactions(userId),
-      getSubscriptions(userId),
-      getCurrency(userId),
-      getSalaryDay(userId),
-    ])
-  const userCategories = getUserCategories(transactions)
+  const [
+    transactions,
+    userSubscriptions,
+    currency,
+    userSalaryDay,
+    userCategoriesFromSettings,
+  ] = await Promise.all([
+    getAllTransactions(userId),
+    getSubscriptions(userId),
+    getCurrency(userId),
+    getSalaryDay(userId),
+    getCachedUserCategories(userId),
+  ])
+  const userCategories = getUserCategories(userCategoriesFromSettings)
 
   const content = (
     <>

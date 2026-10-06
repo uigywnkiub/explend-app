@@ -8,12 +8,18 @@ import { haptic } from 'ios-haptics'
 
 import { importBankTransactions } from '@/app/lib/actions'
 import { capitalizeFirstLetter, pluralize } from '@/app/lib/helpers'
-import { TBank, TIcon, TTransaction, TUserId } from '@/app/lib/types'
+import {
+  TBank,
+  TCategories,
+  TIcon,
+  TTransaction,
+  TUserId,
+} from '@/app/lib/types'
 
 type TProps = {
   userId: TUserId
   currency: TTransaction['currency']
-  userCategories: TTransaction['categories']
+  userCategories: TCategories[]
   userSalaryDay: TTransaction['salaryDay']
 }
 

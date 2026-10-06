@@ -1,4 +1,3 @@
-import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { model, models, Schema } from 'mongoose'
 import { mongooseEncryptionDecryption } from 'mongoose-encryption-decryption'
 
@@ -17,14 +16,14 @@ import type {
   TTransaction,
 } from '../types'
 
-const itemSchema = new Schema<TCategoriesItem>(
+export const itemSchema = new Schema<TCategoriesItem>(
   {
     emoji: { type: String, required: true },
     name: { type: String, required: true },
   },
   { _id: false },
 )
-const categoriesSchema = new Schema<TCategories>(
+export const categoriesSchema = new Schema<TCategories>(
   {
     subject: { type: String, required: true },
     items: { type: [itemSchema], required: true },
@@ -132,10 +131,6 @@ const transactionSchema = new Schema<TTransaction>(
       type: Boolean,
       default: false,
     },
-    categories: {
-      type: [categoriesSchema],
-      default: DEFAULT_CATEGORIES,
-    },
     categoryLimits: {
       type: [categoryLimitsSchema],
       default: [],
@@ -156,6 +151,8 @@ const transactionSchema = new Schema<TTransaction>(
   encodedFields: ['amount', 'balance'],
   privateKey: process.env.ENCRYPTION_SECRET,
 })
+
+transactionSchema.index({ userId: 1, createdAt: -1 })
 
 const TransactionModel =
   models.Transaction || model<TTransaction>('Transaction', transactionSchema)
