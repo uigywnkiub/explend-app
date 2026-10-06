@@ -30,8 +30,8 @@ import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_ICON_SIZE, DEFAULT_TIME_ZONE } from '@/config/constants/main'
 import { DIV } from '@/config/constants/motion'
 
-import { getAllTransactions } from '../lib/actions'
-import { getTransactionsTotals, getWeeklySpendData } from '../lib/data'
+import { getBalanceCardData } from '../lib/actions'
+import { getWeeklySpendData } from '../lib/data'
 import {
   cn,
   getBooleanFromLocalStorage,
@@ -100,16 +100,9 @@ function BalanceCard({
   const getTotal = useCallback(async () => {
     setIsLoading(true)
     try {
-      const transactions = await getAllTransactions(userId)
-      setTotal({
-        income: getTransactionsTotals(transactions).income,
-        expense: getTransactionsTotals(transactions).expense,
-      })
-      try {
-        setWeeklySpend(getWeeklySpendData(transactions))
-      } catch {
-        setWeeklySpend(null)
-      }
+      const { total, weeklyTransactions } = await getBalanceCardData(userId)
+      setTotal(total)
+      setWeeklySpend(getWeeklySpendData(weeklyTransactions))
       setLoadedTransactionCount(transactionCount)
     } catch (err) {
       setTotal({

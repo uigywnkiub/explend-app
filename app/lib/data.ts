@@ -45,7 +45,9 @@ import type {
   TWeeklySpendData,
 } from './types'
 
-export const calculateTotalAmount = (transactions: TTransaction[]) => {
+export const calculateTotalAmount = (
+  transactions: Pick<TTransaction, 'amount'>[],
+) => {
   return transactions.reduce(
     (total, { amount }) => total + parseFloat(amount),
     0,
@@ -156,11 +158,13 @@ export const calculateMonthlyReportData = (
   return { totalIncome, totalExpense, expenseReportData, incomeReportData }
 }
 
-export const filterTransactionsByDateRange = (
-  transactions: TTransaction[],
+export const filterTransactionsByDateRange = <
+  T extends Pick<TTransaction, 'createdAt'>,
+>(
+  transactions: T[],
   startDate: Date,
   endDate: Date,
-): TTransaction[] => {
+): T[] => {
   return transactions.filter((t) => {
     const transactionDate = formatISO(t.createdAt)
 
@@ -172,7 +176,7 @@ export const filterTransactionsByDateRange = (
 }
 
 export const getWeeklySpendData = (
-  transactions: TTransaction[],
+  transactions: Pick<TTransaction, 'amount' | 'isIncome' | 'createdAt'>[],
 ): TWeeklySpendData => {
   const today = startOfToday()
   const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 })

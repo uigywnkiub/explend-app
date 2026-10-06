@@ -113,6 +113,54 @@ export async function getBalance(
 }
 export const getCachedBalance = cache(getBalance)
 
+export async function getBalanceCardData(userId: TUserId): Promise<{
+  total: { income: number; expense: number }
+  weeklyTransactions: Pick<TTransaction, 'amount' | 'isIncome' | 'createdAt'>[]
+}> {
+  if (!userId) {
+    throw new Error('User ID is required to get balance card data.')
+  }
+  try {
+    await dbConnect()
+    const now = new Date()
+    const utcWeekStart = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    )
+    const daysSinceMonday = (utcWeekStart.getUTCDay() + 6) % 7
+    utcWeekStart.setUTCDate(utcWeekStart.getUTCDate() - daysSinceMonday)
+    const startDate = new Date(utcWeekStart)
+    startDate.setUTCDate(startDate.getUTCDate() - 9)
+    const endDate = new Date(utcWeekStart)
+    endDate.setUTCDate(endDate.getUTCDate() + 8)
+
+    const [totalTransactions, weeklyTransactions] = await Promise.all([
+      TransactionModel.find({ userId })
+        .select('amount isIncome -_id')
+        .lean<Pick<TTransaction, 'amount' | 'isIncome'>[]>(),
+      TransactionModel.find({
+        userId,
+        createdAt: { $gte: startDate, $lt: endDate },
+      })
+        .select('amount isIncome createdAt -_id')
+        .lean<Pick<TTransaction, 'amount' | 'isIncome' | 'createdAt'>[]>(),
+    ])
+    const total = totalTransactions.reduce(
+      (totals, transaction) => {
+        const amount = parseFloat(transaction.amount)
+        if (transaction.isIncome) totals.income += amount
+        else totals.expense += amount
+
+        return totals
+      },
+      { income: 0, expense: 0 },
+    )
+
+    return { total, weeklyTransactions }
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function getTransactionLimit(
   userId: TUserId,
 ): Promise<TTransaction['transactionLimit']> {
