@@ -503,13 +503,14 @@ export async function getAllTransactions(
   try {
     await dbConnect()
 
-    return TransactionModel.find({ userId }).lean<TTransaction[]>({
-      transform: (doc) => {
-        if (!doc) return
-        delete doc._id
-        delete doc.__v
-      },
-    })
+    return TransactionModel.find({ userId })
+      .select('category amount isIncome createdAt -_id')
+      .lean<TTransaction[]>({
+        transform: (doc) => {
+          if (!doc) return
+          delete doc.__v
+        },
+      })
   } catch (err) {
     throw err
   }
