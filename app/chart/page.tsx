@@ -3,27 +3,22 @@ import type { Metadata } from 'next'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
-  getCachedAllTransactions,
-  getCachedAuthSession,
+  getAuthSession,
   getCachedCurrency,
   getCountDocuments,
 } from '../lib/actions'
 import Chart from '../ui/chart/chart'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebar from '../ui/sidebar/with-sidebar'
+import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.CHART,
 }
 
-export default async function Page() {
-  // Caching data for a child server component START
-  getCachedAuthSession()
-  // Caching data for a child server component END
-  const session = await getCachedAuthSession()
+async function ChartPageContent() {
+  const session = await getAuthSession()
   const userId = session?.user?.email
   // Caching data for a child server component START
-  getCachedAllTransactions(userId)
   getCachedCurrency(userId)
   // Caching data for a child server component END
   const transactionsCount = await getCountDocuments(userId)
@@ -38,10 +33,18 @@ export default async function Page() {
           <NoTransactionsPlug />
         </div>
       ) : (
-        <Chart />
+        <Chart userId={userId} />
       )}
     </>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
+}
+
+export default function Page() {
+  return (
+    <WithSidebarContent title={NAV_TITLE.CHART}>
+      <ChartPageContent />
+    </WithSidebarContent>
+  )
 }

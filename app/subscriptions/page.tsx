@@ -12,14 +12,14 @@ import {
 } from '../lib/actions'
 import { getUserCategories } from '../lib/data'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebar from '../ui/sidebar/with-sidebar'
+import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
 import Subscriptions from '../ui/subscriptions/subscriptions'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.SUBSCRIPTIONS,
 }
 
-export default async function Page() {
+async function SubscriptionsPageContent() {
   const session = await getAuthSession()
   const userId = session?.user?.email
   const [
@@ -58,5 +58,13 @@ export default async function Page() {
     </>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
+}
+
+export default function Page() {
+  return (
+    <WithSidebarContent title={NAV_TITLE.SUBSCRIPTIONS}>
+      <SubscriptionsPageContent />
+    </WithSidebarContent>
+  )
 }

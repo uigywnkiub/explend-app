@@ -36,7 +36,7 @@ import { haptic } from 'ios-haptics'
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
-import { getCachedExpenseTipsAI } from '@/app/lib/actions'
+import { getExpenseTipsAI } from '@/app/lib/actions'
 import {
   calculateForecast,
   calculateMonthlyReportData,
@@ -246,7 +246,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     }
     setIsLoadingTips(true)
     try {
-      const res = await getCachedExpenseTipsAI(expenseCategories, currency)
+      const res = await getExpenseTipsAI(expenseCategories, currency)
       const parsedRes = JSON.parse(res)
       setTipsDataAI(parsedRes)
       setExpenseTipsAIDataLocalStorage(parsedRes)

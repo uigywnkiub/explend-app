@@ -8,13 +8,13 @@ import { NAV_TITLE } from '@/config/constants/navigation'
 import { sendFeedback } from '../lib/actions'
 import ConfettiRain from '../ui/feedback/confetti-rain'
 import Feedback from '../ui/feedback/feedback'
-import WithSidebar from '../ui/sidebar/with-sidebar'
+import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.FEEDBACK,
 }
 
-export default async function Page() {
+async function FeedbackPageContent() {
   const cookieStore = await cookies()
   const feedbackCookie = cookieStore.get(COOKIE_FEEDBACK.NAME)
   const confettiCookie = cookieStore.get(COOKIE_CONFETTI.NAME)
@@ -55,5 +55,13 @@ export default async function Page() {
     </>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
+}
+
+export default function Page() {
+  return (
+    <WithSidebarContent title={NAV_TITLE.FEEDBACK}>
+      <FeedbackPageContent />
+    </WithSidebarContent>
+  )
 }

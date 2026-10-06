@@ -1,3 +1,5 @@
+import { Suspense } from 'react'
+
 import ChangelogWrapper from '../changelog-wrapper'
 import Footer from '../footer'
 import PushPermission from '../push-permission'
@@ -30,7 +32,9 @@ export default function WithSidebar({
             </nav>
             <nav className={linkWrapper} aria-label='Bottom left menu'>
               <Navbar linksGroup='bottom' />
-              <User />
+              <Suspense fallback={<div className='h-8 w-full' />}>
+                <User />
+              </Suspense>
             </nav>
           </div>
         </aside>

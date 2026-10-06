@@ -10,22 +10,15 @@ import {
 } from '../lib/actions'
 import MonthlyReport from '../ui/monthly-report/monthly-report'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebar from '../ui/sidebar/with-sidebar'
+import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.MONTHLY_REPORT,
 }
 
-export default async function Page() {
-  // Caching data for a child server component START
-  // getCachedAuthSession()
-  // Caching data for a child server component END
+async function MonthlyReportPageContent() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  // Caching data for a child server component START
-  // getCachedAllTransactions(userId)
-  // getCachedCurrency(userId)
-  // Caching data for a child server component END
   const [transactions, currency, userSalaryDay] = await Promise.all([
     getMonthlyReportTransactions(userId),
     getCurrency(userId),
@@ -51,5 +44,13 @@ export default async function Page() {
     </>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
+}
+
+export default function Page() {
+  return (
+    <WithSidebarContent title={NAV_TITLE.MONTHLY_REPORT}>
+      <MonthlyReportPageContent />
+    </WithSidebarContent>
+  )
 }

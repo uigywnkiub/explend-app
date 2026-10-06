@@ -9,7 +9,7 @@ import { siteMeta } from '@/config/site-meta'
 
 import {
   createTransaction,
-  getCachedAuthSession,
+  getAuthSession,
   getCachedBalance,
   getCachedCurrency,
   getCachedTransactionLimit,
@@ -37,7 +37,7 @@ import TransactionForm from './ui/home/transaction-form'
 import TransactionList from './ui/home/transaction-list'
 import NoTransactionsPlug from './ui/no-transactions-plug'
 import PaginationList from './ui/pagination/pagination-list'
-import WithSidebar from './ui/sidebar/with-sidebar'
+import WithSidebarContent from './ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: `${NAV_TITLE.HOME} | ${siteMeta.title}`,
@@ -45,14 +45,14 @@ export const metadata: Metadata = {
     'Track your expenses and income with Explend. Get insights, manage budgets, and achieve your financial goals.',
 }
 
-export default async function Page(props: {
+async function HomePageContent(props: {
   searchParams?: Promise<{
     [SEARCH_PARAM.QUERY]?: string
     [SEARCH_PARAM.PAGE]?: string
   }>
 }) {
   const searchParams = await props.searchParams
-  const session = await getCachedAuthSession()
+  const session = await getAuthSession()
   const userId = session?.user?.email
   const query = searchParams?.[SEARCH_PARAM.QUERY] || ''
   const page = Number(searchParams?.[SEARCH_PARAM.PAGE]) || 1
@@ -266,5 +266,18 @@ export default async function Page(props: {
     </div>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
+}
+
+export default function Page(props: {
+  searchParams?: Promise<{
+    [SEARCH_PARAM.QUERY]?: string
+    [SEARCH_PARAM.PAGE]?: string
+  }>
+}) {
+  return (
+    <WithSidebarContent title={NAV_TITLE.HOME}>
+      <HomePageContent {...props} />
+    </WithSidebarContent>
+  )
 }

@@ -12,13 +12,13 @@ import {
 import { getUserCategories } from '../lib/data'
 import Categories from '../ui/categories/categories'
 import NoTransactionsPlug from '../ui/no-transactions-plug'
-import WithSidebar from '../ui/sidebar/with-sidebar'
+import WithSidebarContent from '../ui/sidebar/with-sidebar-content'
 
 export const metadata: Metadata = {
   title: NAV_TITLE.CATEGORIES,
 }
 
-export default async function Page() {
+async function CategoriesPageContent() {
   const session = await getAuthSession()
   const userId = session?.user?.email
   const [transactionsCount, userCategoriesFromSettings] = await Promise.all([
@@ -48,5 +48,13 @@ export default async function Page() {
     </>
   )
 
-  return <WithSidebar contentNearby={content} />
+  return content
+}
+
+export default function Page() {
+  return (
+    <WithSidebarContent title={NAV_TITLE.CATEGORIES}>
+      <CategoriesPageContent />
+    </WithSidebarContent>
+  )
 }
