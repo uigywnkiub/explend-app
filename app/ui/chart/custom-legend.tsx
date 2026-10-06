@@ -13,13 +13,13 @@ import {
   getFormattedCurrency,
   toLowerCase,
 } from '@/app/lib/helpers'
-import type { TTransaction, TTransactionType } from '@/app/lib/types'
+import type { TCurrency, TTransactionType } from '@/app/lib/types'
 
 type TProps = {
   payload?: LegendProps['payload']
   expenseTotal: number
   incomeTotal: number
-  currency: TTransaction['currency']
+  currency: TCurrency
   isChartForExpensesOnly?: boolean
 }
 

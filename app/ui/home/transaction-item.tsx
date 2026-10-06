@@ -48,7 +48,7 @@ import {
   omit,
   pluralize,
 } from '../../lib/helpers'
-import type { TCategories, TTransaction } from '../../lib/types'
+import type { TCategories, TCurrency, TTransaction } from '../../lib/types'
 import HighlighterText from '../highlighter-text'
 import { HoverableElement } from '../hoverables'
 import CategoryWithImage from './category-with-images'
@@ -63,9 +63,15 @@ const enum DROPDOWN_KEY {
 type TProps = TTransaction & {
   hasCategoryChanged: boolean
   userCategories: TCategories[]
+  currency: TCurrency
 }
 
-function TransactionItem({ hasCategoryChanged, userCategories, ...t }: TProps) {
+function TransactionItem({
+  hasCategoryChanged,
+  userCategories,
+  currency,
+  ...t
+}: TProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const query = searchParams.get(SEARCH_PARAM.QUERY)?.toString() || ''
@@ -76,7 +82,7 @@ function TransactionItem({ hasCategoryChanged, userCategories, ...t }: TProps) {
 ${t.isIncome ? 'Type: Income' : 'Type: Expense'}
 Category: ${t.category}
 Description: ${t.description}
-Amount: ${t.isIncome ? '+' : '-'} ${getFormattedCurrency(t.amount)} ${t.currency.sign}
+Amount: ${t.isIncome ? '+' : '-'} ${getFormattedCurrency(t.amount)} ${currency.sign}
 Date: ${formatDate(t.createdAt)}
 Time: ${formatTime(t.createdAt)}`
 
@@ -107,7 +113,6 @@ Time: ${formatTime(t.createdAt)}`
     try {
       const {
         userId,
-        currency,
         // eslint-disable-next-line unused-imports/no-unused-vars
         images,
         salaryDay,
@@ -116,7 +121,6 @@ Time: ${formatTime(t.createdAt)}`
       await toast.promise(
         createTransaction(
           userId,
-          currency,
           userCategories,
           salaryDay,
           createFormData(restT),
@@ -148,7 +152,7 @@ Time: ${formatTime(t.createdAt)}`
                     query={[getFormattedCurrency(query)]}
                     text={getFormattedCurrency(t.amount)}
                   />{' '}
-                  {t.currency.sign}
+                  {currency.sign}
                 </p>
               ) : (
                 <p className='selection:bg-danger selection:text-light text-lg'>
@@ -157,7 +161,7 @@ Time: ${formatTime(t.createdAt)}`
                     query={[getFormattedCurrency(query)]}
                     text={getFormattedCurrency(t.amount)}
                   />{' '}
-                  {t.currency.sign}
+                  {currency.sign}
                 </p>
               )}
               <p

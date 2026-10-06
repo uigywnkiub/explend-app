@@ -41,14 +41,11 @@ export type TTransaction = {
   id: string
   userId: string
   category: string
-  categoryLimits: TCategoryLimits[] | undefined
-  subscriptions: TSubscriptions[] | []
   images: string[] | undefined
   description: string
   amount: string
   isIncome: boolean
   balance: string
-  currency: TCurrency
   transactionLimit: number | null | undefined
   salaryDay: number | null | undefined
   isEdited: boolean
@@ -76,8 +73,18 @@ export type TSubscriptions = {
 export type TUserSettings = {
   userId: string
   categories: TCategories[]
+  categoryLimits?: TCategoryLimits[]
+  subscriptions?: TSubscriptions[]
+  currency?: TCurrency
+  pushSubscriptions?: TPushSubscription[]
   createdAt: Date
   updatedAt: Date
+}
+
+export type TPushSubscription = {
+  endpoint: string
+  expirationTime?: number | null
+  keys: { p256dh: string; auth: string }
 }
 
 export type TRawTransaction = TTransaction & {

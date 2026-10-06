@@ -86,7 +86,6 @@ export default async function Page(props: {
   const createTransactionWithExtraData = createTransaction.bind(
     null,
     userId,
-    currency,
     userCategories,
     userSalaryDay,
   )

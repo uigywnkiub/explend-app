@@ -30,8 +30,6 @@ const buildTransaction = (
   },
 ): TTransaction => ({
   userId: 'user1@test.com',
-  categoryLimits: undefined,
-  subscriptions: [],
   images: [],
   description: '',
   balance: '',
@@ -40,11 +38,6 @@ const buildTransaction = (
   isEdited: false,
   isSubscription: false,
   isTest: false,
-  currency: {
-    name: DEFAULT_CURRENCY_NAME,
-    code: DEFAULT_CURRENCY_CODE,
-    sign: DEFAULT_CURRENCY_SIGN,
-  },
   createdAt: overrides.date,
   updatedAt: overrides.date,
   id: overrides.id,

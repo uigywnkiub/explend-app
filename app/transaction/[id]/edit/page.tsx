@@ -5,6 +5,7 @@ import {
   findTransactionById,
   getAuthSession,
   getCachedUserCategories,
+  getCurrency,
 } from '@/app/lib/actions'
 import { getUserCategories } from '@/app/lib/data'
 
@@ -22,9 +23,10 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const { id } = params
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const [transaction, categoriesFromSettings] = await Promise.all([
+  const [transaction, categoriesFromSettings, currency] = await Promise.all([
     findTransactionById(id),
     getCachedUserCategories(userId),
+    getCurrency(userId),
   ])
   const isCurrentUser = userId === transaction?.userId
 
@@ -40,6 +42,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       <TransactionFormEdit
         transaction={transaction}
         userCategories={getUserCategories(categoriesFromSettings)}
+        currency={currency}
       />
     </main>
   )

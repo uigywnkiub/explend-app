@@ -261,7 +261,6 @@ export default async function Page() {
                 <Spacer y={2} />
                 <ImportBankTransactions
                   userId={userId}
-                  currency={currency}
                   userCategories={userCategories}
                   userSalaryDay={userSalaryDay}
                 />

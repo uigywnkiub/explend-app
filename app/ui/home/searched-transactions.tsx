@@ -3,12 +3,12 @@
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
 import { getTransactionsTotals } from '@/app/lib/data'
-import type { TTransaction } from '@/app/lib/types'
+import type { TCurrency, TTransaction } from '@/app/lib/types'
 
 import AnimatedNumber from '../animated-number'
 
 type TProps = {
-  currency: TTransaction['currency']
+  currency: TCurrency
   searchedTransactionsByQuery: TTransaction[]
 }
 

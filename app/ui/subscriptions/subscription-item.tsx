@@ -48,7 +48,12 @@ import {
   getEmojiFromCategory,
   toLowerCase,
 } from '@/app/lib/helpers'
-import { TCategories, TSubscriptions, TTransaction } from '@/app/lib/types'
+import {
+  TCategories,
+  TCurrency,
+  TSubscriptions,
+  TTransaction,
+} from '@/app/lib/types'
 
 import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
@@ -57,7 +62,7 @@ import { DROPDOWN_KEY } from './subscriptions'
 type TProps = {
   s: TSubscriptions
   idx: number
-  currency: TTransaction['currency']
+  currency: TCurrency
   userCategories: TCategories[]
   changedCategoryNames: string[]
   reorderContainer: React.RefObject<null>

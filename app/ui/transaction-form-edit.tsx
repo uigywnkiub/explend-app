@@ -55,7 +55,7 @@ import {
   setInLocalStorage,
   uniqueArray,
 } from '../lib/helpers'
-import type { TCategories, TTheme, TTransaction } from '../lib/types'
+import type { TCategories, TCurrency, TTheme, TTransaction } from '../lib/types'
 import Loading from '../loading'
 import InfoText from './info-text'
 import LimitToast from './limit-toast'
@@ -68,9 +68,14 @@ const TAB_KEY = {
 type TProps = {
   transaction: TTransaction
   userCategories: TCategories[]
+  currency: TCurrency
 }
 
-function TransactionFormEdit({ transaction, userCategories }: TProps) {
+function TransactionFormEdit({
+  transaction,
+  userCategories,
+  currency,
+}: TProps) {
   const router = useRouter()
   const { theme } = useTheme()
   const [isLoading, setIsLoading] = useState(false)
@@ -118,7 +123,6 @@ function TransactionFormEdit({ transaction, userCategories }: TProps) {
   }, [categoryName])
   const categoryWithEmoji = getCategoryWithEmoji(categoryName, userCategories)
   const prevCategory = transaction.category
-  const currency = transaction.currency
   const isEdited = transaction.isEdited
   const transactionId = transaction.id
 
@@ -181,7 +185,6 @@ function TransactionFormEdit({ transaction, userCategories }: TProps) {
       | 'description'
       | 'amount'
       | 'category'
-      | 'currency'
       | 'images'
       | 'createdAt'
     > = {
@@ -190,7 +193,6 @@ function TransactionFormEdit({ transaction, userCategories }: TProps) {
       description: capitalizeFirstLetter(description),
       amount,
       category: categoryWithEmoji,
-      currency,
       images: validImageSrcs,
       createdAt: (() => {
         if (!date) return transaction.createdAt
@@ -348,7 +350,7 @@ function TransactionFormEdit({ transaction, userCategories }: TProps) {
                                 : 'text-default-500',
                             )}
                           >
-                            {transaction.currency.sign}
+                            {currency.sign}
                           </span>
                         </div>
                       }

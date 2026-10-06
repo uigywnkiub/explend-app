@@ -8,7 +8,6 @@ import { cookies } from 'next/headers'
 import { auth, signOut } from '@/auth'
 import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { SignOutError } from '@auth/core/errors'
-import { isObjectIdOrHexString } from 'mongoose'
 import { Resend } from 'resend'
 
 import { COOKIE_FEEDBACK } from '@/config/constants/cookies'
@@ -25,6 +24,7 @@ import {
 import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
 import { ROUTE } from '@/config/constants/routes'
 
+import PushSubscriptionModel from '@/app/lib/models/push-subscription.model'
 import TransactionModel from '@/app/lib/models/transaction.model'
 import UserSettingsModel from '@/app/lib/models/user-settings.model'
 
@@ -37,12 +37,10 @@ import {
 import { parseMonobankCsv, parsePrivat24Xlsx } from './data'
 import {
   capitalizeFirstLetter,
-  formatObjectIdToString,
   getCategoryItemNames,
   getCategoryWithEmoji,
   resolveImportedCategory,
 } from './helpers'
-import PushSubscriptionModel from './models/push-subscription.model'
 import dbConnect from './mongodb'
 import type {
   TBalance,
@@ -57,7 +55,7 @@ import type {
   TGetChangelog,
   TGetTransactions,
   TImportTransactions,
-  TRawTransaction,
+  TPushSubscription,
   TSession,
   TSubscriptions,
   TTransaction,
@@ -135,18 +133,21 @@ export async function getTransactionLimit(
 }
 export const getCachedTransactionLimit = cache(getTransactionLimit)
 
-export async function getCurrency(
-  userId: TUserId,
-): Promise<TTransaction['currency']> {
+export async function getCurrency(userId: TUserId): Promise<TCurrency> {
   if (!userId) {
     throw new Error('User ID is required to fetch currency.')
   }
   try {
     await dbConnect()
+    const userSettings = await UserSettingsModel.findOne({ userId })
+      .select('currency -_id')
+      .lean<{ currency: TCurrency }>()
+    if (userSettings?.currency) return userSettings.currency
+
     const transaction = await TransactionModel.findOne(
       { userId },
       { currency: 1, _id: 0 },
-    ).lean<{ currency: TTransaction['currency'] }>()
+    ).lean<{ currency: TCurrency }>()
 
     return (
       transaction?.currency || {
@@ -163,7 +164,7 @@ export const getCachedCurrency = cache(getCurrency)
 
 export async function updateCurrency(
   userId: TUserId,
-  currency: TTransaction['currency'],
+  currency: TCurrency,
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to update currency.')
@@ -173,7 +174,11 @@ export async function updateCurrency(
   }
   try {
     await dbConnect()
-    await TransactionModel.updateMany({ userId }, { currency })
+    await UserSettingsModel.updateOne(
+      { userId },
+      { $set: { currency } },
+      { upsert: true, setDefaultsOnInsert: false },
+    )
     revalidatePath(ROUTE.HOME)
   } catch (err) {
     throw err
@@ -224,7 +229,6 @@ export async function updateSalaryDay(
 
 export async function createTransaction(
   userId: TUserId,
-  currency: TTransaction['currency'],
   userCategories: TCategories[],
   userSalaryDay: TTransaction['salaryDay'],
   formData: FormData,
@@ -240,12 +244,7 @@ export async function createTransaction(
   try {
     const newTransaction: Omit<
       TTransaction,
-      | 'createdAt'
-      | 'updatedAt'
-      | 'transactionLimit'
-      | 'isEdited'
-      | 'categoryLimits'
-      | 'subscriptions'
+      'createdAt' | 'updatedAt' | 'transactionLimit' | 'isEdited'
     > = {
       id: crypto.randomUUID(),
       userId,
@@ -262,7 +261,6 @@ export async function createTransaction(
         'true') as TTransaction['isSubscription'],
       isTest: (formData.get('isTest') === 'true') as TTransaction['isTest'],
       balance: '0' as TTransaction['balance'],
-      currency,
       salaryDay: userSalaryDay,
       images: JSON.parse(
         formData.get('images')?.toString() || '[]',
@@ -378,6 +376,37 @@ export async function getUserSettingsCategories(
 }
 export const getCachedUserCategories = cache(getUserSettingsCategories)
 
+export async function getUserPushSubscriptions(
+  userId: TUserId,
+): Promise<TPushSubscription[]> {
+  if (!userId) {
+    throw new Error('User ID is required to fetch push subscriptions.')
+  }
+  try {
+    await dbConnect()
+    const userSettings = await UserSettingsModel.findOne({ userId })
+      .select('pushSubscriptions -_id')
+      .lean<{ pushSubscriptions: TPushSubscription[] }>()
+    const legacySubscriptions = await PushSubscriptionModel.findOne({ userId })
+      .select('subscriptions -_id')
+      .lean<{ subscriptions: TPushSubscription[] }>()
+
+    const pushSubscriptions = userSettings?.pushSubscriptions || []
+    const endpoints = new Set(
+      pushSubscriptions.map((subscription) => subscription.endpoint),
+    )
+
+    return [
+      ...pushSubscriptions,
+      ...(legacySubscriptions?.subscriptions || []).filter(
+        (subscription) => !endpoints.has(subscription.endpoint),
+      ),
+    ]
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function updateUserCategories(
   userId: TUserId,
   categories: TCategories[],
@@ -409,7 +438,7 @@ export async function getTransactions(
     await dbConnect()
     const [transactions, totalEntries] = await Promise.all([
       TransactionModel.find({ userId })
-        .select('-categories')
+        .select('-categories -categoryLimits -subscriptions -currency')
         .skip(offset)
         .limit(limit)
         .sort({ createdAt: 'desc' })
@@ -441,7 +470,7 @@ export async function getAllTransactions(
     await dbConnect()
 
     return TransactionModel.find({ userId })
-      .select('-categories')
+      .select('-categories -categoryLimits -subscriptions -currency')
       .lean<TTransaction[]>({
         transform: (doc) => {
           if (!doc) return
@@ -483,8 +512,14 @@ export async function importTransactions(
       newTransactions.map((t) => {
         const transaction = { ...t, userId } as Partial<TTransaction> & {
           categories?: TCategories[]
+          categoryLimits?: TCategoryLimits[]
+          subscriptions?: TSubscriptions[]
+          currency?: TCurrency
         }
         delete transaction.categories
+        delete transaction.categoryLimits
+        delete transaction.subscriptions
+        delete transaction.currency
 
         return transaction
       }),
@@ -499,7 +534,6 @@ export async function importTransactions(
 
 export async function importBankTransactions(
   userId: TUserId,
-  currency: TTransaction['currency'],
   userCategories: TCategories[],
   userSalaryDay: TTransaction['salaryDay'],
   bank: TBank,
@@ -527,25 +561,22 @@ export async function importBankTransactions(
     ),
   )
 
-  const transactions: Omit<
-    TTransaction,
-    'isEdited' | 'categoryLimits' | 'subscriptions' | 'transactionLimit'
-  >[] = validRows.map(({ rawAmount, description, createdAt }, i) => ({
-    id: crypto.randomUUID(),
-    userId,
-    description,
-    amount: Math.round(Math.abs(rawAmount)).toString().replace(/\s/g, ''),
-    category: resolvedCategories[i],
-    isIncome: rawAmount > 0,
-    isSubscription: false,
-    isTest: false,
-    balance: rawAmount.toString(),
-    currency,
-    salaryDay: userSalaryDay,
-    images: [],
-    createdAt,
-    updatedAt: createdAt,
-  }))
+  const transactions: Omit<TTransaction, 'isEdited' | 'transactionLimit'>[] =
+    validRows.map(({ rawAmount, description, createdAt }, i) => ({
+      id: crypto.randomUUID(),
+      userId,
+      description,
+      amount: Math.round(Math.abs(rawAmount)).toString().replace(/\s/g, ''),
+      category: resolvedCategories[i],
+      isIncome: rawAmount > 0,
+      isSubscription: false,
+      isTest: false,
+      balance: rawAmount.toString(),
+      salaryDay: userSalaryDay,
+      images: [],
+      createdAt,
+      updatedAt: createdAt,
+    }))
 
   await dbConnect()
 
@@ -608,9 +639,6 @@ export async function editTransactionById(
       }
       if (newTransactionData.category) {
         updateFields.category = newTransactionData.category
-      }
-      if (newTransactionData.currency) {
-        updateFields.currency = newTransactionData.currency
       }
       if (newTransactionData.isIncome !== undefined) {
         updateFields.isIncome = newTransactionData.isIncome
@@ -747,7 +775,7 @@ export async function findTransactionById(
   try {
     await dbConnect()
     const transaction = await TransactionModel.findOne({ id })
-      .select('-categories')
+      .select('-categories -categoryLimits -subscriptions -currency')
       .lean<TTransaction>({
         transform: (doc) => {
           if (!doc) return
@@ -780,18 +808,23 @@ export async function deleteAllTransactionsAndSignOut(
 
 export async function getCategoryLimits(
   userId: TUserId,
-): Promise<TTransaction['categoryLimits']> {
+): Promise<TCategoryLimits[]> {
   if (!userId) {
     throw new Error('User ID is required to get category limits.')
   }
   try {
     await dbConnect()
+    const userSettings = await UserSettingsModel.findOne({ userId })
+      .select('categoryLimits -_id')
+      .lean<{ categoryLimits: TCategoryLimits[] }>()
+    if (userSettings?.categoryLimits) return userSettings.categoryLimits
+
     const transaction = await TransactionModel.findOne(
       { userId },
       { categoryLimits: 1, _id: 0 },
-    ).lean<{ categoryLimits: TTransaction['categoryLimits'] }>()
+    ).lean<{ categoryLimits: TCategoryLimits[] }>()
 
-    return transaction?.categoryLimits
+    return transaction?.categoryLimits || []
   } catch (err) {
     throw err
   }
@@ -819,7 +852,7 @@ export const getCachedSalaryDay = cache(getSalaryDay)
 
 export async function addLimit(
   userId: TUserId,
-  categoryLimits: TTransaction['categoryLimits'],
+  categoryLimits: TCategoryLimits[],
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to add category limits.')
@@ -829,7 +862,11 @@ export async function addLimit(
   }
   try {
     await dbConnect()
-    await TransactionModel.updateMany({ userId }, { categoryLimits })
+    await UserSettingsModel.updateOne(
+      { userId },
+      { $set: { categoryLimits } },
+      { upsert: true, setDefaultsOnInsert: false },
+    )
     revalidatePath(ROUTE.LIMITS)
   } catch (err) {
     throw err
@@ -848,16 +885,14 @@ export async function deleteLimit(
   }
   try {
     await dbConnect()
-    const transaction = await TransactionModel.findOne({ userId })
-    if (!transaction) {
-      throw new Error('Transaction data not found for the user.')
-    }
-    const updatedCategoryLimits = transaction.categoryLimits.filter(
+    const categoryLimits = await getCategoryLimits(userId)
+    const updatedCategoryLimits = categoryLimits.filter(
       (limit: TCategoryLimits) => limit.categoryName !== categoryName,
     )
-    await TransactionModel.updateMany(
+    await UserSettingsModel.updateOne(
       { userId },
-      { categoryLimits: updatedCategoryLimits },
+      { $set: { categoryLimits: updatedCategoryLimits } },
+      { upsert: true, setDefaultsOnInsert: false },
     )
     revalidatePath(ROUTE.LIMITS)
   } catch (err) {
@@ -881,11 +916,8 @@ export async function editLimit(
   }
   try {
     await dbConnect()
-    const transaction = await TransactionModel.findOne({ userId })
-    if (!transaction) {
-      throw new Error('Transaction data not found for the user.')
-    }
-    const updatedCategoryLimits = transaction.categoryLimits.map(
+    const categoryLimits = await getCategoryLimits(userId)
+    const updatedCategoryLimits = categoryLimits.map(
       (limit: TCategoryLimits) => {
         if (limit.categoryName === categoryName) {
           return {
@@ -897,9 +929,10 @@ export async function editLimit(
         return limit
       },
     )
-    await TransactionModel.updateMany(
+    await UserSettingsModel.updateOne(
       { userId },
-      { categoryLimits: updatedCategoryLimits },
+      { $set: { categoryLimits: updatedCategoryLimits } },
+      { upsert: true, setDefaultsOnInsert: false },
     )
     revalidatePath(ROUTE.LIMITS)
   } catch (err) {
@@ -919,7 +952,11 @@ export async function addSubscription(
   }
   try {
     await dbConnect()
-    await TransactionModel.updateMany({ userId }, { subscriptions })
+    await UserSettingsModel.updateOne(
+      { userId },
+      { $set: { subscriptions } },
+      { upsert: true, setDefaultsOnInsert: false },
+    )
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
     throw err
@@ -928,27 +965,28 @@ export async function addSubscription(
 
 export async function getSubscriptions(
   userId: TUserId,
-): Promise<TTransaction['subscriptions']> {
+): Promise<TSubscriptions[]> {
   if (!userId) {
     throw new Error('User ID is required to get subscriptions.')
   }
   try {
     await dbConnect()
-    const transaction = await TransactionModel.findOne(
-      { userId },
-      { subscriptions: 1, _id: 1 },
-    ).lean<{ subscriptions: TTransaction['subscriptions'] }>({
-      transform: (doc) => {
-        if (!doc) return
-        if (doc._id && isObjectIdOrHexString(doc._id)) {
-          doc._id = formatObjectIdToString(
-            doc._id as NonNullable<TRawTransaction['_id']>,
-          )
-        }
-      },
-    })
+    const userSettings = await UserSettingsModel.findOne({ userId })
+      .select('subscriptions -_id')
+      .lean<{ subscriptions: TSubscriptions[] }>()
+    const transaction = userSettings?.subscriptions
+      ? null
+      : await TransactionModel.findOne(
+          { userId },
+          { subscriptions: 1, _id: 0 },
+        ).lean<{ subscriptions: TSubscriptions[] }>()
+    const subscriptions =
+      userSettings?.subscriptions ?? transaction?.subscriptions ?? []
 
-    return transaction?.subscriptions || []
+    return subscriptions.map((subscription) => ({
+      ...subscription,
+      _id: String(subscription._id),
+    }))
   } catch (err) {
     throw err
   }
@@ -981,18 +1019,27 @@ export async function editSubscription(
   }
   try {
     await dbConnect()
-    await TransactionModel.updateMany(
-      { userId, 'subscriptions._id': _id },
+    const subscriptions = await getSubscriptions(userId)
+    await UserSettingsModel.updateOne(
+      { userId },
       {
         $set: {
-          'subscriptions.$.category': category,
-          'subscriptions.$.description': description,
-          'subscriptions.$.amount': amount,
-          'subscriptions.$.note': note,
-          'subscriptions.$.autoRenew': autoRenew,
-          'subscriptions.$.renewDay': renewDay,
+          subscriptions: subscriptions.map((subscription) =>
+            subscription._id === _id
+              ? {
+                  ...subscription,
+                  category,
+                  description,
+                  amount,
+                  note,
+                  autoRenew,
+                  renewDay,
+                }
+              : subscription,
+          ),
         },
       },
+      { upsert: true, setDefaultsOnInsert: false },
     )
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
@@ -1012,9 +1059,17 @@ export async function deleteSubscription(
   }
   try {
     await dbConnect()
-    await TransactionModel.updateMany(
+    const subscriptions = await getSubscriptions(userId)
+    await UserSettingsModel.updateOne(
       { userId },
-      { $pull: { subscriptions: { _id } } },
+      {
+        $set: {
+          subscriptions: subscriptions.filter(
+            (subscription) => subscription._id !== _id,
+          ),
+        },
+      },
+      { upsert: true, setDefaultsOnInsert: false },
     )
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
@@ -1028,9 +1083,10 @@ export async function resetAllSubscriptions(userId: TUserId): Promise<void> {
   }
   try {
     await dbConnect()
-    await TransactionModel.updateMany(
+    await UserSettingsModel.updateOne(
       { userId },
       { $set: { subscriptions: [] } },
+      { upsert: true, setDefaultsOnInsert: false },
     )
     revalidatePath(ROUTE.SUBSCRIPTIONS)
   } catch (err) {
@@ -1104,7 +1160,7 @@ export const getCachedTransactionTypeAI = cache(getTransactionTypeAI)
 
 export async function getExpenseTipsAI(
   categories: string[],
-  currency: TTransaction['currency'],
+  currency: TCurrency,
 ): Promise<string> {
   if (!categories) {
     throw new Error('Categories are required.')
@@ -1218,7 +1274,7 @@ export async function formatWeeklyReportAI(data: {
   transactionCount: number
   expenseReportData: TExpenseReport[]
   biggestExpense: TTransaction | null
-  currencySign: TTransaction['currency']['sign']
+  currencySign: TCurrency['sign']
 }): Promise<string> {
   const {
     totalIncome,

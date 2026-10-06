@@ -40,7 +40,7 @@ import {
   getEmojiFromCategory,
   getFormattedCurrency,
 } from '@/app/lib/helpers'
-import { TCalculatedLimits, TCategories, TTransaction } from '@/app/lib/types'
+import { TCalculatedLimits, TCategories, TCurrency } from '@/app/lib/types'
 
 import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
@@ -49,7 +49,7 @@ import { DROPDOWN_KEY } from './limits'
 type TProps = {
   data: TCalculatedLimits
   idx: number
-  currency: TTransaction['currency']
+  currency: TCurrency
   userCategories: TCategories[]
   changedCategoryNames: string[]
   reorderContainer: React.RefObject<null>

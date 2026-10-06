@@ -39,7 +39,12 @@ import {
   getGreeting,
   setInLocalStorage,
 } from '../lib/helpers'
-import type { TTransaction, TUser, TWeeklySpendData } from '../lib/types'
+import type {
+  TCurrency,
+  TTransaction,
+  TUser,
+  TWeeklySpendData,
+} from '../lib/types'
 import Loading from '../loading'
 import AnimatedGreeting from './animated-greeting'
 import AnimatedNumber from './animated-number'
@@ -48,7 +53,7 @@ import { HoverableElement } from './hoverables'
 type TProps = {
   user: TUser | undefined
   balance: TTransaction['balance']
-  currency: TTransaction['currency']
+  currency: TCurrency
   hasTransactions: boolean
   transactionCount: number
 }

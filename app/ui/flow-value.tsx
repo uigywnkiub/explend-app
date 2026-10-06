@@ -2,13 +2,13 @@ import { motion } from 'framer-motion'
 
 import { MOTION_NUMBER } from '@/config/constants/motion'
 
-import type { TNavLink, TTransaction } from '../lib/types'
+import type { TCurrency, TNavLink } from '../lib/types'
 import AnimatedNumber from './animated-number'
 import InfoText from './info-text'
 
 type TProps = {
   value: number
-  currency: TTransaction['currency']
+  currency: TCurrency
   icon: TNavLink['icon']
   wrapperClassName: string
 }

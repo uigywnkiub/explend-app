@@ -55,6 +55,7 @@ import {
 } from '@/app/lib/helpers'
 import type {
   TCategories,
+  TCurrency,
   TSubscriptions,
   TTransaction,
   TUserId,
@@ -77,8 +78,8 @@ export const enum DROPDOWN_KEY {
 
 type TProps = {
   userId: TUserId
-  currency: TTransaction['currency']
-  subscriptionsData: TTransaction['subscriptions']
+  currency: TCurrency
+  subscriptionsData: TSubscriptions[]
   userCategories: TCategories[]
   userSalaryDay: TTransaction['salaryDay']
   transactions: TTransaction[]
@@ -266,7 +267,6 @@ export default function Subscriptions({
       await toast.promise(
         createTransaction(
           userId,
-          currency,
           userCategories,
           userSalaryDay,
           newSubscription,

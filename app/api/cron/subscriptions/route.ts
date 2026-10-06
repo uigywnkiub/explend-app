@@ -5,12 +5,20 @@ import webpush from 'web-push'
 
 import { ROUTE } from '@/config/constants/routes'
 
-import { createTransaction, getUserSettingsCategories } from '@/app/lib/actions'
+import {
+  createTransaction,
+  getCurrency,
+  getSalaryDay,
+  getSubscriptions,
+  getUserPushSubscriptions,
+  getUserSettingsCategories,
+} from '@/app/lib/actions'
 import { createFormData, getEmojiFromCategory } from '@/app/lib/helpers'
 import PushSubscriptionModel from '@/app/lib/models/push-subscription.model'
 import TransactionModel from '@/app/lib/models/transaction.model'
+import UserSettingsModel from '@/app/lib/models/user-settings.model'
 import dbConnect from '@/app/lib/mongodb'
-import { TSubscriptions, TTransaction } from '@/app/lib/types'
+import { TTransaction } from '@/app/lib/types'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Secs.
@@ -31,21 +39,11 @@ export async function GET(req: NextRequest) {
 
   const todayDay = new Date().getDate()
 
-  const users: Pick<
-    TTransaction,
-    'userId' | 'currency' | 'salaryDay' | 'subscriptions'
-  >[] = await TransactionModel.aggregate([
-    { $match: { 'subscriptions.autoRenew': true } },
-    {
-      $group: {
-        _id: '$userId',
-        userId: { $first: '$userId' },
-        currency: { $first: '$currency' },
-        salaryDay: { $first: '$salaryDay' },
-        subscriptions: { $first: '$subscriptions' },
-      },
-    },
+  const [settingsUserIds, legacyUserIds] = await Promise.all([
+    UserSettingsModel.distinct('userId', { 'subscriptions.autoRenew': true }),
+    TransactionModel.distinct('userId', { 'subscriptions.autoRenew': true }),
   ])
+  const userIds = [...new Set([...settingsUserIds, ...legacyUserIds])]
 
   const results: {
     userId: TTransaction['userId']
@@ -54,17 +52,22 @@ export async function GET(req: NextRequest) {
     notified: boolean
   }[] = []
 
-  for (const user of users) {
+  for (const userId of userIds) {
     const processed: string[] = []
     const errors: string[] = []
     let notified = false
 
-    const eligibleSubs: TTransaction['subscriptions'] = (
-      user.subscriptions || []
-    ).filter((s: TSubscriptions) => {
+    const [subscriptions, userCategories, userSalaryDay, currency, pushSubs] =
+      await Promise.all([
+        getSubscriptions(userId),
+        getUserSettingsCategories(userId),
+        getSalaryDay(userId),
+        getCurrency(userId),
+        getUserPushSubscriptions(userId),
+      ])
+    const eligibleSubs = subscriptions.filter((s) => {
       return s.autoRenew === true && Number(s.renewDay) === todayDay
     })
-    const userCategories = await getUserSettingsCategories(user.userId)
 
     for (const sub of eligibleSubs) {
       try {
@@ -76,13 +79,7 @@ export async function GET(req: NextRequest) {
           isSubscription: true,
         })
 
-        await createTransaction(
-          user.userId,
-          user.currency,
-          userCategories,
-          user.salaryDay,
-          formData,
-        )
+        await createTransaction(userId, userCategories, userSalaryDay, formData)
 
         processed.push(sub._id)
       } catch (err) {
@@ -98,23 +95,19 @@ export async function GET(req: NextRequest) {
     }
 
     if (processed.length > 0) {
-      const pushDoc = await PushSubscriptionModel.findOne({
-        userId: user.userId,
-      }).lean<{ subscriptions: webpush.PushSubscription[] }>()
-
-      if (pushDoc?.subscriptions?.length) {
-        const processedSubs = eligibleSubs.filter((s: TSubscriptions) =>
+      if (pushSubs.length) {
+        const processedSubs = eligibleSubs.filter((s) =>
           processed.includes(s._id),
         )
 
         for (const sub of processedSubs) {
-          for (const pushSub of pushDoc.subscriptions) {
+          for (const pushSub of pushSubs) {
             try {
               await webpush.sendNotification(
                 pushSub,
                 JSON.stringify({
                   title: `Subscription Renewal`,
-                  body: `${getEmojiFromCategory(sub.category)} ${sub.description} — ${sub.amount} ${user.currency.sign}`,
+                  body: `${getEmojiFromCategory(sub.category)} ${sub.description} — ${sub.amount} ${currency.sign}`,
                   icon: '/icon.png',
                   url: ROUTE.SUBSCRIPTIONS,
                 }),
@@ -126,12 +119,20 @@ export async function GET(req: NextRequest) {
                 'statusCode' in err &&
                 (err.statusCode === 410 || err.statusCode === 404)
               ) {
+                await UserSettingsModel.updateOne(
+                  { userId },
+                  {
+                    $pull: {
+                      pushSubscriptions: { endpoint: pushSub.endpoint },
+                    },
+                  },
+                )
                 await PushSubscriptionModel.updateOne(
-                  { userId: user.userId },
+                  { userId },
                   { $pull: { subscriptions: { endpoint: pushSub.endpoint } } },
                 )
               } else {
-                Sentry.captureException(err, { extra: { userId: user.userId } })
+                Sentry.captureException(err, { extra: { userId } })
               }
             }
           }
@@ -142,7 +143,7 @@ export async function GET(req: NextRequest) {
     }
 
     results.push({
-      userId: user.userId,
+      userId,
       processed: processed.length.toString(),
       errors,
       notified,

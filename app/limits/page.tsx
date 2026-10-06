@@ -6,6 +6,7 @@ import {
   getAllTransactions,
   getAuthSession,
   getCachedUserCategories,
+  getCategoryLimits,
   getCurrency,
 } from '../lib/actions'
 import { getUserCategories } from '../lib/data'
@@ -20,10 +21,11 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const [transactions, currency, userCategoriesFromSettings] =
+  const [transactions, currency, categoryLimits, userCategoriesFromSettings] =
     await Promise.all([
       getAllTransactions(userId),
       getCurrency(userId),
+      getCategoryLimits(userId),
       getCachedUserCategories(userId),
     ])
   const userCategories = getUserCategories(userCategoriesFromSettings)
@@ -40,6 +42,7 @@ export default async function Page() {
           <Limits
             userId={userId}
             currency={currency}
+            categoryLimits={categoryLimits}
             transactions={transactions}
             userCategories={userCategories}
           />

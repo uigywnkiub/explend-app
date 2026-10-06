@@ -632,7 +632,10 @@ export const parsePrivat24Xlsx = async (
   return { rows, skipped }
 }
 
-export const buildWeeklyReport = (transactions: TTransaction[]) => {
+export const buildWeeklyReport = (
+  transactions: TTransaction[],
+  currencySign: string,
+) => {
   const lastWeekStart = startOfWeek(subWeeks(new Date(), 1), {
     weekStartsOn: 1,
   })
@@ -659,7 +662,7 @@ export const buildWeeklyReport = (transactions: TTransaction[]) => {
     transactionCount: lastWeek.length,
     weekStart: lastWeekStart,
     weekEnd: lastWeekEnd,
-    currencySign: transactions[0]?.currency.sign || '',
+    currencySign,
   }
 }
 

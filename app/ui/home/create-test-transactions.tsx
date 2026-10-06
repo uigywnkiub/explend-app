@@ -11,12 +11,17 @@ import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
 import { createTransaction } from '../../lib/actions'
 import { cn, createFormData } from '../../lib/helpers'
-import type { TCategories, TTransaction, TUserId } from '../../lib/types'
+import type {
+  TCategories,
+  TCurrency,
+  TTransaction,
+  TUserId,
+} from '../../lib/types'
 import { HoverableElement } from '../hoverables'
 
 type TProps = {
   userId: TUserId
-  currency: TTransaction['currency']
+  currency: TCurrency
   userCategories: TCategories[]
   userSalaryDay: TTransaction['salaryDay']
 }
@@ -122,7 +127,6 @@ export default function CreateTestTransactions({
         )
         await createTransaction(
           userId,
-          currency,
           userCategories,
           userSalaryDay,
           testTransactions[i],

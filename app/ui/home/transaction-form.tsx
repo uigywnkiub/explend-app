@@ -95,6 +95,7 @@ import {
 } from '../../lib/helpers'
 import type {
   TCategories,
+  TCurrency,
   TReceipt,
   TReceiptState,
   TTransaction,
@@ -111,7 +112,7 @@ const TAB_KEY = {
 }
 
 type TProps = {
-  currency: TTransaction['currency']
+  currency: TCurrency
   userCategories: TCategories[]
 }
 

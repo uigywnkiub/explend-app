@@ -58,6 +58,7 @@ import {
 } from '@/app/lib/helpers'
 import { useAttemptTracker } from '@/app/lib/hooks'
 import type {
+  TCurrency,
   TExpenseAdvice,
   TForecastData,
   TTransaction,
@@ -81,7 +82,7 @@ const REFRESH_TIPS_BTN_TEXT = 'Refresh tips'
 
 type TProps = {
   transactions: TTransaction[]
-  currency: TTransaction['currency']
+  currency: TCurrency
   userSalaryDay: TTransaction['salaryDay']
 }
 

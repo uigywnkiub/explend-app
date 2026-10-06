@@ -30,7 +30,7 @@ import {
   toLowerCase,
   toUpperCase,
 } from '../../lib/helpers'
-import { TTransaction } from '../../lib/types'
+import { TCurrency, TTransaction } from '../../lib/types'
 import AnimatedNumber from '../animated-number'
 import { HoverableElement } from '../hoverables'
 import InfoText from '../info-text'
@@ -38,6 +38,7 @@ import NoTransactionsPlug from '../no-transactions-plug'
 
 type TProps = {
   transactions: TTransaction[]
+  currency: TCurrency
 }
 
 const enum TRANSACTION_TYPE {
@@ -55,7 +56,7 @@ type TTableItem = {
   rawAmount: number
   rawDate: TTransaction['createdAt']
   isIncome: TTransaction['isIncome']
-  currencySign: TTransaction['currency']['sign']
+  currencySign: TCurrency['sign']
 }
 
 const enum COLUMN_KEY {
@@ -106,7 +107,7 @@ type TSortDescriptor = {
   direction: 'ascending' | 'descending'
 }
 
-export default function TransactionTable({ transactions }: TProps) {
+export default function TransactionTable({ transactions, currency }: TProps) {
   const [filterValue, setFilterValue] = useState('')
   const [sortDescriptor, setSortDescriptor] = useState<TSortDescriptor>({
     column: COLUMN_KEY.DATE,
@@ -121,15 +122,15 @@ export default function TransactionTable({ transactions }: TProps) {
         key: t.id,
         category: t.category,
         description: t.description,
-        amount: `${getFormattedCurrency(t.amount)} ${t.currency.sign}`,
+        amount: `${getFormattedCurrency(t.amount)} ${currency.sign}`,
         type: t.isIncome ? TRANSACTION_TYPE.INCOME : TRANSACTION_TYPE.EXPENSE,
         date: formatDate(t.createdAt),
         rawAmount: parseFloat(t.amount),
         rawDate: t.createdAt,
         isIncome: t.isIncome,
-        currencySign: t.currency.sign,
+        currencySign: currency.sign,
       })),
-    [transactions],
+    [transactions, currency],
   )
 
   const filteredItems = useMemo(() => {

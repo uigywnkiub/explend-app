@@ -18,14 +18,12 @@ import {
 
 type TProps = {
   userId: TUserId
-  currency: TTransaction['currency']
   userCategories: TCategories[]
   userSalaryDay: TTransaction['salaryDay']
 }
 
 export default function ImportBankTransactions({
   userId,
-  currency,
   userCategories,
   userSalaryDay,
 }: TProps) {
@@ -66,7 +64,6 @@ export default function ImportBankTransactions({
       const result = await toast.promise(
         importBankTransactions(
           userId,
-          currency,
           userCategories,
           userSalaryDay,
           bank,

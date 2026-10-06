@@ -16,13 +16,13 @@ import {
   cn,
   getFormattedCurrency,
 } from '@/app/lib/helpers'
-import type { TTransaction } from '@/app/lib/types'
+import type { TCurrency, TTransaction } from '@/app/lib/types'
 
 type TProps = {
   active: boolean
   payload: TooltipProps<ValueType, NameType>['payload']
   label: string
-  currency: TTransaction['currency']
+  currency: TCurrency
   transactions: TTransaction[]
 }
 

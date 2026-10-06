@@ -14,6 +14,7 @@ import TransactionItem from '@/app/ui/home/transaction-item'
 import { cn } from '../../lib/helpers'
 import type {
   TCategories,
+  TCurrency,
   TGroupedTransactions,
   TTotalsTransaction,
   TTransaction,
@@ -25,7 +26,7 @@ type TProps = {
   groupedTransactionsByDate: TGroupedTransactions
   totalsTransactionsByDate: TTotalsTransaction
   transactionsWithChangedCategory: TTransaction[]
-  currency: TTransaction['currency']
+  currency: TCurrency
   userCategories: TCategories[]
 }
 
@@ -102,6 +103,7 @@ function TransactionList({
                         <TransactionItem
                           hasCategoryChanged={hasCategoryChanged}
                           userCategories={userCategories}
+                          currency={currency}
                           {...t}
                         />
                       </motion.li>
