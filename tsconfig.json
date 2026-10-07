@@ -33,5 +33,5 @@
     ".next/dev/types/**/*.ts",
     "worker/index.ts"
   ],
-  "exclude": ["node_modules", "public/sw.js"]
+  "exclude": ["node_modules", "public/sw.js", "scripts/**/*"]
 }

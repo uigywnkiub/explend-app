@@ -3,7 +3,7 @@ import type { KnipConfig } from 'knip'
 const config: KnipConfig = {
   // Hint by knip to ignore this.
   // ignore: ['./app/sw.{js,ts}'],
-  ignore: ['worker/**/*.{js,ts}'],
+  ignore: ['worker/**/*.{js,ts}', 'scripts/**/*.{js,ts,mjs}'],
   ignoreDependencies: [
     '@testing-library/dom',
     '@testing-library/react',

@@ -33,6 +33,7 @@ const config = [
       'public/**',
       'coverage/**',
       '__tests__/**',
+      'scripts/**',
       '*.log',
       '.env',
       '.env.*',
