@@ -229,7 +229,7 @@ export default function PullToRefresh() {
           className={`size-4 shrink-0 ${isRefreshing ? 'animate-spin' : ''}`}
           viewBox='0 0 20 20'
         >
-          <circle
+          <motion.circle
             cx='10'
             cy='10'
             r='8'
@@ -237,6 +237,8 @@ export default function PullToRefresh() {
             stroke='currentColor'
             strokeOpacity='0.2'
             strokeWidth='2'
+            animate={{ strokeOpacity: isReadyToRefresh ? 1 : 0.2 }}
+            transition={{ duration: 0.16, ease: 'easeOut' }}
           />
           <motion.circle
             cx='10'
