@@ -123,7 +123,7 @@ const config = [
     .extends('plugin:@typescript-eslint/recommended', 'prettier')
     .map((c) => ({ ...c, files: ['**/*.+(ts|tsx)'] })),
   {
-    files: ['**/*.+(ts|tsx)'],
+    files: ['**/*.+(ts|tsx|mjs)'],
     plugins: { '@typescript-eslint': typescriptEslintEslintPlugin },
     languageOptions: { parser: tsParser },
     rules: {
