@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { animate, AnimatePresence, motion, useMotionValue } from 'framer-motion'
+import { haptic } from 'ios-haptics'
 
 const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 8
 const OVERSHOOT_RESISTANCE = 0.2
@@ -56,6 +57,7 @@ export default function PullToRefresh() {
   const isRefreshingRef = useRef(false)
   const animationFrameRef = useRef<number | null>(null)
   const pendingPullDistanceRef = useRef(0)
+  const isReadyToRefreshRef = useRef(false)
   const startRef = useRef<{
     x: number
     y: number
@@ -69,6 +71,7 @@ export default function PullToRefresh() {
     const resetPull = () => {
       startRef.current = null
       distanceRef.current = 0
+      isReadyToRefreshRef.current = false
       animate(translateY, 0, {
         type: 'spring',
         stiffness: 420,
@@ -124,17 +127,30 @@ export default function PullToRefresh() {
       if (!start) return
       const deltaY = touch.clientY - start.y
       const deltaX = touch.clientX - start.x
+      const hasInvalidDirection =
+        Math.abs(deltaX) > Math.abs(deltaY) || deltaY <= 0
+      const hasScrolledContainer = start.containers.some(
+        (container) => container.scrollTop > 0,
+      )
 
-      if (Math.abs(deltaX) > Math.abs(deltaY) || deltaY <= 0) {
+      if (hasInvalidDirection || hasScrolledContainer) {
+        if (isReadyToRefreshRef.current) haptic.error()
+        isReadyToRefreshRef.current = false
         resetPull()
 
         return
       }
 
-      if (start.containers.some((container) => container.scrollTop > 0)) {
-        resetPull()
+      const isReadyToRefresh = deltaY >= start.threshold
 
-        return
+      if (isReadyToRefresh !== isReadyToRefreshRef.current) {
+        isReadyToRefreshRef.current = isReadyToRefresh
+
+        if (isReadyToRefresh) {
+          haptic.confirm()
+        } else {
+          haptic.error()
+        }
       }
 
       event.preventDefault()
