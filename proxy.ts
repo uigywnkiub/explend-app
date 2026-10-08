@@ -51,6 +51,6 @@ export const config = {
      * - robots.txt (robots file)
      * - manifest.webmanifest (web manifest file)
      */
-    '/((?!api|_next/static|_next/image|images|icons|favicon.ico|icon.png|apple-icon.png|workbox.*|sw.*|sitemap.xml|robots.txt|manifest.webmanifest).*)',
+    '/((?!api|_next/static|_next/image|images|icons|favicon.ico|icon.png|apple-icon.png|workbox.*|sw.*|sitemap.xml|robots.txt|manifest.webmanifest|llms.txt).*)',
   ],
 }
