@@ -10,8 +10,9 @@ import {
 } from './config/constants/main'
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
   reactCompiler: true,
+  cacheComponents: true,
+  partialPrefetching: true,
   images: {
     remotePatterns: [
       {
