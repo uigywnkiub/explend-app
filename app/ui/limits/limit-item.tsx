@@ -147,31 +147,34 @@ function LimitItem({
           </div>
           <Tooltip
             content={
-              <div
-                className={cn(
-                  'flex justify-center gap-3 p-2 text-xs',
-                  !isIncreasedAmountByCurrMonth &&
-                    prevMonthAmount !== 0 &&
-                    currMonthAmount !== 0 &&
-                    'flex-row-reverse',
+              <div className='flex justify-center gap-3 p-2 text-xs'>
+                {currMonthAmount > 0 ? (
+                  <div
+                    className={cn(
+                      'flex flex-col items-center',
+                      isLimitOver ? 'text-danger' : 'text-success',
+                    )}
+                  >
+                    <span className='text-default-500 pb-2'>Current</span>
+                    <span>{`${formatPercentage(currMonthPercentage)} %`}</span>
+                    <span>
+                      {getFormattedCurrency(currMonthAmount)} {currency.sign}
+                    </span>
+                  </div>
+                ) : (
+                  <div
+                    className={cn(
+                      'flex flex-col items-center',
+                      'text-[color-mix(in_srgb,theme(colors.default.400)_50%,hsl(var(--heroui-default)))]',
+                    )}
+                  >
+                    <span className='text-default-500 pb-2'>Previous</span>
+                    <span>{`${formatPercentage(prevMonthPercentage)} %`}</span>
+                    <span>
+                      {getFormattedCurrency(prevMonthAmount)} {currency.sign}
+                    </span>
+                  </div>
                 )}
-              >
-                <div
-                  className={cn(
-                    'flex flex-col items-center',
-                    isIncreasedAmountByCurrMonth
-                      ? isLimitOver
-                        ? 'text-[color-mix(in_srgb,hsl(var(--heroui-secondary))_50%,hsl(var(--heroui-danger)))]'
-                        : 'text-[color-mix(in_srgb,hsl(var(--heroui-secondary))_50%,hsl(var(--heroui-success)))]'
-                      : 'text-[color-mix(in_srgb,hsl(var(--heroui-secondary))_50%,hsl(var(--heroui-default)))]',
-                  )}
-                >
-                  <span className='text-default-500 pb-2'>Previous</span>
-                  <span>{`${formatPercentage(prevMonthPercentage)} %`}</span>
-                  <span>
-                    {getFormattedCurrency(prevMonthAmount)} {currency.sign}
-                  </span>
-                </div>
                 <div className='bg-default w-px' />
                 <div
                   className={cn(
@@ -192,26 +195,41 @@ function LimitItem({
                   </div>
                 </div>
                 <div className='bg-default w-px' />
-                <div
-                  className={cn(
-                    'flex flex-col items-center',
-                    isLimitOver ? 'text-danger' : 'text-success',
-                  )}
-                >
-                  <span className='text-default-500 pb-2'>Current</span>
-                  <span>{`${formatPercentage(currMonthPercentage)} %`}</span>
-                  <span>
-                    {getFormattedCurrency(currMonthAmount)} {currency.sign}
-                  </span>
-                </div>
+                {currMonthAmount > 0 ? (
+                  <div
+                    className={cn(
+                      'flex flex-col items-center',
+                      'text-[color-mix(in_srgb,theme(colors.default.400)_50%,hsl(var(--heroui-default)))]',
+                    )}
+                  >
+                    <span className='text-default-500 pb-2'>Previous</span>
+                    <span>{`${formatPercentage(prevMonthPercentage)} %`}</span>
+                    <span>
+                      {getFormattedCurrency(prevMonthAmount)} {currency.sign}
+                    </span>
+                  </div>
+                ) : (
+                  <div
+                    className={cn(
+                      'flex flex-col items-center',
+                      isLimitOver ? 'text-danger' : 'text-success',
+                    )}
+                  >
+                    <span className='text-default-500 pb-2'>Current</span>
+                    <span>{`${formatPercentage(currMonthPercentage)} %`}</span>
+                    <span>
+                      {getFormattedCurrency(currMonthAmount)} {currency.sign}
+                    </span>
+                  </div>
+                )}
               </div>
             }
             placement='bottom'
           >
-            <div className='bg-default xs:w-2/4 absolute -mt-0.5 h-1.5 w-1/3 rounded-full sm:w-2/3 md:relative md:w-full'>
+            <div className='xs:w-2/4 border-default absolute -mt-0.5 h-2 w-1/3 rounded-full border sm:w-2/3 md:relative md:w-full'>
               <div
                 className={cn(
-                  'bg-secondary/50 absolute h-1.5 rounded-full',
+                  'dark:bg-default-300 bg-default-400/50 absolute h-1.5 rounded-full',
                   isIncreasedAmountByCurrMonth && 'z-10',
                 )}
                 style={{ width: `${prevMonthPercentage}%` }}
