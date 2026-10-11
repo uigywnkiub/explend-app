@@ -376,6 +376,8 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             selectedDate={selectedDate}
             onDateSelection={onDateSelection}
             minTransaction={minTransaction}
+            transactions={transactions}
+            currencySign={currency.sign}
             userSalaryDay={userSalaryDay}
           />
           <div className='flex gap-2'>
@@ -398,6 +400,8 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
             selectedDate={selectedDate}
             onDateSelection={onDateSelection}
             minTransaction={minTransaction}
+            transactions={transactions}
+            currencySign={currency.sign}
             userSalaryDay={userSalaryDay}
           />
           <div className='flex gap-2'>
