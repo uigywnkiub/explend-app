@@ -28,7 +28,9 @@ export default function TipsList({ tipsDataAI }: TProps) {
                 )}
                 className='hover:opacity-hover'
               >
-                <h2 className='mb-2 font-semibold'>{tip.category}</h2>
+                <h2 className='mb-2 inline-block font-semibold'>
+                  {tip.category}
+                </h2>
               </Link>
             </Tooltip>
             <ul className='text-sm'>
