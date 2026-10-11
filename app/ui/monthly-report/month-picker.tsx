@@ -13,10 +13,10 @@ import type {
 } from '@/app/lib/types'
 
 const TRANSACTION_LEVEL_CLASSES = [
+  'bg-danger-50!',
   'bg-danger-100!',
   'bg-danger-200!',
   'bg-danger-300!',
-  'bg-danger-400!',
 ] as const
 
 type TProps = {
