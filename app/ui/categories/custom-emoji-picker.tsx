@@ -3,12 +3,12 @@ import { memo, useEffect, useMemo } from 'react'
 import { useTheme } from '@wrksz/themes/client'
 import EmojiPicker, {
   Categories,
+  type CategoryConfig,
   type EmojiClickData,
   SkinTonePickerLocation,
   SuggestionMode,
   Theme,
 } from 'emoji-picker-react'
-import { type CategoryConfig } from 'emoji-picker-react/dist/types/exposedTypes'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
@@ -34,7 +34,6 @@ function CustomEmojiPicker({ onEmojiClick }: TProps) {
         onEmojiClick={onEmojiClick}
         lazyLoadEmojis
         autoFocusSearch={false}
-        // @ts-expect-error - internally, it auto handles namings.
         categories={
           Object.values(Categories).filter(
             (c) => c !== Categories.SUGGESTED,
