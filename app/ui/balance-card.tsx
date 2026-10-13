@@ -59,8 +59,8 @@ type TProps = {
   isBalanceLoading?: boolean
 }
 
-const SPEND_CHART_COLOR = 'hsl(var(--heroui-primary-400))'
-const CHART_MUTED_COLOR = 'hsl(var(--heroui-default-400))'
+const SPEND_CHART_COLOR = 'hsl(var(--heroui-primary-500))'
+const CHART_MUTED_COLOR = 'hsl(var(--heroui-default-500))'
 
 function BalanceCard({
   user,
@@ -231,7 +231,10 @@ function BalanceCard({
               </motion.p>
             )}
             {hasTransactions && (
-              <span className='text-primary-500 mt-1 inline-flex items-center gap-1 text-xs font-medium'>
+              <span
+                style={{ color: SPEND_CHART_COLOR }}
+                className='mt-1 inline-flex items-center gap-1 text-xs font-medium'
+              >
                 {isShowTotals ? 'Hide Details' : 'Show Details'}
                 <motion.span
                   animate={{ rotate: isShowTotals ? 180 : 0 }}

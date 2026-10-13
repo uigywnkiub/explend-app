@@ -2,7 +2,6 @@ import DEFAULT_CATEGORIES from '@/public/data/default-categories.json'
 import { getLocalTimeZone } from '@internationalized/date'
 import { parse } from 'csv-parse/sync'
 import {
-  addDays,
   differenceInCalendarMonths,
   eachDayOfInterval,
   endOfDay,
@@ -10,7 +9,6 @@ import {
   endOfToday,
   endOfWeek,
   format,
-  formatISO,
   getDay,
   isWithinInterval,
   startOfMonth,
@@ -165,14 +163,12 @@ export const filterTransactionsByDateRange = <
   startDate: Date,
   endDate: Date,
 ): T[] => {
-  return transactions.filter((t) => {
-    const transactionDate = formatISO(t.createdAt)
-
-    return isWithinInterval(transactionDate, {
+  return transactions.filter((transaction) =>
+    isWithinInterval(new Date(transaction.createdAt), {
       start: startDate,
       end: endOfDay(endDate),
-    })
-  })
+    }),
+  )
 }
 
 export const getWeeklySpendData = (
@@ -182,9 +178,9 @@ export const getWeeklySpendData = (
   const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 })
   const previousWeekStart = subWeeks(currentWeekStart, 1)
   const currentWeekDayIndex = (getDay(today) + 6) % 7
-  const previousWeekEnd = endOfDay(
-    addDays(previousWeekStart, currentWeekDayIndex),
-  )
+  const previousWeekEnd = endOfWeek(previousWeekStart, {
+    weekStartsOn: 1,
+  })
   const currentWeekTransactions = filterTransactionsByDateRange(
     transactions,
     currentWeekStart,
@@ -204,6 +200,7 @@ export const getWeeklySpendData = (
     previousWeekStart,
     previousWeekEnd,
   )
+
   const previousWeekDailySpend = new Map<string, number>()
   previousWeekTransactions
     .filter((transaction) => !transaction.isIncome)
@@ -213,7 +210,7 @@ export const getWeeklySpendData = (
 
       previousWeekDailySpend.set(
         day,
-        (previousWeekDailySpend.get(day) || 0) + amount,
+        (previousWeekDailySpend.get(day) ?? 0) + amount,
       )
     })
   const previousWeekSpend = previousWeekTransactions.length
@@ -229,9 +226,11 @@ export const getWeeklySpendData = (
   }).map((date) => {
     const day = format(date, 'EEE')
     const dayIndex = (getDay(date) + 6) % 7
+
+    previousWeekCumulativeSpend += previousWeekDailySpend.get(day) || 0
+
     if (dayIndex <= currentWeekDayIndex) {
       currentWeekSpend += dailySpend.get(day) || 0
-      previousWeekCumulativeSpend += previousWeekDailySpend.get(day) || 0
     }
 
     return {
@@ -240,8 +239,7 @@ export const getWeeklySpendData = (
       tooltipDateLabel: format(date, 'EEE, MMM d'),
       cumulativeSpend:
         dayIndex <= currentWeekDayIndex ? currentWeekSpend : null,
-      previousWeekCumulativeSpend:
-        dayIndex <= currentWeekDayIndex ? previousWeekCumulativeSpend : null,
+      previousWeekCumulativeSpend,
     }
   })
 
