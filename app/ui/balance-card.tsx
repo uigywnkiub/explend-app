@@ -92,6 +92,10 @@ function BalanceCard({
   )
   const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const greetingMsg = `${getGreeting(currentTimeZone || DEFAULT_TIME_ZONE)}, ${user?.name} 👋🏼`
+  const maxSpendLength = Math.max(
+    Math.trunc(weeklySpend?.previousWeekSpend ?? 0).toString().length,
+    Math.trunc(weeklySpend?.currentWeekSpend ?? 0).toString().length,
+  )
 
   const onChangeInfo = () => {
     if (!hasTransactions) return
@@ -266,7 +270,7 @@ function BalanceCard({
               <div className='flex min-w-0 cursor-default flex-col items-end text-right'>
                 <div
                   className={cn(
-                    'flex w-full max-w-48 cursor-text items-center justify-end gap-1.5 text-right text-xs select-text',
+                    'flex w-full max-w-48 cursor-text items-center justify-end gap-1 text-right text-xs select-text',
                     weeklySpend.previousWeekSpend === null
                       ? 'text-default-500'
                       : weeklySpend.previousWeekSpend >=
@@ -282,13 +286,13 @@ function BalanceCard({
                         uKey='weekly-spend-check'
                         element={
                           <PiCheckCircle
-                            size={DEFAULT_ICON_SIZE}
+                            size={DEFAULT_ICON_SIZE - 2}
                             className='fill-success cursor-default'
                           />
                         }
                         hoveredElement={
                           <PiCheckCircleFill
-                            size={DEFAULT_ICON_SIZE}
+                            size={DEFAULT_ICON_SIZE - 2}
                             className='fill-success cursor-default'
                           />
                         }
@@ -299,13 +303,13 @@ function BalanceCard({
                         uKey='weekly-spend-warning'
                         element={
                           <PiWarningCircle
-                            size={DEFAULT_ICON_SIZE}
+                            size={DEFAULT_ICON_SIZE - 2}
                             className='fill-danger cursor-default'
                           />
                         }
                         hoveredElement={
                           <PiWarningCircleFill
-                            size={DEFAULT_ICON_SIZE}
+                            size={DEFAULT_ICON_SIZE - 2}
                             className='fill-danger cursor-default'
                           />
                         }
@@ -368,7 +372,19 @@ function BalanceCard({
               >
                 <AreaChart
                   data={weeklySpend.chartData}
-                  margin={{ top: 20, right: 16, bottom: -10, left: 2 }}
+                  margin={{
+                    top: 20,
+                    right: 16,
+                    bottom: -10,
+                    left:
+                      maxSpendLength >= 5
+                        ? 6
+                        : maxSpendLength === 4
+                          ? 1
+                          : maxSpendLength === 3
+                            ? -4
+                            : -10,
+                  }}
                 >
                   <defs>
                     <linearGradient
