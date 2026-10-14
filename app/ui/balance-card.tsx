@@ -41,6 +41,7 @@ import {
 } from '../lib/helpers'
 import type {
   TCurrency,
+  TTotals,
   TTransaction,
   TUser,
   TWeeklySpendData,
@@ -75,10 +76,7 @@ function BalanceCard({
   const [loadedTransactionCount, setLoadedTransactionCount] = useState<
     number | null
   >(null)
-  const [total, setTotal] = useState<{
-    income: number
-    expense: number
-  }>({
+  const [total, setTotal] = useState<TTotals>({
     income: 0,
     expense: 0,
   })

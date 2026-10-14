@@ -111,7 +111,7 @@ export type TBalanceProjection = ['amount', 'isIncome']
 
 export type TGroupedTransactions = Record<string, TTransaction[]>
 
-type TTotals = {
+export type TTotals = {
   income: number
   expense: number
 }
