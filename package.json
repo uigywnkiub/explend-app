@@ -161,5 +161,5 @@
   "engines": {
     "node": "22.x"
   },
-  "packageManager": "pnpm@12.9.1"
+  "packageManager": "pnpm@12.14.0"
 }
