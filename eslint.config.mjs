@@ -8,6 +8,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y'
 import prettier from 'eslint-plugin-prettier'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
+// import eslintPluginTailwindcss from 'eslint-plugin-tailwindcss'
 import unusedImports from 'eslint-plugin-unused-imports'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -43,6 +44,8 @@ const config = [
     ],
   },
   ...compat.extends('prettier'),
+  // eslintPluginTailwindcss.configs['flat/recommended'] ||
+  //   eslintPluginTailwindcss.configs.recommended,
   {
     plugins: {
       prettier,
@@ -56,6 +59,9 @@ const config = [
     settings: {
       react: {
         version: 'detect',
+      },
+      tailwindcss: {
+        cssConfigPath: 'app/globals.css',
       },
     },
     rules: {
