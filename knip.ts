@@ -3,7 +3,7 @@ import type { KnipConfig } from 'knip'
 const config: KnipConfig = {
   // Hint by knip to ignore this.
   // ignore: ['./app/sw.{js,ts}'],
-  ignore: ['worker/**/*.{js,ts}', 'scripts/**/*.{js,ts,mjs}'],
+  ignore: ['worker/**/*.{js,ts}'],
   ignoreDependencies: [
     '@testing-library/dom',
     '@testing-library/react',
@@ -16,7 +16,9 @@ const config: KnipConfig = {
     // Libs are needed for nextjs 15 running dev mode with turbopack END,
     'eslint-config-next',
     '@heroui/shared-icons',
-    '@internationalized/date',
+    // '@internationalized/date',
+    'get-user-locale',
+    '@types/react-highlight-words',
   ],
 }
 

@@ -634,40 +634,6 @@ export const parsePrivat24Xlsx = async (
   return { rows, skipped }
 }
 
-export const buildWeeklyReport = (
-  transactions: TTransaction[],
-  currencySign: string,
-) => {
-  const lastWeekStart = startOfWeek(subWeeks(new Date(), 1), {
-    weekStartsOn: 1,
-  })
-  const lastWeekEnd = endOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 })
-
-  const lastWeek = filterTransactionsByDateRange(
-    transactions,
-    lastWeekStart,
-    lastWeekEnd,
-  )
-  const { income, expense } = filterTransactions(lastWeek)
-  const report = calculateMonthlyReportData(income, expense)
-
-  const biggestExpense = expense.length
-    ? expense.reduce(
-        (max, t) => (parseFloat(t.amount) > parseFloat(max.amount) ? t : max),
-        expense[0],
-      )
-    : null
-
-  return {
-    ...report,
-    biggestExpense: biggestExpense || null,
-    transactionCount: lastWeek.length,
-    weekStart: lastWeekStart,
-    weekEnd: lastWeekEnd,
-    currencySign,
-  }
-}
-
 export const getUniqueCategoriesFromDefaults = (
   categories: TCategories[],
 ): TCategoriesItem[] => {
