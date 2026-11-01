@@ -20,6 +20,7 @@ import { ROUTE } from '@/config/constants/routes'
 
 import TransactionModel from '@/app/lib/models/transaction.model'
 import UserSettingsModel from '@/app/lib/models/user-settings.model'
+import { parseCreateTransactionFormData } from '@/app/lib/schemas/transaction.schema'
 
 import {
   CompletionAIModel,
@@ -220,30 +221,24 @@ export async function createTransaction(
     )
   }
   try {
+    const formValues = parseCreateTransactionFormData(formData)
     const newTransaction: Omit<
       TTransaction,
       'createdAt' | 'updatedAt' | 'isEdited'
     > = {
       id: crypto.randomUUID(),
       userId,
-      description: capitalizeFirstLetter(
-        formData.get('description') as TTransaction['description'],
-      ).trim(),
-      amount: formData.get('amount') as TTransaction['amount'],
+      description: capitalizeFirstLetter(formValues.description).trim(),
+      amount: formValues.amount,
       category:
-        getCategoryWithEmoji(formData.get('category'), userCategories) ||
+        getCategoryWithEmoji(formValues.category, userCategories) ||
         (`${DEFAULT_CATEGORY_EMOJI} ${DEFAULT_CATEGORY}` as TTransaction['category']),
-      isIncome: (formData.get('isIncome') ===
-        'true') as TTransaction['isIncome'],
-      isSubscription: (formData.get('isSubscription') ===
-        'true') as TTransaction['isSubscription'],
-      isTest: (formData.get('isTest') === 'true') as TTransaction['isTest'],
+      isIncome: formValues.isIncome === 'true',
+      isSubscription: formValues.isSubscription === 'true',
+      isTest: formValues.isTest === 'true',
       balance: '0' as TTransaction['balance'],
-      images: JSON.parse(
-        formData.get('images')?.toString() || '[]',
-      ) as TTransaction['images'],
+      images: formValues.images,
     }
-    newTransaction.amount = newTransaction.amount.replace(/\s/g, '')
     const amount = parseFloat(newTransaction.amount)
     let balance = 0
     if (newTransaction.isIncome) {
@@ -253,8 +248,7 @@ export async function createTransaction(
     }
     newTransaction.balance = balance.toString()
 
-    const dateStr = formData.get('date')?.toString()
-    const customDate = dateStr ? new Date(dateStr) : null
+    const customDate = formValues.date ? new Date(formValues.date) : null
     const createPayload =
       customDate && !isNaN(customDate.getTime())
         ? { ...newTransaction, createdAt: customDate }
