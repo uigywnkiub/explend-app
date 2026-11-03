@@ -69,6 +69,12 @@ function Categories({
   areCategoriesLengthMismatch,
 }: TProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+    onOpenChange: onDeleteOpenChange,
+  } = useDisclosure()
 
   const withPlaceholder = useCallback((cats: TCategories[]) => {
     return cats.map((cat) => {
@@ -108,6 +114,12 @@ function Categories({
     reset: false,
   })
   const [isNewEmojiPick, setIsNewEmojiPick] = useState(false)
+  const [pendingDeletion, setPendingDeletion] = useState<{
+    categoryIndex: number
+    itemIndex: number
+    itemName: string
+    itemEmoji: string
+  } | null>(null)
 
   const originalUserCategories = useMemo(
     () => deepCloneCategories(userCategories),
@@ -338,6 +350,21 @@ function Categories({
   )
 
   const onDeleteItemClick = useCallback(
+    (categoryIndex: number, itemIndex: number) => {
+      const item = categories[categoryIndex]?.items[itemIndex]
+      if (!item || item.__isPlaceholder) return
+      setPendingDeletion({
+        categoryIndex,
+        itemIndex,
+        itemName: item.name,
+        itemEmoji: item.emoji,
+      })
+      onDeleteOpen()
+    },
+    [categories, onDeleteOpen],
+  )
+
+  const onConfirmDeleteItem = useCallback(
     async (categoryIndex: number, itemIndex: number) => {
       const category = categories[categoryIndex]
       const itemToDelete = category.items[itemIndex]
@@ -349,13 +376,18 @@ function Categories({
         return
       }
 
+      const updatedCategory = {
+        ...category,
+        items: category.items.filter((_, index) => index !== itemIndex),
+      }
       const updatedCategories = [...categories]
-      category.items.splice(itemIndex, 1)
 
       const isNoCategoryItems =
-        stripPlaceholder([category])[0].items.length === 0
+        stripPlaceholder([updatedCategory])[0].items.length === 0
       if (isNoCategoryItems) {
         updatedCategories.splice(categoryIndex, 1)
+      } else {
+        updatedCategories[categoryIndex] = updatedCategory
       }
 
       updateCategoriesState(() => updatedCategories)
@@ -365,7 +397,7 @@ function Categories({
       try {
         const newCategoriesData = {
           subject: category.subject,
-          items: stripPlaceholder([category])[0].items.filter((i) =>
+          items: stripPlaceholder([updatedCategory])[0].items.filter((i) =>
             Boolean(i.name),
           ),
         }
@@ -391,6 +423,16 @@ function Categories({
     },
     [categories, stripPlaceholder, updateCategoriesState, userId],
   )
+
+  const confirmPendingDeletion = useCallback(async () => {
+    if (!pendingDeletion) return
+    await onConfirmDeleteItem(
+      pendingDeletion.categoryIndex,
+      pendingDeletion.itemIndex,
+    )
+    setPendingDeletion(null)
+    onDeleteClose()
+  }, [onConfirmDeleteItem, onDeleteClose, pendingDeletion])
 
   const haveCategoriesChanged = useMemo(() => {
     const cleanedCategories = categories.map((c) => ({
@@ -495,6 +537,47 @@ function Categories({
           withAsterisk={false}
         />
       </div>
+      <Modal isOpen={isDeleteOpen} onOpenChange={onDeleteOpenChange}>
+        <ModalContent>
+          {(onClose) => {
+            return (
+              <>
+                <ModalHeader className='flex items-center gap-2'>
+                  <PiWarningOctagonFill size={DEFAULT_ICON_SIZE} />
+                  Delete category item
+                </ModalHeader>
+                <ModalBody>
+                  <p className='text-default-500'>
+                    Are you sure you want to delete{' '}
+                    <span className='text-foreground font-medium'>
+                      {pendingDeletion?.itemEmoji} {pendingDeletion?.itemName}
+                    </span>
+                    ? This change may affect how existing transactions are
+                    categorized.
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button variant='light' onPress={onClose}>
+                    Cancel
+                  </Button>
+                  <Button
+                    color='danger'
+                    onPress={async () => {
+                      try {
+                        await confirmPendingDeletion()
+                      } catch {
+                        // The delete handler already reports the failure.
+                      }
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </ModalFooter>
+              </>
+            )
+          }}
+        </ModalContent>
+      </Modal>
       <Modal
         defaultOpen
         isOpen={isOpen}
