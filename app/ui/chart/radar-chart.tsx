@@ -306,14 +306,12 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
               />
             </RechartRadarChart>
           </ResponsiveContainer>
-          <div className='-mt-14'>
-            <CategoryExcludeSelect
-              categories={categories}
-              excludedCategories={excludedCategories}
-              availableCategories={availableCategories}
-              onSelectionChange={setExcludedCategories}
-            />
-          </div>
+          <CategoryExcludeSelect
+            categories={categories}
+            excludedCategories={excludedCategories}
+            availableCategories={availableCategories}
+            onSelectionChange={setExcludedCategories}
+          />
           <div className='-mt-2 flex flex-col gap-1 text-center text-xs md:text-sm'>
             <p>
               {`Visualization of ${isChartByCurrMonth ? 'current month' : 'all-time'} ${pluralize(
