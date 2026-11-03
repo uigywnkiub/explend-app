@@ -1,11 +1,10 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
 import {
-  Legend,
   PolarAngleAxis,
   PolarGrid,
   PolarRadiusAxis,
@@ -16,13 +15,17 @@ import {
 } from 'recharts'
 
 import { DANGER_COLOR, SUCCESS_COLOR } from '@/tailwind.config'
-import { Tooltip as HeroUITooltip } from '@heroui/react'
+import {
+  Tooltip as HeroUITooltip,
+  Select,
+  SelectItem,
+  SelectSection,
+} from '@heroui/react'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
 import {
   calculateChartData,
-  calculateTotalAmount,
   filterTransactions,
   getFirstAndLastTransactions,
   getTransactionsByCurrMonth,
@@ -38,10 +41,9 @@ import {
   getFormattedCurrency,
   pluralize,
 } from '@/app/lib/helpers'
-import type { TCurrency, TTransaction, TTransactionType } from '@/app/lib/types'
+import type { TCategories, TCurrency, TTransaction } from '@/app/lib/types'
 
 import NoTransactionsPlug from '../no-transactions-plug'
-import CustomLegend from './custom-legend'
 import CustomTooltip from './custom-tooltip'
 
 const DATA_KEY = {
@@ -50,13 +52,107 @@ const DATA_KEY = {
   EXPENSE: 'expense',
 }
 
+type TCategoryExcludeSelectProps = {
+  categories: TCategories[]
+  excludedCategories: Set<string>
+  availableCategories: Set<string>
+  onSelectionChange: (keys: Set<string>) => void
+}
+
+function CategoryExcludeSelect({
+  categories,
+  excludedCategories,
+  availableCategories,
+  onSelectionChange,
+}: TCategoryExcludeSelectProps) {
+  const categorySections = categories
+    .map((category) => ({
+      subject: category.subject,
+      items: category.items
+        .map((item) => `${item.emoji} ${item.name}`)
+        .filter((item) => availableCategories.has(item)),
+    }))
+    .filter((category) => category.items.length > 0)
+  const configuredCategoryKeys = new Set(
+    categorySections.flatMap((category) => category.items),
+  )
+  const otherCategories = [...availableCategories].filter(
+    (category) => !configuredCategoryKeys.has(category),
+  )
+  if (otherCategories.length > 0) {
+    categorySections.push({ subject: 'Other', items: otherCategories })
+  }
+
+  return (
+    <div className='mx-auto my-4 w-full max-w-md'>
+      <Select
+        label='Exclude categories'
+        placeholder='Select categories to exclude'
+        selectionMode='multiple'
+        selectedKeys={excludedCategories}
+        onSelectionChange={(keys) =>
+          onSelectionChange(
+            keys === 'all'
+              ? new Set(availableCategories)
+              : new Set(Array.from(keys).map(String)),
+          )
+        }
+        items={categorySections}
+        className='w-full'
+        classNames={{ trigger: 'min-h-12' }}
+      >
+        {categorySections.map((category) => (
+          <SelectSection
+            key={category.subject}
+            title={category.subject}
+            classNames={{
+              heading:
+                'flex w-full sticky top-1 z-20 py-1.5 px-2 text-default-500 bg-background rounded-medium',
+            }}
+          >
+            {category.items.map((item) => (
+              <SelectItem key={item} textValue={item}>
+                {item}
+              </SelectItem>
+            ))}
+          </SelectSection>
+        ))}
+      </Select>
+    </div>
+  )
+}
+
 type TProps = {
   transactionsRaw: TTransaction[]
+  categories: TCategories[]
   currency: TCurrency
 }
 
-function RadarChart({ transactionsRaw, currency }: TProps) {
+function RadarChart({ transactionsRaw, categories, currency }: TProps) {
   const router = useRouter()
+  const isChartByCurrMonth = getBooleanFromLocalStorage(
+    LOCAL_STORAGE_KEY.IS_CHART_BY_CURR_MONTH,
+  )
+  const chartTransactionsRaw = isChartByCurrMonth
+    ? getTransactionsByCurrMonth(transactionsRaw)
+    : transactionsRaw
+  const availableCategories = new Set(
+    chartTransactionsRaw.map(({ category }) => category),
+  )
+  const [excludedCategories, setExcludedCategories] = useState<Set<string>>(
+    () =>
+      new Set(
+        categories.flatMap((category) =>
+          category.items
+            .filter(
+              (item) =>
+                item.name.toLowerCase() === 'salary' &&
+                availableCategories.has(`${item.emoji} ${item.name}`),
+            )
+            .map((item) => `${item.emoji} ${item.name}`),
+        ),
+      ),
+  )
 
   const isPositiveBalance = getBooleanFromLocalStorage(
     LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE,
@@ -67,92 +163,113 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
   const isChartForExpensesOnly = getBooleanFromLocalStorage(
     LOCAL_STORAGE_KEY.IS_CHART_FOR_EXPENSES_ONLY,
   )
-  const isChartByCurrMonth = getBooleanFromLocalStorage(
-    LOCAL_STORAGE_KEY.IS_CHART_BY_CURR_MONTH,
+  const includedTransactions = transactionsRaw.filter(
+    ({ category }) => !excludedCategories.has(category),
   )
   const transactions = isChartByCurrMonth
-    ? getTransactionsByCurrMonth(transactionsRaw)
-    : transactionsRaw
+    ? getTransactionsByCurrMonth(includedTransactions)
+    : includedTransactions
 
   const { firstTransaction, lastTransaction } =
     getFirstAndLastTransactions(transactions)
 
-  if (isChartByCurrMonth && !firstTransaction && !lastTransaction) {
-    return (
-      <div className='mx-auto mt-4 max-w-3xl md:mt-8'>
-        <NoTransactionsPlug text='This month no transactions found' />
-      </div>
-    )
-  }
-
-  const firstTransactionDate = formatDate(firstTransaction!.createdAt)
-  const lastTransactionDate = formatDate(lastTransaction!.createdAt)
+  const firstTransactionDate = firstTransaction
+    ? formatDate(firstTransaction.createdAt)
+    : ''
+  const lastTransactionDate = lastTransaction
+    ? formatDate(lastTransaction.createdAt)
+    : ''
 
   const { income, expense } = filterTransactions(transactions)
   const chartData = calculateChartData(
     isChartForExpensesOnly ? [] : income,
     expense,
   )
-  const getTransactionTypeTotal = (transactionType: TTransactionType) =>
-    calculateTotalAmount(
-      chartData.map((data): { amount: TTransaction['amount'] } => ({
-        amount: data[transactionType].toString(),
-      })) as unknown as TTransaction[],
-    )
+  // const getTransactionTypeTotal = (transactionType: TTransactionType) =>
+  //   calculateTotalAmount(
+  //     chartData.map((data): { amount: TTransaction['amount'] } => ({
+  //       amount: data[transactionType].toString(),
+  //     })) as unknown as TTransaction[],
+  //   )
 
   return (
     <>
-      <ResponsiveContainer width='100%' height='100%' className='-mt-8'>
-        <RechartRadarChart cx='50%' cy='50%' outerRadius='75%' data={chartData}>
-          <PolarGrid
-            className={cn(
-              !isAmountHidden
-                ? isPositiveBalance
-                  ? 'fill-success-50/20'
-                  : 'fill-danger-50/20'
-                : 'fill-default/20',
-            )}
+      {transactions.length === 0 ? (
+        <div className='mx-auto mt-4 max-w-3xl md:mt-8'>
+          {!(isChartByCurrMonth && chartTransactionsRaw.length === 0) && (
+            <CategoryExcludeSelect
+              categories={categories}
+              excludedCategories={excludedCategories}
+              availableCategories={availableCategories}
+              onSelectionChange={setExcludedCategories}
+            />
+          )}
+          <NoTransactionsPlug
+            text={
+              isChartByCurrMonth && chartTransactionsRaw.length === 0
+                ? 'This month no transactions found'
+                : 'No transactions found for the selected categories'
+            }
           />
-          <PolarAngleAxis
-            dataKey={DATA_KEY.CATEGORY}
-            tick={(props) => {
-              const category = props.payload.value
-              const medal = getCategoryMedalByAmount(chartData, category)
+        </div>
+      ) : (
+        <>
+          <ResponsiveContainer width='100%' height='100%' className='-mt-8'>
+            <RechartRadarChart
+              cx='50%'
+              cy='50%'
+              outerRadius='75%'
+              data={chartData}
+            >
+              <PolarGrid
+                className={cn(
+                  !isAmountHidden
+                    ? isPositiveBalance
+                      ? 'fill-success-50/20'
+                      : 'fill-danger-50/20'
+                    : 'fill-default/20',
+                )}
+              />
+              <PolarAngleAxis
+                dataKey={DATA_KEY.CATEGORY}
+                tick={(props) => {
+                  const category = props.payload.value
+                  const medal = getCategoryMedalByAmount(chartData, category)
 
-              return (
-                <HeroUITooltip content='Search by category' placement='top'>
-                  <text
-                    {...props}
-                    className='fill-foreground hover:opacity-hover md:text-medium cursor-pointer text-sm outline-hidden'
-                    alignmentBaseline='central'
-                    onClick={() =>
-                      router.push(
-                        createSearchHrefWithKeyword(
-                          getCategoryWithoutEmoji(category),
-                        ),
-                      )
-                    }
-                  >
-                    {category}
-                    {medal ? ` ${medal}` : ''}
-                  </text>
-                </HeroUITooltip>
-              )
-            }}
-          />
-          <Radar
-            dataKey={DATA_KEY.INCOME}
-            stroke={SUCCESS_COLOR}
-            fill={SUCCESS_COLOR}
-            fillOpacity={0.6}
-          />
-          <Radar
-            dataKey={DATA_KEY.EXPENSE}
-            stroke={DANGER_COLOR}
-            fill={DANGER_COLOR}
-            fillOpacity={0.6}
-          />
-          <Legend
+                  return (
+                    <HeroUITooltip content='Search by category' placement='top'>
+                      <text
+                        {...props}
+                        className='fill-foreground hover:opacity-hover md:text-medium cursor-pointer text-sm outline-hidden'
+                        alignmentBaseline='central'
+                        onClick={() =>
+                          router.push(
+                            createSearchHrefWithKeyword(
+                              getCategoryWithoutEmoji(category),
+                            ),
+                          )
+                        }
+                      >
+                        {category}
+                        {medal ? ` ${medal}` : ''}
+                      </text>
+                    </HeroUITooltip>
+                  )
+                }}
+              />
+              <Radar
+                dataKey={DATA_KEY.INCOME}
+                stroke={SUCCESS_COLOR}
+                fill={SUCCESS_COLOR}
+                fillOpacity={0.6}
+              />
+              <Radar
+                dataKey={DATA_KEY.EXPENSE}
+                stroke={DANGER_COLOR}
+                fill={DANGER_COLOR}
+                fillOpacity={0.6}
+              />
+              {/* <Legend
             content={
               <CustomLegend
                 expenseTotal={getTransactionTypeTotal('expense')}
@@ -161,52 +278,61 @@ function RadarChart({ transactionsRaw, currency }: TProps) {
                 isChartForExpensesOnly={isChartForExpensesOnly}
               />
             }
-          />
-          <Tooltip
-            contentStyle={{ backgroundColor: 'none' }}
-            content={
-              <CustomTooltip
-                active={false}
-                payload={[]}
-                label={''}
-                currency={currency}
-                transactions={transactions}
+          /> */}
+              <Tooltip
+                contentStyle={{ backgroundColor: 'none' }}
+                content={
+                  <CustomTooltip
+                    active={false}
+                    payload={[]}
+                    label={''}
+                    currency={currency}
+                    transactions={transactions}
+                  />
+                }
+                wrapperClassName='rounded-medium bg-background'
+                formatter={(value, name) => [
+                  `${getFormattedCurrency(value as number)} ${currency.code}`,
+                  capitalizeFirstLetter(name as string),
+                ]}
               />
-            }
-            wrapperClassName='rounded-medium bg-background'
-            formatter={(value, name) => [
-              `${getFormattedCurrency(value as number)} ${currency.code}`,
-              capitalizeFirstLetter(name as string),
-            ]}
-          />
-          <PolarRadiusAxis
-            angle={30}
-            orientation='middle'
-            tickFormatter={(value) =>
-              `${getFormattedCurrency(value)} ${currency.sign}`
-            }
-            className='md:text-medium text-sm'
-          />
-        </RechartRadarChart>
-      </ResponsiveContainer>
-
-      <div className='-mt-2 flex flex-col gap-1 text-center text-xs md:text-sm'>
-        <p>
-          {`Visualization of ${isChartByCurrMonth ? 'current month' : 'all-time'} ${pluralize(
-            transactions.length,
-            'transaction',
-            'transactions',
-          )}`}
-        </p>
-        <p>{`From ${firstTransactionDate} to ${lastTransactionDate}`}</p>
-        <p>
-          {`${transactions.length} ${pluralize(
-            transactions.length,
-            'entry',
-            'entries',
-          )}`}
-        </p>
-      </div>
+              <PolarRadiusAxis
+                angle={30}
+                orientation='middle'
+                tickFormatter={(value) =>
+                  `${getFormattedCurrency(value)} ${currency.sign}`
+                }
+                className='md:text-medium text-sm'
+              />
+            </RechartRadarChart>
+          </ResponsiveContainer>
+          <div className='-mt-14'>
+            <CategoryExcludeSelect
+              categories={categories}
+              excludedCategories={excludedCategories}
+              availableCategories={availableCategories}
+              onSelectionChange={setExcludedCategories}
+            />
+          </div>
+          <div className='-mt-2 flex flex-col gap-1 text-center text-xs md:text-sm'>
+            <p>
+              {`Visualization of ${isChartByCurrMonth ? 'current month' : 'all-time'} ${pluralize(
+                transactions.length,
+                'transaction',
+                'transactions',
+              )}`}
+            </p>
+            <p>{`From ${firstTransactionDate} to ${lastTransactionDate}`}</p>
+            <p>
+              {`${transactions.length} ${pluralize(
+                transactions.length,
+                'entry',
+                'entries',
+              )}`}
+            </p>
+          </div>
+        </>
+      )}
     </>
   )
 }
