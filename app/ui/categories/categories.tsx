@@ -1,10 +1,12 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import {
   PiArrowClockwise,
   PiArrowClockwiseFill,
+  PiNotePencil,
+  PiNotePencilFill,
   PiWarningOctagonFill,
 } from 'react-icons/pi'
 
@@ -20,6 +22,7 @@ import {
   useDisclosure,
 } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
+import { Reorder } from 'framer-motion'
 import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
@@ -114,6 +117,10 @@ function Categories({
     reset: false,
   })
   const [isNewEmojiPick, setIsNewEmojiPick] = useState(false)
+  const [isReordering, setIsReordering] = useState(false)
+  const [isSavingOrder, setIsSavingOrder] = useState(false)
+  const reorderContainer = useRef<HTMLDivElement>(null)
+  const orderBeforeReordering = useRef<string | null>(null)
   const [pendingDeletion, setPendingDeletion] = useState<{
     categoryIndex: number
     itemIndex: number
@@ -148,6 +155,7 @@ function Categories({
       if (oldTargetName === _newTargetName) {
         setEditingIndex(null)
         setNewTargetName('')
+        setIsReordering(false)
         haptic.error()
         toast.error('No changes detected.')
 
@@ -169,6 +177,8 @@ function Categories({
         await updateCategories(userId, oldTargetName, newCategoriesData)
         haptic.confirm()
         toast.success('Categories updated.')
+        setIsReordering(false)
+        orderBeforeReordering.current = null
       } catch (err) {
         haptic.error()
         toast.error('Failed to update categories.')
@@ -265,6 +275,7 @@ function Categories({
       if (oldItemName === _newItemName && !isNewEmojiPick) {
         setEditingItemIndex(null)
         setNewItemName('')
+        setIsReordering(false)
         haptic.error()
         toast.error('No changes detected.')
 
@@ -327,6 +338,8 @@ function Categories({
 
         haptic.confirm()
         toast.success('Categories updated.')
+        setIsReordering(false)
+        orderBeforeReordering.current = null
       } catch (err) {
         haptic.error()
         toast.error('Failed to update categories.')
@@ -410,6 +423,8 @@ function Categories({
           haptic.confirm()
           toast.success('Category deleted.')
         }
+        setIsReordering(false)
+        orderBeforeReordering.current = null
       } catch (err) {
         if (isNoCategoryItems) {
           haptic.error()
@@ -463,10 +478,60 @@ function Categories({
     }
   }, [userId])
 
+  const onReorderCategories = useCallback((subjects: string[]) => {
+    setCategories((current) =>
+      subjects
+        .map((subject) =>
+          current.find((category) => category.subject === subject),
+        )
+        .filter((category): category is TCategories => Boolean(category)),
+    )
+  }, [])
+
+  const onReorderCategoryItems = useCallback(
+    (categoryIndex: number, items: TCategoriesItem[]) => {
+      setCategories((current) =>
+        current.map((category, index) =>
+          index === categoryIndex ? { ...category, items } : category,
+        ),
+      )
+    },
+    [],
+  )
+
+  const onSaveCategoryOrder = useCallback(async () => {
+    const currentOrder = JSON.stringify(
+      stripPlaceholder(categories).map(({ subject, items }) => ({
+        subject,
+        items: items.map((item) => item.name),
+      })),
+    )
+    if (currentOrder === orderBeforeReordering.current) {
+      setIsReordering(false)
+      orderBeforeReordering.current = null
+
+      return
+    }
+
+    setIsSavingOrder(true)
+    try {
+      await resetCategories(userId, stripPlaceholder(categories))
+      haptic.confirm()
+      toast.success('Category order saved.')
+      setIsReordering(false)
+      orderBeforeReordering.current = null
+    } catch {
+      haptic.error()
+      toast.error('Failed to save category order.')
+    } finally {
+      setIsSavingOrder(false)
+    }
+  }, [categories, stripPlaceholder, userId])
+
   const buttonWithIcon = (icon: TIcon) => (
     <Button
       isDisabled={haveCategoriesChanged}
-      className='bg-danger text-default-50 mx-auto w-full font-medium'
+      className='bg-danger text-default-50 h-10 w-full font-medium'
       onPress={() => [haptic(), onOpen()]}
       startContent={icon}
     >
@@ -474,36 +539,52 @@ function Categories({
     </Button>
   )
 
+  const categoryElements = categories.map((category, index) => (
+    <Category
+      key={category.subject}
+      category={category}
+      index={index}
+      isReordering={isReordering}
+      reorderContainer={reorderContainer}
+      onReorderItems={onReorderCategoryItems}
+      editingIndex={editingIndex}
+      newTargetName={newTargetName}
+      onEditTargetClick={onEditTargetClick}
+      setNewTargetName={setNewTargetName}
+      onSaveTargetClick={onSaveTargetClick}
+      onEditItemClick={onEditItemClick}
+      editingItemIndex={editingItemIndex}
+      newItemName={newItemName}
+      setNewItemName={setNewItemName}
+      onSaveItemClick={onSaveItemClick}
+      showEmojiPicker={showEmojiPicker}
+      toggleEmojiPicker={toggleEmojiPicker}
+      isLoading={isLoading}
+      onEmojiClick={onEmojiClick}
+      onResetEmojiClick={onResetEmojiClick}
+      isNewEmojiPick={isNewEmojiPick}
+      onDeleteItemClick={onDeleteItemClick}
+      placeholderItemName={PLACEHOLDER.name}
+      originalUserCategories={originalUserCategories}
+    />
+  ))
+
   return (
     <>
-      {categories.map((category, index) => {
-        return (
-          <Category
-            key={category.subject}
-            category={category}
-            index={index}
-            editingIndex={editingIndex}
-            newTargetName={newTargetName}
-            onEditTargetClick={onEditTargetClick}
-            setNewTargetName={setNewTargetName}
-            onSaveTargetClick={onSaveTargetClick}
-            onEditItemClick={onEditItemClick}
-            editingItemIndex={editingItemIndex}
-            newItemName={newItemName}
-            setNewItemName={setNewItemName}
-            onSaveItemClick={onSaveItemClick}
-            showEmojiPicker={showEmojiPicker}
-            toggleEmojiPicker={toggleEmojiPicker}
-            isLoading={isLoading}
-            onEmojiClick={onEmojiClick}
-            onResetEmojiClick={onResetEmojiClick}
-            isNewEmojiPick={isNewEmojiPick}
-            onDeleteItemClick={onDeleteItemClick}
-            placeholderItemName={PLACEHOLDER.name}
-            originalUserCategories={originalUserCategories}
-          />
-        )
-      })}
+      <div ref={reorderContainer}>
+        {isReordering ? (
+          <Reorder.Group
+            axis='y'
+            values={categories.map((category) => category.subject)}
+            onReorder={onReorderCategories}
+            className='select-none'
+          >
+            {categoryElements}
+          </Reorder.Group>
+        ) : (
+          <div>{categoryElements}</div>
+        )}
+      </div>
       {areCategoriesLengthMismatch && (
         <div className='mb-4'>
           <WarningText
@@ -512,17 +593,57 @@ function Categories({
           />
         </div>
       )}
-      <div className='mx-auto max-w-md'>
-        <HoverableElement
-          uKey={RESET_CATEGORIES_BTN_TEXT}
-          element={buttonWithIcon(
-            <PiArrowClockwise size={DEFAULT_ICON_SIZE} />,
-          )}
-          hoveredElement={buttonWithIcon(
-            <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />,
-          )}
-          withShift={false}
-        />
+      <div className='mx-auto flex max-w-md gap-2'>
+        <div className='flex-1'>
+          <Button
+            isDisabled={categories.length === 0 || isSavingOrder}
+            isLoading={isSavingOrder}
+            aria-label={
+              isReordering ? 'Done editing categories' : 'Edit categories'
+            }
+            aria-pressed={isReordering}
+            onPress={() => {
+              haptic()
+              if (isReordering) void onSaveCategoryOrder()
+              else {
+                orderBeforeReordering.current = JSON.stringify(
+                  stripPlaceholder(categories).map(({ subject, items }) => ({
+                    subject,
+                    items: items.map((item) => item.name),
+                  })),
+                )
+                setIsReordering(true)
+              }
+            }}
+            variant='flat'
+            color={isReordering ? 'primary' : 'default'}
+            className='h-10 w-full min-w-0 px-2'
+          >
+            {!isSavingOrder && (
+              <span className='flex items-center gap-1'>
+                <HoverableElement
+                  uKey='edit-categories'
+                  element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
+                  hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
+                  withShift={false}
+                />
+              </span>
+            )}
+            {isReordering ? 'Done' : 'Edit categories'}
+          </Button>
+        </div>
+        <div className='flex-1'>
+          <HoverableElement
+            uKey={RESET_CATEGORIES_BTN_TEXT}
+            element={buttonWithIcon(
+              <PiArrowClockwise size={DEFAULT_ICON_SIZE} />,
+            )}
+            hoveredElement={buttonWithIcon(
+              <PiArrowClockwiseFill size={DEFAULT_ICON_SIZE} />,
+            )}
+            withShift={false}
+          />
+        </div>
       </div>
       <div className='mt-4 flex flex-col gap-1 md:mt-8'>
         <InfoText
@@ -530,11 +651,9 @@ function Categories({
           text='If necessary, it is better to customize all categories at once for yourself and not edit them in the future to avoid overlapping transaction category names.'
         />
         <InfoText text='Once editing, you will need to manually update your previous transactions with previous categories to new categories. You will see a badge on them.' />
-        <InfoText text='The emoji picker may appear with a slight delay.' />
         <InfoText
           id={ANCHOR_ROUTE.HINT1.slice(1)}
-          text='1. The category subject does not affect the category data.'
-          withAsterisk={false}
+          text='The category subject does not affect the category data.'
         />
       </div>
       <Modal isOpen={isDeleteOpen} onOpenChange={onDeleteOpenChange}>
@@ -618,7 +737,7 @@ function Categories({
                         <Chip
                           key={`${item.emoji}-${item.name}`}
                           variant='flat'
-                          color='warning'
+                          color='danger'
                         >
                           {item.emoji} {item.name}
                         </Chip>

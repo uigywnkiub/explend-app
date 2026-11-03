@@ -1,23 +1,26 @@
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useRef } from 'react'
 import {
   PiArrowClockwise,
   PiArrowClockwiseFill,
+  PiDotsSixVerticalBold,
   PiFloppyDisk,
   PiFloppyDiskFill,
   PiNotePencil,
   PiNotePencilFill,
 } from 'react-icons/pi'
 
-import { useRouter } from 'next/navigation'
-
 import { Button, Input, Tooltip } from '@heroui/react'
 import { EmojiClickData } from 'emoji-picker-react'
-import { AnimatePresence, motion } from 'framer-motion'
+import {
+  AnimatePresence,
+  motion,
+  Reorder,
+  useDragControls,
+} from 'framer-motion'
 import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
-import { MOTION_NUMBER } from '@/config/constants/motion'
-import { ANCHOR_ROUTE } from '@/config/constants/routes'
+import { MOTION_LIST, MOTION_REORDER_HANDLE } from '@/config/constants/motion'
 
 import { capitalizeFirstLetter } from '@/app/lib/helpers'
 import {
@@ -56,6 +59,9 @@ type TProps = {
   onDeleteItemClick: (categoryIndex: number, itemIndex: number) => void
   placeholderItemName: TCategoriesItem['name']
   originalUserCategories: TCategories[]
+  isReordering: boolean
+  reorderContainer: React.RefObject<HTMLDivElement | null>
+  onReorderItems: (categoryIndex: number, items: TCategoriesItem[]) => void
 }
 
 function Category({
@@ -80,9 +86,12 @@ function Category({
   onDeleteItemClick,
   placeholderItemName,
   originalUserCategories,
+  isReordering,
+  reorderContainer,
+  onReorderItems,
 }: TProps) {
-  const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
+  const dragControls = useDragControls()
 
   // const isNewTargetNameInvalid = newTargetName.length < 1
 
@@ -95,25 +104,32 @@ function Category({
   //   }
   // }
 
-  const sentinelRef = useRef<HTMLDivElement>(null)
-  const [isStuck, setIsStuck] = useState(false)
+  const categoryItems = category.items?.map((item, itemIndex) => (
+    <CategoryItem
+      key={item.name}
+      item={item}
+      categoryIndex={index}
+      itemIndex={itemIndex}
+      onEditItemClick={onEditItemClick}
+      editingItemIndex={editingItemIndex}
+      newItemName={newItemName}
+      setNewItemName={setNewItemName}
+      onSaveItemClick={onSaveItemClick}
+      showEmojiPicker={showEmojiPicker}
+      toggleEmojiPicker={toggleEmojiPicker}
+      isLoading={isLoading}
+      onEmojiClick={onEmojiClick}
+      onResetEmojiClick={onResetEmojiClick}
+      isNewEmojiPick={isNewEmojiPick}
+      onDeleteItemClick={onDeleteItemClick}
+      placeholderItemName={placeholderItemName}
+      originalUserCategories={originalUserCategories}
+      isReordering={isReordering}
+    />
+  ))
 
-  useEffect(() => {
-    const sentinel = sentinelRef.current
-    if (!sentinel) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsStuck(!entry.isIntersecting),
-      { threshold: 0, rootMargin: '-1px 0px 0px 0px' },
-    )
-
-    observer.observe(sentinel)
-
-    return () => observer.disconnect()
-  }, [])
-
-  return (
-    <div className='mb-4 md:mb-8'>
+  const categoryContent = (
+    <>
       {editingIndex === index ? (
         <div className='mb-3 flex h-[40px] items-center justify-between gap-2 px-2 md:gap-4 md:px-4'>
           <Input
@@ -212,81 +228,90 @@ function Category({
         </div>
       ) : (
         <>
-          <div ref={sentinelRef} className='h-0' />
-          <div className='rounded-medium bg-background/50 sticky top-0 z-10 mb-3 flex h-[40px] items-center justify-between gap-2 px-2 backdrop-blur-xs backdrop-brightness-90 md:gap-4 md:px-4'>
-            <h2 className='text-default-500'>
+          <div className='rounded-medium bg-background/50 sticky top-0 z-10 flex h-[40px] items-center justify-between gap-2 px-2 backdrop-blur-xs backdrop-brightness-90 md:gap-4 md:px-4'>
+            <h2 className='text-default-500 flex items-center'>
+              <AnimatePresence>
+                {isReordering && (
+                  <motion.div
+                    {...MOTION_REORDER_HANDLE}
+                    className='mr-2 flex shrink-0 items-center overflow-hidden'
+                  >
+                    <Tooltip content='Drag to reorder' placement='left'>
+                      <button
+                        type='button'
+                        aria-label={`Drag to reorder ${category.subject}`}
+                        onPointerDown={(event) => dragControls.start(event)}
+                        className='flex h-6 w-6 cursor-grab touch-none items-center justify-center active:cursor-grabbing'
+                      >
+                        <PiDotsSixVerticalBold size={DEFAULT_ICON_SIZE} />
+                      </button>
+                    </Tooltip>
+                  </motion.div>
+                )}
+              </AnimatePresence>
               {category.subject}
-              <button
-                className='ml-1 h-0'
-                onClick={() => router.push(ANCHOR_ROUTE.HINT1)}
-              >
-                <sup className='text-default-500 md:hover:text-foreground md:hover:opacity-hover cursor-pointer p-1 text-xs'>
-                  1
-                </sup>
-              </button>
             </h2>
 
-            {!isStuck && (
-              <AnimatePresence>
-                <motion.div
-                  initial={MOTION_NUMBER.INITIAL}
-                  animate={MOTION_NUMBER.ANIMATE(isStuck ? 0 : 1)}
-                  transition={MOTION_NUMBER.TRANSACTION_TWEEN}
+            {isReordering && (
+              <Tooltip content='Edit category subject' placement='bottom'>
+                <Button
+                  onPress={() => [
+                    haptic(),
+                    onEditTargetClick(index, category.subject),
+                  ]}
+                  className='px-0 font-medium'
                 >
-                  <Tooltip content='Edit category subject' placement='bottom'>
-                    <Button
-                      onPress={() => [
-                        haptic(),
-                        onEditTargetClick(index, category.subject),
-                      ]}
-                      className='px-0 font-medium'
-                    >
-                      <HoverableElement
-                        uKey={category.subject}
-                        element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
-                        hoveredElement={
-                          <PiNotePencilFill size={DEFAULT_ICON_SIZE} />
-                        }
-                        withShift={false}
-                      />{' '}
-                      Edit
-                    </Button>
-                  </Tooltip>
-                </motion.div>
-              </AnimatePresence>
+                  <HoverableElement
+                    uKey={category.subject}
+                    element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
+                    hoveredElement={
+                      <PiNotePencilFill size={DEFAULT_ICON_SIZE} />
+                    }
+                    withShift={false}
+                  />{' '}
+                  Edit
+                </Button>
+              </Tooltip>
             )}
           </div>
         </>
       )}
-      <ul className='list-inside list-disc'>
-        <AnimatePresence>
-          {category.items?.map((item, itemIndex) => {
-            return (
-              <CategoryItem
-                key={item.name + itemIndex}
-                item={item}
-                categoryIndex={index}
-                itemIndex={itemIndex}
-                onEditItemClick={onEditItemClick}
-                editingItemIndex={editingItemIndex}
-                newItemName={newItemName}
-                setNewItemName={setNewItemName}
-                onSaveItemClick={onSaveItemClick}
-                showEmojiPicker={showEmojiPicker}
-                toggleEmojiPicker={toggleEmojiPicker}
-                isLoading={isLoading}
-                onEmojiClick={onEmojiClick}
-                onResetEmojiClick={onResetEmojiClick}
-                isNewEmojiPick={isNewEmojiPick}
-                onDeleteItemClick={onDeleteItemClick}
-                placeholderItemName={placeholderItemName}
-                originalUserCategories={originalUserCategories}
-              />
-            )
-          })}
-        </AnimatePresence>
-      </ul>
-    </div>
+      {isReordering ? (
+        <Reorder.Group
+          as='ul'
+          axis='y'
+          values={category.items}
+          onReorder={(items) => onReorderItems(index, items)}
+          className='list-inside list-disc'
+        >
+          {categoryItems}
+        </Reorder.Group>
+      ) : (
+        <ul className='list-inside list-disc'>{categoryItems}</ul>
+      )}
+    </>
+  )
+
+  if (isReordering) {
+    return (
+      <Reorder.Item
+        value={category.subject}
+        layout='position'
+        dragListener={false}
+        dragControls={dragControls}
+        dragConstraints={reorderContainer}
+        dragElastic={0.1}
+        className='relative z-0 mb-4 md:mb-8'
+      >
+        {categoryContent}
+      </Reorder.Item>
+    )
+  }
+
+  return (
+    <motion.div className='mb-4 md:mb-8' {...MOTION_LIST(index)}>
+      {categoryContent}
+    </motion.div>
   )
 }
 
