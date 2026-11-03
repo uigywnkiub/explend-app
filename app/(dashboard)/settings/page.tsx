@@ -224,7 +224,7 @@ async function SettingsPageContent() {
         <>
           <SectionItem
             title='Management Transactions'
-            subtitle='Download all your transactions as JSON or upload a backup to restore missing data.'
+            subtitle='Download your settings and transactions as JSON or upload a backup to restore missing data.'
           >
             <>
               <div className='my-2 flex flex-col gap-2'>

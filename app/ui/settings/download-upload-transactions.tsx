@@ -14,13 +14,13 @@ import { haptic } from 'ios-haptics'
 
 import { APP_NAME, DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
-import { getAllTransactions, importTransactions } from '../../lib/actions'
+import { getDataDump, importDataDump } from '../../lib/actions'
 import {
   pluralize,
   readFileAsText,
   triggerDownloadJSON,
 } from '../../lib/helpers'
-import { TIcon, TTransaction, TUserId } from '../../lib/types'
+import { TIcon, TTransaction, TUserId, TUserSettings } from '../../lib/types'
 import { HoverableElement } from '../hoverables'
 
 type TProps = {
@@ -41,16 +41,16 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
     setSuccess(null)
 
     try {
-      const transactions = await toast.promise(getAllTransactions(userId), {
-        loading: 'Exporting transactions...',
-        success: 'Transactions exported.',
+      const dump = await toast.promise(getDataDump(userId), {
+        loading: 'Exporting data...',
+        success: 'Data exported.',
         error: 'Download failed. Please try again.',
       })
 
-      if (!transactions.length) {
-        setError('No transactions found.')
+      if (!dump.transactions.length && !dump.usersettings) {
+        setError('No data found.')
         haptic.error()
-        toast.error('No transactions found.')
+        toast.error('No data found.')
 
         return
       }
@@ -58,9 +58,16 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
       const now = new Date()
       const date = now.toISOString().split('T')[0]
       const time = now.toTimeString().slice(0, 5).replace(':', '-')
+      const userIdentifier = userId ?? 'user'
+      const emailPrefix = userIdentifier.includes('@')
+        ? userIdentifier.split('@')[0].slice(0, 12)
+        : userIdentifier.slice(0, 12)
+      const safeEmailPrefix = emailPrefix
+        .toLowerCase()
+        .replace(/[^a-z0-9._-]/g, '-')
       triggerDownloadJSON(
-        JSON.stringify(transactions, null, 2),
-        `${APP_NAME.FULL.toLowerCase().replace(' ', '-')}-dump-${date}_${time}.json`,
+        JSON.stringify(dump, null, 2),
+        `${APP_NAME.FULL.toLowerCase().replace(' ', '-')}-${safeEmailPrefix}-dump-${date}_${time}.json`,
       )
     } catch {
       setError('Download failed. Please try again.')
@@ -87,9 +94,20 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
 
     try {
       const text = await readFileAsText(file)
-      const transactions: Partial<TTransaction>[] = JSON.parse(text)
+      const parsed: unknown = JSON.parse(text)
+      // Continue to accept older backups that contain only a transaction array.
+      const dump = Array.isArray(parsed)
+        ? { transactions: parsed as Partial<TTransaction>[] }
+        : (parsed as {
+            usersettings?: Partial<TUserSettings> | null
+            transactions?: Partial<TTransaction>[]
+          })
 
-      if (!Array.isArray(transactions) || !transactions.length) {
+      if (
+        !dump ||
+        !Array.isArray(dump.transactions) ||
+        (!dump.transactions.length && !dump.usersettings)
+      ) {
         setError('File is empty or has an invalid format.')
         haptic.error()
         toast.error('File is empty or has an invalid format.')
@@ -98,7 +116,10 @@ export default function DownloadUploadTransactions({ userId }: TProps) {
       }
 
       const result = await toast.promise(
-        importTransactions(userId, transactions),
+        importDataDump(userId, {
+          usersettings: dump.usersettings,
+          transactions: dump.transactions,
+        }),
         {
           loading: 'Importing transactions...',
           success: (res) =>

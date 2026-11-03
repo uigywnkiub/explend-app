@@ -403,6 +403,108 @@ export async function getAllTransactions(
   }
 }
 
+export async function importTransactions(
+  userId: TUserId,
+  transactions: Partial<TTransaction>[],
+): Promise<TImportTransactions> {
+  if (!userId) {
+    throw new Error('User ID is required to get all transactions.')
+  }
+  try {
+    await dbConnect()
+
+    const ids = transactions.map((t) => t.id)
+    // Find which IDs already exist.
+    const existing = await TransactionModel.find({ userId, id: { $in: ids } })
+      .lean()
+      .select('id')
+    const existingIds = new Set(existing.map((t) => t.id))
+
+    const newTransactions = transactions.filter((t) => !existingIds.has(t.id))
+    const skipped = transactions.length - newTransactions.length
+
+    if (!newTransactions.length) {
+      return { count: 0, skipped }
+    }
+
+    const result = await TransactionModel.insertMany(
+      newTransactions.map((transaction) => ({ ...transaction, userId })),
+      { ordered: false },
+    )
+    revalidateUserTransactions(userId)
+
+    return { count: result.length, skipped }
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getDataDump(userId: TUserId) {
+  if (!userId) throw new Error('User ID is required to export a data dump.')
+  await dbConnect()
+
+  const [transactions, settings] = await Promise.all([
+    TransactionModel.find({ userId }).lean<TTransaction[]>({
+      transform: (doc) => {
+        if (!doc) return
+        delete doc._id
+        delete doc.__v
+      },
+    }),
+    UserSettingsModel.findOne({ userId })
+      .select('-_id -__v -userId -pushSubscriptions -createdAt -updatedAt')
+      .lean(),
+  ])
+
+  // Mongoose lean results may still contain BSON ObjectIds in nested arrays.
+  // Round-trip through JSON so the server action only returns serializable values.
+  return JSON.parse(
+    JSON.stringify({ usersettings: settings ?? null, transactions }),
+  ) as {
+    usersettings: Partial<TUserSettings> | null
+    transactions: TTransaction[]
+  }
+}
+
+export async function importDataDump(
+  userId: TUserId,
+  dump: {
+    usersettings?: Partial<TUserSettings> | null
+    transactions: Partial<TTransaction>[]
+  },
+): Promise<TImportTransactions> {
+  if (!userId) throw new Error('User ID is required to import a data dump.')
+  await dbConnect()
+
+  if (dump.usersettings) {
+    const {
+      categories,
+      categoryLimits,
+      subscriptions,
+      currency,
+      transactionLimit,
+      salaryDay,
+    } = dump.usersettings
+    await UserSettingsModel.updateOne(
+      { userId },
+      {
+        $set: {
+          categories,
+          categoryLimits,
+          subscriptions,
+          currency,
+          transactionLimit,
+          salaryDay,
+        },
+      },
+      { upsert: true, runValidators: true },
+    )
+    revalidateUserSettings(userId)
+  }
+
+  return importTransactions(userId, dump.transactions)
+}
+
 export async function getTableTransactions(
   userId: TUserId,
 ): Promise<TTableTransaction[]> {
@@ -440,42 +542,6 @@ export async function getRecentTransactionsForLimits(
   userId: TUserId,
 ): Promise<TTransaction[]> {
   return getCachedRecentTransactionsForLimitsData(userId)
-}
-
-export async function importTransactions(
-  userId: TUserId,
-  transactions: Partial<TTransaction>[],
-): Promise<TImportTransactions> {
-  if (!userId) {
-    throw new Error('User ID is required to get all transactions.')
-  }
-  try {
-    await dbConnect()
-
-    const ids = transactions.map((t) => t.id)
-    // Find which IDs already exist.
-    const existing = await TransactionModel.find({ userId, id: { $in: ids } })
-      .lean()
-      .select('id')
-    const existingIds = new Set(existing.map((t) => t.id))
-
-    const newTransactions = transactions.filter((t) => !existingIds.has(t.id))
-    const skipped = transactions.length - newTransactions.length
-
-    if (!newTransactions.length) {
-      return { count: 0, skipped }
-    }
-
-    const result = await TransactionModel.insertMany(
-      newTransactions.map((transaction) => ({ ...transaction, userId })),
-      { ordered: false },
-    )
-    revalidateUserTransactions(userId)
-
-    return { count: result.length, skipped }
-  } catch (err) {
-    throw err
-  }
 }
 
 export async function importBankTransactions(
