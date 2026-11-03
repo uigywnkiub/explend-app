@@ -155,11 +155,7 @@ function TransactionFormEdit({
       const oldDate = new Date(oldData.createdAt)
       const newDate = new Date(newData.createdAt)
 
-      return (
-        oldDate.getFullYear() !== newDate.getFullYear() ||
-        oldDate.getMonth() !== newDate.getMonth() ||
-        oldDate.getDate() !== newDate.getDate()
-      )
+      return oldDate.getTime() !== newDate.getTime()
     })()
 
     const imagesChanged = (() => {
@@ -196,13 +192,13 @@ function TransactionFormEdit({
       images: validImageSrcs,
       createdAt: (() => {
         if (!date) return transaction.createdAt
-        const now = new Date()
         const selected = date.toDate(getLocalTimeZone())
+        const original = new Date(transaction.createdAt)
         selected.setHours(
-          now.getHours(),
-          now.getMinutes(),
-          now.getSeconds(),
-          now.getMilliseconds(),
+          original.getHours(),
+          original.getMinutes(),
+          original.getSeconds(),
+          original.getMilliseconds(),
         )
 
         return selected
