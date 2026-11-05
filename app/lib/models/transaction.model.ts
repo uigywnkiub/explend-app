@@ -51,7 +51,9 @@ export const subscriptionsSchema = new Schema<TSubscriptions>(
     autoRenew: { type: Boolean, default: false },
     renewDay: { type: Number, default: null, min: 1, max: 28 },
   },
-  { _id: false },
+  // Subscription entries are addressed individually by the UI (edit, remove,
+  // reorder), so keep Mongoose's generated subdocument id.
+  { _id: true },
 )
 
 const transactionSchema = new Schema<TTransaction>(
