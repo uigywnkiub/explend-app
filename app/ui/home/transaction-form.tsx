@@ -114,9 +114,14 @@ const TAB_KEY = {
 type TProps = {
   currency: TCurrency
   userCategories: TCategories[]
+  isAiFeaturesEnabled: boolean
 }
 
-function TransactionForm({ currency, userCategories }: TProps) {
+function TransactionForm({
+  currency,
+  userCategories,
+  isAiFeaturesEnabled,
+}: TProps) {
   const { pending } = useFormStatus()
   const { theme } = useTheme()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -264,6 +269,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
   }, [hasReceiptAIData])
 
   const getReceiptAIData = async (compressedFile: File) => {
+    if (!isAiFeaturesEnabled) return
+
     try {
       const res = await toast.promise(getAnalyzedReceiptAI(compressedFile), {
         loading: 'Analyzing receipt...',
@@ -297,6 +304,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
   }
 
   const onUploadReceipt = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isAiFeaturesEnabled) return
+
     onCloseImageModal()
     setImageSrcs(['', '', ''])
 
@@ -442,6 +451,8 @@ function TransactionForm({ currency, userCategories }: TProps) {
       categories: TCategories[],
       userPrompt: string,
     ): Promise<UseDebounceReturn | undefined> => {
+      if (!isAiFeaturesEnabled) return [() => null, () => undefined]
+
       if (!trimmedDescription) {
         resetAIRelatedStates()
 
@@ -484,7 +495,13 @@ function TransactionForm({ currency, userCategories }: TProps) {
         setIsLoadingAIData(false)
       }
     },
-    [currency, hasReceiptAIData, resetAIRelatedStates, trimmedDescription],
+    [
+      currency,
+      hasReceiptAIData,
+      isAiFeaturesEnabled,
+      resetAIRelatedStates,
+      trimmedDescription,
+    ],
   )
 
   // Docs https://github.com/streamich/react-use/blob/master/docs/useDebounce.md
@@ -492,14 +509,14 @@ function TransactionForm({ currency, userCategories }: TProps) {
     () =>
       // In dev mode, we may get an error or bug like the one below with an empty category after successfully analyzing the receipt.
       // Error: Transaction validation failed: category: Path `category` is required.
-      IS_PROD
+      isAiFeaturesEnabled && IS_PROD
         ? getCompletionAIData(
             userCategories,
             capitalizeFirstLetter(trimmedDescription),
           )
         : [() => null, () => undefined],
     1000,
-    [trimmedDescription],
+    [isAiFeaturesEnabled, trimmedDescription],
   )
   useEffect(() => {
     if (!isReady()) cancel()
@@ -517,6 +534,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
   useDebounce(
     () => {
       const shouldTrigger =
+        !isAiFeaturesEnabled ||
         !isValidReceiptAIDataLocalStorage ||
         resumeToastShownRef.current ||
         !isExpanded
@@ -609,7 +627,7 @@ function TransactionForm({ currency, userCategories }: TProps) {
       resumeToastShownRef.current = true // Set flag to true after the toast is shown.
     },
     500,
-    [isExpanded],
+    [isAiFeaturesEnabled, isExpanded],
   )
 
   // Auto submit START.
@@ -629,11 +647,16 @@ function TransactionForm({ currency, userCategories }: TProps) {
 
   const [isReadyAutoSubmit, cancelAutoSubmit] = useDebounce(
     () =>
-      IS_PROD && isAutoSubmitReceiptAIData
+      isAiFeaturesEnabled && IS_PROD && isAutoSubmitReceiptAIData
         ? onAutoSubmitCallback()
         : [() => null, () => undefined],
     0,
-    [isLoadingAIData, hasCurrOrPrevReceiptAIData, categoryItemNameAI],
+    [
+      isAiFeaturesEnabled,
+      isLoadingAIData,
+      hasCurrOrPrevReceiptAIData,
+      categoryItemNameAI,
+    ],
   )
 
   useEffect(() => {
@@ -647,7 +670,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
       // Abort useDebounce after form submit.
       startTransition(() => {
         cancel()
-        if (hasReceiptAIData && hasCurrOrPrevReceiptAIData) {
+        if (
+          isAiFeaturesEnabled &&
+          hasReceiptAIData &&
+          hasCurrOrPrevReceiptAIData
+        ) {
           onSubmitReceiptAIDataTransaction()
 
           return
@@ -656,7 +683,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
       })
 
       queueMicrotask(() => {
-        if (!hasReceiptAIData || !hasCurrOrPrevReceiptAIData) {
+        if (
+          !isAiFeaturesEnabled ||
+          !hasReceiptAIData ||
+          !hasCurrOrPrevReceiptAIData
+        ) {
           haptic.confirm()
           toast.success('Transaction added.')
         }
@@ -712,63 +743,69 @@ function TransactionForm({ currency, userCategories }: TProps) {
                       haptic()
                       setSelectedTab(tab.toString())
                     }}
-                    selectedKey={selectedTab}
+                    selectedKey={
+                      isAiFeaturesEnabled ? selectedTab : TAB_KEY.IMAGE
+                    }
                   >
-                    <Tab
-                      key={TAB_KEY.CAMERA}
-                      title={
-                        <div className='flex items-center space-x-2'>
-                          <PiReceiptFill />
-                          <span>Receipt</span>
+                    {isAiFeaturesEnabled && (
+                      <Tab
+                        key={TAB_KEY.CAMERA}
+                        title={
+                          <div className='flex items-center space-x-2'>
+                            <PiReceiptFill />
+                            <span>Receipt</span>
+                          </div>
+                        }
+                      >
+                        <div className='md:text-medium flex flex-col items-center gap-2 text-center text-sm text-balance'>
+                          <p>
+                            Take or select a photo of your receipt to
+                            automatically fill in the transaction fields
+                          </p>
+                          <InfoText text='Attached images will not be included.' />
                         </div>
-                      }
-                    >
-                      <div className='md:text-medium flex flex-col items-center gap-2 text-center text-sm text-balance'>
-                        <p>
-                          Take or select a photo of your receipt to
-                          automatically fill in the transaction fields
-                        </p>
-                        <InfoText text='Attached images will not be included.' />
-                      </div>
-                      <Card shadow='none'>
-                        <CardBody className='flex h-[176px] items-center justify-center p-0'>
-                          <input
-                            type='file'
-                            accept='image/*, .heic'
-                            onChange={onUploadReceipt}
-                            className='hidden'
-                            ref={fileInputRef}
-                          />
-                          <Badge
-                            content={<AILogo asIcon />}
-                            classNames={{
-                              badge:
-                                'right-0 border-0 bg-transparent cursor-pointer md:hover:opacity-hover',
-                            }}
-                          >
-                            <Button
-                              isIconOnly
-                              variant='shadow'
-                              size='lg'
-                              onPress={() => [
-                                haptic(),
-                                fileInputRef.current?.click(),
-                              ]}
-                              className='bg-ai-gradient text-background'
+                        <Card shadow='none'>
+                          <CardBody className='flex h-[176px] items-center justify-center p-0'>
+                            <input
+                              type='file'
+                              accept='image/*, .heic'
+                              onChange={onUploadReceipt}
+                              className='hidden'
+                              ref={fileInputRef}
+                            />
+                            <Badge
+                              content={<AILogo asIcon />}
+                              classNames={{
+                                badge:
+                                  'right-0 border-0 bg-transparent cursor-pointer md:hover:opacity-hover',
+                              }}
                             >
-                              <HoverableElement
-                                uKey='camera'
-                                element={<PiCamera size={DEFAULT_ICON_SIZE} />}
-                                hoveredElement={
-                                  <PiCameraFill size={DEFAULT_ICON_SIZE} />
-                                }
-                                withShift={false}
-                              />
-                            </Button>
-                          </Badge>
-                        </CardBody>
-                      </Card>
-                    </Tab>
+                              <Button
+                                isIconOnly
+                                variant='shadow'
+                                size='lg'
+                                onPress={() => [
+                                  haptic(),
+                                  fileInputRef.current?.click(),
+                                ]}
+                                className='bg-ai-gradient text-background'
+                              >
+                                <HoverableElement
+                                  uKey='camera'
+                                  element={
+                                    <PiCamera size={DEFAULT_ICON_SIZE} />
+                                  }
+                                  hoveredElement={
+                                    <PiCameraFill size={DEFAULT_ICON_SIZE} />
+                                  }
+                                  withShift={false}
+                                />
+                              </Button>
+                            </Badge>
+                          </CardBody>
+                        </Card>
+                      </Tab>
+                    )}
 
                     <Tab
                       key={TAB_KEY.IMAGE}
@@ -900,7 +937,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
           }}
         >
           <Badge
-            isInvisible={!isTransactionTypeAIValid || isLoadingAIData}
+            isInvisible={
+              !isAiFeaturesEnabled ||
+              !isTransactionTypeAIValid ||
+              isLoadingAIData
+            }
             content={<AILogo asIcon />}
             classNames={{
               badge:
@@ -954,15 +995,17 @@ function TransactionForm({ currency, userCategories }: TProps) {
             aria-label='Description'
             maxLength={180}
             description={
-              <div className='flex flex-wrap items-center gap-1'>
-                <div className='flex'>
-                  <AILogo />
+              isAiFeaturesEnabled ? (
+                <div className='flex flex-wrap items-center gap-1'>
+                  <div className='flex'>
+                    <AILogo />
+                  </div>
+                  <InfoText
+                    text='fills in the remaining fields.'
+                    withAsterisk={false}
+                  />
                 </div>
-                <InfoText
-                  text='fills in the remaining fields.'
-                  withAsterisk={false}
-                />
-              </div>
+              ) : undefined
             }
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -999,7 +1042,9 @@ function TransactionForm({ currency, userCategories }: TProps) {
             endContent={
               <div className='w-[154px] md:w-36'>
                 <Badge
-                  isInvisible={!isAmountAIValid || isLoadingAIData}
+                  isInvisible={
+                    !isAiFeaturesEnabled || !isAmountAIValid || isLoadingAIData
+                  }
                   content={<AILogo asIcon />}
                   classNames={{
                     badge:
@@ -1050,7 +1095,11 @@ function TransactionForm({ currency, userCategories }: TProps) {
             <div className='flex flex-col gap-4 lg:flex-row'>
               <div className='w-56'>
                 <Badge
-                  isInvisible={!isCategoryItemNameAIValid || isLoadingAIData}
+                  isInvisible={
+                    !isAiFeaturesEnabled ||
+                    !isCategoryItemNameAIValid ||
+                    isLoadingAIData
+                  }
                   content={<AILogo asIcon />}
                   classNames={{
                     badge:

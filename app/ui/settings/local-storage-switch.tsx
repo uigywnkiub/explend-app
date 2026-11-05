@@ -14,9 +14,13 @@ import {
 
 type TProps = {
   localStorageKey: string
+  isDisabled?: boolean
 }
 
-export default function LocalStorageSwitch({ localStorageKey }: TProps) {
+export default function LocalStorageSwitch({
+  localStorageKey,
+  isDisabled = false,
+}: TProps) {
   const router = useRouter()
   const [isSelected, setIsSelected] = useState<boolean | undefined>(undefined)
 
@@ -28,6 +32,7 @@ export default function LocalStorageSwitch({ localStorageKey }: TProps) {
     <Switch
       aria-label='Switch'
       color='primary'
+      isDisabled={isDisabled}
       isSelected={isSelected || false}
       onValueChange={(value) => {
         haptic()

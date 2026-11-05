@@ -85,9 +85,15 @@ type TProps = {
   transactions: TTransaction[]
   currency: TCurrency
   userSalaryDay: TUserSettings['salaryDay']
+  isAiFeaturesEnabled: boolean
 }
 
-function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
+function MonthlyReport({
+  transactions,
+  currency,
+  userSalaryDay,
+  isAiFeaturesEnabled,
+}: TProps) {
   const [tipsDataAI, setTipsDataAI] = useState<TExpenseAdvice[] | null>(null)
   const [isLoadingTips, setIsLoadingTips] = useState(false)
   const [forecastData, setForecastData] = useState<TForecastData | null>(null)
@@ -231,6 +237,8 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
   )
 
   const getExpenseTipsAIData = useCallback(async () => {
+    if (!isAiFeaturesEnabled) return
+
     if (expenseReportData.length === 0) {
       haptic.error()
       toast.error('No expenses found.')
@@ -268,11 +276,13 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
       haptic.confirm()
       toast.success(isTipsDataExist ? 'Tips refreshed.' : 'Tips loaded.')
     } catch (err) {
-      haptic.error()
-      toast.error(
-        isTipsDataExist ? 'Failed to refresh tips.' : 'Failed to load tips.',
-      )
-      throw err
+      if (isAiFeaturesEnabled) {
+        haptic.error()
+        toast.error(
+          isTipsDataExist ? 'Failed to refresh tips.' : 'Failed to load tips.',
+        )
+        throw err
+      }
     } finally {
       setIsLoadingTips(false)
     }
@@ -286,6 +296,7 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
     expenseCategories,
     currency,
     registerAttempt,
+    isAiFeaturesEnabled,
   ])
 
   const displayTotalIncome =
@@ -531,49 +542,51 @@ function MonthlyReport({ transactions, currency, userSalaryDay }: TProps) {
           </AccordionItem>
         </Accordion>
       </div>
-      <div className='mt-4 md:mt-8'>
-        {isTipsDataExist ? (
-          <>
-            {/* <p className='mb-2 text-xs text-default-500 md:text-sm'>
+      {isAiFeaturesEnabled && (
+        <div className='mt-4 md:mt-8'>
+          {isTipsDataExist ? (
+            <>
+              {/* <p className='mb-2 text-xs text-default-500 md:text-sm'>
               Expense Tips
             </p> */}
-            <TipsList tipsDataAI={tipsDataAI} />
-          </>
-        ) : (
-          <p className='text-center text-sm text-balance'>
-            Get useful tips for managing expenses.
-          </p>
-        )}
-
-        {isMissMatchLocalStorageAndCurrMonthExpenses &&
-          isTipsDataExist &&
-          !isLoadingTips && (
-            <div className='mb-4'>
-              <WarningText
-                text='Tips from memory do not match the tips for the current month or selected date expense.'
-                actionText={`Press "${REFRESH_TIPS_BTN_TEXT}" button to update and sync them.`}
-              />
-            </div>
+              <TipsList tipsDataAI={tipsDataAI} />
+            </>
+          ) : (
+            <p className='text-center text-sm text-balance'>
+              Get useful tips for managing expenses.
+            </p>
           )}
 
-        <Magnetic>
-          <Button
-            isLoading={isLoadingTips}
-            variant='flat'
-            onPress={() => [haptic(), getExpenseTipsAIData()]}
-            className='mx-auto mt-2 flex'
-          >
-            {!isLoadingTips && <AILogo asIcon iconSize='sm' />}{' '}
-            {isLoadingTips
-              ? isTipsDataExist
-                ? 'Refreshing...'
-                : 'Getting...'
-              : isTipsDataExist
-                ? REFRESH_TIPS_BTN_TEXT
-                : 'Get tips'}
-          </Button>
-        </Magnetic>
-      </div>
+          {isMissMatchLocalStorageAndCurrMonthExpenses &&
+            isTipsDataExist &&
+            !isLoadingTips && (
+              <div className='mb-4'>
+                <WarningText
+                  text='Tips from memory do not match the tips for the current month or selected date expense.'
+                  actionText={`Press "${REFRESH_TIPS_BTN_TEXT}" button to update and sync them.`}
+                />
+              </div>
+            )}
+
+          <Magnetic>
+            <Button
+              isLoading={isLoadingTips}
+              variant='flat'
+              onPress={() => [haptic(), getExpenseTipsAIData()]}
+              className='mx-auto mt-2 flex'
+            >
+              {!isLoadingTips && <AILogo asIcon iconSize='sm' />}{' '}
+              {isLoadingTips
+                ? isTipsDataExist
+                  ? 'Refreshing...'
+                  : 'Getting...'
+                : isTipsDataExist
+                  ? REFRESH_TIPS_BTN_TEXT
+                  : 'Get tips'}
+            </Button>
+          </Magnetic>
+        </div>
+      )}
     </>
   )
 }

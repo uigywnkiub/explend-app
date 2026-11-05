@@ -33,6 +33,7 @@ const userSettingsSchema = new Schema<TUserSettings>(
       min: 1,
       max: 31,
     },
+    isAiFeaturesEnabled: { type: Boolean, default: true },
   },
   { timestamps: true },
 )

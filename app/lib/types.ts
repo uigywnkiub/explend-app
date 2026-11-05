@@ -84,6 +84,7 @@ export type TUserSettings = {
   pushSubscriptions?: TPushSubscription[]
   transactionLimit?: number | null
   salaryDay?: number | null
+  isAiFeaturesEnabled?: boolean
   createdAt: Date
   updatedAt: Date
 }

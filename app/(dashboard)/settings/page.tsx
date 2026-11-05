@@ -10,6 +10,7 @@ import {
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
+  getAiFeaturesEnabled,
   getAuthSession,
   getCachedUserCategories,
   getCountDocuments,
@@ -25,6 +26,7 @@ import Currency from '../../ui/settings/currency'
 import DeleteAccount from '../../ui/settings/delete-account'
 import DownloadUploadTransactions from '../../ui/settings/download-upload-transactions'
 import ExitAccount from '../../ui/settings/exit-account'
+import ExplendIntelligenceSwitch from '../../ui/settings/explend-intelligence-switch'
 import ForecastMonthsBack from '../../ui/settings/forecast-months-back'
 import ImportBankTransactions from '../../ui/settings/import-bank-transactions'
 import LocalStorageSwitch from '../../ui/settings/local-storage-switch'
@@ -49,12 +51,14 @@ async function SettingsPageContent() {
     currency,
     userSalaryDay,
     userCategoriesFromSettings,
+    isAiFeaturesEnabled,
   ] = await Promise.all([
     getTransactionLimit(userId),
     getCountDocuments(userId),
     getCurrency(userId),
     getSalaryDay(userId),
     getCachedUserCategories(userId),
+    getAiFeaturesEnabled(userId),
   ])
   const userCategories = getUserCategories(userCategoriesFromSettings)
 
@@ -96,6 +100,7 @@ async function SettingsPageContent() {
             />
             <LocalStorageSwitch
               localStorageKey={LOCAL_STORAGE_KEY.IS_AUTO_SUBMIT}
+              isDisabled={!isAiFeaturesEnabled}
             />
           </div>
 
@@ -151,6 +156,19 @@ async function SettingsPageContent() {
 
       <Section title='Account' subtitle='Change your account preferences.'>
         <>
+          <div className='flex justify-between gap-2'>
+            <SectionItem
+              title={`${AI_NAME.FULL}`}
+              subtitle={`${AI_NAME.FULL} powers transaction suggestions, receipt scanning, bank import categorization, expense tips, changelog summaries, and more across the app.`}
+            />
+            <ExplendIntelligenceSwitch
+              userId={userId}
+              enabled={isAiFeaturesEnabled}
+            />
+          </div>
+
+          <Divider className='my-4' />
+
           <SectionItem
             title='Currency'
             subtitle='Select your preferred currency. This will set the default currency for your app.'
@@ -253,7 +271,11 @@ async function SettingsPageContent() {
                   text='Currently supports bank statements in Ukrainian language.'
                 />
                 <InfoText
-                  text={`Categories will be automatically assigned by transaction description using ${AI_NAME.FULL} or an MCC code.`}
+                  text={
+                    isAiFeaturesEnabled
+                      ? `Categories will be automatically assigned by transaction description using ${AI_NAME.FULL} or an MCC code.`
+                      : 'Categories will be assigned using an MCC code when available.'
+                  }
                 />
                 <InfoText text='After completion, review your imported transactions.' />
               </div>

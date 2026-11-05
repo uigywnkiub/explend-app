@@ -9,6 +9,7 @@ import { Resend } from 'resend'
 
 import { COOKIE_FEEDBACK } from '@/config/constants/cookies'
 import {
+  AI_NAME,
   APP_NAME,
   DEFAULT_CATEGORY,
   DEFAULT_CATEGORY_EMOJI,
@@ -29,6 +30,7 @@ import {
   UploadReceiptAIModel,
 } from './ai'
 import {
+  getCachedAiFeaturesEnabledData,
   getCachedBalanceCardData,
   getCachedBalanceData,
   getCachedCategoryLimitsData,
@@ -91,6 +93,19 @@ function revalidateUserSettings(userId: TUserId) {
   revalidateTag(getUserSettingsCacheTag(userId), { expire: 0 })
 }
 
+async function assertAiFeaturesEnabled() {
+  const userId = (await auth())?.user?.email
+  if (!userId) throw new Error(`You must be signed in to use ${AI_NAME.FULL}.`)
+
+  await dbConnect()
+  const settings = await UserSettingsModel.findOne({ userId })
+    .select('isAiFeaturesEnabled -_id')
+    .lean<{ isAiFeaturesEnabled?: boolean }>()
+  if (settings?.isAiFeaturesEnabled === false) {
+    throw new Error(`${AI_NAME.FULL} is disabled in your account settings.`)
+  }
+}
+
 export async function signOutAccount(): Promise<void> {
   try {
     await signOut({ redirectTo: ROUTE.SIGNIN })
@@ -121,6 +136,23 @@ export async function getTransactionLimit(
   userId: TUserId,
 ): Promise<TUserSettings['transactionLimit']> {
   return getCachedTransactionLimitData(userId)
+}
+export async function getAiFeaturesEnabled(userId: TUserId): Promise<boolean> {
+  return getCachedAiFeaturesEnabledData(userId)
+}
+
+export async function updateAiFeaturesEnabled(
+  userId: TUserId,
+  enabled: boolean,
+): Promise<void> {
+  if (!userId) throw new Error('User ID is required to update user settings.')
+  await dbConnect()
+  await UserSettingsModel.updateOne(
+    { userId },
+    { $set: { isAiFeaturesEnabled: enabled } },
+    { upsert: true },
+  )
+  revalidateUserSettings(userId)
 }
 export const getCachedTransactionLimit = async (userId: TUserId) =>
   getCachedTransactionLimitData(userId)
@@ -565,10 +597,16 @@ export async function importBankTransactions(
       : await parsePrivat24Xlsx(payload)
 
   let skipped = parseSkipped
+  const isAiFeaturesEnabled = await getCachedAiFeaturesEnabledData(userId)
 
   const resolvedCategories = await Promise.all(
     validRows.map(({ description, mcc }) =>
-      resolveImportedCategory(userCategories, description, mcc),
+      resolveImportedCategory(
+        userCategories,
+        description,
+        mcc,
+        isAiFeaturesEnabled,
+      ),
     ),
   )
 
@@ -1076,6 +1114,7 @@ export async function getCategoryItemNameAI(
   categories: TCategories[],
   userPrompt: string,
 ): Promise<string> {
+  await assertAiFeaturesEnabled()
   if (!categories || !userPrompt) {
     throw new Error('Categories or user prompt are required.')
   }
@@ -1098,6 +1137,7 @@ export async function getAmountAI(
   currencyCode: TCurrency['code'],
   userPrompt: string,
 ): Promise<string> {
+  await assertAiFeaturesEnabled()
   if (!currencyCode || !userPrompt) {
     throw new Error('Currency or user prompt is required.')
   }
@@ -1117,6 +1157,7 @@ export async function getAmountAI(
 export async function getTransactionTypeAI(
   userPrompt: string,
 ): Promise<string> {
+  await assertAiFeaturesEnabled()
   if (!userPrompt) {
     throw new Error('User prompt is required.')
   }
@@ -1137,6 +1178,7 @@ export async function getExpenseTipsAI(
   categories: string[],
   currency: TCurrency,
 ): Promise<string> {
+  await assertAiFeaturesEnabled()
   if (!categories) {
     throw new Error('Categories are required.')
   }
@@ -1170,6 +1212,7 @@ Requirements:
 }
 
 export async function getAnalyzedReceiptAI(file: Blob): Promise<string> {
+  await assertAiFeaturesEnabled()
   if (!file) {
     throw new Error('File blob is required.')
   }
@@ -1202,6 +1245,7 @@ export async function getAnalyzedReceiptAI(file: Blob): Promise<string> {
 export async function formatChangelogMessageAI(
   commitMsg: string,
 ): Promise<string> {
+  await assertAiFeaturesEnabled()
   if (!commitMsg) {
     throw new Error('Commit message is required.')
   }
@@ -1220,6 +1264,10 @@ export async function formatChangelogMessageAI(
 
 export async function getChangelog(): Promise<TGetChangelog> {
   try {
+    const userId = (await auth())?.user?.email
+    const isAiFeaturesEnabled = userId
+      ? await getCachedAiFeaturesEnabledData(userId)
+      : true
     const res = await fetch(
       'https://api.github.com/repos/uigywnkiub/explend-app/commits?sha=main&per_page=1',
       {
@@ -1233,9 +1281,13 @@ export async function getChangelog(): Promise<TGetChangelog> {
     }
     const data = await res.json()
 
+    const commitMessage = data[0]?.commit?.message || ''
+
     return {
       sha: data[0]?.sha?.slice(0, 7) || '',
-      msg: (await formatChangelogMessageAI(data[0]?.commit?.message)) || '',
+      msg: isAiFeaturesEnabled
+        ? (await formatChangelogMessageAI(commitMessage)) || ''
+        : commitMessage,
     }
   } catch (err) {
     throw err

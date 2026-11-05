@@ -9,6 +9,7 @@ import { siteMeta } from '@/config/site-meta'
 
 import {
   createTransaction,
+  getAiFeaturesEnabled,
   getAuthSession,
   getCachedBalance,
   getCachedCurrency,
@@ -73,11 +74,13 @@ async function HomePageContent(props: {
     currency,
     transactionData,
     userCategoriesFromSettings,
+    isAiFeaturesEnabled,
   ] = await Promise.all([
     userTransactionLimitPromise,
     getCachedCurrency(userId),
     transactionsPromise,
     getCachedUserCategories(userId),
+    getAiFeaturesEnabled(userId),
   ])
   const { transactions, totalEntries, totalPages } = transactionData
   const userCategories = getUserCategories(userCategoriesFromSettings)
@@ -179,6 +182,7 @@ async function HomePageContent(props: {
           <TransactionForm
             currency={currency}
             userCategories={userCategories}
+            isAiFeaturesEnabled={isAiFeaturesEnabled}
           />
         </form>
         <div className='text-default-500 text-center'>

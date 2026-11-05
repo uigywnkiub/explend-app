@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { NAV_TITLE } from '@/config/constants/navigation'
 
 import {
+  getAiFeaturesEnabled,
   getAuthSession,
   getCurrency,
   getMonthlyReportTransactions,
@@ -19,11 +20,13 @@ export const metadata: Metadata = {
 async function MonthlyReportPageContent() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const [transactions, currency, userSalaryDay] = await Promise.all([
-    getMonthlyReportTransactions(userId),
-    getCurrency(userId),
-    getSalaryDay(userId),
-  ])
+  const [transactions, currency, userSalaryDay, isAiFeaturesEnabled] =
+    await Promise.all([
+      getMonthlyReportTransactions(userId),
+      getCurrency(userId),
+      getSalaryDay(userId),
+      getAiFeaturesEnabled(userId),
+    ])
 
   const content = (
     <>
@@ -38,6 +41,7 @@ async function MonthlyReportPageContent() {
             transactions={transactions}
             currency={currency}
             userSalaryDay={userSalaryDay}
+            isAiFeaturesEnabled={isAiFeaturesEnabled}
           />
         )}
       </div>

@@ -149,6 +149,23 @@ export async function getCachedCurrencyData(
   )
 }
 
+export async function getCachedAiFeaturesEnabledData(
+  userId: TUserId,
+): Promise<boolean> {
+  'use cache'
+  cacheLife('minutes')
+  cacheTag(getUserSettingsCacheTag(userId))
+
+  if (!userId) throw new Error('User ID is required to fetch user settings.')
+
+  await dbConnect()
+  const userSettings = await UserSettingsModel.findOne({ userId })
+    .select('isAiFeaturesEnabled -_id')
+    .lean<{ isAiFeaturesEnabled?: boolean }>()
+
+  return userSettings?.isAiFeaturesEnabled ?? true
+}
+
 export async function getCachedCountDocumentsData(
   userId: TUserId,
 ): Promise<TGetTransactions['totalEntries']> {

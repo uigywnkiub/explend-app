@@ -630,19 +630,27 @@ export async function resolveImportedCategory(
   userCategories: TCategories[],
   description: TBankParsedRow['description'],
   mcc?: TBankParsedRow['mcc'],
+  isAiFeaturesEnabled = true,
 ): Promise<TTransaction['category']> {
-  try {
-    const aiCategory = await getCategoryItemNameAI(userCategories, description)
-    const categoryNames = getCategoryItemNames(userCategories)
-    // If AI returned Unknown skip to MCC.
-    if (
-      aiCategory &&
-      aiCategory !== DEFAULT_CATEGORY &&
-      categoryNames.includes(aiCategory)
-    ) {
-      return getCategoryWithEmoji(aiCategory, userCategories)
+  if (isAiFeaturesEnabled) {
+    try {
+      const aiCategory = await getCategoryItemNameAI(
+        userCategories,
+        description,
+      )
+      const categoryNames = getCategoryItemNames(userCategories)
+      // If AI returned Unknown skip to MCC.
+      if (
+        aiCategory &&
+        aiCategory !== DEFAULT_CATEGORY &&
+        categoryNames.includes(aiCategory)
+      ) {
+        return getCategoryWithEmoji(aiCategory, userCategories)
+      }
+    } catch {
+      // Fall back to the MCC mapping when AI is unavailable.
     }
-  } catch {}
+  }
 
   // MCC (Merchant Category Code).
   if (mcc) {
