@@ -1,6 +1,6 @@
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
-import type { LegendProps } from 'recharts'
+import type { LegendPayload } from 'recharts'
 
 import { Tooltip } from '@heroui/react'
 
@@ -16,7 +16,7 @@ import {
 import type { TCurrency, TTransactionType } from '@/app/lib/types'
 
 type TProps = {
-  payload?: LegendProps['payload']
+  payload?: ReadonlyArray<LegendPayload>
   expenseTotal: number
   incomeTotal: number
   currency: TCurrency
@@ -58,7 +58,9 @@ function CustomLegend({
               >
                 <Icon className='size-full' fill={entry.color} />
               </div>
-              <span className='ml-1'>{capitalizeFirstLetter(entry.value)}</span>
+              <span className='ml-1'>
+                {capitalizeFirstLetter(entry.value ?? '')}
+              </span>
             </li>
           </Tooltip>
         )

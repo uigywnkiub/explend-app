@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -10,6 +10,7 @@ import {
   PolarRadiusAxis,
   Radar,
   RadarChart as RechartRadarChart,
+  Text as RechartText,
   ResponsiveContainer,
   Tooltip,
 } from 'recharts'
@@ -43,7 +44,6 @@ import {
 } from '@/app/lib/helpers'
 import type { TCategories, TCurrency, TTransaction } from '@/app/lib/types'
 
-import NoTransactionsPlug from '../no-transactions-plug'
 import CustomTooltip from './custom-tooltip'
 
 const DATA_KEY = {
@@ -82,6 +82,11 @@ function CategoryExcludeSelect({
   if (otherCategories.length > 0) {
     categorySections.push({ subject: 'Other', items: otherCategories })
   }
+  const selectedAvailableCategories = new Set(
+    [...excludedCategories].filter((category) =>
+      availableCategories.has(category),
+    ),
+  )
 
   return (
     <div className='mx-auto my-4 w-full max-w-md'>
@@ -89,7 +94,7 @@ function CategoryExcludeSelect({
         label='Exclude categories'
         placeholder='Select categories to exclude'
         selectionMode='multiple'
-        selectedKeys={excludedCategories}
+        selectedKeys={selectedAvailableCategories}
         onSelectionChange={(keys) =>
           onSelectionChange(
             keys === 'all'
@@ -130,9 +135,30 @@ type TProps = {
 
 function RadarChart({ transactionsRaw, categories, currency }: TProps) {
   const router = useRouter()
-  const isChartByCurrMonth = getBooleanFromLocalStorage(
-    LOCAL_STORAGE_KEY.IS_CHART_BY_CURR_MONTH,
-  )
+  const [isChartByCurrMonth, setIsChartByCurrMonth] = useState(false)
+  const [isPositiveBalance, setIsPositiveBalance] = useState(false)
+  const [isAmountHidden, setIsAmountHidden] = useState(false)
+  const [isChartForExpensesOnly, setIsChartForExpensesOnly] = useState(false)
+
+  useEffect(() => {
+    setIsChartByCurrMonth(
+      getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_CHART_BY_CURR_MONTH) ===
+        true,
+    )
+    setIsPositiveBalance(
+      getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE) ===
+        true,
+    )
+    setIsAmountHidden(
+      getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN) === true,
+    )
+    setIsChartForExpensesOnly(
+      getBooleanFromLocalStorage(
+        LOCAL_STORAGE_KEY.IS_CHART_FOR_EXPENSES_ONLY,
+      ) === true,
+    )
+  }, [])
+
   const chartTransactionsRaw = isChartByCurrMonth
     ? getTransactionsByCurrMonth(transactionsRaw)
     : transactionsRaw
@@ -154,15 +180,6 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
       ),
   )
 
-  const isPositiveBalance = getBooleanFromLocalStorage(
-    LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE,
-  )
-  const isAmountHidden = getBooleanFromLocalStorage(
-    LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN,
-  )
-  const isChartForExpensesOnly = getBooleanFromLocalStorage(
-    LOCAL_STORAGE_KEY.IS_CHART_FOR_EXPENSES_ONLY,
-  )
   const includedTransactions = transactionsRaw.filter(
     ({ category }) => !excludedCategories.has(category),
   )
@@ -204,18 +221,17 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
               onSelectionChange={setExcludedCategories}
             />
           )}
-          <NoTransactionsPlug
-            text={
-              isChartByCurrMonth && chartTransactionsRaw.length === 0
-                ? 'This month no transactions found'
-                : 'No transactions found for the selected categories'
-            }
-          />
+          <p className='md:text-medium text-default-500 text-center text-sm'>
+            {isChartByCurrMonth && chartTransactionsRaw.length === 0
+              ? 'No transactions found this month'
+              : 'No transactions found for the selected categories'}
+          </p>
         </div>
       ) : (
         <>
           <ResponsiveContainer width='100%' height='100%' className='-mt-8'>
             <RechartRadarChart
+              accessibilityLayer={false}
               cx='50%'
               cy='50%'
               outerRadius='75%'
@@ -238,7 +254,7 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
 
                   return (
                     <HeroUITooltip content='Search by category' placement='top'>
-                      <text
+                      <RechartText
                         {...props}
                         className='fill-foreground hover:opacity-hover md:text-medium cursor-pointer text-sm outline-hidden'
                         alignmentBaseline='central'
@@ -250,9 +266,8 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
                           )
                         }
                       >
-                        {category}
-                        {medal ? ` ${medal}` : ''}
-                      </text>
+                        {`${category}${medal ? ` ${medal}` : ''}`}
+                      </RechartText>
                     </HeroUITooltip>
                   )
                 }}

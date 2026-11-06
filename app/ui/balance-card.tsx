@@ -369,6 +369,7 @@ function BalanceCard({
                 className='w-full min-w-0'
               >
                 <AreaChart
+                  accessibilityLayer={false}
                   data={weeklySpend.chartData}
                   margin={{
                     top: 20,
@@ -518,7 +519,6 @@ function BalanceCard({
                     fill='white'
                     stroke={SPEND_CHART_COLOR}
                     strokeWidth={3}
-                    isFront
                   />
                 </AreaChart>
               </ResponsiveContainer>

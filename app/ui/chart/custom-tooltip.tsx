@@ -1,10 +1,6 @@
 import { PiArrowCircleDownFill, PiArrowCircleUpFill } from 'react-icons/pi'
 
-import type { TooltipProps } from 'recharts'
-import {
-  NameType,
-  ValueType,
-} from 'recharts/types/component/DefaultTooltipContent'
+import type { TooltipContentProps } from 'recharts'
 
 import { Badge } from '@heroui/react'
 
@@ -20,8 +16,8 @@ import type { TCurrency, TTransaction } from '@/app/lib/types'
 
 type TProps = {
   active: boolean
-  payload: TooltipProps<ValueType, NameType>['payload']
-  label: string
+  payload: TooltipContentProps['payload']
+  label?: string | number
   currency: TCurrency
   transactions: TTransaction[]
 }
@@ -35,14 +31,16 @@ function CustomTooltip({
 }: TProps) {
   if (!active && !payload?.length) return null
 
+  const category = String(label ?? '')
+
   return (
     <Badge
-      content={getTransactionCountByCategory(transactions, label)}
+      content={getTransactionCountByCategory(transactions, category)}
       size='sm'
       className='text-foreground'
     >
       <div className='rounded-medium bg-background/90 p-2 drop-shadow-md md:p-4'>
-        <p className='md:text-medium mb-2 text-sm'>{label}</p>
+        <p className='md:text-medium mb-2 text-sm'>{category}</p>
         {payload?.map((item, idx) => {
           const isIncome = item.dataKey === 'income'
           const isPositive = isIncome

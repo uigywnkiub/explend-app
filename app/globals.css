@@ -200,6 +200,10 @@
   @apply text-success!;
 }
 
+.recharts-surface :focus {
+  outline: none !important;
+}
+
 /* Check if View Transitions API browser support. */
 /* @supports (view-transition-name: figure-caption) {
 } */

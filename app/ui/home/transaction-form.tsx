@@ -705,6 +705,7 @@ function TransactionForm({
     pending,
     resetAllStates,
     hasCurrOrPrevReceiptAIData,
+    isAiFeaturesEnabled,
   ])
   // Submit transaction END.
 
