@@ -34,7 +34,7 @@
     "@sentry/nextjs": "^10.78.0",
     "@tailwindcss/postcss": "^4.3.4",
     "@vercel/analytics": "^2.0.1",
-    "@vercel/speed-insights": "^2.0.0",
+    "@vercel/speed-insights": "^2.1.0",
     "@wrksz/themes": "^2.1.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "clsx": "^2.1.1",

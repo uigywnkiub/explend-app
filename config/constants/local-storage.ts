@@ -7,8 +7,6 @@ export const enum LOCAL_STORAGE_KEY {
   IS_AMOUNT_HIDDEN = 'isAmountHidden',
   IS_POSITIVE_BALANCE = 'isPositiveBalance',
   IS_AUTO_SUBMIT = 'isAutoSubmit',
-  IS_CHART_BY_CURR_MONTH = 'isChartByCurrMonth',
-  IS_CHART_FOR_EXPENSES_ONLY = 'isChartForExpensesOnly',
   IS_ENABLE_CHANGELOG = 'isEnableChangelog',
   FORECAST_MONTHS_BACK = 'forecastMonthsBack',
 

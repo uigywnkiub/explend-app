@@ -17,11 +17,15 @@ import {
 
 import { DANGER_COLOR, SUCCESS_COLOR } from '@/tailwind.config'
 import {
+  Chip,
+  Divider,
   Tooltip as HeroUITooltip,
   Select,
   SelectItem,
   SelectSection,
+  Switch,
 } from '@heroui/react'
+import { haptic } from 'ios-haptics'
 
 import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 
@@ -44,6 +48,8 @@ import {
 } from '@/app/lib/helpers'
 import type { TCategories, TCurrency, TTransaction } from '@/app/lib/types'
 
+import AnimatedNumber from '../animated-number'
+import InfoText from '../info-text'
 import CustomTooltip from './custom-tooltip'
 
 const DATA_KEY = {
@@ -89,9 +95,16 @@ function CategoryExcludeSelect({
   )
 
   return (
-    <div className='mx-auto my-4 w-full max-w-md'>
+    <div className='my-4 w-full max-w-md'>
+      <div className='mb-3'>
+        <h3 className='font-medium'>Exclude categories</h3>
+        <p className='text-default-500 text-sm'>
+          Choose categories to leave out of the chart.
+        </p>
+      </div>
       <Select
-        label='Exclude categories'
+        isClearable
+        label='Categories'
         placeholder='Select categories to exclude'
         selectionMode='multiple'
         selectedKeys={selectedAvailableCategories}
@@ -135,27 +148,19 @@ type TProps = {
 
 function RadarChart({ transactionsRaw, categories, currency }: TProps) {
   const router = useRouter()
-  const [isChartByCurrMonth, setIsChartByCurrMonth] = useState(false)
+  const [isChartByCurrMonth, setIsChartByCurrMonth] = useState(true)
   const [isPositiveBalance, setIsPositiveBalance] = useState(false)
   const [isAmountHidden, setIsAmountHidden] = useState(false)
   const [isChartForExpensesOnly, setIsChartForExpensesOnly] = useState(false)
+  const [areMedalsHidden, setAreMedalsHidden] = useState(true)
 
   useEffect(() => {
-    setIsChartByCurrMonth(
-      getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_CHART_BY_CURR_MONTH) ===
-        true,
-    )
     setIsPositiveBalance(
       getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_POSITIVE_BALANCE) ===
         true,
     )
     setIsAmountHidden(
       getBooleanFromLocalStorage(LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN) === true,
-    )
-    setIsChartForExpensesOnly(
-      getBooleanFromLocalStorage(
-        LOCAL_STORAGE_KEY.IS_CHART_FOR_EXPENSES_ONLY,
-      ) === true,
     )
   }, [])
 
@@ -166,18 +171,7 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
     chartTransactionsRaw.map(({ category }) => category),
   )
   const [excludedCategories, setExcludedCategories] = useState<Set<string>>(
-    () =>
-      new Set(
-        categories.flatMap((category) =>
-          category.items
-            .filter(
-              (item) =>
-                item.name.toLowerCase() === 'salary' &&
-                availableCategories.has(`${item.emoji} ${item.name}`),
-            )
-            .map((item) => `${item.emoji} ${item.name}`),
-        ),
-      ),
+    new Set(),
   )
 
   const includedTransactions = transactionsRaw.filter(
@@ -202,6 +196,13 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
     isChartForExpensesOnly ? [] : income,
     expense,
   )
+  const totals = chartData.reduce(
+    (result, item) => ({
+      income: result.income + item.income,
+      expense: result.expense + item.expense,
+    }),
+    { income: 0, expense: 0 },
+  )
   // const getTransactionTypeTotal = (transactionType: TTransactionType) =>
   //   calculateTotalAmount(
   //     chartData.map((data): { amount: TTransaction['amount'] } => ({
@@ -212,15 +213,7 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
   return (
     <>
       {transactions.length === 0 ? (
-        <div className='mx-auto mt-4 max-w-3xl md:mt-8'>
-          {!(isChartByCurrMonth && chartTransactionsRaw.length === 0) && (
-            <CategoryExcludeSelect
-              categories={categories}
-              excludedCategories={excludedCategories}
-              availableCategories={availableCategories}
-              onSelectionChange={setExcludedCategories}
-            />
-          )}
+        <div className='mx-auto my-4 max-w-3xl md:my-8'>
           <p className='md:text-medium text-default-500 text-center text-sm'>
             {isChartByCurrMonth && chartTransactionsRaw.length === 0
               ? 'No transactions found this month'
@@ -229,7 +222,7 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
         </div>
       ) : (
         <>
-          <ResponsiveContainer width='100%' height='100%' className='-mt-8'>
+          <ResponsiveContainer width='100%' height='100%'>
             <RechartRadarChart
               accessibilityLayer={false}
               cx='50%'
@@ -250,7 +243,9 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
                 dataKey={DATA_KEY.CATEGORY}
                 tick={(props) => {
                   const category = props.payload.value
-                  const medal = getCategoryMedalByAmount(chartData, category)
+                  const medal = areMedalsHidden
+                    ? ''
+                    : getCategoryMedalByAmount(chartData, category)
 
                   return (
                     <HeroUITooltip content='Search by category' placement='top'>
@@ -321,30 +316,113 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
               />
             </RechartRadarChart>
           </ResponsiveContainer>
-          <CategoryExcludeSelect
-            categories={categories}
-            excludedCategories={excludedCategories}
-            availableCategories={availableCategories}
-            onSelectionChange={setExcludedCategories}
-          />
-          <div className='-mt-2 flex flex-col gap-1 text-center text-xs md:text-sm'>
-            <p>
-              {`Visualization of ${isChartByCurrMonth ? 'current month' : 'all-time'} ${pluralize(
-                transactions.length,
-                'transaction',
-                'transactions',
-              )}`}
-            </p>
-            <p>{`From ${firstTransactionDate} to ${lastTransactionDate}`}</p>
-            <p>
-              {`${transactions.length} ${pluralize(
-                transactions.length,
-                'entry',
-                'entries',
-              )}`}
+        </>
+      )}
+      <section className='rounded-medium bg-content1 mx-auto w-full max-w-3xl p-4 shadow-xs md:p-8'>
+        <div className='mb-5'>
+          <h2 className='text-xl font-semibold'>Chart options</h2>
+          <p className='text-default-500 text-sm'>
+            Customize what appears in your chart.
+          </p>
+        </div>
+        <CategoryExcludeSelect
+          categories={categories}
+          excludedCategories={excludedCategories}
+          availableCategories={availableCategories}
+          onSelectionChange={setExcludedCategories}
+        />
+        <Divider />
+        <div className='flex items-center justify-between gap-4 py-4'>
+          <div className='min-w-0'>
+            <h3 className='font-medium'>Current month</h3>
+            <p className='text-default-500 text-sm'>
+              Show this month instead of all time.
             </p>
           </div>
-        </>
+          <Switch
+            aria-label='Show chart for current month'
+            color='primary'
+            isSelected={isChartByCurrMonth}
+            onValueChange={(value) => {
+              haptic()
+              setIsChartByCurrMonth(value)
+            }}
+          />
+        </div>
+        <Divider />
+        <div className='flex items-center justify-between gap-4 py-4'>
+          <div className='min-w-0'>
+            <h3 className='font-medium'>Expenses only</h3>
+            <p className='text-default-500 text-sm'>
+              Exclude income transactions from the chart.
+            </p>
+          </div>
+          <Switch
+            aria-label='Show expenses only'
+            color='primary'
+            isSelected={isChartForExpensesOnly}
+            onValueChange={(value) => {
+              haptic()
+              setIsChartForExpensesOnly(value)
+            }}
+          />
+        </div>
+        <Divider />
+        <div className='flex items-center justify-between gap-4 py-4 pb-0'>
+          <div className='min-w-0'>
+            <h3 className='font-medium'>Hide category medals</h3>
+            <p className='text-default-500 text-sm'>
+              Remove medal icons from category labels.
+            </p>
+          </div>
+          <Switch
+            aria-label='Hide category medals'
+            color='primary'
+            isSelected={areMedalsHidden}
+            onValueChange={(value) => {
+              haptic()
+              setAreMedalsHidden(value)
+            }}
+          />
+        </div>
+      </section>
+      {transactions.length > 0 && (
+        <div className='mx-auto mt-4 flex max-w-3xl flex-col gap-1 text-center text-xs md:text-sm'>
+          <div className='mb-1 flex flex-col justify-center gap-2 sm:flex-row sm:gap-6'>
+            <div className='flex items-center justify-center gap-2'>
+              <InfoText isSm withAsterisk={false} text='Income:' />
+              <Chip color='success' size='sm' variant='flat'>
+                <AnimatedNumber value={totals.income} /> {currency.sign}
+              </Chip>
+            </div>
+            <div className='flex items-center justify-center gap-2'>
+              <InfoText isSm withAsterisk={false} text='Expense:' />
+              <Chip color='danger' size='sm' variant='flat'>
+                <AnimatedNumber value={totals.expense} /> {currency.sign}
+              </Chip>
+            </div>
+          </div>
+          <InfoText
+            withAsterisk={false}
+            text={`Visualization of ${isChartByCurrMonth ? 'current month' : 'all-time'} ${pluralize(
+              transactions.length,
+              'transaction',
+              'transactions',
+            )}`}
+          />
+          <InfoText
+            withAsterisk={false}
+            text={`From ${firstTransactionDate} to ${lastTransactionDate}`}
+          />
+          <InfoText
+            withAsterisk={false}
+            text={`${transactions.length} ${pluralize(
+              transactions.length,
+              'entry',
+              'entries',
+            )}`}
+          />
+        </div>
       )}
     </>
   )

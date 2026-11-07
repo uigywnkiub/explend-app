@@ -9,7 +9,7 @@ import { haptic } from 'ios-haptics'
 
 import {
   getBooleanFromLocalStorage,
-  toggleBooleanInLocalStorage,
+  setInLocalStorage,
 } from '@/app/lib/helpers'
 
 type TProps = {
@@ -37,7 +37,7 @@ export default function LocalStorageSwitch({
       onValueChange={(value) => {
         haptic()
         setIsSelected(value)
-        toggleBooleanInLocalStorage(localStorageKey)
+        setInLocalStorage(localStorageKey, String(value))
         router.refresh()
       }}
     />

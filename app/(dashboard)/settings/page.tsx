@@ -20,7 +20,6 @@ import {
   signOutAccount,
 } from '../../lib/actions'
 import { getUserCategories } from '../../lib/data'
-import { toLowerCase } from '../../lib/helpers'
 import InfoText from '../../ui/info-text'
 import Currency from '../../ui/settings/currency'
 import DeleteAccount from '../../ui/settings/delete-account'
@@ -69,30 +68,6 @@ async function SettingsPageContent() {
       </h1>
       <Section title='General' subtitle='Configure your general preferences.'>
         <>
-          <div className='flex justify-between gap-2'>
-            <SectionItem
-              title={`${NAV_TITLE.CHART} by Current Month`}
-              subtitle={`Show the ${toLowerCase(NAV_TITLE.CHART)} for the current month rather than for all time.`}
-            />
-            <LocalStorageSwitch
-              localStorageKey={LOCAL_STORAGE_KEY.IS_CHART_BY_CURR_MONTH}
-            />
-          </div>
-
-          <Divider className='my-4' />
-
-          <div className='flex justify-between gap-2'>
-            <SectionItem
-              title={`${NAV_TITLE.CHART} for Expenses Only`}
-              subtitle={`Show the ${toLowerCase(NAV_TITLE.CHART)} of expense transactions, excluding income.`}
-            />
-            <LocalStorageSwitch
-              localStorageKey={LOCAL_STORAGE_KEY.IS_CHART_FOR_EXPENSES_ONLY}
-            />
-          </div>
-
-          <Divider className='my-4' />
-
           <div className='flex justify-between gap-2'>
             <SectionItem
               title='Automated Submission'
