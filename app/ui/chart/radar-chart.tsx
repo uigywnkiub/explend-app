@@ -388,7 +388,7 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
       </section>
       {transactions.length > 0 && (
         <div className='mx-auto mt-4 flex max-w-3xl flex-col gap-1 text-center text-xs md:text-sm'>
-          <div className='mb-1 flex flex-col justify-center gap-2 sm:flex-row sm:gap-6'>
+          <div className='mb-1 flex flex-row justify-center gap-2 sm:gap-6'>
             <div className='flex items-center justify-center gap-2'>
               <InfoText isSm withAsterisk={false} text='Income:' />
               <Chip color='success' size='sm' variant='flat'>

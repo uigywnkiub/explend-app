@@ -284,6 +284,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
           </div>
           <div className='mt-4 self-start sm:self-auto md:mt-0'>
             <InfoText
+              withAsterisk={false}
               text={`Showing ${
                 hasSearchFilter ? 'filtered' : 'all-time'
               } ${pluralize(
