@@ -6,6 +6,7 @@ import {
   getAiFeaturesEnabled,
   getAuthSession,
   getCurrency,
+  getForecastMonthsBack,
   getMonthlyReportTransactions,
   getSalaryDay,
 } from '../../lib/actions'
@@ -20,13 +21,19 @@ export const metadata: Metadata = {
 async function MonthlyReportPageContent() {
   const session = await getAuthSession()
   const userId = session?.user?.email
-  const [transactions, currency, userSalaryDay, isAiFeaturesEnabled] =
-    await Promise.all([
-      getMonthlyReportTransactions(userId),
-      getCurrency(userId),
-      getSalaryDay(userId),
-      getAiFeaturesEnabled(userId),
-    ])
+  const [
+    transactions,
+    currency,
+    userSalaryDay,
+    forecastMonthsBack,
+    isAiFeaturesEnabled,
+  ] = await Promise.all([
+    getMonthlyReportTransactions(userId),
+    getCurrency(userId),
+    getSalaryDay(userId),
+    getForecastMonthsBack(userId),
+    getAiFeaturesEnabled(userId),
+  ])
 
   const content = (
     <>
@@ -41,6 +48,7 @@ async function MonthlyReportPageContent() {
             transactions={transactions}
             currency={currency}
             userSalaryDay={userSalaryDay}
+            forecastMonthsBack={forecastMonthsBack}
             isAiFeaturesEnabled={isAiFeaturesEnabled}
           />
         )}

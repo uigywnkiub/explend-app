@@ -27,6 +27,7 @@ const userSettingsSchema = new Schema<TUserSettings>(
     currency: { type: currencySchema },
     pushSubscriptions: { type: [Schema.Types.Mixed] },
     transactionLimit: { type: Number, default: null },
+    forecastMonthsBack: { type: Number, min: 1, max: 12 },
     salaryDay: {
       type: Number,
       default: DEFAULT_SALARY_DAY,

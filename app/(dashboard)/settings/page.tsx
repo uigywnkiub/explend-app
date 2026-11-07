@@ -15,6 +15,7 @@ import {
   getCachedUserCategories,
   getCountDocuments,
   getCurrency,
+  getForecastMonthsBack,
   getSalaryDay,
   getTransactionLimit,
   signOutAccount,
@@ -49,6 +50,7 @@ async function SettingsPageContent() {
     transactionsCount,
     currency,
     userSalaryDay,
+    forecastMonthsBack,
     userCategoriesFromSettings,
     isAiFeaturesEnabled,
   ] = await Promise.all([
@@ -56,6 +58,7 @@ async function SettingsPageContent() {
     getCountDocuments(userId),
     getCurrency(userId),
     getSalaryDay(userId),
+    getForecastMonthsBack(userId),
     getCachedUserCategories(userId),
     getAiFeaturesEnabled(userId),
   ])
@@ -103,18 +106,6 @@ async function SettingsPageContent() {
                 localStorageKey={LOCAL_STORAGE_KEY.IS_ENABLE_CHANGELOG}
               />
             </div>
-
-            <Divider className='my-4' />
-
-            <SectionItem
-              title='Forecast Months'
-              subtitle='Choose how many complete past months to use for the forecast.'
-            >
-              <div className='max-w-xs'>
-                <Spacer y={2} />
-                <ForecastMonthsBack />
-              </div>
-            </SectionItem>
 
             <Divider className='my-4' />
 
@@ -171,6 +162,21 @@ async function SettingsPageContent() {
                   userId={userId}
                   userTransactionLimit={userTransactionLimit}
                   transactionsCount={transactionsCount}
+                />
+              </div>
+            </SectionItem>
+
+            <Divider className='my-4' />
+
+            <SectionItem
+              title='Forecast Months'
+              subtitle='Choose how many complete past months to use for the forecast.'
+            >
+              <div className='max-w-xs'>
+                <Spacer y={2} />
+                <ForecastMonthsBack
+                  userId={userId}
+                  forecastMonthsBack={forecastMonthsBack}
                 />
               </div>
             </SectionItem>

@@ -37,6 +37,7 @@ import {
   getCachedChartTransactionsData,
   getCachedCountDocumentsData,
   getCachedCurrencyData,
+  getCachedForecastMonthsBackData,
   getCachedMonthlyReportTransactionsData,
   getCachedRecentTransactionsForLimitsData,
   getCachedSalaryDayData,
@@ -209,6 +210,28 @@ export async function updateTransactionLimit(
   } catch (err) {
     throw err
   }
+}
+
+export async function updateForecastMonthsBack(
+  userId: TUserId,
+  forecastMonthsBack: number,
+): Promise<void> {
+  if (!userId) throw new Error('User ID is required to update forecast months.')
+  if (
+    !Number.isInteger(forecastMonthsBack) ||
+    forecastMonthsBack < 1 ||
+    forecastMonthsBack > 12
+  ) {
+    throw new Error('Forecast months must be a whole number between 1 and 12.')
+  }
+
+  await dbConnect()
+  await UserSettingsModel.updateOne(
+    { userId },
+    { $set: { forecastMonthsBack } },
+    { upsert: true },
+  )
+  revalidateUserSettings(userId)
 }
 
 export async function updateSalaryDay(
@@ -878,6 +901,9 @@ export async function getSalaryDay(
   userId: TUserId,
 ): Promise<TUserSettings['salaryDay']> {
   return getCachedSalaryDayData(userId)
+}
+export async function getForecastMonthsBack(userId: TUserId): Promise<number> {
+  return getCachedForecastMonthsBackData(userId)
 }
 export const getCachedSalaryDay = async (userId: TUserId) =>
   getCachedSalaryDayData(userId)

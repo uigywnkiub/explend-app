@@ -42,7 +42,6 @@ import {
   calculateMonthlyReportData,
   filterTransactions,
   filterTransactionsByDateRange,
-  FORECAST_MONTHS_BACK,
   getFirstAndLastTransactions,
 } from '@/app/lib/data'
 import {
@@ -85,6 +84,7 @@ type TProps = {
   transactions: TTransaction[]
   currency: TCurrency
   userSalaryDay: TUserSettings['salaryDay']
+  forecastMonthsBack: number
   isAiFeaturesEnabled: boolean
 }
 
@@ -92,6 +92,7 @@ function MonthlyReport({
   transactions,
   currency,
   userSalaryDay,
+  forecastMonthsBack,
   isAiFeaturesEnabled,
 }: TProps) {
   const [tipsDataAI, setTipsDataAI] = useState<TExpenseAdvice[] | null>(null)
@@ -101,10 +102,6 @@ function MonthlyReport({
 
   const [expenseTipsAIDataLocalStorageRaw, setExpenseTipsAIDataLocalStorage] =
     useLocalStorage(LOCAL_STORAGE_KEY.AI_EXPENSE_TIPS_DATA)
-  const [forecastMonthsBack = FORECAST_MONTHS_BACK] = useLocalStorage<number>(
-    LOCAL_STORAGE_KEY.FORECAST_MONTHS_BACK,
-    FORECAST_MONTHS_BACK,
-  )
   const isValidExpenseTipsAIDataLocalStorage = isValidArrayWithKeys(
     expenseTipsAIDataLocalStorageRaw,
     ['category', 'tip', 'savings'] satisfies readonly (keyof TExpenseAdvice)[],

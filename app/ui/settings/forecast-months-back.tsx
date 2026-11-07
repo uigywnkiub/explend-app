@@ -1,21 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { PiCalendarBlank, PiCalendarBlankFill } from 'react-icons/pi'
 
 import { Select, SelectItem } from '@heroui/react'
 import { haptic } from 'ios-haptics'
 
-import { LOCAL_STORAGE_KEY } from '@/config/constants/local-storage'
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
-import { FORECAST_MONTHS_BACK } from '@/app/lib/data'
-import {
-  getFromLocalStorage,
-  pluralize,
-  setInLocalStorage,
-} from '@/app/lib/helpers'
+import { updateForecastMonthsBack } from '@/app/lib/actions'
+import { pluralize } from '@/app/lib/helpers'
+import type { TUserId } from '@/app/lib/types'
 
 import { HoverableElement } from '../hoverables'
 
@@ -24,46 +20,44 @@ const MONTH_OPTIONS = Array.from({ length: 12 }, (_, idx) => ({
   months: idx + 1,
 }))
 
-export default function ForecastMonthsBack() {
-  const [monthsBack, setMonthsBack] = useState(FORECAST_MONTHS_BACK)
+type TProps = { userId: TUserId; forecastMonthsBack: number }
 
-  useEffect(() => {
-    const storedMonths = Number(
-      getFromLocalStorage(LOCAL_STORAGE_KEY.FORECAST_MONTHS_BACK),
-    )
-    if (
-      Number.isInteger(storedMonths) &&
-      storedMonths >= 1 &&
-      storedMonths <= 12
-    ) {
-      setMonthsBack(storedMonths)
+export default function ForecastMonthsBack({
+  userId,
+  forecastMonthsBack,
+}: TProps) {
+  const [monthsBack, setMonthsBack] = useState(forecastMonthsBack)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const onChange = async (selectedMonths: number) => {
+    setIsLoading(true)
+    try {
+      await updateForecastMonthsBack(userId, selectedMonths)
+      setMonthsBack(selectedMonths)
+      haptic.confirm()
+      toast.success('Forecast period updated.')
+    } catch (err) {
+      haptic.error()
+      toast.error('Failed to update forecast period.')
+      throw err
+    } finally {
+      setIsLoading(false)
     }
-  }, [])
+  }
 
   return (
     <Select
       isVirtualized={false}
       label='Months to analyze'
       items={MONTH_OPTIONS}
+      isLoading={isLoading}
       selectedKeys={new Set([String(monthsBack)])}
       onSelectionChange={(keys) => {
         if (keys === 'all') return
-
         const selectedMonths = Number(Array.from(keys)[0])
-        if (
-          Number.isInteger(selectedMonths) &&
-          selectedMonths >= 1 &&
-          selectedMonths <= 12 &&
-          selectedMonths !== monthsBack
-        ) {
+        if (Number.isInteger(selectedMonths) && selectedMonths !== monthsBack) {
           haptic()
-          setMonthsBack(selectedMonths)
-          setInLocalStorage(
-            LOCAL_STORAGE_KEY.FORECAST_MONTHS_BACK,
-            String(selectedMonths),
-          )
-          haptic.confirm()
-          toast.success('Forecast period updated.')
+          void onChange(selectedMonths)
         }
       }}
     >

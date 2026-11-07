@@ -13,6 +13,7 @@ import { DEFAULT_TRANSACTION_LIMIT } from '@/config/constants/navigation'
 import TransactionModel from '@/app/lib/models/transaction.model'
 import UserSettingsModel from '@/app/lib/models/user-settings.model'
 
+import { FORECAST_MONTHS_BACK } from './data'
 import dbConnect from './mongodb'
 import type {
   TBalance,
@@ -394,6 +395,23 @@ export async function getCachedSalaryDayData(
     .lean<{ salaryDay: TUserSettings['salaryDay'] }>()
 
   return userSettings ? userSettings.salaryDay : DEFAULT_SALARY_DAY
+}
+
+export async function getCachedForecastMonthsBackData(
+  userId: TUserId,
+): Promise<number> {
+  'use cache'
+  cacheLife('minutes')
+  cacheTag(getUserSettingsCacheTag(userId))
+
+  if (!userId) throw new Error('User ID is required to get forecast months.')
+
+  await dbConnect()
+  const userSettings = await UserSettingsModel.findOne({ userId })
+    .select('forecastMonthsBack -_id')
+    .lean<{ forecastMonthsBack?: number }>()
+
+  return userSettings?.forecastMonthsBack ?? FORECAST_MONTHS_BACK
 }
 
 export async function getCachedSubscriptionsData(

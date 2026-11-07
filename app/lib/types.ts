@@ -83,6 +83,7 @@ export type TUserSettings = {
   currency?: TCurrency
   pushSubscriptions?: TPushSubscription[]
   transactionLimit?: number | null
+  forecastMonthsBack?: number
   salaryDay?: number | null
   isAiFeaturesEnabled?: boolean
   createdAt: Date

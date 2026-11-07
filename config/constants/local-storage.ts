@@ -8,7 +8,6 @@ export const enum LOCAL_STORAGE_KEY {
   IS_POSITIVE_BALANCE = 'isPositiveBalance',
   IS_AUTO_SUBMIT = 'isAutoSubmit',
   IS_ENABLE_CHANGELOG = 'isEnableChangelog',
-  FORECAST_MONTHS_BACK = 'forecastMonthsBack',
 
   AI_EXPENSE_TIPS_DATA = 'AIExpenseTipsData',
   ATTEMPT_AI_EXPENSE_TIPS = 'attemptAIExpenseTips',
