@@ -66,215 +66,217 @@ async function SettingsPageContent() {
       <h1 className='mb-4 text-center text-2xl font-semibold md:mb-8'>
         {NAV_TITLE.SETTINGS}
       </h1>
-      <Section title='General' subtitle='Configure your general preferences.'>
-        <>
-          <div className='flex justify-between gap-2'>
-            <SectionItem
-              title='Automated Submission'
-              subtitle='Automatically submit receipt transactions for seamless processing.'
-            />
-            <LocalStorageSwitch
-              localStorageKey={LOCAL_STORAGE_KEY.IS_AUTO_SUBMIT}
-              isDisabled={!isAiFeaturesEnabled}
-            />
-          </div>
-
-          <Divider className='my-4' />
-
-          <div className='flex justify-between gap-2'>
-            <SectionItem
-              title='Mask Amounts'
-              subtitle='Mask your amounts with asterisks to keep them private.'
-            />
-            <LocalStorageSwitch
-              localStorageKey={LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN}
-            />
-          </div>
-
-          <Divider className='my-4' />
-
-          <div className='flex justify-between gap-2'>
-            <SectionItem
-              title='Changelog'
-              subtitle='Shows a popup with the latest commit message once a day whenever a new version is released.'
-            />
-            <LocalStorageSwitch
-              localStorageKey={LOCAL_STORAGE_KEY.IS_ENABLE_CHANGELOG}
-            />
-          </div>
-
-          <Divider className='my-4' />
-
-          <SectionItem
-            title='Forecast Months'
-            subtitle='Choose how many complete past months to use for the forecast.'
-          >
-            <div className='max-w-xs'>
-              <Spacer y={2} />
-              <ForecastMonthsBack />
-            </div>
-          </SectionItem>
-
-          <Divider className='my-4' />
-
-          <SectionItem
-            title='Theme Switcher'
-            subtitle='Select your favorite theme to give the app a new look that matches your style.'
-          >
-            <div className='max-w-xs'>
-              <Spacer y={2} />
-              <ThemeSwitcher />
-            </div>
-          </SectionItem>
-        </>
-      </Section>
-
-      <Section title='Account' subtitle='Change your account preferences.'>
-        <>
-          <div className='flex justify-between gap-2'>
-            <SectionItem
-              title={`${AI_NAME.FULL}`}
-              subtitle={`${AI_NAME.FULL} powers transaction suggestions, receipt scanning, bank import categorization, expense tips, changelog summaries, and more across the app.`}
-            />
-            <ExplendIntelligenceSwitch
-              userId={userId}
-              enabled={isAiFeaturesEnabled}
-            />
-          </div>
-
-          <Divider className='my-4' />
-
-          <SectionItem
-            title='Currency'
-            subtitle='Select your preferred currency. This will set the default currency for your app.'
-          >
-            <div className='max-w-xs'>
-              <Spacer y={2} />
-              <Currency
-                userId={userId}
-                currency={currency}
-                transactionsCount={transactionsCount}
+      <div className='rounded-medium bg-content1 p-4 shadow-xs md:p-8'>
+        <Section title='General' subtitle='Configure your general preferences.'>
+          <>
+            <div className='flex justify-between gap-2'>
+              <SectionItem
+                title='Automated Submission'
+                subtitle='Automatically submit receipt transactions for seamless processing.'
+              />
+              <LocalStorageSwitch
+                localStorageKey={LOCAL_STORAGE_KEY.IS_AUTO_SUBMIT}
+                isDisabled={!isAiFeaturesEnabled}
               />
             </div>
-          </SectionItem>
 
-          <Divider className='my-4' />
+            <Divider className='my-4' />
 
-          <SectionItem
-            title='Transactions Limit'
-            subtitle='Select how many transactions you would like to see per page. This setting helps you manage the amount of data displayed and can improve loading times.'
-          >
-            <div className='max-w-xs'>
-              <Spacer y={2} />
-              <TransactionLimit
-                userId={userId}
-                userTransactionLimit={userTransactionLimit}
-                transactionsCount={transactionsCount}
+            <div className='flex justify-between gap-2'>
+              <SectionItem
+                title='Mask Amounts'
+                subtitle='Mask your amounts with asterisks to keep them private.'
+              />
+              <LocalStorageSwitch
+                localStorageKey={LOCAL_STORAGE_KEY.IS_AMOUNT_HIDDEN}
               />
             </div>
-          </SectionItem>
 
-          <Divider className='my-4' />
+            <Divider className='my-4' />
 
-          <SectionItem
-            title='Salary Day'
-            subtitle='Select the day of the month on which you receive your salary. This will help you track expenses/incomes in a calendar, etc.'
-          >
-            <div className='max-w-xs'>
-              <Spacer y={2} />
-              <SalaryDay
-                userId={userId}
-                transactionsCount={transactionsCount}
-                userSalaryDay={userSalaryDay}
+            <div className='flex justify-between gap-2'>
+              <SectionItem
+                title='Changelog'
+                subtitle='Shows a popup with the latest commit message once a day whenever a new version is released.'
+              />
+              <LocalStorageSwitch
+                localStorageKey={LOCAL_STORAGE_KEY.IS_ENABLE_CHANGELOG}
               />
             </div>
-          </SectionItem>
 
-          <Divider className='my-4' />
+            <Divider className='my-4' />
 
-          <SectionItem
-            title='Exit Account'
-            subtitle='Signing out of your account will end your current session. You will need to sign in again or switch accounts.'
-          >
-            <div className='max-w-md'>
-              <Spacer y={2} />
-              <User withoutPopover />
-              <Spacer y={2} />
-              <form action={signOutAccount}>
-                <ExitAccount />
-              </form>
-            </div>
-          </SectionItem>
-        </>
-      </Section>
-
-      <Section
-        title='Danger Zone'
-        subtitle='This section contains actions that may have severe consequences for your account or data.'
-        withDivider={false}
-        titleClassName='text-danger'
-      >
-        <>
-          <SectionItem
-            title='Management Transactions'
-            subtitle='Download your settings and transactions as JSON or upload a backup to restore missing data.'
-          >
-            <>
-              <div className='my-2 flex flex-col gap-2'>
-                <InfoText
-                  text={`You can upload nearly 10,000 transactions or a JSON file with a maximum size of ${DEFAULT_SERVER_ACTION_BODY_SIZE_LIMIT.toString().replace('mb', ' MB')}.`}
-                  withDoubleAsterisk
-                />
-                <InfoText text='10,000 transactions ≈ 10 years of data.' />
-                <InfoText text='You may upload an unlimited number of dumps, as long as each one contains unique data.' />
-              </div>
-              <div className='max-w-md'>
+            <SectionItem
+              title='Forecast Months'
+              subtitle='Choose how many complete past months to use for the forecast.'
+            >
+              <div className='max-w-xs'>
                 <Spacer y={2} />
-                <DownloadUploadTransactions userId={userId} />
+                <ForecastMonthsBack />
               </div>
-            </>
-          </SectionItem>
-          <Divider className='my-4' />
-          <SectionItem
-            title='Import Bank Transactions'
-            subtitle='Import your transaction statement from a Monobank or Privat24 export file.'
-          >
-            <>
-              <div className='my-2 flex flex-col gap-2'>
-                <InfoText
-                  withDoubleAsterisk
-                  text='Currently supports bank statements in Ukrainian language.'
-                />
-                <InfoText
-                  text={
-                    isAiFeaturesEnabled
-                      ? `Categories will be automatically assigned by transaction description using ${AI_NAME.FULL} or an MCC code.`
-                      : 'Categories will be assigned using an MCC code when available.'
-                  }
-                />
-                <InfoText text='After completion, review your imported transactions.' />
-              </div>
-              <div className='max-w-md'>
+            </SectionItem>
+
+            <Divider className='my-4' />
+
+            <SectionItem
+              title='Theme Switcher'
+              subtitle='Select your favorite theme to give the app a new look that matches your style.'
+            >
+              <div className='max-w-xs'>
                 <Spacer y={2} />
-                <ImportBankTransactions
+                <ThemeSwitcher />
+              </div>
+            </SectionItem>
+          </>
+        </Section>
+
+        <Section title='Account' subtitle='Change your account preferences.'>
+          <>
+            <div className='flex justify-between gap-2'>
+              <SectionItem
+                title={`${AI_NAME.FULL}`}
+                subtitle={`${AI_NAME.FULL} powers transaction suggestions, receipt scanning, bank import categorization, expense tips, changelog summaries, and more across the app.`}
+              />
+              <ExplendIntelligenceSwitch
+                userId={userId}
+                enabled={isAiFeaturesEnabled}
+              />
+            </div>
+
+            <Divider className='my-4' />
+
+            <SectionItem
+              title='Currency'
+              subtitle='Select your preferred currency. This will set the default currency for your app.'
+            >
+              <div className='max-w-xs'>
+                <Spacer y={2} />
+                <Currency
                   userId={userId}
-                  userCategories={userCategories}
+                  currency={currency}
+                  transactionsCount={transactionsCount}
                 />
               </div>
-            </>
-          </SectionItem>
-          <Divider className='my-4' />
-          <SectionItem
-            title='Delete Account'
-            subtitle='Removing your account will delete all your data and sign out.'
-          >
-            <div className='max-w-md'>
-              <Spacer y={2} />
-              <DeleteAccount userId={userId} />
-            </div>
-          </SectionItem>
-        </>
-      </Section>
+            </SectionItem>
+
+            <Divider className='my-4' />
+
+            <SectionItem
+              title='Transactions Limit'
+              subtitle='Select how many transactions you would like to see per page. This setting helps you manage the amount of data displayed and can improve loading times.'
+            >
+              <div className='max-w-xs'>
+                <Spacer y={2} />
+                <TransactionLimit
+                  userId={userId}
+                  userTransactionLimit={userTransactionLimit}
+                  transactionsCount={transactionsCount}
+                />
+              </div>
+            </SectionItem>
+
+            <Divider className='my-4' />
+
+            <SectionItem
+              title='Salary Day'
+              subtitle='Select the day of the month on which you receive your salary. This will help you track expenses/incomes in a calendar, etc.'
+            >
+              <div className='max-w-xs'>
+                <Spacer y={2} />
+                <SalaryDay
+                  userId={userId}
+                  transactionsCount={transactionsCount}
+                  userSalaryDay={userSalaryDay}
+                />
+              </div>
+            </SectionItem>
+
+            <Divider className='my-4' />
+
+            <SectionItem
+              title='Exit Account'
+              subtitle='Signing out of your account will end your current session. You will need to sign in again or switch accounts.'
+            >
+              <div className='max-w-md'>
+                <Spacer y={2} />
+                <User withoutPopover />
+                <Spacer y={2} />
+                <form action={signOutAccount}>
+                  <ExitAccount />
+                </form>
+              </div>
+            </SectionItem>
+          </>
+        </Section>
+
+        <Section
+          title='Danger Zone'
+          subtitle='This section contains actions that may have severe consequences for your account or data.'
+          withDivider={false}
+          titleClassName='text-danger'
+        >
+          <>
+            <SectionItem
+              title='Management Transactions'
+              subtitle='Download your settings and transactions as JSON or upload a backup to restore missing data.'
+            >
+              <>
+                <div className='my-2 flex flex-col gap-2'>
+                  <InfoText
+                    text={`You can upload nearly 10,000 transactions or a JSON file with a maximum size of ${DEFAULT_SERVER_ACTION_BODY_SIZE_LIMIT.toString().replace('mb', ' MB')}.`}
+                    withDoubleAsterisk
+                  />
+                  <InfoText text='10,000 transactions ≈ 10 years of data.' />
+                  <InfoText text='You may upload an unlimited number of dumps, as long as each one contains unique data.' />
+                </div>
+                <div className='max-w-md'>
+                  <Spacer y={2} />
+                  <DownloadUploadTransactions userId={userId} />
+                </div>
+              </>
+            </SectionItem>
+            <Divider className='my-4' />
+            <SectionItem
+              title='Import Bank Transactions'
+              subtitle='Import your transaction statement from a Monobank or Privat24 export file.'
+            >
+              <>
+                <div className='my-2 flex flex-col gap-2'>
+                  <InfoText
+                    withDoubleAsterisk
+                    text='Currently supports bank statements in Ukrainian language.'
+                  />
+                  <InfoText
+                    text={
+                      isAiFeaturesEnabled
+                        ? `Categories will be automatically assigned by transaction description using ${AI_NAME.FULL} or an MCC code.`
+                        : 'Categories will be assigned using an MCC code when available.'
+                    }
+                  />
+                  <InfoText text='After completion, review your imported transactions.' />
+                </div>
+                <div className='max-w-md'>
+                  <Spacer y={2} />
+                  <ImportBankTransactions
+                    userId={userId}
+                    userCategories={userCategories}
+                  />
+                </div>
+              </>
+            </SectionItem>
+            <Divider className='my-4' />
+            <SectionItem
+              title='Delete Account'
+              subtitle='Removing your account will delete all your data and sign out.'
+            >
+              <div className='max-w-md'>
+                <Spacer y={2} />
+                <DeleteAccount userId={userId} />
+              </div>
+            </SectionItem>
+          </>
+        </Section>
+      </div>
     </div>
   )
 

@@ -593,7 +593,7 @@ function Categories({
           />
         </div>
       )}
-      <div className='mx-auto flex max-w-md gap-2'>
+      <div className='mx-auto flex max-w-md flex-col gap-2 md:flex-row'>
         <div className='flex-1'>
           <Button
             isDisabled={categories.length === 0 || isSavingOrder}
