@@ -23,6 +23,7 @@ import {
   Select,
   SelectItem,
   SelectSection,
+  Spacer,
   Switch,
 } from '@heroui/react'
 import { haptic } from 'ios-haptics'
@@ -319,12 +320,13 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
         </>
       )}
       <section className='rounded-medium bg-content1 mx-auto w-full max-w-3xl p-4 shadow-xs md:p-8'>
-        <div className='mb-5'>
+        <div>
           <h2 className='text-xl font-semibold'>Chart options</h2>
-          <p className='text-default-500 text-sm'>
+          <p className='text-default-500'>
             Customize what appears in your chart.
           </p>
         </div>
+        <Spacer y={4} />
         <CategoryExcludeSelect
           categories={categories}
           excludedCategories={excludedCategories}
