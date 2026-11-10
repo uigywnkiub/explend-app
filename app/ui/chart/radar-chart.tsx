@@ -63,6 +63,8 @@ type TCategoryExcludeSelectProps = {
   categories: TCategories[]
   excludedCategories: Set<string>
   availableCategories: Set<string>
+  amountsByCategory: Map<string, { income: number; expense: number }>
+  currency: TCurrency
   onSelectionChange: (keys: Set<string>) => void
 }
 
@@ -70,6 +72,8 @@ function CategoryExcludeSelect({
   categories,
   excludedCategories,
   availableCategories,
+  amountsByCategory,
+  currency,
   onSelectionChange,
 }: TCategoryExcludeSelectProps) {
   const categorySections = categories
@@ -130,7 +134,31 @@ function CategoryExcludeSelect({
             }}
           >
             {category.items.map((item) => (
-              <SelectItem key={item} textValue={item}>
+              <SelectItem
+                key={item}
+                textValue={item}
+                endContent={(() => {
+                  const amounts = amountsByCategory.get(item)
+                  if (!amounts) return null
+
+                  return (
+                    <div className='text-default-500 flex flex-col items-end gap-1 text-xs'>
+                      {amounts.expense > 0 && (
+                        <span>
+                          Expense by {getFormattedCurrency(amounts.expense)}{' '}
+                          {currency.sign}
+                        </span>
+                      )}
+                      {amounts.income > 0 && (
+                        <span>
+                          Income by {getFormattedCurrency(amounts.income)}{' '}
+                          {currency.sign}
+                        </span>
+                      )}
+                    </div>
+                  )
+                })()}
+              >
                 {item}
               </SelectItem>
             ))}
@@ -171,6 +199,15 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
   const availableCategories = new Set(
     chartTransactionsRaw.map(({ category }) => category),
   )
+  const amountsByCategory = new Map<
+    string,
+    { income: number; expense: number }
+  >()
+  chartTransactionsRaw.forEach(({ category, amount, isIncome }) => {
+    const amounts = amountsByCategory.get(category) ?? { income: 0, expense: 0 }
+    amounts[isIncome ? 'income' : 'expense'] += parseFloat(amount)
+    amountsByCategory.set(category, amounts)
+  })
   const [excludedCategories, setExcludedCategories] = useState<Set<string>>(
     new Set(),
   )
@@ -331,6 +368,8 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
           categories={categories}
           excludedCategories={excludedCategories}
           availableCategories={availableCategories}
+          amountsByCategory={amountsByCategory}
+          currency={currency}
           onSelectionChange={setExcludedCategories}
         />
         <Divider />
