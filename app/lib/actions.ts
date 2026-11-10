@@ -1031,6 +1031,28 @@ export async function getSubscriptions(
   return getCachedSubscriptionsData(userId)
 }
 
+export async function setSubscriptionPaused(
+  userId: TUserId,
+  _id: TTransaction['id'],
+  isPaused: boolean,
+): Promise<void> {
+  if (!userId) throw new Error('User ID is required to pause subscriptions.')
+  if (!_id) throw new Error('_id is required to pause subscription.')
+
+  await dbConnect()
+  await UserSettingsModel.updateOne(
+    { userId, 'subscriptions._id': _id },
+    {
+      $set: {
+        'subscriptions.$.isPaused': isPaused,
+        'subscriptions.$.pausedAt': isPaused ? new Date().toISOString() : null,
+      },
+    },
+  )
+  revalidateUserSettings(userId)
+  revalidatePath(ROUTE.SUBSCRIPTIONS)
+}
+
 export async function editSubscription(
   userId: TUserId,
   _id: TTransaction['id'],

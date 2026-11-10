@@ -59,7 +59,11 @@ export async function GET(req: NextRequest) {
         getUserPushSubscriptions(userId),
       ])
     const eligibleSubs = subscriptions.filter((s) => {
-      return s.autoRenew === true && Number(s.renewDay) === todayDay
+      return (
+        s.autoRenew === true &&
+        s.isPaused !== true &&
+        Number(s.renewDay) === todayDay
+      )
     })
 
     for (const sub of eligibleSubs) {

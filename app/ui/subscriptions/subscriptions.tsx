@@ -41,6 +41,7 @@ import {
   deleteSubscription,
   editSubscription,
   resetAllSubscriptions,
+  setSubscriptionPaused,
 } from '@/app/lib/actions'
 import { getTransactionsByCurrMonth } from '@/app/lib/data'
 import {
@@ -74,6 +75,7 @@ export const enum DROPDOWN_KEY {
   ADD = 'add',
   EDIT = 'edit',
   DELETE = 'delete',
+  TOGGLE_PAUSE = 'toggle-pause',
 }
 
 type TProps = {
@@ -342,6 +344,34 @@ export default function Subscriptions({
     }
   }
 
+  const onToggleSubscriptionPause = async (subscription: TSubscriptions) => {
+    const isPaused = !subscription.isPaused
+    const pausedAt = isPaused ? new Date().toISOString() : undefined
+    setSubscriptionsDataState((current) =>
+      current.map((item) =>
+        item._id === subscription._id ? { ...item, isPaused, pausedAt } : item,
+      ),
+    )
+    try {
+      await setSubscriptionPaused(userId, subscription._id, isPaused)
+      toast.success(isPaused ? 'Subscription paused.' : 'Subscription resumed.')
+    } catch (err) {
+      setSubscriptionsDataState((current) =>
+        current.map((item) =>
+          item._id === subscription._id
+            ? {
+                ...item,
+                isPaused: subscription.isPaused,
+                pausedAt: subscription.pausedAt,
+              }
+            : item,
+        ),
+      )
+      toast.error('Failed to update subscription.')
+      throw err
+    }
+  }
+
   const onResetAllSubscriptions = async (onCloseResetCallback: () => void) => {
     setIsLoadingReset(true)
     try {
@@ -538,7 +568,7 @@ export default function Subscriptions({
           values={subscriptionsDataState.map((s) => s._id)}
           onReorder={onReorderSubscription}
           ref={reorderContainer}
-          className='space-y-4 select-none'
+          className='space-y-4'
         >
           <AnimatePresence>
             {subscriptionsDataState.map((s, idx) => (
@@ -554,6 +584,7 @@ export default function Subscriptions({
                 subscriptionTransactionsByCurrMonth={
                   subscriptionTransactionsByCurrMonth
                 }
+                isPaused={Boolean(s.isPaused)}
                 onAction={(key) => {
                   const currSubscription = getCurrSubscription(s._id)
                   if (!currSubscription)
@@ -599,6 +630,9 @@ export default function Subscriptions({
                   }
                   if (key === DROPDOWN_KEY.EDIT) onOpenEdit()
                   if (key === DROPDOWN_KEY.DELETE) onOpenDelete()
+                  if (key === DROPDOWN_KEY.TOGGLE_PAUSE) {
+                    onToggleSubscriptionPause(s)
+                  }
                 }}
               />
             ))}
@@ -608,6 +642,7 @@ export default function Subscriptions({
         <div className='mt-4 flex flex-col gap-1 text-left md:mt-8'>
           <InfoText text='You can add each subscription to transactions as an expense.' />
           <InfoText text='The green check icon indicates a subscription has been added this month.' />
+          <InfoText text='Paused subscriptions will not renew automatically until resumed.' />
         </div>
       </div>
 

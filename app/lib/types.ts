@@ -73,6 +73,8 @@ export type TSubscriptions = {
   note?: string
   autoRenew?: boolean
   renewDay?: number
+  isPaused?: boolean
+  pausedAt?: string
 }
 
 export type TUserSettings = {

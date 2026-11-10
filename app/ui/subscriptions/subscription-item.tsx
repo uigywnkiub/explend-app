@@ -5,6 +5,10 @@ import {
   PiDotsThreeOutlineVerticalFill,
   PiNotePencil,
   PiNotePencilFill,
+  PiPause,
+  PiPauseFill,
+  PiPlay,
+  PiPlayFill,
   PiPlus,
   PiPlusFill,
   PiRepeat,
@@ -69,6 +73,7 @@ type TProps = {
   isReordering: boolean
   subscriptionTransactionsByCurrMonth: TTransaction[]
   onAction: (key: string) => void
+  isPaused: boolean
 }
 
 function SubscriptionItem({
@@ -81,10 +86,47 @@ function SubscriptionItem({
   isReordering,
   subscriptionTransactionsByCurrMonth,
   onAction,
+  isPaused,
 }: TProps) {
   const dragControls = useDragControls()
 
-  const { _id, category, description, amount, note, autoRenew, renewDay } = s
+  const {
+    _id,
+    category,
+    description,
+    amount,
+    note,
+    autoRenew,
+    renewDay,
+    pausedAt,
+  } = s
+
+  const nextRenewalDate = (() => {
+    if (!autoRenew || !renewDay) return null
+
+    const today = new Date()
+    const renewalDate = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      renewDay,
+    )
+
+    if (
+      renewalDate <
+      new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    ) {
+      renewalDate.setMonth(renewalDate.getMonth() + 1)
+    }
+
+    return new Intl.DateTimeFormat('en', {
+      month: 'long',
+      day: 'numeric',
+      year:
+        renewalDate.getFullYear() !== today.getFullYear()
+          ? 'numeric'
+          : undefined,
+    }).format(renewalDate)
+  })()
 
   const isChangedCategoryName = changedCategoryNames.includes(
     getCategoryWithoutEmoji(category),
@@ -210,6 +252,22 @@ function SubscriptionItem({
                 {note}
               </p>
             )}
+            {nextRenewalDate && !isPaused && (
+              <p className='text-default-500 text-left text-sm'>
+                Renews {nextRenewalDate}
+              </p>
+            )}
+            {isPaused && (
+              <p className='text-warning text-left text-sm'>
+                Paused
+                {pausedAt &&
+                  ` ${new Intl.DateTimeFormat('en', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                  }).format(new Date(pausedAt))}`}
+              </p>
+            )}
           </div>
         </div>
         <div className='flex items-center gap-2'>
@@ -292,6 +350,42 @@ function SubscriptionItem({
                 >
                   Edit
                 </DropdownItem>
+              </DropdownSection>
+              <DropdownSection title='Auto-renewal'>
+                {isPaused ? (
+                  <DropdownItem
+                    key={DROPDOWN_KEY.TOGGLE_PAUSE}
+                    description='Restarts automatic renewal'
+                    classNames={{ description: 'text-default-500' }}
+                    startContent={
+                      <HoverableElement
+                        uKey={DROPDOWN_KEY.TOGGLE_PAUSE}
+                        element={<PiPlay size={DEFAULT_ICON_SIZE} />}
+                        hoveredElement={<PiPlayFill size={DEFAULT_ICON_SIZE} />}
+                      />
+                    }
+                  >
+                    Resume
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem
+                    key={DROPDOWN_KEY.TOGGLE_PAUSE}
+                    isDisabled={!autoRenew}
+                    description='Stops automatic renewal'
+                    classNames={{ description: 'text-default-500' }}
+                    startContent={
+                      <HoverableElement
+                        uKey={DROPDOWN_KEY.TOGGLE_PAUSE}
+                        element={<PiPause size={DEFAULT_ICON_SIZE} />}
+                        hoveredElement={
+                          <PiPauseFill size={DEFAULT_ICON_SIZE} />
+                        }
+                      />
+                    }
+                  >
+                    Pause
+                  </DropdownItem>
+                )}
               </DropdownSection>
               <DropdownSection title='Danger zone'>
                 <DropdownItem
