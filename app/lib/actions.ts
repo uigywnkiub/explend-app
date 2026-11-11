@@ -756,6 +756,7 @@ export async function updateCategories(
   userId: TUserId,
   subjectName: TCategories['subject'],
   updatedCategories: Partial<TCategories>,
+  transactionCategoryRename?: { from: string; to: string; migrate: boolean },
 ): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to update categories.')
@@ -769,6 +770,13 @@ export async function updateCategories(
 
   try {
     await dbConnect()
+    if (transactionCategoryRename?.migrate) {
+      await TransactionModel.updateMany(
+        { userId, category: transactionCategoryRename.from },
+        { $set: { category: transactionCategoryRename.to } },
+      )
+      revalidateUserTransactions(userId)
+    }
     const userCategories = await getUserSettingsCategories(userId)
     // If the category's items are empty, delete the category.
     if (updatedCategories.items && updatedCategories.items.length === 0) {
@@ -798,6 +806,16 @@ export async function updateCategories(
   } catch (err) {
     throw err
   }
+}
+
+export async function getCategoryTransactionCount(
+  userId: TUserId,
+  category: string,
+): Promise<number> {
+  if (!userId || !category) return 0
+  await dbConnect()
+
+  return TransactionModel.countDocuments({ userId, category })
 }
 
 export async function resetCategories(

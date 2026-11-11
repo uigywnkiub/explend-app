@@ -28,7 +28,11 @@ import { haptic } from 'ios-haptics'
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 import { ANCHOR_ROUTE } from '@/config/constants/routes'
 
-import { resetCategories, updateCategories } from '@/app/lib/actions'
+import {
+  getCategoryTransactionCount,
+  resetCategories,
+  updateCategories,
+} from '@/app/lib/actions'
 import {
   deepCloneCategories,
   getUniqueCategoriesFromDefaults,
@@ -110,6 +114,7 @@ function Categories({
   const [editingItemIndex, setEditingItemIndex] =
     useState<TEditingItemIndex | null>(null)
   const [newItemName, setNewItemName] = useState('')
+  const [editingOriginalCategory, setEditingOriginalCategory] = useState('')
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [isLoading, setIsLoading] = useState<TCategoriesLoading>({
     subject: false,
@@ -127,6 +132,14 @@ function Categories({
     itemName: string
     itemEmoji: string
   } | null>(null)
+  const [pendingCategoryRename, setPendingCategoryRename] = useState<{
+    oldCategory: string
+    newCategory: string
+    categoryIndex: number
+    data: Partial<TCategories>
+  } | null>(null)
+  const [isRenameOpen, setIsRenameOpen] = useState(false)
+  const [renameTransactionCount, setRenameTransactionCount] = useState(0)
 
   const originalUserCategories = useMemo(
     () => deepCloneCategories(userCategories),
@@ -204,6 +217,7 @@ function Categories({
       if (!item) return
 
       if (item.__isPlaceholder) {
+        setEditingOriginalCategory('')
         // Replace placeholder with a temporary new editable item and mark it as __isNew.
         updateCategoriesState((prev) => {
           const updated = [...prev]
@@ -230,6 +244,7 @@ function Categories({
       }
 
       // Normal edit for existing item.
+      setEditingOriginalCategory(`${item.emoji} ${item.name}`)
       setEditingItemIndex({ categoryIndex, itemIndex })
       setNewItemName(currentItemName)
       setShowEmojiPicker(true)
@@ -268,9 +283,26 @@ function Categories({
 
   const onSaveItemClick = useCallback(
     async (categoryIndex: number, itemIndex: number) => {
-      const updatedCategories = [...categories]
+      const oldCategory = editingOriginalCategory
+      const updatedCategories = deepCloneCategories(categories)
       const oldItemName = updatedCategories[categoryIndex].items[itemIndex].name
       const _newItemName = capitalizeFirstLetter(newItemName).trim()
+
+      const duplicateItem = updatedCategories.some((category, catIndex) =>
+        category.items.some(
+          (item, index) =>
+            (catIndex !== categoryIndex || index !== itemIndex) &&
+            !item.__isPlaceholder &&
+            item.name.trim().toLocaleLowerCase() ===
+              _newItemName.toLocaleLowerCase(),
+        ),
+      )
+      if (duplicateItem) {
+        haptic.error()
+        toast.error('A category with this name already exists.')
+
+        return
+      }
 
       if (oldItemName === _newItemName && !isNewEmojiPick) {
         setEditingItemIndex(null)
@@ -292,6 +324,25 @@ function Categories({
         items: stripPlaceholder(updatedCategories)
           [categoryIndex].items.map(({ emoji, name }) => ({ emoji, name }))
           .filter((i) => Boolean(i.name)),
+      }
+
+      const newCategory = `${updatedCategories[categoryIndex].items[itemIndex].emoji} ${_newItemName}`
+      const transactionCount = await getCategoryTransactionCount(
+        userId,
+        oldCategory,
+      )
+      if (transactionCount > 0 && oldCategory !== newCategory) {
+        setPendingCategoryRename({
+          oldCategory,
+          newCategory,
+          categoryIndex,
+          data: newCategoriesData,
+        })
+        setRenameTransactionCount(transactionCount)
+        setIsRenameOpen(true)
+        setIsLoading({ subject: false, item: false, reset: false })
+
+        return
       }
 
       setIsLoading({ subject: false, item: true, reset: false })
@@ -355,6 +406,7 @@ function Categories({
       categories,
       isNewEmojiPick,
       newItemName,
+      editingOriginalCategory,
       stripPlaceholder,
       updateCategoriesState,
       userId,
@@ -448,6 +500,58 @@ function Categories({
     setPendingDeletion(null)
     onDeleteClose()
   }, [onConfirmDeleteItem, onDeleteClose, pendingDeletion])
+
+  const finishPendingCategoryRename = useCallback(
+    async (migrate: boolean) => {
+      if (!pendingCategoryRename) return
+      const { oldCategory, newCategory, categoryIndex, data } =
+        pendingCategoryRename
+      setIsLoading({ subject: false, item: true, reset: false })
+      try {
+        await updateCategories(userId, data.subject!, data, {
+          from: oldCategory,
+          to: newCategory,
+          migrate,
+        })
+        haptic.confirm()
+        toast.success(
+          migrate
+            ? `Category updated in ${renameTransactionCount} transactions.`
+            : 'Category updated. Previous transactions kept their category.',
+        )
+        setCategories((prev) => {
+          const copy = [...prev]
+          const category = {
+            ...copy[categoryIndex],
+            items: copy[categoryIndex].items
+              .filter((item) => item.name.trim())
+              .map((item) => {
+                if (!item.__isNew) return item
+                const clean = { ...item }
+                delete clean.__isNew
+
+                return clean
+              }),
+          }
+          copy[categoryIndex] = withPlaceholder([category])[0]
+
+          return copy
+        })
+        setEditingItemIndex(null)
+        setNewItemName('')
+        setIsReordering(false)
+        orderBeforeReordering.current = null
+      } catch {
+        haptic.error()
+        toast.error('Failed to update category.')
+      } finally {
+        setIsLoading({ subject: false, item: false, reset: false })
+        setPendingCategoryRename(null)
+        setIsRenameOpen(false)
+      }
+    },
+    [pendingCategoryRename, renameTransactionCount, userId, withPlaceholder],
+  )
 
   const haveCategoriesChanged = useMemo(() => {
     const cleanedCategories = categories.map((c) => ({
@@ -571,6 +675,47 @@ function Categories({
 
   return (
     <>
+      <Modal
+        isOpen={isRenameOpen}
+        onOpenChange={setIsRenameOpen}
+        isDismissable={!isLoading.item}
+        hideCloseButton={isLoading.item}
+      >
+        <ModalContent>
+          <ModalHeader className='flex items-center gap-2'>
+            <PiWarningOctagonFill size={DEFAULT_ICON_SIZE} />
+            Update previous transactions?
+          </ModalHeader>
+          <ModalBody>
+            <p className='text-default-500 text-balance'>
+              {renameTransactionCount}{' '}
+              {pluralize(
+                renameTransactionCount,
+                'transaction uses',
+                'transactions use',
+              )}{' '}
+              with category “{pendingCategoryRename?.oldCategory}”. Choose
+              whether to update them to “{pendingCategoryRename?.newCategory}”.
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              variant='light'
+              isDisabled={isLoading.item}
+              onPress={() => finishPendingCategoryRename(false)}
+            >
+              Keep old category
+            </Button>
+            <Button
+              color='primary'
+              isLoading={isLoading.item}
+              onPress={() => finishPendingCategoryRename(true)}
+            >
+              Update transactions
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <div ref={reorderContainer}>
         {isReordering ? (
           <Reorder.Group
@@ -745,7 +890,7 @@ function Categories({
                     </div>
                   </div>
                 )}
-                <InfoText text='Once reset, you will need to manually update your previous transactions with previous categories to new default categories. You will see a badge on them.' />
+                <InfoText text='Once reset, if you have changed any categories in the past, you will need to manually update previous transactions that use those categories to the new default categories. You will see a badge on them.' />
               </ModalBody>
               <ModalFooter>
                 <Button
