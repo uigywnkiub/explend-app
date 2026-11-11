@@ -496,6 +496,10 @@ export async function importTransactions(
 
 export async function getDataDump(userId: TUserId) {
   if (!userId) throw new Error('User ID is required to export a data dump.')
+  const authenticatedUserId = (await auth())?.user?.email
+  if (!authenticatedUserId || authenticatedUserId !== userId) {
+    throw new Error('You are not authorized to export this data.')
+  }
   await dbConnect()
 
   const [transactions, settings] = await Promise.all([
@@ -529,6 +533,10 @@ export async function importDataDump(
   },
 ): Promise<TImportTransactions> {
   if (!userId) throw new Error('User ID is required to import a data dump.')
+  const authenticatedUserId = (await auth())?.user?.email
+  if (!authenticatedUserId || authenticatedUserId !== userId) {
+    throw new Error('You are not authorized to import data for this account.')
+  }
   await dbConnect()
 
   if (dump.usersettings) {
