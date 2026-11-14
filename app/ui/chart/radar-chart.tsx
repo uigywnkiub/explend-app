@@ -44,6 +44,7 @@ import {
   getBooleanFromLocalStorage,
   getCategoryMedalByAmount,
   getCategoryWithoutEmoji,
+  getEmojiFromCategory,
   getFormattedCurrency,
   pluralize,
 } from '@/app/lib/helpers'
@@ -182,6 +183,7 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
   const [isAmountHidden, setIsAmountHidden] = useState(false)
   const [isChartForExpensesOnly, setIsChartForExpensesOnly] = useState(false)
   const [areMedalsHidden, setAreMedalsHidden] = useState(true)
+  const [areCategoryNamesHidden, setAreCategoryNamesHidden] = useState(false)
 
   useEffect(() => {
     setIsPositiveBalance(
@@ -281,15 +283,23 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
                 dataKey={DATA_KEY.CATEGORY}
                 tick={(props) => {
                   const category = props.payload.value
-                  const medal = areMedalsHidden
-                    ? ''
-                    : getCategoryMedalByAmount(chartData, category)
+                  const medal =
+                    areMedalsHidden || areCategoryNamesHidden
+                      ? ''
+                      : getCategoryMedalByAmount(chartData, category)
+                  const categoryLabel = areCategoryNamesHidden
+                    ? getEmojiFromCategory(category)
+                    : category
 
                   return (
                     <HeroUITooltip content='Search by category' placement='top'>
                       <RechartText
                         {...props}
-                        className='fill-foreground hover:opacity-hover md:text-medium cursor-pointer text-sm outline-hidden'
+                        className={cn(
+                          'fill-foreground hover:opacity-hover md:text-medium cursor-pointer text-sm outline-hidden',
+                          areCategoryNamesHidden &&
+                            'text-lg! sm:text-xl! md:text-2xl!',
+                        )}
                         alignmentBaseline='central'
                         onClick={() =>
                           router.push(
@@ -299,7 +309,7 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
                           )
                         }
                       >
-                        {`${category}${medal ? ` ${medal}` : ''}`}
+                        {`${categoryLabel}${medal ? ` ${medal}` : ''}`}
                       </RechartText>
                     </HeroUITooltip>
                   )
@@ -405,6 +415,24 @@ function RadarChart({ transactionsRaw, categories, currency }: TProps) {
             onValueChange={(value) => {
               haptic()
               setIsChartForExpensesOnly(value)
+            }}
+          />
+        </div>
+        <Divider />
+        <div className='flex items-center justify-between gap-4 py-4'>
+          <div className='min-w-0'>
+            <h3 className='font-medium'>Hide category names</h3>
+            <p className='text-default-500 text-sm'>
+              Show only category emojis on the chart.
+            </p>
+          </div>
+          <Switch
+            aria-label='Hide category names'
+            color='primary'
+            isSelected={areCategoryNamesHidden}
+            onValueChange={(value) => {
+              haptic()
+              setAreCategoryNamesHidden(value)
             }}
           />
         </div>
