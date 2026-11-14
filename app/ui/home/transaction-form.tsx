@@ -244,6 +244,7 @@ function TransactionForm({
 
   const resumeToastId = 'resume'
   const autoProcessingToastId = 'auto-processing'
+  const receiptProcessingToastId = 'receipt-processing'
 
   const resetAllStates = useCallback(() => {
     setIsSwitchedOn(false)
@@ -271,14 +272,11 @@ function TransactionForm({
   const getReceiptAIData = async (compressedFile: File) => {
     if (!isAiFeaturesEnabled) return
 
+    toast.loading('Analyzing receipt...', { id: receiptProcessingToastId })
+
     try {
-      const res = await toast.promise(getAnalyzedReceiptAI(compressedFile), {
-        loading: 'Analyzing receipt...',
-        success: 'Receipt analyzed.',
-        error: (err) => {
-          return getAIErrorMessage(err, 'Failed to analyze receipt.')
-        },
-      })
+      const res = await getAnalyzedReceiptAI(compressedFile)
+      toast.success('Receipt analyzed.', { id: receiptProcessingToastId })
 
       const parsedRes: TReceipt[] = JSON.parse(res)
       const modifiedReceiptData = parsedRes.map((item) => ({
@@ -299,7 +297,9 @@ function TransactionForm({
         }, TOAST_DURATION)
       }
     } catch (err) {
-      throw err
+      toast.error(getAIErrorMessage(err, 'Failed to analyze receipt.'), {
+        id: receiptProcessingToastId,
+      })
     }
   }
 
@@ -313,25 +313,22 @@ function TransactionForm({
     if (!targetFile || !(targetFile instanceof File)) return
 
     toast.dismiss(resumeToastId)
+    toast.loading('Preparing receipt...', { id: receiptProcessingToastId })
 
     try {
       let processedFile: File | Blob = targetFile
 
       // Convert HEIC to jpeg
       if (targetFile.type === 'image/heic') {
+        toast.loading('Converting receipt...', {
+          id: receiptProcessingToastId,
+        })
         const heic2any = (await import('heic2any')).default
 
-        const convertedBlob = await toast.promise(
-          heic2any({
-            blob: targetFile,
-            toType: 'image/jpeg',
-          }),
-          {
-            loading: 'Converting receipt...',
-            success: 'Receipt converted.',
-            error: 'Failed to convert receipt.',
-          },
-        )
+        const convertedBlob = await heic2any({
+          blob: targetFile,
+          toType: 'image/jpeg',
+        })
 
         processedFile = new File(
           [convertedBlob as Blob],
@@ -340,7 +337,8 @@ function TransactionForm({
         )
       }
 
-      // Compress
+      // Compress after showing progress so large iPhone photos do not appear stuck.
+      toast.loading('Preparing receipt...', { id: receiptProcessingToastId })
       new Compressor(processedFile, {
         quality: 0.8,
         maxWidth: 800,
@@ -348,16 +346,20 @@ function TransactionForm({
         convertSize: 1000000,
         checkOrientation: false,
         success: (compressedFile: File) => {
-          getReceiptAIData(compressedFile)
+          void getReceiptAIData(compressedFile)
           setHasCurrOrPrevReceiptAIData(true)
           setAttemptResumeAIReceiptData(0)
         },
         error: (err) => {
-          throw err
+          toast.error(getAIErrorMessage(err, 'Failed to prepare receipt.'), {
+            id: receiptProcessingToastId,
+          })
         },
       })
     } catch (err) {
-      throw err
+      toast.error(getAIErrorMessage(err, 'Failed to prepare receipt.'), {
+        id: receiptProcessingToastId,
+      })
     }
   }
 
