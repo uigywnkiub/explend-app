@@ -30,6 +30,7 @@ import {
   format,
   startOfMonth,
   startOfToday,
+  subMonths,
 } from 'date-fns'
 import { haptic } from 'ios-haptics'
 
@@ -49,7 +50,7 @@ import {
   createSearchHrefWithKeyword,
   deepCompareArrays,
   formatDate,
-  getExpenseCategories,
+  getFormattedCurrency,
   isValidArrayWithKeys,
   pluralize,
   sortArrayByKeyByReferenceArray,
@@ -73,6 +74,14 @@ import WarningText from '../warning-text'
 import MonthPicker from './month-picker'
 import MonthlyReportData from './monthly-report-data'
 import TipsList from './tips-list'
+
+const normalizeSavingsNumberFormatting = (savings: string) =>
+  savings.replace(/\d[\d., ]*\d|\d+/g, (value) => {
+    const amount = Number(value.replace(/[.,\s]/g, ''))
+    if (!Number.isFinite(amount)) return value
+
+    return getFormattedCurrency(Math.round(amount), false)
+  })
 
 const ACCORDION_KEY = {
   EXPENSE: 'expense',
@@ -220,10 +229,30 @@ function MonthlyReport({
       () => calculateMonthlyReportData(income, expense),
       [income, expense],
     )
-  const expenseCategories = useMemo(
-    () => getExpenseCategories(expenseReportData, false),
-    [expenseReportData],
-  )
+  const expenseCategories = useMemo(() => {
+    const previousStart = startDate ? subMonths(startDate, 1) : null
+    const previousEnd = endDate ? subMonths(endDate, 1) : null
+    const previousExpenses =
+      previousStart && previousEnd
+        ? filterTransactions(
+            filterTransactionsByDateRange(
+              transactions,
+              previousStart,
+              previousEnd,
+            ),
+          ).expense
+        : []
+    const previousReport = calculateMonthlyReportData([], previousExpenses)
+
+    return expenseReportData.map((item) => ({
+      category: item.category,
+      spent: item.spent,
+      sharePercent: Number.parseFloat(item.percentage) || 0,
+      previousPeriodSpent: previousReport.expenseReportData.find(
+        (previous) => previous.category === item.category,
+      )?.spent,
+    }))
+  }, [expenseReportData, startDate, endDate, transactions])
   const isMissMatchLocalStorageAndCurrMonthExpenses = useMemo(
     () =>
       !deepCompareArrays(
@@ -266,7 +295,29 @@ function MonthlyReport({
     setIsLoadingTips(true)
     try {
       const res = await getExpenseTipsAI(expenseCategories, currency)
-      const parsedRes = JSON.parse(res)
+      const parsed: unknown = JSON.parse(res)
+      if (
+        !Array.isArray(parsed) ||
+        parsed.length !== expenseCategories.length ||
+        !parsed.every(
+          (item) =>
+            item &&
+            typeof item === 'object' &&
+            typeof item.category === 'string' &&
+            typeof item.tip === 'string' &&
+            typeof item.savings === 'string',
+        ) ||
+        new Set(parsed.map((item) => item.category)).size !== parsed.length ||
+        expenseCategories.some(
+          ({ category }) => !parsed.some((item) => item.category === category),
+        )
+      ) {
+        throw new Error('AI returned invalid expense tips data.')
+      }
+      const parsedRes = (parsed as TExpenseAdvice[]).map((tip) => ({
+        ...tip,
+        savings: normalizeSavingsNumberFormatting(tip.savings),
+      }))
       setTipsDataAI(parsedRes)
       setExpenseTipsAIDataLocalStorage(parsedRes)
       registerAttempt()
