@@ -286,103 +286,150 @@ function TransactionForm({
     setCategoryItemNameAI('')
   }, [hasReceiptAIData])
 
-  const getReceiptAIData = async (compressedFile: File) => {
-    if (!isAiFeaturesEnabled) return
+  const getReceiptAIData = useCallback(
+    async (compressedFile: File) => {
+      if (!isAiFeaturesEnabled) return
 
-    toast.loading('Analyzing receipt...', { id: receiptProcessingToastId })
+      toast.loading('Analyzing receipt...', { id: receiptProcessingToastId })
 
-    try {
-      const res = await getAnalyzedReceiptAI(compressedFile)
-      toast.success('Receipt analyzed.', { id: receiptProcessingToastId })
+      try {
+        const res = await getAnalyzedReceiptAI(compressedFile)
+        toast.success('Receipt analyzed.', { id: receiptProcessingToastId })
 
-      const parsedRes: TReceipt[] = JSON.parse(res)
-      const modifiedReceiptData = parsedRes.map((item) => ({
-        ...item,
-        date: typeof item.date === 'string' ? item.date : '',
-        amount: getFormattedCurrency(Math.round(item.amount), false),
-      }))
+        const parsedRes: TReceipt[] = JSON.parse(res)
+        const modifiedReceiptData = parsedRes.map((item) => ({
+          ...item,
+          date: typeof item.date === 'string' ? item.date : '',
+          amount: getFormattedCurrency(Math.round(item.amount), false),
+        }))
 
-      setReceiptAIData(modifiedReceiptData)
-      setReceiptAIDataLocalStorage(modifiedReceiptData)
-      if (modifiedReceiptData.length > 0) {
-        setDescription(modifiedReceiptData[0].description)
-        setAmount(modifiedReceiptData[0].amount)
-        const receiptDate = getReceiptDate(modifiedReceiptData[0].date)
-        setDate(receiptDate ?? today(getLocalTimeZone()))
-        setIsReceiptDateAIValid(Boolean(receiptDate))
-      } else {
-        setTimeout(() => {
-          haptic.error()
-          toast.error('Not a valid receipt.')
-          setHasCurrOrPrevReceiptAIData(false)
-        }, TOAST_DURATION)
-      }
-    } catch (err) {
-      toast.error(getAIErrorMessage(err, 'Failed to analyze receipt.'), {
-        id: receiptProcessingToastId,
-      })
-    }
-  }
-
-  const onUploadReceipt = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isAiFeaturesEnabled) return
-
-    onCloseImageModal()
-    setImageSrcs(['', '', ''])
-
-    const targetFile = e.target.files?.[0]
-    if (!targetFile || !(targetFile instanceof File)) return
-
-    toast.dismiss(resumeToastId)
-    toast.loading('Preparing receipt...', { id: receiptProcessingToastId })
-
-    try {
-      let processedFile: File | Blob = targetFile
-
-      // Convert HEIC to jpeg
-      if (targetFile.type === 'image/heic') {
-        toast.loading('Converting receipt...', {
+        setReceiptAIData(modifiedReceiptData)
+        setReceiptAIDataLocalStorage(modifiedReceiptData)
+        if (modifiedReceiptData.length > 0) {
+          setDescription(modifiedReceiptData[0].description)
+          setAmount(modifiedReceiptData[0].amount)
+          const receiptDate = getReceiptDate(modifiedReceiptData[0].date)
+          setDate(receiptDate ?? today(getLocalTimeZone()))
+          setIsReceiptDateAIValid(Boolean(receiptDate))
+        } else {
+          setTimeout(() => {
+            haptic.error()
+            toast.error('Not a valid receipt.')
+            setHasCurrOrPrevReceiptAIData(false)
+          }, TOAST_DURATION)
+        }
+      } catch (err) {
+        toast.error(getAIErrorMessage(err, 'Failed to analyze receipt.'), {
           id: receiptProcessingToastId,
         })
-        const heic2any = (await import('heic2any')).default
-
-        const convertedBlob = await heic2any({
-          blob: targetFile,
-          toType: 'image/jpeg',
-        })
-
-        processedFile = new File(
-          [convertedBlob as Blob],
-          targetFile.name.replace(/\.\w+$/, '.jpg'),
-          { type: 'image/jpeg' },
-        )
       }
+    },
+    [
+      isAiFeaturesEnabled,
+      setAmount,
+      setDescription,
+      setHasCurrOrPrevReceiptAIData,
+      setReceiptAIData,
+      setReceiptAIDataLocalStorage,
+    ],
+  )
 
-      // Compress after showing progress so large iPhone photos do not appear stuck.
+  const processReceiptFile = useCallback(
+    async (targetFile: File) => {
+      if (!isAiFeaturesEnabled) return
+
+      onCloseImageModal()
+      setImageSrcs(['', '', ''])
+
+      toast.dismiss(resumeToastId)
       toast.loading('Preparing receipt...', { id: receiptProcessingToastId })
-      new Compressor(processedFile, {
-        quality: 0.8,
-        maxWidth: 800,
-        maxHeight: 800,
-        convertSize: 1000000,
-        checkOrientation: false,
-        success: (compressedFile: File) => {
-          void getReceiptAIData(compressedFile)
-          setHasCurrOrPrevReceiptAIData(true)
-          setAttemptResumeAIReceiptData(0)
-        },
-        error: (err) => {
-          toast.error(getAIErrorMessage(err, 'Failed to prepare receipt.'), {
+
+      try {
+        let processedFile: File | Blob = targetFile
+
+        // Convert HEIC to jpeg
+        if (targetFile.type === 'image/heic') {
+          toast.loading('Converting receipt...', {
             id: receiptProcessingToastId,
           })
-        },
-      })
-    } catch (err) {
-      toast.error(getAIErrorMessage(err, 'Failed to prepare receipt.'), {
-        id: receiptProcessingToastId,
-      })
-    }
+          const heic2any = (await import('heic2any')).default
+
+          const convertedBlob = await heic2any({
+            blob: targetFile,
+            toType: 'image/jpeg',
+          })
+
+          processedFile = new File(
+            [convertedBlob as Blob],
+            targetFile.name.replace(/\.\w+$/, '.jpg'),
+            { type: 'image/jpeg' },
+          )
+        }
+
+        // Compress after showing progress so large iPhone photos do not appear stuck.
+        toast.loading('Preparing receipt...', { id: receiptProcessingToastId })
+        new Compressor(processedFile, {
+          quality: 0.8,
+          maxWidth: 800,
+          maxHeight: 800,
+          convertSize: 1000000,
+          checkOrientation: false,
+          success: (compressedFile: File) => {
+            void getReceiptAIData(compressedFile)
+            setHasCurrOrPrevReceiptAIData(true)
+            setAttemptResumeAIReceiptData(0)
+          },
+          error: (err) => {
+            toast.error(getAIErrorMessage(err, 'Failed to prepare receipt.'), {
+              id: receiptProcessingToastId,
+            })
+          },
+        })
+      } catch (err) {
+        toast.error(getAIErrorMessage(err, 'Failed to prepare receipt.'), {
+          id: receiptProcessingToastId,
+        })
+      }
+    },
+    [
+      getReceiptAIData,
+      isAiFeaturesEnabled,
+      onCloseImageModal,
+      setAttemptResumeAIReceiptData,
+      setHasCurrOrPrevReceiptAIData,
+    ],
+  )
+
+  const onUploadReceipt = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) void processReceiptFile(file)
+    e.target.value = ''
   }
+
+  useEffect(() => {
+    if (
+      !isOpenImageModal ||
+      !isAiFeaturesEnabled ||
+      selectedTab !== TAB_KEY.CAMERA
+    ) {
+      return
+    }
+
+    const onPaste = (event: ClipboardEvent) => {
+      const imageItem = Array.from(event.clipboardData?.items ?? []).find(
+        (item) => item.type.startsWith('image/'),
+      )
+      const imageFile = imageItem?.getAsFile()
+      if (!imageFile) return
+
+      event.preventDefault()
+      void processReceiptFile(imageFile)
+    }
+
+    window.addEventListener('paste', onPaste)
+
+    return () => window.removeEventListener('paste', onPaste)
+  }, [isOpenImageModal, isAiFeaturesEnabled, processReceiptFile, selectedTab])
 
   const onSubmitReceiptAIDataTransaction = useCallback(() => {
     const nextIndex = currReceiptAIDataIdx + 1
@@ -575,7 +622,7 @@ function TransactionForm({
         // May contain slightly different keys in t than ToastOptions.
         (t: ToastOptions) => {
           const isOverAttemptResumeAIReceiptData =
-            attemptResumeAIReceiptData === 3
+            attemptResumeAIReceiptData === 2
 
           return (
             <div className='text-center'>
@@ -794,8 +841,9 @@ function TransactionForm({
                       >
                         <div className='md:text-medium flex flex-col items-center gap-2 text-center text-sm text-balance'>
                           <p>
-                            Take or select a photo of your receipt to
-                            automatically fill in the transaction fields
+                            Take or select a receipt photo, or paste one from
+                            your clipboard to automatically fill in the
+                            transaction fields
                           </p>
                           <InfoText text='Attached images will not be included.' />
                         </div>
