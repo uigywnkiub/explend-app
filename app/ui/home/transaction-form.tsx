@@ -51,6 +51,7 @@ import {
 import {
   type DateValue,
   getLocalTimeZone,
+  parseDate,
   today,
 } from '@internationalized/date'
 import { useTheme } from '@wrksz/themes/client'
@@ -65,7 +66,7 @@ import {
   IS_PROD,
 } from '@/config/constants/main'
 import { MOTION_LIST } from '@/config/constants/motion'
-import { URL_REGEXP } from '@/config/constants/regexp'
+import { DATE_REGEXP, URL_REGEXP } from '@/config/constants/regexp'
 import { getResolvedToastCfg, TOAST_DURATION } from '@/config/constants/toast'
 
 import {
@@ -111,6 +112,20 @@ const TAB_KEY = {
   IMAGE: 'image',
 }
 
+const getReceiptDate = (value?: string) => {
+  if (!value || !DATE_REGEXP.test(value)) return null
+
+  try {
+    const parsedDate = parseDate(value)
+
+    return parsedDate.compare(today(getLocalTimeZone())) <= 0
+      ? parsedDate
+      : null
+  } catch {
+    return null
+  }
+}
+
 type TProps = {
   currency: TCurrency
   userCategories: TCategories[]
@@ -136,6 +151,7 @@ function TransactionForm({
     onClose: onCloseImageModal,
   } = useDisclosure()
   const [date, setDate] = useState<DateValue | null>(today(getLocalTimeZone()))
+  const [isReceiptDateAIValid, setIsReceiptDateAIValid] = useState(false)
   const [imageSrcs, setImageSrcs] = useState<
     NonNullable<TTransaction['images']>
   >(['', '', ''])
@@ -259,6 +275,7 @@ function TransactionForm({
     if (hasCurrOrPrevReceiptAIData) setReceiptAIData([])
     setImageSrcs(['', '', ''])
     setDate(today(getLocalTimeZone()))
+    setIsReceiptDateAIValid(false)
   }, [hasCurrOrPrevReceiptAIData])
 
   const resetAIRelatedStates = useCallback(() => {
@@ -281,6 +298,7 @@ function TransactionForm({
       const parsedRes: TReceipt[] = JSON.parse(res)
       const modifiedReceiptData = parsedRes.map((item) => ({
         ...item,
+        date: typeof item.date === 'string' ? item.date : '',
         amount: getFormattedCurrency(Math.round(item.amount), false),
       }))
 
@@ -289,6 +307,9 @@ function TransactionForm({
       if (modifiedReceiptData.length > 0) {
         setDescription(modifiedReceiptData[0].description)
         setAmount(modifiedReceiptData[0].amount)
+        const receiptDate = getReceiptDate(modifiedReceiptData[0].date)
+        setDate(receiptDate ?? today(getLocalTimeZone()))
+        setIsReceiptDateAIValid(Boolean(receiptDate))
       } else {
         setTimeout(() => {
           haptic.error()
@@ -408,6 +429,14 @@ function TransactionForm({
         setCurrReceiptAIDataIdx(nextIndex)
         setDescription(receiptAIData[nextIndex].description)
         setAmount(receiptAIData[nextIndex].amount)
+        const receiptDate = getReceiptDate(receiptAIData[nextIndex].date)
+        if (receiptDate) {
+          setDate(receiptDate)
+          setIsReceiptDateAIValid(true)
+        } else {
+          setDate(today(getLocalTimeZone()))
+          setIsReceiptDateAIValid(false)
+        }
       })
     } else {
       haptic()
@@ -592,6 +621,9 @@ function TransactionForm({
                     haptic()
                     setDescription(receiptAIData[0].description)
                     setAmount(receiptAIData[0].amount)
+                    const receiptDate = getReceiptDate(receiptAIData[0].date)
+                    setDate(receiptDate ?? today(getLocalTimeZone()))
+                    setIsReceiptDateAIValid(Boolean(receiptDate))
                     setHasCurrOrPrevReceiptAIData(true)
                     toast.dismiss(t.id)
                   }}
@@ -1159,24 +1191,34 @@ function TransactionForm({
                   </Select>
                 </Badge>
               </div>
-              <DatePicker
-                isDisabled={pending || isLoadingAIData}
-                granularity='day'
-                aria-label='Select a date'
-                label='Select a date'
-                value={date}
-                onChange={(val) => {
-                  haptic()
-                  setDate(val)
-                }}
-                maxValue={today(getLocalTimeZone())}
-                className='w-56'
+              <Badge
+                isInvisible={!isAiFeaturesEnabled || !isReceiptDateAIValid}
+                content={<AILogo asIcon />}
                 classNames={{
-                  selectorButton: 'text-default-500',
-                  inputWrapper:
-                    'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                  badge:
+                    'right-0 border-0 bg-transparent cursor-pointer md:hover:opacity-hover',
                 }}
-              />
+              >
+                <DatePicker
+                  isDisabled={pending || isLoadingAIData}
+                  granularity='day'
+                  aria-label='Select a date'
+                  label='Select a date'
+                  value={date}
+                  onChange={(val) => {
+                    haptic()
+                    setDate(val)
+                    setIsReceiptDateAIValid(false)
+                  }}
+                  maxValue={today(getLocalTimeZone())}
+                  className='w-56'
+                  classNames={{
+                    selectorButton: 'text-default-500',
+                    inputWrapper:
+                      'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                  }}
+                />
+              </Badge>
             </div>
             <div className='flex items-center justify-end self-center'>
               <p>

@@ -119,10 +119,14 @@ export const UploadReceiptAIModel = GenerativeAI.getGenerativeModel({
           amount: {
             type: SchemaType.NUMBER,
           },
+          date: {
+            type: SchemaType.STRING,
+          },
         },
         required: [
           'description',
           'amount',
+          'date',
         ] satisfies readonly (keyof TReceiptState)[],
       },
     },

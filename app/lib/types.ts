@@ -258,11 +258,13 @@ export type TForecastData = {
 export type TReceipt = {
   description: TTransaction['description']
   amount: number
+  date?: string
 }
 
 export type TReceiptState = {
   description: TTransaction['description']
   amount: TTransaction['amount']
+  date?: string
 }
 
 export type TCalculatedLimits = {
