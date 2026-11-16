@@ -860,6 +860,34 @@ export async function deleteTransaction(id: TTransaction['id']): Promise<void> {
   }
 }
 
+export async function deleteTransactions(
+  ids: TTransaction['id'][],
+): Promise<number> {
+  const userId = (await auth())?.user?.email
+  if (!userId) throw new Error('You must be signed in to delete transactions.')
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new Error('At least one transaction ID is required.')
+  }
+
+  const transactionIds = [
+    ...new Set(ids.filter((id) => typeof id === 'string' && id)),
+  ]
+  if (transactionIds.length === 0) {
+    throw new Error('At least one valid transaction ID is required.')
+  }
+
+  await dbConnect()
+  const result = await TransactionModel.deleteMany({
+    userId,
+    id: { $in: transactionIds },
+  })
+  revalidateUserTransactions(userId)
+  revalidatePath(ROUTE.HOME)
+  revalidatePath(ROUTE.TABLE)
+
+  return result.deletedCount
+}
+
 export async function deleteTestTransactions(userId: TUserId): Promise<void> {
   if (!userId) {
     throw new Error('User ID is required to delete test transactions.')

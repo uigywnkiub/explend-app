@@ -1,12 +1,29 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import { PiMagnifyingGlass, PiMagnifyingGlassFill } from 'react-icons/pi'
+import toast from 'react-hot-toast'
+import {
+  PiMagnifyingGlass,
+  PiMagnifyingGlassFill,
+  PiNotePencil,
+  PiNotePencilFill,
+  PiTrash,
+  PiTrashFill,
+  PiWarningOctagonFill,
+} from 'react-icons/pi'
+
+import { useRouter } from 'next/navigation'
 
 import {
+  Button,
   Chip,
   Input,
   Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Table,
   TableBody,
   TableCell,
@@ -14,11 +31,14 @@ import {
   TableHeader,
   TableRow,
   Tooltip,
+  useDisclosure,
 } from '@heroui/react'
 import { SortIcon } from '@heroui/shared-icons'
+import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
 
+import { deleteTransactions } from '@/app/lib/actions'
 import { getTransactionsTotals } from '@/app/lib/data'
 
 import {
@@ -114,13 +134,23 @@ type TSortDescriptor = {
 }
 
 export default function TransactionTable({ transactions, currency }: TProps) {
+  const router = useRouter()
   const [filterValue, setFilterValue] = useState('')
+  const [isEditingSelection, setIsEditingSelection] = useState(false)
+  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
+  const {
+    isOpen: isDeleteModalOpen,
+    onOpen: onOpenDeleteModal,
+    onClose: onCloseDeleteModal,
+    onOpenChange: onDeleteModalOpenChange,
+  } = useDisclosure()
   const [sortDescriptor, setSortDescriptor] = useState<TSortDescriptor>({
     column: COLUMN_KEY.DATE,
     direction: 'descending',
   })
 
-  const hasSearchFilter = Boolean(filterValue)
+  const searchText = filterValue.trim()
+  const hasSearchFilter = Boolean(searchText)
 
   const tableItems: TTableItem[] = useMemo(
     () =>
@@ -146,14 +176,14 @@ export default function TransactionTable({ transactions, currency }: TProps) {
     if (hasSearchFilter) {
       filtered = filtered.filter(
         (item) =>
-          toLowerCase(item.category).includes(toLowerCase(filterValue)) ||
-          toLowerCase(item.description).includes(toLowerCase(filterValue)) ||
-          toLowerCase(item.type).includes(toLowerCase(filterValue)),
+          toLowerCase(item.category).includes(toLowerCase(searchText)) ||
+          toLowerCase(item.description).includes(toLowerCase(searchText)) ||
+          toLowerCase(item.type).includes(toLowerCase(searchText)),
       )
     }
 
     return filtered
-  }, [tableItems, filterValue, hasSearchFilter])
+  }, [tableItems, searchText, hasSearchFilter])
 
   const sortedItems = useMemo(() => {
     return filteredItems.toSorted((a, b) => {
@@ -191,6 +221,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
   }, [filteredItems])
 
   const onSearchChange = useCallback((value?: string) => {
+    setSelectedKeys(new Set())
     if (value) {
       setFilterValue(value)
     } else {
@@ -200,7 +231,27 @@ export default function TransactionTable({ transactions, currency }: TProps) {
 
   const onClear = useCallback(() => {
     setFilterValue('')
+    setSelectedKeys(new Set())
   }, [])
+
+  const onDeleteSelected = async () => {
+    const ids = Array.from(selectedKeys)
+    try {
+      const deletedCount = await toast.promise(deleteTransactions(ids), {
+        loading: 'Deleting transactions...',
+        success: (count) =>
+          `${count} ${pluralize(count, 'transaction', 'transactions')} deleted.`,
+        error: 'Failed to delete transactions.',
+      })
+      if (deletedCount > 0) {
+        setSelectedKeys(new Set())
+        onCloseDeleteModal()
+        router.refresh()
+      }
+    } catch {
+      // toast.promise displays the failure message.
+    }
+  }
 
   const topContent = useMemo(() => {
     return (
@@ -236,10 +287,75 @@ export default function TransactionTable({ transactions, currency }: TProps) {
               description: 'text-left',
             }}
           />
+          <div className='flex shrink-0 items-center gap-2'>
+            {isEditingSelection && (
+              <HoverableElement
+                uKey='delete-selected-transactions'
+                element={
+                  <Button
+                    color='danger'
+                    variant='flat'
+                    isDisabled={selectedKeys.size === 0}
+                    onPress={() => {
+                      haptic()
+                      onOpenDeleteModal()
+                    }}
+                    startContent={<PiTrash size={DEFAULT_ICON_SIZE} />}
+                  >
+                    Delete selected
+                    {selectedKeys.size > 0 ? ` (${selectedKeys.size})` : ''}
+                  </Button>
+                }
+                hoveredElement={
+                  <Button
+                    color='danger'
+                    variant='flat'
+                    isDisabled={selectedKeys.size === 0}
+                    onPress={() => {
+                      haptic()
+                      onOpenDeleteModal()
+                    }}
+                    startContent={<PiTrashFill size={DEFAULT_ICON_SIZE} />}
+                  >
+                    Delete selected
+                    {selectedKeys.size > 0 ? ` (${selectedKeys.size})` : ''}
+                  </Button>
+                }
+                withShift={false}
+              />
+            )}
+            <Button
+              variant='flat'
+              color={isEditingSelection ? 'primary' : 'default'}
+              aria-pressed={isEditingSelection}
+              onPress={() => {
+                haptic()
+                if (isEditingSelection) setSelectedKeys(new Set())
+                setIsEditingSelection((editing) => !editing)
+              }}
+              startContent={
+                <HoverableElement
+                  uKey='edit-table-selection'
+                  element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
+                  hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
+                  withShift={false}
+                />
+              }
+            >
+              {isEditingSelection ? 'Done' : 'Edit'}
+            </Button>
+          </div>
         </div>
       </div>
     )
-  }, [filterValue, filteredItems.length, onSearchChange, onClear])
+  }, [
+    filterValue,
+    onSearchChange,
+    onClear,
+    isEditingSelection,
+    selectedKeys.size,
+    onOpenDeleteModal,
+  ])
 
   const bottomContent = useMemo(() => {
     return (
@@ -289,124 +405,179 @@ export default function TransactionTable({ transactions, currency }: TProps) {
   }, [totals, hasSearchFilter, filteredItems.length])
 
   return (
-    <Table
-      aria-label='Transaction table'
-      isVirtualized
-      isHeaderSticky
-      isCompact
-      isStriped
-      topContent={topContent}
-      topContentPlacement='outside'
-      bottomContent={bottomContent}
-      bottomContentPlacement='outside'
-      sortDescriptor={sortDescriptor}
-      onSortChange={(descriptor) =>
-        setSortDescriptor(descriptor as TSortDescriptor)
-      }
-      sortIcon={SortIcon}
-      shadow='none'
-      classNames={{
-        wrapper: 'shadow-xs',
-      }}
-    >
-      <TableHeader columns={COLUMNS}>
-        {(column) => (
-          <TableColumn
-            width={column.key === COLUMN_KEY.CATEGORY ? 180 : undefined}
-            key={column.key}
-            allowsSorting={column.allowsSorting}
-          >
-            {column.label}
-          </TableColumn>
-        )}
-      </TableHeader>
-
-      <TableBody
-        items={sortedItems}
-        emptyContent={
-          hasSearchFilter ? (
-            <div className='py-4 text-center'>
-              <p className='text-default-500'>
-                No transactions found matching &quot;{filterValue}&quot;
-              </p>
-            </div>
-          ) : (
-            <NoTransactionsPlug text='This month no transactions found' />
+    <>
+      <Table
+        aria-label='Transaction table'
+        selectionMode={isEditingSelection ? 'multiple' : 'none'}
+        selectedKeys={selectedKeys}
+        onSelectionChange={(keys) => {
+          setSelectedKeys(
+            keys === 'all'
+              ? new Set(sortedItems.map((item) => item.key))
+              : new Set(Array.from(keys, String)),
           )
+        }}
+        isVirtualized
+        isHeaderSticky
+        isCompact
+        isStriped
+        topContent={topContent}
+        topContentPlacement='outside'
+        bottomContent={bottomContent}
+        bottomContentPlacement='outside'
+        sortDescriptor={sortDescriptor}
+        onSortChange={(descriptor) =>
+          setSortDescriptor(descriptor as TSortDescriptor)
         }
+        sortIcon={SortIcon}
+        shadow='none'
+        classNames={{
+          wrapper: 'shadow-xs',
+        }}
       >
-        {(item) => (
-          <TableRow key={item.key}>
-            {(columnKey) => {
-              // Only access display properties (exclude raw values)
-              const displayKey = columnKey as keyof Omit<
-                TTableItem,
-                | 'key'
-                | 'rawAmount'
-                | 'rawDate'
-                | 'isIncome'
-                | 'currencySign'
-                | 'imagesCount'
-              >
-              const cellValue = item[displayKey]
+        <TableHeader columns={COLUMNS}>
+          {(column) => (
+            <TableColumn
+              width={column.key === COLUMN_KEY.CATEGORY ? 180 : undefined}
+              key={column.key}
+              allowsSorting={column.allowsSorting}
+            >
+              {column.label}
+            </TableColumn>
+          )}
+        </TableHeader>
 
-              if (columnKey === COLUMN_KEY.TYPE) {
-                return (
-                  <TableCell>
-                    <Chip
-                      className='capitalize'
-                      color={
-                        item.type === TRANSACTION_TYPE.INCOME
-                          ? 'success'
-                          : 'danger'
-                      }
-                      size='sm'
-                      variant='flat'
-                    >
-                      {cellValue}
-                    </Chip>
-                  </TableCell>
-                )
-              }
-
-              if (columnKey === COLUMN_KEY.DESCRIPTION) {
-                const tooltipLengthStr = 30
+        <TableBody
+          items={sortedItems}
+          emptyContent={
+            hasSearchFilter ? (
+              <div className='py-4 text-center'>
+                <p className='text-default-500'>
+                  No transactions found matching &quot;{searchText}&quot;
+                </p>
+              </div>
+            ) : (
+              <NoTransactionsPlug text='This month no transactions found' />
+            )
+          }
+        >
+          {(item) => (
+            <TableRow key={item.key}>
+              {(columnKey) => {
+                // Only access display properties (exclude raw values)
+                const displayKey = columnKey as keyof Omit<
+                  TTableItem,
+                  | 'key'
+                  | 'rawAmount'
+                  | 'rawDate'
+                  | 'isIncome'
+                  | 'currencySign'
+                  | 'imagesCount'
+                >
                 const cellValue = item[displayKey]
 
-                return (
-                  <TableCell>
-                    <Tooltip
-                      content={`Search by ${cellValue.slice(0, tooltipLengthStr)}${cellValue.length > tooltipLengthStr ? '...' : ''}`}
-                      placement='bottom'
-                      delay={2000}
-                    >
-                      <Link
+                if (columnKey === COLUMN_KEY.TYPE) {
+                  return (
+                    <TableCell>
+                      <Chip
+                        className='capitalize'
+                        color={
+                          item.type === TRANSACTION_TYPE.INCOME
+                            ? 'success'
+                            : 'danger'
+                        }
                         size='sm'
-                        href={createSearchHrefWithKeyword(
-                          getCategoryWithoutEmoji(cellValue),
-                        )}
-                        className='hover:opacity-hover text-inherit'
+                        variant='flat'
                       >
-                        <div>
-                          {cellValue}
-                          {item.imagesCount > 0 && (
-                            <span className='text-secondary-700 pl-1 text-xs font-medium text-wrap italic'>
-                              with{' '}
-                              {pluralize(item.imagesCount, 'image', 'images')}
-                            </span>
-                          )}
-                        </div>
-                      </Link>
-                    </Tooltip>
-                  </TableCell>
-                )
-              }
+                        {cellValue}
+                      </Chip>
+                    </TableCell>
+                  )
+                }
 
-              return <TableCell>{cellValue}</TableCell>
-            }}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+                if (columnKey === COLUMN_KEY.DESCRIPTION) {
+                  const tooltipLengthStr = 30
+                  const cellValue = item[displayKey]
+                  const descriptionContent = (
+                    <div>
+                      {cellValue}
+                      {item.imagesCount > 0 && (
+                        <span className='text-secondary-700 pl-1 text-xs font-medium text-wrap italic'>
+                          with {pluralize(item.imagesCount, 'image', 'images')}
+                        </span>
+                      )}
+                    </div>
+                  )
+
+                  if (isEditingSelection) {
+                    return <TableCell>{descriptionContent}</TableCell>
+                  }
+
+                  return (
+                    <TableCell>
+                      <Tooltip
+                        content={`Search by ${cellValue.slice(0, tooltipLengthStr)}${cellValue.length > tooltipLengthStr ? '...' : ''}`}
+                        placement='bottom'
+                        delay={2000}
+                      >
+                        <Link
+                          size='sm'
+                          href={createSearchHrefWithKeyword(
+                            getCategoryWithoutEmoji(cellValue),
+                          )}
+                          className='hover:opacity-hover text-inherit'
+                        >
+                          {descriptionContent}
+                        </Link>
+                      </Tooltip>
+                    </TableCell>
+                  )
+                }
+
+                return <TableCell>{cellValue}</TableCell>
+              }}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <Modal isOpen={isDeleteModalOpen} onOpenChange={onDeleteModalOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className='flex items-center gap-2'>
+                <PiWarningOctagonFill size={DEFAULT_ICON_SIZE} />
+                Delete selected transactions?
+              </ModalHeader>
+              <ModalBody>
+                <p className='text-default-500'>
+                  You are about to{' '}
+                  <span className='text-foreground font-medium'>
+                    permanently delete {selectedKeys.size}{' '}
+                    {pluralize(
+                      selectedKeys.size,
+                      'selected transaction',
+                      'selected transactions',
+                    )}
+                  </span>
+                  . This action cannot be undone.
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button variant='light' onPress={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  color='danger'
+                  onPress={onDeleteSelected}
+                  isDisabled={selectedKeys.size === 0}
+                >
+                  Delete transactions
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
