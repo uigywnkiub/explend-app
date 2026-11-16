@@ -80,6 +80,7 @@ function TransactionFormEdit({
   const { theme } = useTheme()
   const [isLoading, setIsLoading] = useState(false)
   const [isSwitchedOn, setIsSwitchedOn] = useState(transaction.isIncome)
+  const [isEdited, setIsEdited] = useState(true)
   const [description, setDescription] = useState(transaction.description)
   const [amount, setAmount] = useState(
     getFormattedCurrency(transaction.amount, false),
@@ -123,7 +124,6 @@ function TransactionFormEdit({
   }, [categoryName])
   const categoryWithEmoji = getCategoryWithEmoji(categoryName, userCategories)
   const prevCategory = transaction.category
-  const isEdited = transaction.isEdited
   const transactionId = transaction.id
 
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -212,8 +212,6 @@ function TransactionFormEdit({
 
       return
     }
-    newTransactionData.isEdited = true
-
     try {
       await editTransactionById(transactionId, newTransactionData)
       haptic.confirm()
@@ -279,20 +277,36 @@ function TransactionFormEdit({
           <Card shadow='none' className='bg-transparent'>
             <CardBody className='p-0'>
               <form onSubmit={onSubmit}>
-                <Switch
-                  isDisabled={isLoading}
-                  color='success'
-                  name='isIncome'
-                  aria-label='Income switch'
-                  value={isSwitchedOn ? 'true' : 'false'}
-                  isSelected={isSwitchedOn}
-                  onValueChange={(isSelected) => {
-                    haptic()
-                    setIsSwitchedOn(isSelected)
-                  }}
-                >
-                  Income
-                </Switch>
+                <div className='flex items-center gap-4'>
+                  <Switch
+                    isDisabled={isLoading}
+                    color='success'
+                    name='isIncome'
+                    aria-label='Income switch'
+                    value={isSwitchedOn ? 'true' : 'false'}
+                    isSelected={isSwitchedOn}
+                    onValueChange={(isSelected) => {
+                      haptic()
+                      setIsSwitchedOn(isSelected)
+                    }}
+                  >
+                    Income
+                  </Switch>
+                  <Switch
+                    isDisabled={isLoading}
+                    name='isEdited'
+                    aria-label='Edited switch'
+                    color='default'
+                    value={isEdited ? 'true' : 'false'}
+                    isSelected={isEdited}
+                    onValueChange={(isSelected) => {
+                      haptic()
+                      setIsEdited(isSelected)
+                    }}
+                  >
+                    Edited
+                  </Switch>
+                </div>
                 <Input
                   isDisabled={isLoading}
                   isRequired

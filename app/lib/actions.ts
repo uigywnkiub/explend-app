@@ -724,7 +724,7 @@ export async function editTransactionById(
       if (newTransactionData.isIncome !== undefined) {
         updateFields.isIncome = newTransactionData.isIncome
       }
-      if (newTransactionData.isEdited) {
+      if (newTransactionData.isEdited !== undefined) {
         updateFields.isEdited = newTransactionData.isEdited
       }
       if (newTransactionData.images) {
