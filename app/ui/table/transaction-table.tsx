@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import {
   PiMagnifyingGlass,
@@ -34,6 +34,7 @@ import {
   useDisclosure,
 } from '@heroui/react'
 import { SortIcon } from '@heroui/shared-icons'
+import { format } from 'date-fns'
 import { haptic } from 'ios-haptics'
 
 import { DEFAULT_ICON_SIZE } from '@/config/constants/main'
@@ -138,6 +139,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
   const [filterValue, setFilterValue] = useState('')
   const [isEditingSelection, setIsEditingSelection] = useState(false)
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
+  const [deleteCountdown, setDeleteCountdown] = useState(0)
   const {
     isOpen: isDeleteModalOpen,
     onOpen: onOpenDeleteModal,
@@ -151,6 +153,33 @@ export default function TransactionTable({ transactions, currency }: TProps) {
 
   const searchText = filterValue.trim()
   const hasSearchFilter = Boolean(searchText)
+  const deleteDelaySeconds = Math.min(
+    Math.max(1, Math.ceil(selectedKeys.size / 3)),
+    10,
+  )
+
+  useEffect(() => {
+    if (!isDeleteModalOpen) {
+      setDeleteCountdown(0)
+
+      return
+    }
+
+    setDeleteCountdown(deleteDelaySeconds)
+    const timer = window.setInterval(() => {
+      setDeleteCountdown((countdown) => {
+        if (countdown <= 1) {
+          window.clearInterval(timer)
+
+          return 0
+        }
+
+        return countdown - 1
+      })
+    }, 1000)
+
+    return () => window.clearInterval(timer)
+  }, [isDeleteModalOpen, deleteDelaySeconds])
 
   const tableItems: TTableItem[] = useMemo(
     () =>
@@ -206,6 +235,10 @@ export default function TransactionTable({ transactions, currency }: TProps) {
       return sortDescriptor.direction === 'descending' ? -cmp : cmp
     })
   }, [filteredItems, sortDescriptor])
+
+  const selectedTransactions = sortedItems.filter((item) =>
+    selectedKeys.has(item.key),
+  )
 
   const totals = useMemo(() => {
     const transactionsFromItems = filteredItems.map((item) => ({
@@ -287,7 +320,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
               description: 'text-left',
             }}
           />
-          <div className='flex shrink-0 items-center gap-2'>
+          <div className='flex w-full shrink-0 items-center justify-center gap-2 md:w-auto'>
             {isEditingSelection && (
               <HoverableElement
                 uKey='delete-selected-transactions'
@@ -298,6 +331,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
                     isDisabled={selectedKeys.size === 0}
                     onPress={() => {
                       haptic()
+                      setDeleteCountdown(deleteDelaySeconds)
                       onOpenDeleteModal()
                     }}
                     startContent={<PiTrash size={DEFAULT_ICON_SIZE} />}
@@ -313,6 +347,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
                     isDisabled={selectedKeys.size === 0}
                     onPress={() => {
                       haptic()
+                      setDeleteCountdown(deleteDelaySeconds)
                       onOpenDeleteModal()
                     }}
                     startContent={<PiTrashFill size={DEFAULT_ICON_SIZE} />}
@@ -354,6 +389,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
     onClear,
     isEditingSelection,
     selectedKeys.size,
+    deleteDelaySeconds,
     onOpenDeleteModal,
   ])
 
@@ -561,6 +597,22 @@ export default function TransactionTable({ transactions, currency }: TProps) {
                   </span>
                   . This action cannot be undone.
                 </p>
+                <ul className='rounded-medium bg-default-100 max-h-56 space-y-2 overflow-y-auto p-3'>
+                  {selectedTransactions.map((transaction) => (
+                    <li
+                      key={transaction.key}
+                      className='flex items-center justify-between gap-3 text-sm'
+                    >
+                      <span className='min-w-0 truncate'>
+                        {transaction.description}
+                      </span>
+                      <span className='text-default-500 shrink-0'>
+                        {transaction.amount} ·{' '}
+                        {format(transaction.rawDate, 'EEE, MMM d')}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </ModalBody>
               <ModalFooter>
                 <Button variant='light' onPress={onClose}>
@@ -569,9 +621,11 @@ export default function TransactionTable({ transactions, currency }: TProps) {
                 <Button
                   color='danger'
                   onPress={onDeleteSelected}
-                  isDisabled={selectedKeys.size === 0}
+                  isDisabled={selectedKeys.size === 0 || deleteCountdown > 0}
                 >
-                  Delete transactions
+                  {deleteCountdown > 0
+                    ? `Delete in ${deleteCountdown}s`
+                    : 'Delete transactions'}
                 </Button>
               </ModalFooter>
             </>
