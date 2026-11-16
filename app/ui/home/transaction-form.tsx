@@ -297,11 +297,13 @@ function TransactionForm({
         toast.success('Receipt analyzed.', { id: receiptProcessingToastId })
 
         const parsedRes: TReceipt[] = JSON.parse(res)
-        const modifiedReceiptData = parsedRes.map((item) => ({
-          ...item,
-          date: typeof item.date === 'string' ? item.date : '',
-          amount: getFormattedCurrency(Math.round(item.amount), false),
-        }))
+        const modifiedReceiptData = parsedRes
+          .filter((item) => item.amount > 0)
+          .map((item) => ({
+            ...item,
+            date: typeof item.date === 'string' ? item.date : '',
+            amount: getFormattedCurrency(Math.round(item.amount), false),
+          }))
 
         setReceiptAIData(modifiedReceiptData)
         setReceiptAIDataLocalStorage(modifiedReceiptData)
