@@ -236,17 +236,6 @@ export default function TransactionTable({ transactions, currency }: TProps) {
               description: 'text-left',
             }}
           />
-          <span className='text-default-500 text-center text-sm'>
-            <InfoText
-              isSm
-              withAsterisk={false}
-              text={`Total ${filteredItems.length} ${pluralize(
-                filteredItems.length,
-                'transaction',
-                'transactions',
-              )}`}
-            />
-          </span>
         </div>
       </div>
     )
@@ -287,17 +276,17 @@ export default function TransactionTable({ transactions, currency }: TProps) {
               withAsterisk={false}
               text={`Showing ${
                 hasSearchFilter ? 'filtered' : 'all-time'
-              } ${pluralize(
-                transactions.length,
-                'transaction.',
-                'transactions.',
-              )}`}
+              } transactions. ${filteredItems.length} ${pluralize(
+                filteredItems.length,
+                'entry',
+                'entries',
+              )}.`}
             />
           </div>
         </div>
       </div>
     )
-  }, [totals, transactions.length, hasSearchFilter])
+  }, [totals, hasSearchFilter, filteredItems.length])
 
   return (
     <Table
@@ -338,7 +327,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
           hasSearchFilter ? (
             <div className='py-4 text-center'>
               <p className='text-default-500'>
-                No transactions found matching {filterValue}
+                No transactions found matching &quot;{filterValue}&quot;
               </p>
             </div>
           ) : (
