@@ -46,6 +46,7 @@ import {
   createSearchHrefWithKeyword,
   formatDate,
   getCategoryWithoutEmoji,
+  getEmojiFromCategory,
   getFormattedCurrency,
   pluralize,
   toLowerCase,
@@ -456,7 +457,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
         isVirtualized
         isHeaderSticky
         isCompact
-        isStriped
+        isStriped={!isEditingSelection}
         topContent={topContent}
         topContentPlacement='outside'
         bottomContent={bottomContent}
@@ -604,11 +605,18 @@ export default function TransactionTable({ transactions, currency }: TProps) {
                       className='flex items-center justify-between gap-3 text-sm'
                     >
                       <span className='min-w-0 truncate'>
+                        {getEmojiFromCategory(transaction.category)}{' '}
                         {transaction.description}
                       </span>
                       <span className='text-default-500 shrink-0'>
                         {transaction.amount} ·{' '}
-                        {format(transaction.rawDate, 'EEE, MMM d')}
+                        {format(
+                          transaction.rawDate,
+                          transaction.rawDate.getFullYear() ===
+                            new Date().getFullYear()
+                            ? 'MMM d'
+                            : 'MMM d, yyyy',
+                        )}
                       </span>
                     </li>
                   ))}
