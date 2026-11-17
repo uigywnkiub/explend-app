@@ -1241,34 +1241,38 @@ function TransactionForm({
                   </Select>
                 </Badge>
               </div>
-              <Badge
-                isInvisible={!isAiFeaturesEnabled || !isReceiptDateAIValid}
-                content={<AILogo asIcon />}
-                classNames={{
-                  badge:
-                    'right-0 border-0 bg-transparent cursor-pointer md:hover:opacity-hover',
-                }}
-              >
-                <DatePicker
-                  isDisabled={pending || isLoadingAIData}
-                  granularity='day'
-                  aria-label='Select a date'
-                  label='Select a date'
-                  value={date}
-                  onChange={(val) => {
-                    haptic()
-                    setDate(val)
-                    setIsReceiptDateAIValid(false)
-                  }}
-                  maxValue={today(getLocalTimeZone())}
-                  className='w-56'
-                  classNames={{
-                    selectorButton: 'text-default-500',
-                    inputWrapper:
-                      'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
-                  }}
-                />
-              </Badge>
+              <div className='flex flex-col gap-4 lg:flex-row'>
+                <div className='w-56'>
+                  <Badge
+                    isInvisible={!isAiFeaturesEnabled || !isReceiptDateAIValid}
+                    content={<AILogo asIcon />}
+                    classNames={{
+                      badge:
+                        'right-0 border-0 bg-transparent cursor-pointer md:hover:opacity-hover',
+                    }}
+                  >
+                    <DatePicker
+                      isDisabled={pending || isLoadingAIData}
+                      granularity='day'
+                      aria-label='Select a date'
+                      label='Select a date'
+                      value={date}
+                      onChange={(val) => {
+                        haptic()
+                        setDate(val)
+                        setIsReceiptDateAIValid(false)
+                      }}
+                      maxValue={today(getLocalTimeZone())}
+                      className='w-56'
+                      classNames={{
+                        selectorButton: 'text-default-500',
+                        inputWrapper:
+                          'h-12 min-h-12 py-1.5 px-3 md:h-14 md:min-h-14 md:py-2',
+                      }}
+                    />
+                  </Badge>
+                </div>
+              </div>
             </div>
             <div className='flex items-center justify-end self-center'>
               <p>

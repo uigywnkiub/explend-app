@@ -5,8 +5,6 @@ import toast from 'react-hot-toast'
 import {
   PiMagnifyingGlass,
   PiMagnifyingGlassFill,
-  PiNotePencil,
-  PiNotePencilFill,
   PiTrash,
   PiTrashFill,
   PiWarningOctagonFill,
@@ -279,6 +277,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
       })
       if (deletedCount > 0) {
         setSelectedKeys(new Set())
+        setIsEditingSelection(false)
         onCloseDeleteModal()
         router.refresh()
       }
@@ -286,6 +285,34 @@ export default function TransactionTable({ transactions, currency }: TProps) {
       // toast.promise displays the failure message.
     }
   }
+
+  const onDeleteButtonPress = useCallback(() => {
+    haptic()
+    if (!isEditingSelection) {
+      setIsEditingSelection(true)
+
+      return
+    }
+    if (selectedKeys.size === 0) {
+      setIsEditingSelection(false)
+
+      return
+    }
+
+    setDeleteCountdown(deleteDelaySeconds)
+    onOpenDeleteModal()
+  }, [
+    isEditingSelection,
+    selectedKeys.size,
+    deleteDelaySeconds,
+    onOpenDeleteModal,
+  ])
+
+  const deleteButtonLabel = !isEditingSelection
+    ? 'Delete'
+    : selectedKeys.size === 0
+      ? 'Cancel'
+      : `Delete selected (${selectedKeys.size})`
 
   const topContent = useMemo(() => {
     return (
@@ -322,64 +349,32 @@ export default function TransactionTable({ transactions, currency }: TProps) {
             }}
           />
           <div className='flex w-full shrink-0 items-center justify-center gap-2 md:w-auto'>
-            {isEditingSelection && (
-              <HoverableElement
-                uKey='delete-selected-transactions'
-                element={
-                  <Button
-                    color='danger'
-                    variant='flat'
-                    isDisabled={selectedKeys.size === 0}
-                    onPress={() => {
-                      haptic()
-                      setDeleteCountdown(deleteDelaySeconds)
-                      onOpenDeleteModal()
-                    }}
-                    startContent={<PiTrash size={DEFAULT_ICON_SIZE} />}
-                  >
-                    Delete selected
-                    {selectedKeys.size > 0 ? ` (${selectedKeys.size})` : ''}
-                  </Button>
-                }
-                hoveredElement={
-                  <Button
-                    color='danger'
-                    variant='flat'
-                    isDisabled={selectedKeys.size === 0}
-                    onPress={() => {
-                      haptic()
-                      setDeleteCountdown(deleteDelaySeconds)
-                      onOpenDeleteModal()
-                    }}
-                    startContent={<PiTrashFill size={DEFAULT_ICON_SIZE} />}
-                  >
-                    Delete selected
-                    {selectedKeys.size > 0 ? ` (${selectedKeys.size})` : ''}
-                  </Button>
-                }
-                withShift={false}
-              />
-            )}
-            <Button
-              variant='flat'
-              color={isEditingSelection ? 'primary' : 'default'}
-              aria-pressed={isEditingSelection}
-              onPress={() => {
-                haptic()
-                if (isEditingSelection) setSelectedKeys(new Set())
-                setIsEditingSelection((editing) => !editing)
-              }}
-              startContent={
-                <HoverableElement
-                  uKey='edit-table-selection'
-                  element={<PiNotePencil size={DEFAULT_ICON_SIZE} />}
-                  hoveredElement={<PiNotePencilFill size={DEFAULT_ICON_SIZE} />}
-                  withShift={false}
-                />
+            <HoverableElement
+              uKey='delete-selected-transactions'
+              element={
+                <Button
+                  color='danger'
+                  variant='flat'
+                  aria-pressed={isEditingSelection}
+                  onPress={onDeleteButtonPress}
+                  startContent={<PiTrash size={DEFAULT_ICON_SIZE} />}
+                >
+                  {deleteButtonLabel}
+                </Button>
               }
-            >
-              {isEditingSelection ? 'Done' : 'Edit'}
-            </Button>
+              hoveredElement={
+                <Button
+                  color='danger'
+                  variant='flat'
+                  aria-pressed={isEditingSelection}
+                  onPress={onDeleteButtonPress}
+                  startContent={<PiTrashFill size={DEFAULT_ICON_SIZE} />}
+                >
+                  {deleteButtonLabel}
+                </Button>
+              }
+              withShift={false}
+            />
           </div>
         </div>
       </div>
@@ -389,9 +384,8 @@ export default function TransactionTable({ transactions, currency }: TProps) {
     onSearchChange,
     onClear,
     isEditingSelection,
-    selectedKeys.size,
-    deleteDelaySeconds,
-    onOpenDeleteModal,
+    deleteButtonLabel,
+    onDeleteButtonPress,
   ])
 
   const bottomContent = useMemo(() => {
@@ -583,7 +577,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
             <>
               <ModalHeader className='flex items-center gap-2'>
                 <PiWarningOctagonFill size={DEFAULT_ICON_SIZE} />
-                Delete selected transactions?
+                Delete selected transactions
               </ModalHeader>
               <ModalBody>
                 <p className='text-default-500'>
@@ -630,6 +624,7 @@ export default function TransactionTable({ transactions, currency }: TProps) {
                   color='danger'
                   onPress={onDeleteSelected}
                   isDisabled={selectedKeys.size === 0 || deleteCountdown > 0}
+                  className='min-w-42 justify-center'
                 >
                   {deleteCountdown > 0
                     ? `Delete in ${deleteCountdown}s`
