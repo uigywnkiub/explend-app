@@ -2713,6 +2713,16 @@
   }
 }
 
+@keyframes aquarium-mobile-fish-drift {
+  0%,
+  100% {
+    transform: translate3d(-6px, 1px, 0);
+  }
+  50% {
+    transform: translate3d(8px, -2px, 0);
+  }
+}
+
 @keyframes aquarium-tail {
   0% {
     transform: rotate(-8deg) scaleX(0.82);
@@ -3495,6 +3505,47 @@
   .aquarium__refraction i:nth-child(n + 5),
   .aquarium__plankton i:nth-child(n + 9),
   .aquarium__sand-grains i:nth-child(n + 25) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .aquarium__cloud-shadow,
+  .aquarium__current,
+  .aquarium__refraction,
+  .aquarium__surface-distortion,
+  .aquarium__fish-shadow,
+  .aquarium__cast-shadow--fish,
+  .aquarium__cast-shadow--passer {
+    display: none;
+  }
+
+  .aquarium__caustics,
+  .aquarium__wave {
+    animation: none;
+    filter: none;
+  }
+
+  .aquarium__fish-wrap {
+    top: var(--fish-origin-y);
+    left: var(--fish-origin-x);
+    animation: aquarium-mobile-fish-drift var(--fish-duration) var(--fish-delay)
+      ease-in-out infinite;
+    filter: none;
+  }
+
+  .aquarium--expanded .aquarium__fish-wrap {
+    filter: none;
+  }
+
+  .aquarium__fish-wrap:nth-of-type(n + 7) {
+    display: none;
+  }
+
+  .aquarium__plankton i:nth-child(n + 5),
+  .aquarium__plants i:nth-child(n + 7),
+  .aquarium__seagrass i:nth-child(n + 6),
+  .aquarium__plant-bubbles i:nth-child(n + 3) {
     display: none;
   }
 }
