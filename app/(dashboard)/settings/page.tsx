@@ -109,6 +109,19 @@ async function SettingsPageContent() {
 
             <Divider className='my-4' />
 
+            <div className='flex justify-between gap-2'>
+              <SectionItem
+                title='Aquarium'
+                subtitle='Show the aquarium animation on the balance card.'
+              />
+              <LocalStorageSwitch
+                localStorageKey={LOCAL_STORAGE_KEY.IS_AQUARIUM_ENABLED}
+                defaultValue
+              />
+            </div>
+
+            <Divider className='my-4' />
+
             <SectionItem
               title='Theme Switcher'
               subtitle='Select your favorite theme to give the app a new look that matches your style.'

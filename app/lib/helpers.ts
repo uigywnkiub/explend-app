@@ -298,15 +298,33 @@ export const toCalendarDate = (date: Date) => {
   return new CalendarDate(getYear(date), getMonth(date) + 1, getDate(date))
 }
 
-export const getGreeting = (timeZoneIANA: string): string => {
+export type TDayPeriod = 'morning' | 'noon' | 'sunset' | 'twilight' | 'night'
+
+export const getDayPeriod = (timeZoneIANA: string): TDayPeriod => {
   const currentHour = formatInTimeZone(new Date(), timeZoneIANA, 'HH')
   const parsedHour = parseInt(currentHour, 10)
 
-  if (parsedHour < 12) {
+  if (parsedHour >= 5 && parsedHour < 11) {
+    return 'morning'
+  } else if (parsedHour >= 11 && parsedHour < 16) {
+    return 'noon'
+  } else if (parsedHour >= 16 && parsedHour < 19) {
+    return 'sunset'
+  } else if (parsedHour >= 19 && parsedHour < 21) {
+    return 'twilight'
+  } else {
+    return 'night'
+  }
+}
+
+export const getGreeting = (timeZoneIANA: string): string => {
+  const dayPeriod = getDayPeriod(timeZoneIANA)
+
+  if (dayPeriod === 'morning') {
     return 'Good morning'
-  } else if (parsedHour < 18) {
+  } else if (dayPeriod === 'noon') {
     return 'Good afternoon'
-  } else if (parsedHour < 22) {
+  } else if (dayPeriod === 'sunset' || dayPeriod === 'twilight') {
     return 'Good evening'
   } else {
     return 'Good night'

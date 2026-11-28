@@ -5,6 +5,7 @@ export const enum LOCAL_STORAGE_KEY {
   SELECTED_CATEGORY_NAME = 'selectedCategoryName',
 
   IS_AMOUNT_HIDDEN = 'isAmountHidden',
+  IS_AQUARIUM_ENABLED = 'isAquariumEnabled',
   IS_POSITIVE_BALANCE = 'isPositiveBalance',
   IS_AUTO_SUBMIT = 'isAutoSubmit',
   IS_ENABLE_CHANGELOG = 'isEnableChangelog',
