@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
 import * as Sentry from '@sentry/nextjs'
-import webpush from 'web-push'
+import { sendNotification, setVapidDetails } from 'web-push'
 
 import { ROUTE } from '@/config/constants/routes'
 
@@ -19,7 +19,7 @@ import { TTransaction } from '@/app/lib/types'
 
 export const maxDuration = 60 // Secs.
 
-webpush.setVapidDetails(
+setVapidDetails(
   `mailto:${process.env.RESEND_EMAIL}`,
   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
   process.env.VAPID_PRIVATE_KEY,
@@ -100,7 +100,7 @@ export async function GET(req: NextRequest) {
         for (const sub of processedSubs) {
           for (const pushSub of pushSubs) {
             try {
-              await webpush.sendNotification(
+              await sendNotification(
                 pushSub,
                 JSON.stringify({
                   title: `Subscription Renewal`,
