@@ -579,7 +579,7 @@ function BalanceCard({
   })
   const [weeklySpend, setWeeklySpend] = useState<TWeeklySpendData | null>(null)
   const [currentTimeZone, setCurrentTimeZone] = useState(DEFAULT_TIME_ZONE)
-  const [isAquariumEnabled, setIsAquariumEnabled] = useState(true)
+  const [isAquariumEnabled, setIsAquariumEnabled] = useState(false)
 
   const userId = user?.email
   const isTotalLoaded = Boolean(total.income) || Boolean(total.expense)
@@ -635,7 +635,7 @@ function BalanceCard({
     const storedValue = getFromLocalStorage(
       LOCAL_STORAGE_KEY.IS_AQUARIUM_ENABLED,
     )
-    setIsAquariumEnabled(storedValue === null || storedValue === 'true')
+    setIsAquariumEnabled(storedValue === 'true')
   }, [])
 
   useEffect(() => {

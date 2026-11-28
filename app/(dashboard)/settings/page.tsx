@@ -112,11 +112,10 @@ async function SettingsPageContent() {
             <div className='flex justify-between gap-2'>
               <SectionItem
                 title='Aquarium'
-                subtitle='Show the aquarium animation on the balance card.'
+                subtitle='Show the aquarium animation on the balance card. It may use additional system resources.'
               />
               <LocalStorageSwitch
                 localStorageKey={LOCAL_STORAGE_KEY.IS_AQUARIUM_ENABLED}
-                defaultValue
               />
             </div>
 
